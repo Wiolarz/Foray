@@ -1,40 +1,48 @@
-[gd_scene load_steps=4 format=3 uid="uid://5g2iqdyqmc75"]
+[gd_scene load_steps=5 format=3 uid="uid://5g2iqdyqmc75"]
 
 [ext_resource type="Script" path="res://Scripts/UI/LevelUp/level_up_world.gd" id="1_kwwbk"]
-[ext_resource type="PackedScene" uid="uid://bukisun1sjf4t" path="res://Scenes/UI/LevelUp/TierPanel.tscn" id="2_ip6k2"]
+[ext_resource type="PackedScene" uid="uid://b7fpb6r5mluj1" path="res://Scenes/UI/LevelUp/TierTalentPanel.tscn" id="2_j8sai"]
+[ext_resource type="PackedScene" uid="uid://m7kfrja5xmn4" path="res://Scenes/UI/LevelUp/TierSkillPanel.tscn" id="3_3qo4o"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bud47"]
 bg_color = Color(0, 0, 0, 1)
 
 [node name="LevelUpWorldScreen" type="Control"]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_kwwbk")
 
 [node name="Panel" type="Panel" parent="."]
 editor_description = "STUB
 Has a simple Theme Overide"
-layout_mode = 0
-offset_left = 76.0
-offset_top = 11.0
-offset_right = 1846.0
-offset_bottom = 984.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 100.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_bud47")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 layout_mode = 0
 offset_left = 87.0
-offset_top = 917.0
+offset_top = 959.0
 offset_right = 1410.0
 offset_bottom = 1061.0
 text = "Examle skill/passive description"
 
 [node name="ButtonConfirm" type="Button" parent="."]
 layout_mode = 0
-offset_left = 1530.0
-offset_top = 898.0
-offset_right = 1729.0
-offset_bottom = 980.0
+offset_left = 1414.0
+offset_top = 943.0
+offset_right = 1613.0
+offset_bottom = 1025.0
 text = "Confirm"
 
 [node name="TierPanels" type="VBoxContainer" parent="."]
@@ -46,13 +54,28 @@ offset_bottom = 904.0
 theme_override_constants/separation = 23
 alignment = 1
 
-[node name="TierPanel" parent="TierPanels" instance=ExtResource("2_ip6k2")]
+[node name="TierTalentPanel" parent="TierPanels" instance=ExtResource("2_j8sai")]
 layout_mode = 2
 
-[node name="TierPanel2" parent="TierPanels" instance=ExtResource("2_ip6k2")]
+[node name="TierSkillPanel" parent="TierPanels" instance=ExtResource("3_3qo4o")]
 layout_mode = 2
 
-[node name="TierPanel3" parent="TierPanels" instance=ExtResource("2_ip6k2")]
+[node name="Control" type="HSeparator" parent="TierPanels"]
+layout_mode = 2
+
+[node name="TierTalentPanel2" parent="TierPanels" instance=ExtResource("2_j8sai")]
+layout_mode = 2
+
+[node name="TierSkillPanel2" parent="TierPanels" instance=ExtResource("3_3qo4o")]
+layout_mode = 2
+
+[node name="Control2" type="HSeparator" parent="TierPanels"]
+layout_mode = 2
+
+[node name="TierTalentPanel3" parent="TierPanels" instance=ExtResource("2_j8sai")]
+layout_mode = 2
+
+[node name="TierSkillPanel3" parent="TierPanels" instance=ExtResource("3_3qo4o")]
 layout_mode = 2
 
 [node name="HeroLevelValue" type="Label" parent="."]

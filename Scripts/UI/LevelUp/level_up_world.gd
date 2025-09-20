@@ -2,8 +2,20 @@ extends LevelUpScreen
 
 
 # override
-func _get_tier_panel_children() -> Array[Node]:
-	return get_node("TierPanels").get_children()
+func _assign_tier_panels() -> void:
+	tier_talent_panels = []
+	tier_talent_panels.append($TierPanels/TierTalentPanel)
+	tier_talent_panels.append($TierPanels/TierTalentPanel2)
+	tier_talent_panels.append($TierPanels/TierTalentPanel3)
+
+	tier_skill_panels = []
+	tier_skill_panels.append($TierPanels/TierSkillPanel)
+	tier_skill_panels.append($TierPanels/TierSkillPanel2)
+	tier_skill_panels.append($TierPanels/TierSkillPanel3)
+
+	tier_panels = []
+	tier_panels.append_array(tier_talent_panels)
+	tier_panels.append_array(tier_skill_panels)
 
 
 func load_selected_hero_level_up_screen(hero : Hero) -> void:
