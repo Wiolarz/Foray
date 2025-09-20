@@ -16,7 +16,7 @@ var pressed : bool :
 		return button.button_pressed
 
 
-## Obtained used in world to distinquished passives already locked to a character
+## Obtained used in world to distinguished passives already locked to a character
 func load_passive(passive : HeroPassive) -> void:
 	label.hide()
 	button.show()

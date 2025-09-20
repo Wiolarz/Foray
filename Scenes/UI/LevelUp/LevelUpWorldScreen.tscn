@@ -23,8 +23,6 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 100.0
-offset_bottom = 100.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_bud47")
@@ -39,10 +37,10 @@ text = "Examle skill/passive description"
 
 [node name="ButtonConfirm" type="Button" parent="."]
 layout_mode = 0
-offset_left = 1414.0
-offset_top = 943.0
-offset_right = 1613.0
-offset_bottom = 1025.0
+offset_left = 876.0
+offset_top = 983.0
+offset_right = 1075.0
+offset_bottom = 1065.0
 text = "Confirm"
 
 [node name="TierPanels" type="VBoxContainer" parent="."]

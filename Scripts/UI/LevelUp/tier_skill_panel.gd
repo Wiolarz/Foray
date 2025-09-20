@@ -146,7 +146,8 @@ func _ability_pressed(pressed_button_idx : int):
 
 	assert(number_of_available_abilities > 0, "ability button was not properly disabled")
 
-	if number_of_available_abilities == 1:  ## Hero can have only one Ability
+	## Hero can have only one Ability
+	if number_of_available_abilities == 1:
 		var button_idx = -1
 		for ability_button in ability_buttons:
 			button_idx += 1
