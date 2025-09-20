@@ -3,7 +3,7 @@ extends Control
 
 var selected_hero : Hero
 
-var tier_panels : Array[PanelContainer]#PanelContainer
+var tier_panels : Array[PanelContainer]
 
 ## Each number represents choice from subsequent tier [br]
 ##  -1 - No Talent taken [br]
@@ -26,7 +26,7 @@ func _ready() -> void:
 	var tier_idx = -1
 	for tier_panel in tier_panels:
 		tier_idx += 1
-		tier_panel.init_tier_panel(tier_idx, null)
+		tier_panel.init_tier_panel(tier_idx)
 		tier_panel.talent_chosen.connect(_selected_talent)
 		tier_panel.ability_chosen.connect(_selected_ability)
 
@@ -52,12 +52,12 @@ func apply_talents_and_abilities() -> void:
 
 
 func _selected_talent(tier : int, button_idx : int) -> void:
-	#print(tier, button_idx)
+	#log(tier, button_idx)
 	chosen_talents[tier] = button_idx
 
 
 func _selected_ability(tier : int, button_idx : int, selected : bool) -> void:
-	#print(tier, button_idx)
+	#log(tier, button_idx)
 	if selected:
 		chosen_abilities[tier].append(button_idx)
 		assert(chosen_abilities[tier].size() <= 2)

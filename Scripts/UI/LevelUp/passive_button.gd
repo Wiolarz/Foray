@@ -6,8 +6,8 @@ signal button_pressed
 ## TODO add passive icon
 ## TODO add logic related on hover to display description
 
-@onready var label = $Label
-@onready var button = $Button
+@onready var label : Label = $Label
+@onready var button : Button = $Button
 
 var pressed : bool :
 	set(value):

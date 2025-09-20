@@ -168,7 +168,7 @@ var NODE_GAMESETUP_PATH : String = "/root/UI/MainMenu/MainContainer/HostLobby/Ho
 													load(_hero_talent_magic_weapons),
 													load(_hero_talent_weak_weapons)]
 
-@onready var _tier_2_talents : Array[HeroPassive] = [null, null, null]
+@onready var _tier_2_talents : Array[HeroPassive] = [load(_hero_talent_wind_weapons), null, null]
 
 @onready var _tier_3_talents : Array[HeroPassive] = [null, null, null]
 
