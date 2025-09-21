@@ -29,9 +29,7 @@ func init_tier_panel(tier_ : int) -> void:
 		if talent:  # TEMP null check until all passives in level_up_screen are present
 			talent_button.load_passive(talent)
 
-		var lambda = func on_click():
-			_talent_pressed(button_idx)
-		talent_button.button_pressed.connect(lambda)
+		talent_button.button_pressed.connect(_talent_pressed.bind(button_idx))
 
 
 #region Hero level
@@ -63,9 +61,11 @@ func set_hero(hero : Hero, is_in_world : bool = false) -> void:
 
 func _adjust_talents() -> void:
 	var can_choose_talent : bool = true
-	if tier == 0 and hero_level == 1:
-		can_choose_talent = false
-	elif (hero_level - (tier * 2)) <= 0:  # 3 or 5
+	## hero can obtain talent on levels 2, 3 and 5
+	## lvl 3 - tier 1 * 2 = 1 bigger than 0
+	## lvl 5 - tier 2 * 2 = 1 bigger than 0
+	if tier == 0 and hero_level == 1 \
+	or (hero_level - (tier * 2)) <= 0:
 		can_choose_talent = false
 	#log("talents", tier, can_choose_talent)
 	if not can_choose_talent:

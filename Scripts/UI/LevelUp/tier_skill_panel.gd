@@ -35,9 +35,7 @@ func init_tier_panel(tier_ : int) -> void:
 		if ability: # TEMP null check until all passives in level_up_screen are present
 			ability_button.load_passive(ability)
 
-		var lambda = func on_click():
-			_ability_pressed(button_idx)
-		ability_button.button_pressed.connect(lambda)
+		ability_button.button_pressed.connect(_ability_pressed.bind(button_idx))
 
 
 #region Hero level
