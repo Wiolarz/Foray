@@ -211,8 +211,6 @@ func _on_button_level_up_pressed():
 
 	setup_ui.show_hero_level_up(slot_index)
 
-	UI.show_hero_level_up()
-
 #endregion Hero list
 
 
