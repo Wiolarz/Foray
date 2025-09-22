@@ -1,0 +1,75 @@
+[gd_scene load_steps=5 format=3 uid="uid://8gkshp6dgl0f"]
+
+[ext_resource type="Script" path="res://Scripts/UI/LevelUp/level_up_lobby.gd" id="1_iirgi"]
+[ext_resource type="PackedScene" uid="uid://b7fpb6r5mluj1" path="res://Scenes/UI/LevelUp/TierTalentPanel.tscn" id="2_gp4fp"]
+[ext_resource type="PackedScene" uid="uid://m7kfrja5xmn4" path="res://Scenes/UI/LevelUp/TierSkillPanel.tscn" id="3_m007f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bud47"]
+bg_color = Color(0, 0, 0, 1)
+
+[node name="LevelUpLobbyScreen" type="PanelContainer"]
+script = ExtResource("1_iirgi")
+
+[node name="Panel" type="Panel" parent="."]
+editor_description = "STUB
+Has a simple Theme Overide"
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bud47")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HeroLevelValue" type="OptionButton" parent="VBox"]
+layout_mode = 2
+item_count = 6
+selected = 0
+popup/item_0/text = "Hero Level: 1"
+popup/item_0/id = 0
+popup/item_1/text = "2"
+popup/item_1/id = 1
+popup/item_2/text = "3"
+popup/item_2/id = 2
+popup/item_3/text = "4"
+popup/item_3/id = 3
+popup/item_4/text = "5"
+popup/item_4/id = 4
+popup/item_5/text = "6"
+popup/item_5/id = 5
+
+[node name="TierPanels" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="TierTalentPanel" parent="VBox/TierPanels" instance=ExtResource("2_gp4fp")]
+layout_mode = 2
+
+[node name="TierSkillPanel" parent="VBox/TierPanels" instance=ExtResource("3_m007f")]
+layout_mode = 2
+
+[node name="Control" type="HSeparator" parent="VBox/TierPanels"]
+layout_mode = 2
+
+[node name="TierTalentPanel2" parent="VBox/TierPanels" instance=ExtResource("2_gp4fp")]
+layout_mode = 2
+
+[node name="TierSkillPanel2" parent="VBox/TierPanels" instance=ExtResource("3_m007f")]
+layout_mode = 2
+
+[node name="Control2" type="HSeparator" parent="VBox/TierPanels"]
+layout_mode = 2
+
+[node name="TierTalentPanel3" parent="VBox/TierPanels" instance=ExtResource("2_gp4fp")]
+layout_mode = 2
+
+[node name="TierSkillPanel3" parent="VBox/TierPanels" instance=ExtResource("3_m007f")]
+layout_mode = 2
+
+[node name="Control3" type="HSeparator" parent="VBox/TierPanels"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBox"]
+layout_mode = 2
+text = "Examle skill/passive description"
+fit_content = true
+
+[connection signal="item_selected" from="VBox/HeroLevelValue" to="." method="_on_hero_level_value_item_selected"]

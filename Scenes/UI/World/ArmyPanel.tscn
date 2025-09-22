@@ -1,17 +1,14 @@
 [gd_scene load_steps=6 format=3 uid="uid://ciyo87ovmkwqh"]
 
 [ext_resource type="Script" path="res://Scripts/UI/World/army_panel.gd" id="1_07qff"]
-[ext_resource type="Texture2D" uid="uid://cyl65pr2i8wia" path="res://Art/elf_hero_druid.png" id="2_0bs3v"]
-[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/elf_spearmen.png" id="3_jvuy5"]
-[ext_resource type="Texture2D" uid="uid://d0l8icvbxebbs" path="res://Art/elf_archer.png" id="4_bglnc"]
-[ext_resource type="Texture2D" uid="uid://46hotsqcdww7" path="res://Art/elf_cheap_guard.png" id="5_nlcu7"]
+[ext_resource type="Texture2D" uid="uid://cyl65pr2i8wia" path="res://Art/elf_hero_druid.png" id="2_efg74"]
+[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/elf_spearmen.png" id="3_f3i1b"]
+[ext_resource type="Texture2D" uid="uid://d0l8icvbxebbs" path="res://Art/elf_archer.png" id="4_8ydx1"]
+[ext_resource type="Texture2D" uid="uid://by6lxadhw2amf" path="res://Art/items/hex_border_light.png" id="5_esqgq"]
 
 [node name="HBoxArmy" type="HBoxContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 512.0
+offset_bottom = 204.0
 script = ExtResource("1_07qff")
 
 [node name="ArmyLabel" type="Label" parent="."]
@@ -20,11 +17,11 @@ theme_override_font_sizes/font_size = 20
 text = "Hero Name"
 horizontal_alignment = 1
 
-[node name="HeroIcon" type="TextureRect" parent="."]
+[node name="HeroIcon" type="TextureButton" parent="."]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture = ExtResource("2_0bs3v")
-expand_mode = 1
+texture_normal = ExtResource("2_efg74")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="."]
@@ -43,14 +40,14 @@ layout_mode = 2
 [node name="TextureButton" type="TextureButton" parent="Units/FirstRow"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture_normal = ExtResource("3_jvuy5")
+texture_normal = ExtResource("3_f3i1b")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="TextureButton2" type="TextureButton" parent="Units/FirstRow"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture_normal = ExtResource("4_bglnc")
+texture_normal = ExtResource("4_8ydx1")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -60,6 +57,6 @@ layout_mode = 2
 [node name="TextureRect" type="TextureRect" parent="Units/SecondRow"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture = ExtResource("5_nlcu7")
+texture = ExtResource("5_esqgq")
 expand_mode = 1
 stretch_mode = 5

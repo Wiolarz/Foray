@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="BattleMagicEffect" load_steps=2 format=3 uid="uid://c22rl2fd16wax"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/battle_magic_effect.gd" id="1_ojn3y"]
+
+[resource]
+script = ExtResource("1_ojn3y")
+name = "Second Wind"
+icon_path = "res://Art/items/claws.png"
+spell_effects = Array[ExtResource("1_ojn3y")]([])
+passive_effect = true

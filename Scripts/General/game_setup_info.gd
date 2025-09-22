@@ -47,13 +47,17 @@ func set_team(slot_index : int, team_idx : int):
 func set_unit(slot_index : int, unit_index : int, unit_data : DataUnit):
 	slots[slot_index].units_list[unit_index] = unit_data
 
+
 func set_battle_bot(slot_index : int, path : String):
 	slots[slot_index].battle_bot_path = path
 
+
 ## Gameplay setting a hero to memory
 func set_hero(slot_index : int, hero_data : DataHero):
-	slots[slot_index].slot_hero = hero_data
-
+	if hero_data:
+		slots[slot_index].slot_hero = Hero.construct_hero(hero_data, slot_index)
+	else:
+		slots[slot_index].slot_hero = null
 
 ## Gameplay setting Timer to memory
 func set_timer(slot_index : int, reserve_sec : int, increment_sec : int):
@@ -222,7 +226,7 @@ func apply_battle_preset( \
 		var slot : Slot = slots[i]
 		var army_preset : PresetArmy = preset.armies[i]
 		slot.team = army_preset.team
-		slot.slot_hero = army_preset.hero
+		set_hero(i, army_preset.hero)
 
 		var units := slot.units_list
 		for j in units.size():

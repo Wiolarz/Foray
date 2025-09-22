@@ -6,6 +6,7 @@ extends CanvasLayer
 @onready var heroes_list : BoxContainer = $HeroesList
 @onready var trade_screen : Control = $TradeScreen
 @onready var army_panel : BoxContainer = $Army_Panel
+@onready var level_screen : Control = $LevelUpWorldScreen
 
 
 var _hideable_context_menu : Control :
@@ -31,6 +32,7 @@ func _ready():
 	heroes_list.show()
 	trade_screen.hide()
 	army_panel.hide()
+	army_panel.show_level_up_screen.connect(show_level_up)
 	$Hide.hide()
 	# Game chat visibility is set in its own script
 	$Players.show()
@@ -96,9 +98,21 @@ func refresh_player_buttons():
 #region Context Menus
 
 func show_trade_ui(first_army : Army, second_army : Army):
-	hide_army_panel(false)
-	_hideable_context_menu = trade_screen
+	_show_context_menu(trade_screen)
 	trade_screen.start_trade(first_army, second_army)
+
+
+## temp - function is simplified to work only with currently selected hero
+func show_level_up() -> void:
+	if WM.selected_hero:
+
+		level_screen.load_selected_hero_level_up_screen(WM.selected_hero.entity.hero)
+		_show_context_menu(level_screen)
+
+
+func _show_context_menu(menu : Control) -> void:
+	hide_army_panel(false)
+	_hideable_context_menu = menu
 
 
 func try_to_close_context_menu() -> void:
