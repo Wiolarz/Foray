@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BattleSpell" load_steps=2 format=3 uid="uid://rvifpr2apuv3"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/battle_spell.gd" id="1_g2q60"]
+
+[resource]
+script = ExtResource("1_g2q60")
+name = "Sacrifice"
+icon_path = "res://Art/magic/spell_icons/vengence.png"
+description = "Sacrifice an ally unit to gain mana and refresh your spells."
+spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
+axial_cast_range = -1
+only_in_front = false

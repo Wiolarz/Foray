@@ -1066,7 +1066,7 @@ func is_spell_target_valid(caster : Unit, coord : Vector2i, spell : BattleSpell)
 			var target = get_unit(coord)
 			if target and target.controller == caster.controller:
 				return true
-		"Martyr": # any current player controlled unit, but not the caster
+		"Martyr", "Sacrifice": # any current player controlled unit, but not the caster
 			var target = get_unit(coord)
 			if target and target.controller == caster.controller and target != caster:
 				return true
@@ -1155,6 +1155,13 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 
 		"Summon Dryad":
 			_summon_a_unit(unit, spell.summon_unit_data, target_tile_coord)
+		"Sacrifice":
+			var target : Unit = get_unit(target_tile_coord)
+			assert(target)
+			#unit.template.mana += 6 # TEMP
+			unit.spells = unit.template.spells.duplicate()
+			unit.spells.erase(spell)
+			_kill_unit(target)
 
 		_:
 			printerr("Spell perform not supported: ", spell.name)
@@ -1657,7 +1664,6 @@ func get_move_consequences(move : MoveInfo) -> MoveConsequences:
 	return MoveConsequences.KILL if kill_registered else MoveConsequences.NONE
 
 #endregion AI Helpers
-
 
 
 #region Subclasses
