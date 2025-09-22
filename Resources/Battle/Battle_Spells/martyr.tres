@@ -9,9 +9,7 @@ name = "Martyr"
 icon_path = "res://Art/magic/spell_icons/martyr.png"
 description = "Chosen a friendly unit -> it along with casters are now connected through martyr bond.
 
-If one were to die, the other one dies instead and the first one is teleport to the sacrificed unit spot
- Direction Cast:ANY
- Axial range:-1"
+If one were to die, the other one dies instead and the first one is teleport to the sacrificed unit spot"
 spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([ExtResource("2_uu874")])
 axial_cast_range = -1
 direction_cast = 0

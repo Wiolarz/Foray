@@ -7,9 +7,7 @@
 script = ExtResource("1_oialf")
 name = "Anchor"
 icon_path = "res://Art/magic/spell_icons/anchor.png"
-description = "Make the target unable to move, only rotate toward the tiles it would like to move to
- Direction Cast:STRAIGHT
- Axial range:3"
+description = "Make the target unable to move, only rotate toward the tiles it would like to move to"
 spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([ExtResource("2_gjbnk")])
 axial_cast_range = 3
 direction_cast = 2

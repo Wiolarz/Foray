@@ -7,9 +7,7 @@
 script = ExtResource("1_udpvt")
 name = "Summon Dryad"
 icon_path = "res://Art/units/neutral/wood_dryad.png"
-description = "Summons a dryad unit on an adjacent hex. Unit lasts only for 6 rounds adn posses 3 front weak weapons.
- Direction Cast:ANY
- Axial range:1"
+description = "Summons a dryad unit on an adjacent hex. Unit lasts only for 6 rounds adn posses 3 front weak weapons."
 spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
 summon_unit_data = ExtResource("2_v2swd")
 axial_cast_range = 1

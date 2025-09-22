@@ -101,6 +101,46 @@ func _to_string() -> String:
 	return "BattleSpell: " + name
 
 
+func generate_description() -> String:
+	var result : String = description
+	result += "\n" + "Who spell can target:" + "\n"
+
+	match name: # Unique spells
+		"Blood Ritual":
+			result += "any enemy unit which is not the last one alive"
+			return result
+
+	if axial_cast_range == 0:
+		return result + "caster can only target himself"
+	elif axial_cast_range != -1:
+		result += "Spell has a range of: " + str(axial_cast_range) + "\n"
+
+	match direction_cast:
+		BattleSpell.DirectionCast.FRONT:
+			result += "Target has to be faced by the caster\n"
+		BattleSpell.DirectionCast.STRAIGHT:
+			result += "Target has to be in a straight line from the caster\n"
+
+
+	match target_type:
+		BattleSpell.TargetType.EMPTY_TILE:
+			result += "Target has to be an empty tile"
+		BattleSpell.TargetType.UNIT:
+			match target_unit_type:
+				BattleSpell.TargetUnitType.ALLY:
+					result += "Target has to be an ally unit\n"
+					if not_self:
+						result += "Caster cannot target himself\n"
+				BattleSpell.TargetUnitType.ENEMY:
+					result += "Target has to be an enemy unit\n"
+				BattleSpell.TargetUnitType.ANY:
+					result += "Target has to be a unit\n"
+					if not_self:
+						result += "Caster cannot target himself\n"
+
+	return result
+
+
 ## STUB for magic refactor
 func enchanted_unit_dies() -> void:
 	match name:
