@@ -22,6 +22,8 @@ extends Resource
 
 ## currently only works for attack_power and not yet for push power.
 @export var counter_attack : bool = false
+## weapon attack occurs before enemy can counter attack
+@export var swift_attack : bool = false
 
 ## blocks any enemy melee symbol from taking an effect, [br]
 ## prevents enemy symbol from damaging or pushing regardless of its power

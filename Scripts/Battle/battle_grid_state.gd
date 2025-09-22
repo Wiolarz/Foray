@@ -225,10 +225,11 @@ func _undo_push(_move : MoveInfo , pushed : MoveInfo.PushedUnit) -> void:
 ## returns true when unit should stop processing further steps
 ## it died or battle ended
 func _process_symbols(unit : Unit, move_type : E.MoveType) -> bool:
+	_process_offensive_symbols(unit, move_type, true)
 	if _should_die_to_counter_attack(unit):
 		_kill_unit(unit)
 		return true
-	_process_offensive_symbols(unit, move_type)
+	_process_offensive_symbols(unit, move_type, false)
 	if not battle_is_ongoing():
 		return true
 	return false
@@ -272,9 +273,11 @@ func _should_die_to_counter_attack(unit : Unit) -> bool:
 	return false
 
 
-func _process_offensive_symbols(unit : Unit, move_type : E.MoveType) -> void:
+func _process_offensive_symbols(unit : Unit, move_type : E.MoveType, swift : bool = false) -> void:
 	for side in range(6):
 		var unit_weapon = unit.get_symbol(side)
+		if unit_weapon.swift_attack != swift:
+			continue
 		if not unit_weapon.is_offensive(move_type):
 			continue  # We don't have any weapon
 		if unit_weapon.does_it_shoot():
