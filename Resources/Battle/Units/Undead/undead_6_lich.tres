@@ -9,9 +9,9 @@
 
 [sub_resource type="Resource" id="Resource_vofdp"]
 script = ExtResource("1_xxvw5")
-wood = 2
-iron = 0
-ruby = 0
+wood = 0
+iron = 5
+ruby = 5
 
 [resource]
 script = ExtResource("3_dflqx")

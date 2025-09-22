@@ -25,3 +25,4 @@ data_unit = ExtResource("1_gvmd2")
 starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([])
 max_army_size = 3
 max_movement_points = 3
+starting_level = 1

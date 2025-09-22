@@ -1,0 +1,159 @@
+[gd_scene load_steps=3 format=3 uid="uid://b8xrjsl8gmups"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Educational/city_defense.gd" id="1_7lrr4"]
+[ext_resource type="PackedScene" uid="uid://ciyo87ovmkwqh" path="res://Scenes/UI/World/ArmyPanel.tscn" id="2_016xn"]
+
+[node name="CityDefense" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_7lrr4")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "City Defense"
+horizontal_alignment = 1
+
+[node name="VBoxNewRun" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Description" type="Label" parent="MarginContainer/VBoxContainer/VBoxNewRun"]
+custom_minimum_size = Vector2(1000, 0)
+layout_mode = 2
+text = "Single Player series of defense battles where your army persists between them,
+but you can purchase additional units."
+horizontal_alignment = 1
+
+[node name="VBoxNewRunRules" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxNewRun"]
+layout_mode = 2
+
+[node name="HBoxArmiesSettings" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxNewRun/VBoxNewRunRules"]
+layout_mode = 2
+alignment = 1
+
+[node name="DefenderArmy" type="Label" parent="MarginContainer/VBoxContainer/VBoxNewRun/VBoxNewRunRules/HBoxArmiesSettings"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = "Defender Army:"
+horizontal_alignment = 1
+
+[node name="DefenderOptionButton" type="OptionButton" parent="MarginContainer/VBoxContainer/VBoxNewRun/VBoxNewRunRules/HBoxArmiesSettings"]
+layout_mode = 2
+alignment = 1
+item_count = 1
+selected = 0
+popup/item_0/text = "Undead"
+popup/item_0/id = 0
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/VBoxNewRun/VBoxNewRunRules/HBoxArmiesSettings"]
+layout_mode = 2
+theme_override_constants/separation = 200
+
+[node name="AttackerArmy" type="Label" parent="MarginContainer/VBoxContainer/VBoxNewRun/VBoxNewRunRules/HBoxArmiesSettings"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = "Attacker Army:"
+horizontal_alignment = 1
+
+[node name="AttackerOptionButton" type="OptionButton" parent="MarginContainer/VBoxContainer/VBoxNewRun/VBoxNewRunRules/HBoxArmiesSettings"]
+layout_mode = 2
+alignment = 1
+item_count = 1
+selected = 0
+popup/item_0/text = "Orcs"
+popup/item_0/id = 0
+
+[node name="HBoxAttackerArmy" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxNewRun/VBoxNewRunRules"]
+layout_mode = 2
+
+[node name="HBoxAIDifficulty" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxNewRun/VBoxNewRunRules"]
+layout_mode = 2
+alignment = 1
+
+[node name="AIDifficultyLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxNewRun/VBoxNewRunRules/HBoxAIDifficulty"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text = "AI Difficulty:"
+horizontal_alignment = 1
+
+[node name="AIDifficulty" type="OptionButton" parent="MarginContainer/VBoxContainer/VBoxNewRun/VBoxNewRunRules/HBoxAIDifficulty"]
+layout_mode = 2
+item_count = 1
+popup/item_0/text = "Random"
+popup/item_0/id = 0
+
+[node name="StartNewRunButton" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Start new Run"
+
+[node name="VBoxCurrentRun" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="CurrentRunLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxCurrentRun"]
+custom_minimum_size = Vector2(1000, 0)
+layout_mode = 2
+text = "Current Run:"
+horizontal_alignment = 1
+
+[node name="HBoxPurchases" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxCurrentRun"]
+layout_mode = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="CurrentRoster" type="Label" parent="MarginContainer/VBoxContainer/VBoxCurrentRun"]
+custom_minimum_size = Vector2(1000, 0)
+layout_mode = 2
+text = "Unit Roster:"
+horizontal_alignment = 1
+
+[node name="HBoxArmy" parent="MarginContainer/VBoxContainer/VBoxCurrentRun" instance=ExtResource("2_016xn")]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxNextWave" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxCurrentRun"]
+layout_mode = 2
+
+[node name="HBoxNextWaveInfo" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxCurrentRun/VBoxNextWave"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxCurrentRun/VBoxNextWave/HBoxNextWaveInfo"]
+layout_mode = 2
+text = "Next Wave: "
+horizontal_alignment = 1
+
+[node name="OptionWaveSelection" type="OptionButton" parent="MarginContainer/VBoxContainer/VBoxCurrentRun/VBoxNextWave/HBoxNextWaveInfo"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "1"
+popup/item_0/id = 0
+
+[node name="HBoxNextWaveArmy" parent="MarginContainer/VBoxContainer/VBoxCurrentRun/VBoxNextWave" instance=ExtResource("2_016xn")]
+layout_mode = 2
+alignment = 1
+
+[node name="ContinueButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxCurrentRun"]
+layout_mode = 2
+disabled = true
+text = "Continue"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/StartNewRunButton" to="." method="_on_start_new_run_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxCurrentRun/ContinueButton" to="." method="_on_continue_button_pressed"]

@@ -21,3 +21,4 @@ race_name = "undead"
 units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("9_6cilx"), ExtResource("10_pu517"), ExtResource("11_krrq8"), ExtResource("12_23vvs"), ExtResource("13_2tgku"), ExtResource("14_31tw5")])
 heroes = Array[Resource("res://Resources/Battle/data_hero.gd")]([ExtResource("5_2486t"), ExtResource("6_x1v3t"), ExtResource("7_0uq73")])
 buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_x3ggh"), ExtResource("2_xsrup"), ExtResource("3_byntk"), ExtResource("4_1q38u")])
+description = "Magic > Horde > Elite"

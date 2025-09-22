@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://baltedrhixfl7"]
+[gd_scene load_steps=2 format=3 uid="uid://b5f677a5bdad"]
 
-[ext_resource type="Script" path="res://Scripts/UI/Educational/tutorial_menu.gd" id="1_gtpmc"]
+[ext_resource type="Script" path="res://Scripts/UI/Educational/Practice/puzzle_menu.gd" id="1_3xydp"]
 
-[node name="Tutorials" type="Panel"]
+[node name="Puzzles" type="Panel"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -10,8 +10,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("1_gtpmc")
-battle_bot_path = "res://Resources/Battle/Bots/MCTS_Easy.tscn"
+script = ExtResource("1_3xydp")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -27,7 +26,7 @@ layout_mode = 2
 [node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 100
-text = "Tutorials"
+text = "Puzzles"
 horizontal_alignment = 1
 
 [node name="Columns" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
@@ -47,19 +46,11 @@ theme_override_constants/separation = 8
 
 [node name="Button" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
 layout_mode = 2
-text = "Basic Tutorial"
+text = "Halbards vs Horde"
 
 [node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
 layout_mode = 2
-text = "Mana Cyclone Timer"
-
-[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
-layout_mode = 2
-text = "Spears and Shields"
-
-[node name="Button4" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
-layout_mode = 2
-text = "Parry and Parry Break"
+text = "Pushers vs Shields"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Columns"]
 layout_mode = 2
@@ -68,7 +59,7 @@ size_flags_horizontal = 3
 [node name="Description" type="Label" parent="MarginContainer/VBoxContainer/Columns/VBoxContainer"]
 custom_minimum_size = Vector2(1000, 0)
 layout_mode = 2
-text = "Cyclone Timer
+text = "Halbards vs Horde
 
 It's an Anti Draw Mechanic that supports Wizards
 by allowing them to play on the defensive.
@@ -77,6 +68,21 @@ by allowing them to play on the defensive.
 [node name="PlayButton" type="Button" parent="MarginContainer/VBoxContainer/Columns/VBoxContainer"]
 layout_mode = 2
 text = "Play"
+
+[node name="SpinBox" type="SpinBox" parent="MarginContainer/VBoxContainer/Columns/VBoxContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 6.0
+value = 1.0
+update_on_text_changed = true
+prefix = "Optional: Change Side : "
+custom_arrow_step = 1.0
+
+[node name="AIDifficulty" type="OptionButton" parent="MarginContainer/VBoxContainer/Columns/VBoxContainer"]
+layout_mode = 2
+item_count = 1
+popup/item_0/text = "Random"
+popup/item_0/id = 0
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Columns/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]

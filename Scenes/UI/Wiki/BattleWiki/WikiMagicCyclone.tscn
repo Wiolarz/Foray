@@ -1,0 +1,118 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmmq8s1lme2oe"]
+
+[ext_resource type="Texture2D" uid="uid://bxt8qblt76cyj" path="res://Art/magic/mana_icon.png" id="1_mdav6"]
+[ext_resource type="Texture2D" uid="uid://xoe78lmyi4dg" path="res://Art/battle_map/mana_well.png" id="2_6tlng"]
+
+[node name="WikiMagicCyclone" type="Panel"]
+clip_contents = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Magic Cyclone"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TileInformationContainer" type="ScrollContainer" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "To prevent armies from endlessly going back and forth in a stalemate, magic forces of the world determine which army has weaker mana force, and gradually sucks into the abbyss unfortunate victims of the army that failed to overpower magical energy of their opponents."
+fit_content = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "For army to obtain Mana there are only two sources of mana: spellcaster units which passivly provide couple of points. And capturable \"Mana Wells\" on the battlefields.
+"
+fit_content = true
+
+[node name="Section Title2" type="Label" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "Mana Points on Units"
+horizontal_alignment = 1
+
+[node name="HBoxOutpostsImages" type="HBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxOutpostsImages"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Upon death of a unit providng mana points, those are immidietly substracted.
+Possesing multiple of same type of spell caster doesn't provide more mana points but makes it harder for the enemy to reduce your mana reserves."
+
+[node name="Control" type="Control" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxOutpostsImages"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxOutpostsImages"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("1_mdav6")
+expand_mode = 1
+
+[node name="Section Title3" type="Label" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "Mana Well"
+horizontal_alignment = 1
+
+[node name="HBoxHuntSpotsImages" type="HBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxHuntSpotsImages"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mana Wells at the start of battle are uncontrolled, to capture them unit has to enter their tile. They are lost only once enemy army captures them themselves.
+Each Mana Well provides 5 mana points
+(In future updates mana well points will be related to the number of mana wells on the battle)"
+fit_content = true
+
+[node name="Control2" type="Control" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxHuntSpotsImages"]
+layout_mode = 2
+
+[node name="TextureRect2" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxHuntSpotsImages"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("2_6tlng")
+expand_mode = 1
+
+[node name="Section Title5" type="Label" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "Cyclone"
+horizontal_alignment = 1
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "Magic Cyclone Targets upon timer expiration have to choose one of their units to sacrifice. Number of rounds of the timer is based on mana difference between army with most mana points and the target with the least:
+Difference of only 1 mana point : 30 rounds  |  <4: 20  |  <8: 15   |  <11: 10   |   >=11: 5"
+fit_content = true

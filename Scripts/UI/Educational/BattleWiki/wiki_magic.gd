@@ -10,14 +10,14 @@ extends Panel
 @onready var spell_information_description = $Margin/VBoxContainer/HBoxContainer/SpellInformationContainer/VBox/RichTextLabel
 @onready var spell_information_icon = $Margin/VBoxContainer/HBoxContainer/SpellInformationContainer/VBox/TextureRect
 
-@onready var button_template : Resource = load("res://Scenes/UI/Wiki/wiki_spell_button.tscn")
+@onready var button_template : Resource = load("res://Scenes/UI/Wiki/BattleWiki/wiki_spell_button.tscn")
 
 func _ready():
 	generate_battle_spell_buttons()
 
 
 func load_spell(battle_spell : BattleSpell) -> void:
-	spell_information_title.text = battle_spell.name
+	spell_information_title.text = battle_spell.name.capitalize()
 	spell_information_icon.texture = load(battle_spell.icon_path)
 
 	spell_information_description.text = battle_spell.description

@@ -768,7 +768,8 @@ func _on_battle_ended() -> void:
 
 		# show battle summary over world map
 		UI.ui_overlay.show_battle_summary(_current_summary, null)
-
+	elif IM.is_city_defense_active:
+		_end_city_battle()
 	elif _replay_is_playing:
 		_battle_ui.update_replay_controls(_replay_number_of_moves, _replay_number_of_moves, _current_summary)
 		# do not exit immediately
@@ -785,6 +786,13 @@ func _close_battle_and_return() -> void:
 
 	close_when_quitting_game()
 	WM.end_of_battle(state_for_world)
+
+
+func _end_city_battle() -> void:
+	var armies : Array[BattleGridState.ArmyInBattleState] = _battle_grid_state.armies_in_battle_state
+	close_when_quitting_game()
+	IM.end_city_defense_battle(armies)
+	IM.go_to_main_menu()
 
 
 func _close_custom_battle() -> void:
