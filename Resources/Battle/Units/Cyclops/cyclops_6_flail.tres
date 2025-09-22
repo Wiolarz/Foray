@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://cyhjeh4nx5xbk"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_4ee3s"]
+[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_g5hbd"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_7s32c"]
+[ext_resource type="Resource" path="res://Resources/Battle/Battle_Spells/summon_dryad.tres" id="4_2p1bg"]
+[ext_resource type="Resource" uid="uid://bpp7uuufysbuh" path="res://Resources/Battle/Symbols/sickle.tres" id="4_oix20"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="6_2vn76"]
+
+[sub_resource type="Resource" id="Resource_8qfgt"]
+script = ExtResource("1_4ee3s")
+wood = 4
+iron = 1
+ruby = 0
+
+[resource]
+script = ExtResource("3_7s32c")
+unit_name = "Flail Master"
+texture_path = "res://Art/units/cyclops/cyclops_6_red_flail.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_oix20"), ExtResource("4_oix20"), ExtResource("6_2vn76"), ExtResource("6_2vn76"), ExtResource("6_2vn76"), ExtResource("4_oix20")])
+cost = SubResource("Resource_8qfgt")
+required_building = ExtResource("2_g5hbd")
+level = 6
+mana = 2
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([ExtResource("4_2p1bg")])

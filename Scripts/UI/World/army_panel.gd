@@ -33,3 +33,17 @@ func load_army(army : Army):
 
 	load_unit_buttons(army, army.units_data, [units_box_first_row, units_box_second_row], UNIT_ICON_SIZE, true, false)
 
+
+func simplified_display_load_army(army : PresetArmy):
+	# city garrison allows player to enter it, even though there is no hero in second army
+	if not army.hero:
+		if army.units.size() == 0:
+			return
+		$HeroIcon.texture = load(army.units[0].texture_path)
+		$ArmyLabel.text = "Army"
+	else:
+		$ArmyLabel.text = army.hero.hero_name
+		$HeroIcon.texture = load(army.hero.data_unit.texture_path)
+	var empty_army := Army.new()
+	load_unit_buttons(empty_army, army.units, [units_box_first_row, units_box_second_row], UNIT_ICON_SIZE, false, false)
+

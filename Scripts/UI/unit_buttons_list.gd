@@ -47,13 +47,13 @@ func load_unit_buttons(army : Army, units_to_display : Array[DataUnit],
 		added_icon_idx += 1
 		# Generating unit buttons
 
-		var unit_display := UnitForm.create_for_summon_ui(unit, bg_color)
+		var unit_display := UnitForm.create_for_deployment_ui(unit, bg_color)
 
 		if army.hero and army.hero.is_in_city and added_icon_idx >= (army.max_army_size - CFG.CITY_MAX_ARMY_SIZE):
 			unit_display.set_marked_for_unit_list()  # mark units that breach max army size
 
 		var button = TextureButton.new()
-		button.texture_normal = CFG.SUMMON_BUTTON_TEXTURE
+		button.texture_normal = CFG.DEPLOY_BUTTON_TEXTURE
 		button.custom_minimum_size = Vector2.ONE * unit_button_size
 		button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		button.ignore_texture_size = true

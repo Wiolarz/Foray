@@ -5,10 +5,12 @@
 [resource]
 script = ExtResource("1_2dgil")
 name = "Wind Dash"
-icon_path = "res://Art/items/big_sword.png"
-spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
+icon_path = "res://Art/magic/spell_icons/wind_dash.png"
 description = "Choose a tile directly in front of the caster ->
 Caster traverses 3 tiles forward attacking before getting hit by enemy spears.
 
 If unit along casters path were to survive his attacks. (ex. because it had a shield)
 Caster will be squashed"
+spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
+axial_cast_range = 1
+only_in_front = true

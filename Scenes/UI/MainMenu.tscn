@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://iqku7lopk1xl" path="res://Scenes/UI/CreditsMenu.tscn" id="5_bvo4w"]
 [ext_resource type="PackedScene" uid="uid://cs7ibsdnsrn5v" path="res://Scenes/UI/ReplaysMenu.tscn" id="6_lxdjb"]
 [ext_resource type="PackedScene" uid="uid://hxaial4lcwu7" path="res://Scenes/UI/Wiki/Learn.tscn" id="7_frqj7"]
+[ext_resource type="PackedScene" uid="uid://b8xrjsl8gmups" path="res://Scenes/UI/Wiki/CityDefenseMenu.tscn" id="8_j4xhh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nt26j"]
 bg_color = Color(0.0941176, 0.0941176, 0.0941176, 0.870588)
@@ -42,7 +43,7 @@ theme_override_constants/separation = 0
 [node name="TopMenu" type="HBoxContainer" parent="MainContainer"]
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_constants/separation = 20
+theme_override_constants/separation = 17
 
 [node name="ReturnToGameButton" type="Button" parent="MainContainer/TopMenu"]
 layout_mode = 2
@@ -51,7 +52,7 @@ text = "Foray"
 
 [node name="Tabs" type="TabBar" parent="MainContainer/TopMenu"]
 layout_mode = 2
-tab_count = 6
+tab_count = 7
 current_tab = 5
 clip_tabs = false
 tab_0/title = " >> Host <<"
@@ -60,10 +61,10 @@ tab_2/title = "Settings"
 tab_3/title = "Credits"
 tab_4/title = "Replays"
 tab_5/title = "Learn"
+tab_6/title = "Defense"
 
 [node name="VSeparator" type="VSeparator" parent="MainContainer/TopMenu"]
 layout_mode = 2
-theme_override_constants/separation = 92
 theme_override_styles/separator = SubResource("StyleBoxLine_3lov4")
 
 [node name="UnitEditorButton" type="Button" parent="MainContainer/TopMenu"]
@@ -108,6 +109,10 @@ visible = false
 layout_mode = 2
 
 [node name="Learn" parent="MainContainer" instance=ExtResource("7_frqj7")]
+visible = false
+layout_mode = 2
+
+[node name="CityDefense" parent="MainContainer" instance=ExtResource("8_j4xhh")]
 layout_mode = 2
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

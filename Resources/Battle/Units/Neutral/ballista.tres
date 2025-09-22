@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3 uid="uid://cvfiodlus3vw8"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_fvi4r"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="1_gtu2h"]
+[ext_resource type="Resource" uid="uid://c61kr7bqpyhr0" path="res://Resources/Battle/Symbols/bow.tres" id="3_v0vkl"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_a3cyw"]
+
+[sub_resource type="Resource" id="Resource_6r5q3"]
+script = ExtResource("1_fvi4r")
+wood = 0
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("1_gtu2h")
+unit_name = "Ballista"
+texture_path = "res://Art/units/neutral/ballista.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_v0vkl"), ExtResource("5_a3cyw"), ExtResource("5_a3cyw"), ExtResource("5_a3cyw"), ExtResource("5_a3cyw"), ExtResource("5_a3cyw")])
+cost = SubResource("Resource_6r5q3")
+level = 2
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

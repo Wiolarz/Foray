@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_0306o")
 name = "Teleport"
-icon_path = "res://Art/items/mace.png"
-spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
+icon_path = "res://Art/magic/spell_icons/teleport.png"
 description = "Choose a tile in front of the caster, caster is teleported there activating his attacks"
+spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
+axial_cast_range = 3
+only_in_front = true

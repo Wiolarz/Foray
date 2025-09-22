@@ -29,6 +29,12 @@ stream = ExtResource("3_3tvte")
 max_polyphony = 2
 bus = &"Game"
 
+[node name="MagicEffect" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_3tvte")
+pitch_scale = 0.53
+max_polyphony = 2
+bus = &"Game"
+
 [node name="UnitDeath" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_qwmxk")
 max_polyphony = 2

@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://b4ajym7wahumg"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_ifgi0"]
+[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_gq30o"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_enwox"]
+[ext_resource type="Resource" uid="uid://can6h14rlybte" path="res://Resources/Battle/Symbols/javelin.tres" id="4_oo3n0"]
+[ext_resource type="Resource" uid="uid://sr1570kq7sm8" path="res://Resources/Battle/Symbols/shield.tres" id="5_x03um"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="6_ewoy3"]
+
+[sub_resource type="Resource" id="Resource_8qfgt"]
+script = ExtResource("1_ifgi0")
+wood = 4
+iron = 1
+ruby = 0
+
+[resource]
+script = ExtResource("3_enwox")
+unit_name = "Javelin Defender"
+texture_path = "res://Art/units/cyclops/cyclops_3_javelin.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_oo3n0"), ExtResource("5_x03um"), ExtResource("6_ewoy3"), ExtResource("6_ewoy3"), ExtResource("6_ewoy3"), ExtResource("5_x03um")])
+cost = SubResource("Resource_8qfgt")
+required_building = ExtResource("2_gq30o")
+level = 3
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

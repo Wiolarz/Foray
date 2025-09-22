@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://sh62rfw7ulr8"]
+[gd_scene load_steps=13 format=3 uid="uid://sh62rfw7ulr8"]
 
 [ext_resource type="Shader" path="res://Art/tile_overall_shader.gdshader" id="1_5p8y7"]
 [ext_resource type="Script" path="res://Scripts/Battle/unit_form.gd" id="1_ep020"]
@@ -6,8 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://cukwcwy4fikm1" path="res://Art/elf_hero_noble.png" id="3_3flaq"]
 [ext_resource type="Texture2D" uid="uid://by6lxadhw2amf" path="res://Art/items/hex_border_light.png" id="4_0xhp4"]
 [ext_resource type="PackedScene" uid="uid://bc4yv21yc35fw" path="res://Scenes/Form/SymbolForm.tscn" id="5_2gor3"]
-[ext_resource type="Texture2D" uid="uid://d1vofsv8lia8m" path="res://Art/items/claws.png" id="6_kue6p"]
-[ext_resource type="Texture2D" uid="uid://os5cuvhyb3sm" path="res://Art/items/mace.png" id="7_rdbed"]
+[ext_resource type="Texture2D" uid="uid://bxt8qblt76cyj" path="res://Art/magic/mana_icon.png" id="7_cnn68"]
+[ext_resource type="Texture2D" uid="uid://1hbpqpqeo60k" path="res://Art/magic/spell_icons/blood_curse.png" id="7_vgjoi"]
+[ext_resource type="Texture2D" uid="uid://cifsoyagq2aaw" path="res://Art/magic/spell_icons/vengence.png" id="8_3kkm8"]
 [ext_resource type="Texture2D" uid="uid://cb6b5qgltj1bc" path="res://Art/battle_map/swamp.png" id="8_i7m4u"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_djiqc"]
@@ -95,6 +96,12 @@ use_parent_material = true
 [node name="RigidUI" type="Node2D" parent="."]
 use_parent_material = true
 
+[node name="ManaIcon" type="Sprite2D" parent="RigidUI"]
+use_parent_material = true
+position = Vector2(1, 639)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("7_cnn68")
+
 [node name="UnitLevel" type="Label" parent="RigidUI"]
 use_parent_material = true
 offset_left = -567.0
@@ -105,30 +112,41 @@ theme_override_font_sizes/font_size = 150
 text = "IV"
 metadata/_edit_use_anchors_ = true
 
+[node name="UnitMana" type="Label" parent="RigidUI"]
+use_parent_material = true
+offset_left = -66.0
+offset_top = 592.0
+offset_right = 78.0
+offset_bottom = 769.0
+theme_override_font_sizes/font_size = 150
+text = "II"
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
 [node name="SpellEffect1" type="Sprite2D" parent="RigidUI"]
 use_parent_material = true
-position = Vector2(513, -256)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("6_kue6p")
+position = Vector2(503, -293)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("7_vgjoi")
 
 [node name="SpellEffect2" type="Sprite2D" parent="RigidUI"]
 use_parent_material = true
-position = Vector2(528, 330)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("7_rdbed")
+position = Vector2(503, 302)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("8_3kkm8")
 
 [node name="TerrainEffect" type="Sprite2D" parent="RigidUI"]
 use_parent_material = true
-position = Vector2(-331, 328)
+position = Vector2(-515, 11)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("8_i7m4u")
 
 [node name="SpellEffectCounter1" type="Label" parent="RigidUI"]
 use_parent_material = true
-offset_left = 274.0
-offset_top = -323.0
-offset_right = 314.0
-offset_bottom = -247.0
+offset_left = 336.0
+offset_top = -411.0
+offset_right = 376.0
+offset_bottom = -335.0
 scale = Vector2(3, 3)
 theme_override_font_sizes/font_size = 64
 text = "6"
@@ -136,10 +154,10 @@ metadata/_edit_use_anchors_ = true
 
 [node name="SpellEffectCounter2" type="Label" parent="RigidUI"]
 use_parent_material = true
-offset_left = 275.0
-offset_top = 215.0
-offset_right = 315.0
-offset_bottom = 291.0
+offset_left = 344.0
+offset_top = 246.0
+offset_right = 384.0
+offset_bottom = 322.0
 scale = Vector2(3, 3)
 theme_override_font_sizes/font_size = 64
 text = "6"

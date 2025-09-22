@@ -6,6 +6,6 @@
 [resource]
 script = ExtResource("1_yaat0")
 name = "Blood Ritual"
-icon_path = "res://Art/items/claws.png"
+icon_path = "res://Art/magic/spell_icons/blood_curse.png"
 spell_effects = Array[ExtResource("1_yaat0")]([ExtResource("2_uuj04")])
 passive_effect = true

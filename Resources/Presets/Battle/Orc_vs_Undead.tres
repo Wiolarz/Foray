@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_ekqt7"]
 [ext_resource type="Resource" uid="uid://w4ycloqp51wx" path="res://Resources/Battle/Units/Orcs/orc_4_shaman.tres" id="2_no7q3"]
 [ext_resource type="Resource" uid="uid://bxb7842q7rrib" path="res://Resources/Battle/Units/Classic/orc3.tres" id="4_hpkyb"]
-[ext_resource type="Resource" uid="uid://bgu30lp3txcwv" path="res://Resources/Battle/Units/Orcs/orc_3_champion.tres" id="5_b4orp"]
+[ext_resource type="Resource" uid="uid://bgu30lp3txcwv" path="res://Resources/Battle/Units/Orcs/orc_6_champion.tres" id="5_b4orp"]
 [ext_resource type="Resource" uid="uid://bx2ya2olx578k" path="res://Resources/Battle/Units/Orcs/orc_unit_hero_executioner.tres" id="5_ow4i6"]
 [ext_resource type="Resource" uid="uid://3x0qi3t8cq" path="res://Resources/Battle/Units/Undead/undead_1_skelly.tres" id="6_p6jjk"]
 [ext_resource type="Resource" uid="uid://d18rrv3v75dk6" path="res://Resources/Battle/Units/Undead/undead_hero_reaper.tres" id="7_i5qrn"]

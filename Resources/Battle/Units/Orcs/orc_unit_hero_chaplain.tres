@@ -18,5 +18,5 @@ texture_path = "res://Art/orc_hero_fighter.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_dpdty"), ExtResource("5_pwexe"), ExtResource("5_pwexe"), ExtResource("5_pwexe"), ExtResource("5_pwexe"), ExtResource("5_pwexe")])
 cost = SubResource("Resource_bgw4c")
 level = 1
-mana = 1
+mana = 0
 spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

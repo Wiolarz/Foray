@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=11 format=3 uid="uid://dcg43eamgip11"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_m32nc"]
+[ext_resource type="Resource" uid="uid://c3d8o8qw4dfa4" path="res://Resources/Battle/Units/Cyclops/cyclops_1_axer.tres" id="2_ihgw0"]
+[ext_resource type="Resource" uid="uid://b4ajym7wahumg" path="res://Resources/Battle/Units/Cyclops/cyclops_3_javelin.tres" id="3_wbwcg"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="6_wolwi"]
+[ext_resource type="Resource" uid="uid://sr1570kq7sm8" path="res://Resources/Battle/Symbols/shield.tres" id="7_1ro7s"]
+[ext_resource type="Resource" uid="uid://bp747guikipcb" path="res://Resources/Battle/Symbols/spear.tres" id="8_34j2a"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="9_nuidr"]
+[ext_resource type="Resource" uid="uid://bpp7uuufysbuh" path="res://Resources/Battle/Symbols/sickle.tres" id="10_b3mbe"]
+
+[sub_resource type="Resource" id="Resource_fvl2p"]
+script = ExtResource("6_wolwi")
+unit_name = "Halbard Defender"
+texture_path = "res://Art/units/cyclops/cyclops_5_shield_halbard.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("7_1ro7s"), ExtResource("8_34j2a"), ExtResource("9_nuidr"), ExtResource("9_nuidr"), ExtResource("9_nuidr"), ExtResource("8_34j2a")])
+level = 5
+mana = 2
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])
+
+[sub_resource type="Resource" id="Resource_lfkgg"]
+script = ExtResource("6_wolwi")
+unit_name = "Flail Master"
+texture_path = "res://Art/units/cyclops/cyclops_6_red_flail.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("10_b3mbe"), ExtResource("10_b3mbe"), ExtResource("9_nuidr"), ExtResource("9_nuidr"), ExtResource("9_nuidr"), ExtResource("10_b3mbe")])
+level = 6
+mana = 2
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])
+
+[resource]
+script = ExtResource("1_m32nc")
+units = Array[ExtResource("6_wolwi")]([ExtResource("2_ihgw0"), ExtResource("3_wbwcg"), SubResource("Resource_fvl2p"), SubResource("Resource_lfkgg")])
+team = 0

@@ -9,7 +9,7 @@ extends Resource
 #TODO consider generating those events for battle replays, to be compared to with new ones for unit tests
 
 @export_enum(BattleGridState.STATE_FIGHTING,
-			BattleGridState.STATE_SUMMONNING,
+			BattleGridState.STATE_DEPLOYMENT,
 			BattleGridState.STATE_SACRIFICE,
 			BattleGridState.STATE_BATTLE_FINISHED) \
 			var state_battle_is_in : String = BattleGridState.STATE_FIGHTING

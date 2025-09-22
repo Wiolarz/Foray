@@ -2,15 +2,15 @@ class_name MoveInfo
 extends Resource
 
 const TYPE_MOVE = "move"
-const TYPE_SUMMON = "summon"
+const TYPE_DEPLOY = "deploy"
 const TYPE_SACRIFICE = "sacrifice"
 const TYPE_MAGIC = "magic"
 
 const TYPE_SURRENDER = "surrender"
 
 @export var move_type : String = ""
-## if TYPE_SUMMON, determines summoned unit
-@export var summon_unit : DataUnit
+## if TYPE_DEPLOY, determines deployed unit
+@export var deployed_unit : DataUnit
 ## used by: TYPE_MOVE, TYPE_MAGIC
 @export var move_source : Vector2i
 ## used by all move types
@@ -43,10 +43,10 @@ static func make_move(src : Vector2i, dst : Vector2i) -> MoveInfo:
 	return result
 
 
-static func make_summon(unit : DataUnit, dst : Vector2i) -> MoveInfo:
+static func make_deploy(unit : DataUnit, dst : Vector2i) -> MoveInfo:
 	var result := MoveInfo.new()
-	result.move_type = TYPE_SUMMON
-	result.summon_unit = unit
+	result.move_type = TYPE_DEPLOY
+	result.deployed_unit = unit
 	result.target_tile_coord = dst
 	return result
 
@@ -84,16 +84,16 @@ func to_network_serializable() -> Dictionary:
 		"move_type" : move_type,
 		"move_source" : move_source,
 		"target_tile_coord": target_tile_coord,
-		"summon_unit": DataUnit.get_network_id(summon_unit),
+		"deployed_unit": DataUnit.get_network_id(deployed_unit),
 		"spell": BattleSpell.get_network_id(spell),
 	}
 
 
 static func from_network_serializable(dict : Dictionary) -> MoveInfo:
 	match dict["move_type"]:
-		MoveInfo.TYPE_SUMMON:
-			return MoveInfo.make_summon( \
-				DataUnit.from_network_id(dict["summon_unit"]),\
+		MoveInfo.TYPE_DEPLOY:
+			return MoveInfo.make_deploy( \
+				DataUnit.from_network_id(dict["deployed_unit"]),\
 					dict["target_tile_coord"])
 		MoveInfo.TYPE_MOVE:
 			return MoveInfo.make_move(dict["move_source"],
@@ -143,8 +143,8 @@ func register_whole_move_complete() -> void:
 func _to_string() -> String:
 	if move_type == TYPE_MAGIC:
 		return "cast " + spell.name + " on " + str(target_tile_coord) + " from " + str(move_source)
-	elif move_type == TYPE_SUMMON:
-		return TYPE_SUMMON + " " + str(target_tile_coord) + " " + summon_unit.unit_name
+	elif move_type == TYPE_DEPLOY:
+		return TYPE_DEPLOY + " " + str(target_tile_coord) + " " + deployed_unit.unit_name
 	return move_type + " " + str(target_tile_coord) + " from " + str(move_source)
 
 

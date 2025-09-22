@@ -86,9 +86,9 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 		elif martyrs.size() == 1:
 			new.set_unit_solo_martyr(army_idx, martyrs[0], martyr_duration)
 
-		# Summon processing
-		for summon_idx in range(army.units_to_summon.size()):
-			var unit = army.units_to_summon[summon_idx]
+		# Deployment processing
+		for summon_idx in range(army.units_to_deploy.size()):
+			var unit = army.units_to_deploy[summon_idx]
 			var unit_idx = summon_idx + army.units.size()
 
 			new.insert_unit(army_idx, unit_idx, Vector2i.ZERO, 0, true)
@@ -128,7 +128,7 @@ func libspear_tuple_to_move_info(tuple: Array) -> MoveInfo:
 	if is_in_sacrifice_phase():
 		return MoveInfo.make_sacrifice(unit_position)
 	elif is_in_summoning_phase():
-		return MoveInfo.make_summon(summon_mapping_cpp2gd[uid], position)
+		return MoveInfo.make_deploy(summon_mapping_cpp2gd[uid], position)
 	elif tuple.size() == 3: # Magic
 		return MoveInfo.make_magic(unit_position, position, spell_mapping[tuple[2]])
 	else:
@@ -139,8 +139,8 @@ func move_info_to_libspear_tuple(move: MoveInfo) -> Array:
 	var pos = move.target_tile_coord
 
 	match move.move_type:
-		MoveInfo.TYPE_SUMMON:
-			unit = summon_mapping_gd2cpp[move.summon_unit][1]
+		MoveInfo.TYPE_DEPLOY:
+			unit = summon_mapping_gd2cpp[move.deployed_unit][1]
 		MoveInfo.TYPE_MOVE:
 			unit = get_unit_id_on_position(move.move_source)[1]
 		MoveInfo.TYPE_SACRIFICE:
@@ -167,7 +167,7 @@ func check_integrity_before_move(bgs: BattleGridState, move: MoveInfo):
 	assert_integrity_check(compare_move_list(bgs), "Integrity check failed before move")
 	assert_integrity_check(compare_grid_state(bgs), "Integrity check failed before move")
 
-	if move.move_type == MoveInfo.TYPE_SUMMON: # Do not check summon after move
+	if move.move_type == MoveInfo.TYPE_DEPLOY: # Do not check summon after move
 		move = null
 		return
 
@@ -206,7 +206,7 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 		push_error("BMFast mismatch - state mismatch - fast: sacrifice, slow: " + bgs.state)
 		is_ok = false
 
-	if is_in_summoning_phase() and bgs.state != bgs.STATE_SUMMONNING:
+	if is_in_summoning_phase() and bgs.state != bgs.STATE_DEPLOYMENT:
 		push_error("BMFast mismatch - state mismatch - fast: summoning, slow: " + bgs.state)
 		is_ok = false
 
@@ -224,7 +224,7 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 		var army = bgs.armies_in_battle_state[army_id]
 
 		assert(
-			army.units.size() + army.units_to_summon.size() <= get_max_units_in_army(),
+			army.units.size() + army.units_to_deploy.size() <= get_max_units_in_army(),
 			"No support for more than %s units in fast BM" % [get_max_units_in_army()]
 		)
 

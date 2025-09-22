@@ -96,6 +96,7 @@ func is_playing() -> bool:
 func play_tween(tween : Tween, settings := TweenPlaybackSettings.new()) -> void:
 	match _playback_mode:
 		PlaybackMode.NORMAL:
+			# Add to list of tweens that are managed by the ANIM
 			_running_tweens[tween] = settings
 
 			if settings.influenced_by_game_speed:
@@ -108,6 +109,9 @@ func play_tween(tween : Tween, settings := TweenPlaybackSettings.new()) -> void:
 			tween.pause()
 			tween.kill()
 		PlaybackMode.FAST_FORWARD when not settings.interrupt_on_fast_forward:
+			# Not functional, just for correct cleanup in _tween_finished
+			# TODO it's probably better to bind _tween_finished in play_tween
+			_running_tweens[tween] = settings
 			tween.play()
 			tween.custom_step(INF)
 

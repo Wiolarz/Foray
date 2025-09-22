@@ -6,5 +6,6 @@
 [resource]
 script = ExtResource("1_um1px")
 name = "Vengeance"
-icon_path = "res://Art/items/blue_axe.png"
+icon_path = "res://Art/magic/spell_icons/vengence.png"
 spell_effects = Array[ExtResource("1_um1px")]([ExtResource("2_wokb1")])
+passive_effect = false

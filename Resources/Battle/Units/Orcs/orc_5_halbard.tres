@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://d3v274u447pu7"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_7guoa"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="1_dtild"]
+[ext_resource type="Script" path="res://Resources/Races/data_building.gd" id="2_n4ioe"]
+[ext_resource type="Resource" uid="uid://bp747guikipcb" path="res://Resources/Battle/Symbols/spear.tres" id="4_kow6g"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_cf0gn"]
+
+[sub_resource type="Resource" id="Resource_e5piu"]
+script = ExtResource("1_7guoa")
+wood = 1
+iron = 1
+ruby = 1
+
+[sub_resource type="Resource" id="Resource_k7ote"]
+script = ExtResource("2_n4ioe")
+name = ""
+requirements = Array[ExtResource("2_n4ioe")]([])
+discounts = Array[Resource("res://Scripts/World/Economy/discount.gd")]([])
+outpost_requirement = ""
+
+[resource]
+script = ExtResource("1_dtild")
+unit_name = "halbard"
+texture_path = "res://Art/units/orc/orc_halbard.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_kow6g"), ExtResource("4_kow6g"), ExtResource("5_cf0gn"), ExtResource("5_cf0gn"), ExtResource("5_cf0gn"), ExtResource("4_kow6g")])
+cost = SubResource("Resource_e5piu")
+required_building = SubResource("Resource_k7ote")
+level = 5
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

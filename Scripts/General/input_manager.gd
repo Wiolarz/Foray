@@ -13,6 +13,9 @@ var players : Array[Player] = []
 ## flag for MAP EDITOR
 var in_map_editor : bool = false
 
+## flag for City Defense game mode
+var is_city_defense_active : bool = false
+
 
 func init_game_setup():
 	game_setup_info = GameSetupInfo.create_empty()
@@ -90,6 +93,7 @@ func start_game(world_state : SerializableWorldState = null,
 
 		_start_game_battle(battle_state, replay_template)
 		UI.set_camera(E.CameraPosition.BATTLE)
+		DISCORD.change_state("Playing custom battle")
 
 	elif game_setup_info.is_in_mode_world():
 		# in world mode we can have no states, only world state or both states
@@ -104,6 +108,7 @@ func start_game(world_state : SerializableWorldState = null,
 			for army_coord in battle_state.world_armies:
 				armies.append(WS.get_army_at(army_coord))
 			WM.start_combat(armies, battle_state.combat_coord, battle_state)
+		DISCORD.change_state("Exploring the world map")
 
 	if NET.server:
 		NET.server.broadcast_start_game()
@@ -257,6 +262,7 @@ func start_scripted_battle(scripted_battle : ScriptedBattle, battle_bot_path : S
 		armies.append(create_army_from_preset(army_preset, player_idx))
 
 	BM.start_battle(armies, scripted_battle.battle_map, 0, null, null, scripted_battle)
+	UI.set_camera(E.CameraPosition.BATTLE)
 
 
 func _clear_players() -> void:
@@ -343,3 +349,11 @@ func is_slot_steal_allowed() -> bool:
 	return true # local game
 
 #endregion Information
+
+
+#region City Defense
+
+func end_city_defense_battle(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
+	UI.main_menu.get_node("MainContainer/CityDefense").battle_ended(armies)  # TEMP
+
+#endregion City Defense

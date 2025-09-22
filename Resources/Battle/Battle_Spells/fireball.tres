@@ -5,8 +5,10 @@
 [resource]
 script = ExtResource("1_8g38n")
 name = "Fireball"
-icon_path = "res://Art/items/big_sword.png"
-spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
+icon_path = "res://Art/magic/spell_icons/fireball.png"
 description = "Chosen tile explodes killing every nearby unit in range of 1 tile
 
 Currently enemy unit are killed first, but soon it will be reversed."
+spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
+axial_cast_range = 0
+only_in_front = false

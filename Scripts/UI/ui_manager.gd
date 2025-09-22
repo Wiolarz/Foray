@@ -57,6 +57,7 @@ func _hide_all():
 func go_to_main_menu():
 	_hide_all()
 	main_menu.open_main_menu()
+	DISCORD.change_state("Sitting in main menu")
 
 
 func go_to_unit_editor():

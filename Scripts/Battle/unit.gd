@@ -4,7 +4,7 @@ extends RefCounted # default
 signal unit_died()
 signal unit_turned()
 signal unit_moved()
-signal unit_magic_effect()
+signal unit_magic_effect(effect : BattleMagicEffect)
 
 const MAX_EFFECTS_PER_UNIT = 2
 
@@ -19,7 +19,6 @@ signal unit_captured_mana(target_tile : Vector2i)  # change visuals of the tile 
 
 ## TODO remove this
 var controller : Player
-
 ## reference to army to which the unit belongs
 var army_in_battle : BattleGridState.ArmyInBattleState
 
@@ -31,12 +30,14 @@ var symbols : Array[DataSymbol]
 
 ## coordinates on a battle grid
 var coord : Vector2i
-
 ## see E.GridDirections, int for convinience
 var unit_rotation : int
 
 ## unit died
 var dead : bool
+## is unit created using magic
+var summoned : bool = false
+
 
 ## list of spells unit can cast (all of those are one-time use only)
 var spells : Array[BattleSpell] = []
@@ -65,6 +66,7 @@ static func create(new_controller : Player, \
 	result.coord = new_coord
 	result.unit_rotation = new_rotation
 	result.spells = new_template.spells.duplicate() # spells reset every battle
+	result.summoned = new_template.summoned
 	return result
 
 #region Emit Animation Signals
@@ -83,7 +85,7 @@ func move(new_coord : Vector2i, battle_tile : BattleGridState.BattleHex):
 	is_on_swamp = battle_tile.swamp
 	is_on_rock = battle_tile.hill
 	is_on_mana = battle_tile.mana
-	unit_magic_effect.emit()
+	unit_magic_effect.emit(null)
 
 	var old = coord
 	coord = new_coord
@@ -133,12 +135,12 @@ func try_adding_magic_effect(effect : BattleMagicEffect) -> bool:
 	if effects.size() >= MAX_EFFECTS_PER_UNIT:
 		return false
 	effects.append(effect)
-	unit_magic_effect.emit()
+	unit_magic_effect.emit(effect)
 	return true
 
 
 ## currently used only to update UI
 func effect_state_changed() -> void:
-	unit_magic_effect.emit()
+	unit_magic_effect.emit(null)
 
 #endregion Magic

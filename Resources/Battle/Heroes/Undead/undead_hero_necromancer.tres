@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="DataHero" load_steps=6 format=3 uid="uid://b5832pkksr873"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_wrxnu"]
+[ext_resource type="Resource" uid="uid://bncgkxs56tdgt" path="res://Resources/Battle/Units/Undead/undead_hero_necromancer.tres" id="2_7bjhx"]
+[ext_resource type="Script" path="res://Resources/Battle/data_hero.gd" id="3_33ltn"]
+
+[sub_resource type="Resource" id="Resource_d5a4o"]
+script = ExtResource("1_wrxnu")
+wood = 1
+iron = 0
+ruby = 0
+
+[sub_resource type="Resource" id="Resource_0khg2"]
+script = ExtResource("1_wrxnu")
+wood = 1
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("3_33ltn")
+hero_name = "necromancer"
+cost = SubResource("Resource_d5a4o")
+revive_cost = SubResource("Resource_0khg2")
+data_unit = ExtResource("2_7bjhx")
+starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([])
+max_army_size = 3
+max_movement_points = 3

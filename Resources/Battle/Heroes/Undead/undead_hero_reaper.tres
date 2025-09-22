@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="DataHero" load_steps=6 format=3 uid="uid://hi0yrvk6sqbs"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_dwtky"]
+[ext_resource type="Script" path="res://Resources/Battle/data_hero.gd" id="1_i0do1"]
+[ext_resource type="Resource" uid="uid://d18rrv3v75dk6" path="res://Resources/Battle/Units/Undead/undead_hero_reaper.tres" id="2_t0xd1"]
+
+[sub_resource type="Resource" id="Resource_wwtsp"]
+script = ExtResource("1_dwtky")
+wood = 1
+iron = 0
+ruby = 0
+
+[sub_resource type="Resource" id="Resource_0q1qy"]
+script = ExtResource("1_dwtky")
+wood = 1
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("1_i0do1")
+hero_name = "reaper"
+cost = SubResource("Resource_wwtsp")
+revive_cost = SubResource("Resource_0q1qy")
+data_unit = ExtResource("2_t0xd1")
+starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([])
+max_army_size = 3
+max_movement_points = 3

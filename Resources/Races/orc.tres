@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataRace" load_steps=12 format=3 uid="uid://c8eqaxhujkmsy"]
+[gd_resource type="Resource" script_class="DataRace" load_steps=14 format=3 uid="uid://c8eqaxhujkmsy"]
 
 [ext_resource type="Script" path="res://Resources/Races/data_race.gd" id="1_iksfp"]
 [ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="1_ric5p"]
@@ -9,12 +9,15 @@
 [ext_resource type="Resource" uid="uid://c38l6fj56u5fp" path="res://Resources/Battle/Heroes/Orcs/orc_hero_crusader.tres" id="6_5iyhu"]
 [ext_resource type="Resource" uid="uid://wxlo2qqrsl4f" path="res://Resources/Battle/Heroes/Orcs/orc_hero_executioner.tres" id="7_ha0i5"]
 [ext_resource type="Resource" uid="uid://bjcrbdv3aq2jk" path="res://Resources/Battle/Units/Orcs/orc_1_brute.tres" id="9_tlc31"]
-[ext_resource type="Resource" uid="uid://cx8ch2m3osvk0" path="res://Resources/Battle/Units/Orcs/orc_2_brigand.tres" id="10_dd0ds"]
-[ext_resource type="Resource" uid="uid://bgu30lp3txcwv" path="res://Resources/Battle/Units/Orcs/orc_3_champion.tres" id="11_kiw71"]
+[ext_resource type="Resource" uid="uid://3e7lgte3o0of" path="res://Resources/Battle/Units/Orcs/orc_2_brigand.tres" id="10_dd0ds"]
+[ext_resource type="Resource" uid="uid://d3v274u447pu7" path="res://Resources/Battle/Units/Orcs/orc_5_halbard.tres" id="12_74etn"]
+[ext_resource type="Resource" uid="uid://w4ycloqp51wx" path="res://Resources/Battle/Units/Orcs/orc_4_shaman.tres" id="12_dn4jr"]
+[ext_resource type="Resource" uid="uid://bgu30lp3txcwv" path="res://Resources/Battle/Units/Orcs/orc_6_champion.tres" id="13_3diae"]
 
 [resource]
 script = ExtResource("1_iksfp")
 race_name = "orc"
-units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("9_tlc31"), ExtResource("10_dd0ds"), ExtResource("11_kiw71")])
+units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("9_tlc31"), ExtResource("10_dd0ds"), ExtResource("12_dn4jr"), ExtResource("12_74etn"), ExtResource("13_3diae")])
 heroes = Array[Resource("res://Resources/Battle/data_hero.gd")]([ExtResource("5_811w1"), ExtResource("6_5iyhu"), ExtResource("7_ha0i5")])
 buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_ric5p"), ExtResource("2_mfg18"), ExtResource("3_6vaij"), ExtResource("4_06kyo")])
+description = "Elite > Horde > Magic"

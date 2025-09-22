@@ -1,0 +1,130 @@
+[gd_scene load_steps=7 format=3 uid="uid://chbkr4ic76rs"]
+
+[ext_resource type="Texture2D" uid="uid://cehlmd0mdmtha" path="res://Art/world_map/outpost_wood.png" id="1_i3qhh"]
+[ext_resource type="Texture2D" uid="uid://3m8ehbpffdwy" path="res://Art/world_map/outpost_iron.png" id="2_d1rc7"]
+[ext_resource type="Texture2D" uid="uid://cb3kmdouhn4rr" path="res://Art/world_map/outpost_ruby.png" id="3_evog8"]
+[ext_resource type="Texture2D" uid="uid://ci0wqgw8ycgsa" path="res://Art/world_map/hunt_wood.png" id="4_aoat8"]
+[ext_resource type="Texture2D" uid="uid://cbha2uajq8ox1" path="res://Art/world_map/hunt_iron.png" id="5_s31nc"]
+[ext_resource type="Texture2D" uid="uid://c41x5bpnw5jyt" path="res://Art/world_map/hunt_ruby.png" id="6_cjjwa"]
+
+[node name="WikiEconomy" type="Panel"]
+clip_contents = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Economy"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TileInformationContainer" type="ScrollContainer" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Section Title" type="Label" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "Goods"
+horizontal_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "There are 3 Types of resources present in the game: | wood 🪓| iron ⛏️| ruby 💎|
+(In next updates instead of simple number of specific goods there will be a complex tier system)"
+fit_content = true
+
+[node name="Section Title2" type="Label" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "Outposts"
+horizontal_alignment = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "Strongly defended structures provide upon capture a stable income of their corresponding resource."
+fit_content = true
+
+[node name="HBoxOutpostsImages" type="HBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxOutpostsImages"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("1_i3qhh")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxOutpostsImages"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("2_d1rc7")
+expand_mode = 1
+
+[node name="TextureRect3" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxOutpostsImages"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_evog8")
+expand_mode = 1
+
+[node name="Section Title3" type="Label" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "Hunt Spots"
+horizontal_alignment = 1
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "In similar fashion to outposts those are are spread between 3 resource types.But their defenders are weaker at the start and with each respawn they grew in strentgh.
+The more numerous the defenders the greater the reward for defeating them."
+fit_content = true
+
+[node name="HBoxHuntSpotsImages" type="HBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="TextureRect4" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxHuntSpotsImages"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("4_aoat8")
+expand_mode = 1
+
+[node name="TextureRect5" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxHuntSpotsImages"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("5_s31nc")
+expand_mode = 1
+
+[node name="TextureRect6" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox/HBoxHuntSpotsImages"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("6_cjjwa")
+expand_mode = 1

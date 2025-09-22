@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://bawliiem6bw0u"]
+[gd_scene load_steps=8 format=3 uid="uid://bawliiem6bw0u"]
 
 [ext_resource type="Script" path="res://Scripts/UI/battle_ui.gd" id="1_0rgae"]
 [ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="2_hku4e"]
 [ext_resource type="Texture2D" uid="uid://cukwcwy4fikm1" path="res://Art/elf_hero_noble.png" id="3_arbmx"]
 [ext_resource type="PackedScene" uid="uid://c2tjldwjynnry" path="res://Scenes/UI/GameChat.tscn" id="5_10swj"]
 [ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/elf_spearmen.png" id="5_51fsi"]
+[ext_resource type="Texture2D" uid="uid://1hbpqpqeo60k" path="res://Art/magic/spell_icons/blood_curse.png" id="5_mgkn6"]
+[ext_resource type="Texture2D" uid="uid://d1muvxfwq45g1" path="res://Art/magic/spell_icons/fireball.png" id="6_7sot2"]
 
 [node name="BattleUI" type="CanvasLayer"]
 script = ExtResource("1_0rgae")
@@ -247,7 +249,7 @@ text = "Player1"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="EndPlacementPhaseAnnouncement" type="ColorRect" parent="."]
+[node name="EndDeploymentPhaseAnnouncement" type="ColorRect" parent="."]
 editor_description = "Modulate set to 0 turned up through Tween animation"
 modulate = Color(1, 1, 1, 0)
 anchors_preset = 8
@@ -264,7 +266,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.423529)
 
-[node name="FluffText" type="Label" parent="EndPlacementPhaseAnnouncement"]
+[node name="FluffText" type="Label" parent="EndDeploymentPhaseAnnouncement"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -273,11 +275,11 @@ offset_left = -244.5
 offset_right = 244.5
 offset_bottom = 106.0
 grow_horizontal = 2
-text = "End of the Placement Phase"
+text = "End of the Deployment Phase"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="FirstPlayerToMoveName" type="Label" parent="EndPlacementPhaseAnnouncement"]
+[node name="FirstPlayerToMoveName" type="Label" parent="EndDeploymentPhaseAnnouncement"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -302,9 +304,19 @@ anchor_bottom = 0.5
 offset_left = 15.0
 grow_vertical = 2
 
-[node name="Spell" type="Button" parent="SpellBook"]
+[node name="ExampleSpell" type="TextureButton" parent="SpellBook"]
+custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
-text = "Spell"
+texture_normal = ExtResource("5_mgkn6")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="ExampleSpell2" type="TextureButton" parent="SpellBook"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("6_7sot2")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="TextBubble" type="Control" parent="."]
 layout_mode = 3

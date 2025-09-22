@@ -2,11 +2,22 @@ class_name BattleSpell
 extends Resource
 
 @export var name : String = ""
-@export var icon_path : String = ""
+@export_file var icon_path : String = ""
+@export_multiline var description : String = ""
 
+## optional, used when spell applies an effect to a unit
 @export var spell_effects : Array[BattleMagicEffect]
 
-@export_multiline var description : String = ""
+## optional, used only by summon spells
+@export var summon_unit_data : DataUnit
+
+##STUB category
+@export_category("restrictions for spell targeting")
+
+## -1 infinite | 0 allows to cast on itself
+@export var axial_cast_range : int = 0
+
+@export var only_in_front : bool = false
 
 ## used to debug
 func _to_string() -> String:

@@ -69,6 +69,7 @@ func has_movement_points() -> bool:
 	return entity.hero.movement_points > 0
 
 
+##STUB
 func place_on(tile):
 	position = tile.position
 

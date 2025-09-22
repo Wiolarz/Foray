@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=9 format=3 uid="uid://cir43eqa3uet2"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_eky4d"]
+[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_gxp4x"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_7vnbl"]
+[ext_resource type="Resource" uid="uid://sr1570kq7sm8" path="res://Resources/Battle/Symbols/shield.tres" id="4_f8po0"]
+[ext_resource type="Resource" uid="uid://bk4vt1njy2ic2" path="res://Resources/Battle/Battle_Spells/anchor.tres" id="4_ly4ic"]
+[ext_resource type="Resource" uid="uid://bp747guikipcb" path="res://Resources/Battle/Symbols/spear.tres" id="5_1xvyi"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_5g5oy"]
+
+[sub_resource type="Resource" id="Resource_8qfgt"]
+script = ExtResource("1_eky4d")
+wood = 4
+iron = 1
+ruby = 0
+
+[resource]
+script = ExtResource("3_7vnbl")
+unit_name = "Halbard Defender"
+texture_path = "res://Art/units/cyclops/cyclops_5_shield_halbard.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_f8po0"), ExtResource("5_1xvyi"), ExtResource("5_5g5oy"), ExtResource("5_5g5oy"), ExtResource("5_5g5oy"), ExtResource("5_1xvyi")])
+cost = SubResource("Resource_8qfgt")
+required_building = ExtResource("2_gxp4x")
+level = 5
+mana = 2
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([ExtResource("4_ly4ic")])

@@ -6,6 +6,8 @@
 [resource]
 script = ExtResource("1_oialf")
 name = "Anchor"
-icon_path = "res://Art/items/sickle.png"
-spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([ExtResource("2_gjbnk")])
+icon_path = "res://Art/magic/spell_icons/anchor.png"
 description = "Make the target unable to move, only rotate toward the tiles it would like to move to"
+spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([ExtResource("2_gjbnk")])
+axial_cast_range = 0
+only_in_front = false

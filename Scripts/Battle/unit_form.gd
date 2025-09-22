@@ -42,9 +42,9 @@ static func create(new_unit : Unit) -> UnitForm:
 	return result
 
 
-## HACK, this is for visuals only for summon UI
+## HACK, this is for visuals only for deployment UI
 ## no underlying Unit exists
-static func create_for_summon_ui(template: DataUnit, color : DataPlayerColor) -> UnitForm:
+static func create_for_deployment_ui(template: DataUnit, color : DataPlayerColor) -> UnitForm:
 	var result = CFG.UNIT_FORM_SCENE.instantiate()
 	# defer apply_graphics to after the symbol forms are ready (they must be in order for this to work)
 	result.ready.connect(result.apply_graphics.bind(template, color))
@@ -55,13 +55,13 @@ func apply_graphics(template : DataUnit, color : DataPlayerColor):
 	var unit_texture = load(template.texture_path) as Texture2D
 	_set_texture(unit_texture)
 	_apply_color_texture(color)
-	_apply_level_number(template.level)
+	_apply_level_and_mana_numbers(template.level, template.mana)
 
 	for side in range(0,6):
 		var symbol_texture
 		if entity:   # effects may change symbols during battle
 			symbol_texture = entity.symbols[side].texture_path
-		else:  # Placement screen
+		else:  # Deployment screen
 			symbol_texture = template.symbols[side].texture_path
 
 		var data_symbol = template.symbols[side]
@@ -89,6 +89,7 @@ func _flip_unit_sprite():
 	else:
 		$sprite_unit.flip_h = true
 
+
 ## WARNING: called directly in UNIT EDITOR
 func _set_texture(texture : Texture2D) -> void:
 	$sprite_unit.texture = texture
@@ -105,14 +106,20 @@ func _apply_color_texture(color : DataPlayerColor) -> void:
 		color.color)
 
 
-func _apply_level_number(level : int) -> void:
-	const roman_numbers = ["0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
-	if level > 10 or level < 0:
+func _apply_level_and_mana_numbers(level : int, mana : int) -> void:
+	const roman_numbers = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
+	if level > 10 or level < 0 and mana > 10 or mana < 0:
 		assert(false, "Design wise higher level units don't make sense")
 		level = 1
 	$RigidUI/UnitLevel.text = roman_numbers[level]
+	if mana == 0:
+		$RigidUI/ManaIcon.hide()
+	else:
+		$RigidUI/ManaIcon.show()
+	$RigidUI/UnitMana.text = roman_numbers[mana]
 
 #endregion Init
+
 
 #region Animations
 
@@ -196,9 +203,20 @@ func anim_symbol(side : int, animation_type : int, target_coord: Vector2i = Vect
 
 
 
-func anim_magic():
-	# TODO
-	pass
+func anim_magic(effect: BattleMagicEffect):
+	if not effect:
+		return
+
+	var sprite := Sprite2D.new()
+	sprite.texture = load(effect.icon_path)
+	sprite.visible = false
+	add_child(sprite)
+	sprite.global_rotation = 0
+	ANIM.main_tween().tween_property(sprite, "visible", true, 0.0)
+	ANIM.main_tween().tween_callback(AUDIO.play.bind("magic_effect"))
+	ANIM.main_tween().tween_property(sprite, "scale", Vector2(6.0, 6.0), 0.7)
+	ANIM.main_tween().parallel().tween_property(sprite, "modulate:a", 0.0, 0.7)
+	ANIM.main_tween().tween_callback(sprite.queue_free)
 
 #endregion Animations
 
@@ -214,6 +232,8 @@ func _rotation_symbol_flip():
 
 #region UI
 
+
+## Unit form has to be in the scene tree for this function to properly apply textures
 func set_effects() -> void:
 	# Terrain effects
 	if entity.is_on_swamp:
@@ -228,12 +248,13 @@ func set_effects() -> void:
 	# Magical effects
 	var spell_effects_slots : Array[Sprite2D] = [$RigidUI/SpellEffect1, $RigidUI/SpellEffect2]
 	var spell_counters_slots : Array[Label] = [$RigidUI/SpellEffectCounter1, $RigidUI/SpellEffectCounter2]
-	for slot_idx in range(spell_effects_slots.size()):
-		if entity.effects.size() - 1 < slot_idx:
-			spell_effects_slots[slot_idx].texture = null
-			spell_counters_slots[slot_idx].text = ""
-			continue
 
+	$RigidUI/SpellEffect1.texture = null
+	$RigidUI/SpellEffect2.texture = null
+	$RigidUI/SpellEffectCounter1.text = ""
+	$RigidUI/SpellEffectCounter2.text = ""
+	assert(entity.effects.size() <= 2, "Unit has too many spell effects")
+	for slot_idx in range(entity.effects.size()):
 		var spell_texture = load(entity.effects[slot_idx].icon_path)  #TEMP spell icon path
 		spell_effects_slots[slot_idx].texture = spell_texture
 		if not entity.effects[slot_idx].passive_effect:  # passive effect are pernament

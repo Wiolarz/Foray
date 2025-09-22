@@ -8,7 +8,7 @@ enum MoveConsequences {
 	KAMIKAZE # Both kills and dies
 }
 
-const STATE_SUMMONNING = "summonning"
+const STATE_DEPLOYMENT = "deployment"
 const STATE_FIGHTING = "fighting"
 const STATE_SACRIFICE = "sacrifice"
 const STATE_BATTLE_FINISHED = "battle_finished"
@@ -18,7 +18,7 @@ const MOVE_IS_INVALID = -1
 ## BM._check_for_stalemate() doesn't yet handle bigger number of allowed repeats than 2
 const STALEMATE_TURN_REPEATS = 2  # number of repeated moves that fast forward Mana Cyclon Timer
 
-var state : String = STATE_SUMMONNING
+var state : String = STATE_DEPLOYMENT
 
 ## Visible to players counter which works alongside Mana Cyclone system [br]
 ## Is incremented after units move/cast_a_spell -> Doesn't after unit placement/sacrifice
@@ -31,7 +31,7 @@ var currently_active_unit : Unit = null
 
 var number_of_mana_wells : int = 0
 var cyclone_target : ArmyInBattleState
-const MANA_WELL_POWER : int = 100
+const MANA_WELL_POWER : int = 5
 
 #TEMP HACK for proper awarding of exp in spear kills
 var spear_holding_killer_teams : Array[int] = []
@@ -78,14 +78,14 @@ static func create(map : DataBattleMap, new_armies : Array[Army]) -> BattleGridS
 
 ## Unpacker of MoveInfo class [br]
 ## returns Unit (RefCounted) to the BM for there to be created Node2D object
-func move_info_summon_unit(move_info : MoveInfo) -> Unit:
-	assert(move_info.move_type == MoveInfo.TYPE_SUMMON)
+func move_info_deploy_unit(move_info : MoveInfo) -> Unit:
+	assert(move_info.move_type == MoveInfo.TYPE_DEPLOY)
 	currently_processed_move_info = move_info
-	var unit_data := move_info.summon_unit
+	var unit_data := move_info.deployed_unit
 	var coord := move_info.target_tile_coord
-	var initial_rotation := _get_spawn_rotation(coord)
+	var initial_rotation := _get_deploy_rotation(coord)
 	var army_state := armies_in_battle_state[current_army_index]
-	var unit := army_state.summon_unit(unit_data, coord, initial_rotation)
+	var unit := army_state.deploy_unit(unit_data, coord, initial_rotation)
 	move_info.army_idx = current_army_index
 	move_info.original_rotation = initial_rotation
 
@@ -167,10 +167,10 @@ func move_info_execute(move_info : MoveInfo) -> void:
 ## returns array of revived units
 func undo(move_info : MoveInfo) -> Array[Unit]:
 	var killed_units : Array[Unit] = []
-	if move_info.move_type == MoveInfo.TYPE_SUMMON:
+	if move_info.move_type == MoveInfo.TYPE_DEPLOY:
 		current_army_index = move_info.army_idx
-		armies_in_battle_state[current_army_index].unsummon(move_info.target_tile_coord)
-		state = STATE_SUMMONNING
+		armies_in_battle_state[current_army_index].undeploy(move_info.target_tile_coord)
+		state = STATE_DEPLOYMENT
 
 	if move_info.move_type == MoveInfo.TYPE_MOVE:
 		# revert turn change
@@ -443,8 +443,8 @@ func is_move_valid(unit : Unit, coord : Vector2i) -> bool:
 	return _get_move_direction_if_valid(unit, coord) != MOVE_IS_INVALID
 
 
-func is_during_summoning_phase() -> bool:
-	return state == STATE_SUMMONNING
+func is_during_deployment_phase() -> bool:
+	return state == STATE_DEPLOYMENT
 
 #endregion public helpers
 
@@ -551,7 +551,7 @@ func _get_move_direction_if_valid(unit : Unit, coord : Vector2i) -> int:
 		# check if a landing spot is a viable move
 		var jump_spot : Vector2i = GenericHexGrid.adjacent_coord(coord, move_direction)
 		hex = _get_battle_hex(jump_spot)
-		if not hex.can_be_moved_to:  # landing spot cannot be a special_move place
+		if not hex.can_be_moved_to:  # landing spot cannot be a special_move tile
 			return MOVE_IS_INVALID
 
 		# is unit present on landing spot
@@ -673,14 +673,14 @@ func _switch_participant_turn() -> void:
 	print(NET.get_role_name(), " _switch_participant_turn ", current_army_index)
 
 	match state:
-		STATE_SUMMONNING:
+		STATE_DEPLOYMENT:
 			var skip_count = 0
-			# skip players with nothing to summon
-			while armies_in_battle_state[current_army_index].units_to_summon.size() == 0:
+			# skip players with nothing to deploy
+			while armies_in_battle_state[current_army_index].units_to_deploy.size() == 0:
 				current_army_index += 1
 				current_army_index %= armies_in_battle_state.size()
 				skip_count += 1
-				# no player has anything to summon, go to next phase
+				# no player has anything to deploy, go to next phase
 				if skip_count == armies_in_battle_state.size():
 					state = STATE_FIGHTING
 					current_army_index = 0  # first army is always present
@@ -804,6 +804,18 @@ func _perform_dash(unit : Unit, target_tile_coord : Vector2i, power : int = 3) -
 		_kill_unit(unit)
 
 
+func _summon_a_unit(caster : Unit, summoned_unit : DataUnit, target_tile_coord : Vector2i) -> void:
+	summoned_unit.summoned = true
+	var direction : int = GenericHexGrid.direction_to_adjacent(caster.coord, target_tile_coord)
+	var unit : Unit = caster.army_in_battle.deploy_unit(summoned_unit, target_tile_coord, direction)
+
+	# Apply summon sickness
+	var success : bool = unit.try_adding_magic_effect(load(CFG.SUMMONING_SICKNESS_PATH))
+	assert(success, "failure to apply summoning sickness effect")
+
+	_put_unit_on_grid(unit, target_tile_coord)
+
+
 ## changes coordinates of the unit ONLY (doesn't activate attack or anything like that)
 func _change_unit_coord(unit : Unit, target_coord : Vector2i) -> void:
 	_remove_unit(unit)
@@ -815,7 +827,7 @@ func _change_unit_coord(unit : Unit, target_coord : Vector2i) -> void:
 		capture_mana_well(target_tile, unit.army_in_battle)
 
 
-## Used for movement, kills, unsummon(undo) [br]
+## Used for movement, kills, undeploy(undo) [br]
 ## removes Unit from logic hex tile
 func _remove_unit(unit : Unit) -> void:
 	var hex := _get_battle_hex(unit.coord)
@@ -930,29 +942,29 @@ func end_stalemate() -> void:
 #endregion Gameplay Events
 
 
-#region Summon Phase
+#region Deployment Phase
 
-func current_player_can_summon_on(coord : Vector2i) -> bool:
-	return _can_summon_on(current_army_index, coord)
+func current_player_can_deploy_on(coord : Vector2i) -> bool:
+	return _can_deploy_on(current_army_index, coord)
 
 
-func _can_summon_on(army_idx : int, coord : Vector2i) -> bool:
+func _can_deploy_on(army_idx : int, coord : Vector2i) -> bool:
 	var hex := _get_battle_hex(coord)
 	return  hex.spawn_point_army_idx == army_idx and hex.unit == null
 
 
-func _get_spawn_rotation(coord : Vector2i) -> int:
+func _get_deploy_rotation(coord : Vector2i) -> int:
 	return _get_battle_hex(coord).spawn_direction
 
 
 func _put_unit_on_grid(unit : Unit, coord : Vector2i) -> void:
 	var hex := _get_battle_hex(coord)
 	# TODO discuss this assert as it conflicts with special move tiles
-	#assert(hex.can_be_moved_to, "summoning unit to an invalid tile")
-	assert(not hex.unit, "summoning unit to an occupied tile")
+	#assert(hex.can_be_moved_to, "deployed unit to an invalid tile")
+	assert(not hex.unit, "deploying unit to an occupied tile")
 	hex.unit = unit
 
-#endregion Summon Phase
+#endregion Deployment Phase
 
 
 #region Timer
@@ -994,8 +1006,24 @@ func mana_values_changed() -> void:
 			current_best = army
 
 	cyclone_target = current_worst
+
 	var mana_difference = current_best.mana_points - current_worst.mana_points
-	var new_cylone_counter = CFG.BIG_CYCLONE_COUNTER_VALUE
+	## TODO consider moving it to a sepereta balance file instead of CFG
+	var new_cylone_counter = 0
+	if mana_difference >= 11:
+		new_cylone_counter = 5
+	elif mana_difference >= 8:
+		new_cylone_counter = 10
+	elif mana_difference >= 4:
+		new_cylone_counter = 15
+	elif mana_difference >= 2:
+		new_cylone_counter = 20
+	elif mana_difference == 1:
+		new_cylone_counter = CFG.BIG_CYCLONE_COUNTER_VALUE
+	else: # mana_difference == 0
+		new_cylone_counter = CFG.BIG_CYCLONE_COUNTER_VALUE
+
+
 	if mana_difference > CFG.CYCLONE_MANA_THRESHOLD:
 		new_cylone_counter = CFG.SMALL_CYCLONE_COUNTER_VALUE
 
@@ -1059,7 +1087,10 @@ func is_spell_target_valid(caster : Unit, coord : Vector2i, spell : BattleSpell)
 
 			if _is_faced_tile_in_range(caster.coord, coord, caster.unit_rotation, spell_range):
 				return true
-
+		"Summon Dryad":  # adjacent empty tile to caster
+			if get_unit(coord) or not _get_battle_hex(coord).can_be_moved_to:
+				return false
+			return is_adjacent(caster.coord, coord)
 		"Blood Ritual":  # any enemy units -> when enemy has more than 1 unit
 			var target = get_unit(coord)
 			if target and target.controller.team != caster.controller.team and \
@@ -1119,6 +1150,9 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 		"Wind Dash":
 			_perform_dash(unit, target_tile_coord)
 
+		"Summon Dryad":
+			_summon_a_unit(unit, spell.summon_unit_data, target_tile_coord)
+
 		_:
 			printerr("Spell perform not supported: ", spell.name)
 			return
@@ -1156,6 +1190,8 @@ func _end_of_turn_magic() -> void:
 					magic_effect.duration_counter -= 1
 					if magic_effect.duration_counter == 0:
 						unit.effects.pop_at(effect_idx)
+						if magic_effect.name == "Summoning Sickness":
+							unit.try_adding_magic_effect(magic_effect.spell_effects[0])
 						continue
 
 				match magic_effect:
@@ -1248,31 +1284,31 @@ func force_surrender():
 #region AI Helpers
 
 func get_possible_moves() -> Array[MoveInfo]:
-	if is_during_summoning_phase():
-		return _get_all_spawn_moves()
+	if is_during_deployment_phase():
+		return _get_all_deploy_moves()
 	if state == STATE_SACRIFICE:
 		return _get_all_sacrifice_moves()
 
 	return _get_all_unit_moves()
 
 
-func _get_summon_tiles(player : Player) -> Array[Vector2i]:
+func _get_deployment_tiles(player : Player) -> Array[Vector2i]:
 	var army_idx = _find_army_idx(player)
 	var result : Array[Vector2i] = []
 	for x in range(width):
 		for y in range(height):
 			var coord := Vector2i(x,y)
-			if _can_summon_on(army_idx, coord):
+			if _can_deploy_on(army_idx, coord):
 				result.append(coord)
 	return result
 
 
-func _get_not_summoned_units(player : Player) -> Array[DataUnit]:
+func _get_not_deployed_units(player : Player) -> Array[DataUnit]:
 	var index = player.index if player else -1
 	for a in armies_in_battle_state:
 		if a.army_reference.controller_index == index:
-			return a.units_to_summon.duplicate()
-	assert(false, "ai asked for units to summon but it doesn't control any army")
+			return a.units_to_deploy.duplicate()
+	assert(false, "ai asked for units to deploy but it doesn't control any army")
 	return []
 
 
@@ -1294,7 +1330,7 @@ func _find_army_idx(player : Player) -> int:
 	return -1
 
 
-## not summons, only units already placed
+## get's all move action not deploy/magic/sacrifice ones
 func _get_all_unit_moves() -> Array[MoveInfo]:
 	var legal_moves : Array[MoveInfo] = []
 	var my_units := _get_units(get_current_player())
@@ -1327,14 +1363,14 @@ func _get_all_sacrifice_moves() -> Array[MoveInfo]:
 	return legal_moves
 
 
-func _get_all_spawn_moves() -> Array[MoveInfo]:
+func _get_all_deploy_moves() -> Array[MoveInfo]:
 	var legal_moves: Array[MoveInfo] = []
 	var me = get_current_player()
-	var spawn_tiles = _get_summon_tiles(me)
-	var units = _get_not_summoned_units(me)
+	var spawn_tiles = _get_deployment_tiles(me)
+	var units = _get_not_deployed_units(me)
 	for unit in units:
 		for spawn_tile in spawn_tiles:
-			legal_moves.append(MoveInfo.make_summon(unit, spawn_tile))
+			legal_moves.append(MoveInfo.make_deploy(unit, spawn_tile))
 
 	return legal_moves
 
@@ -1504,7 +1540,7 @@ func get_move_consequences(move : MoveInfo) -> MoveConsequences:
 	var kill_registered = false
 
 	if move.move_type != MoveInfo.TYPE_MOVE:  # TODO add support for spells and sacrifices
-		return MoveConsequences.NONE # summons don't kill
+		return MoveConsequences.NONE # deployment doesn't kill
 
 	var attacker = get_unit(move.move_source)
 	var move_direction : int = GenericHexGrid.direction_to_adjacent( \
@@ -1711,8 +1747,8 @@ class ArmyInBattleState:
 	## basic idx reference to which units are allies
 	var team : int = -1
 
-	var units_to_summon : Array[DataUnit] = []
-	## alive already summoned units
+	var units_to_deploy : Array[DataUnit] = []
+	## alive already deployed units
 	var units : Array[Unit] = []
 	## owned units that died during combat
 	var dead_units : Array[DataUnit] = []
@@ -1745,25 +1781,38 @@ class ArmyInBattleState:
 		result.army_reference = army
 		if army.hero and not army.hero.wounded: #TEMP
 			var hero_unit : DataUnit = army.hero.template.data_unit
-			result.units_to_summon.append(hero_unit)
+			result.units_to_deploy.append(hero_unit)
 
 		# unit list
 		for unit : DataUnit in army.units_data:
-			result.units_to_summon.append(unit)
+			result.units_to_deploy.append(unit)
 
 			result.mana_points += unit.mana # MANA
+
+		result.apply_passive_effects(state)
 
 		#Temp solution for world map, where proper clock system isn't implemented yet
 		if army.timer_reserve_sec == 0:
 			army.timer_reserve_sec = 3000
-
 		#TEMP
 		result.start_turn_clock_time_left_ms = army.timer_reserve_sec * 1000
 		result.turn_increment_ms = army.timer_increment_sec * 1000
-
 		result.turn_started() # TEMP - FIXME - better init for chess clock
 
 		return result
+
+	func apply_passive_effects(state : BattleGridState) -> void:
+		if not hero:
+			return
+		for effect in hero.passive_effects:
+			match effect.passive_name:
+				"ballista_summon":
+					# HACK -> there are no armies in that array, if this army is the first one being created
+					if state.armies_in_battle_state.size() != 0:
+						continue  # only attacker can use ballista
+					var ballista : DataUnit = load(CFG.BALLISTA_PATH)
+					ballista.summoned = true
+					units_to_deploy.append(ballista)
 
 
 	func turn_started() -> void:
@@ -1798,7 +1847,10 @@ class ArmyInBattleState:
 			# mana_value changed gets called after every kill anyway
 
 		units.erase(target)
+
 		dead_units.append(target.template)
+		if not can_fight():  # remove all summons once are alive units have died
+			kill_army()
 		#gdlint: ignore=private-method-call
 
 
@@ -1806,24 +1858,29 @@ class ArmyInBattleState:
 		var unit = kill_info.respawn()
 		unit.controller = IM.get_player_by_index(army_reference.controller_index)
 		unit.army_in_battle = self
+
 		dead_units.erase(unit.template)
 		units.append(unit)
 		return unit
 
 
 	func kill_army() -> void:
-		dead_units.append_array(units_to_summon)
-		units_to_summon.clear()
+		dead_units.append_array(units_to_deploy)
+		units_to_deploy.clear()
 		for unit_idx in range(units.size() - 1, -1, -1):
 			battle_grid_state.get_ref()._kill_unit(units[unit_idx])
 
 
 	func can_fight() -> bool:
-		return units.size() > 0 or units_to_summon.size() > 0
+		var alive_not_summoned_units : int = 0
+		for unit in units:
+			if not unit.summoned:
+				alive_not_summoned_units += 1
+		return alive_not_summoned_units > 0 or units_to_deploy.size() > 0
 
 
-	func summon_unit(unit_data : DataUnit, coord : Vector2i, rotation : int) -> Unit:
-		units_to_summon.erase(unit_data)
+	func deploy_unit(unit_data : DataUnit, coord : Vector2i, rotation : int) -> Unit:
+		units_to_deploy.erase(unit_data)
 		var player = IM.get_player_by_index(army_reference.controller_index)
 		var result = Unit.create(player, unit_data, coord, rotation, self)
 		units.append(result)
@@ -1839,7 +1896,7 @@ class ArmyInBattleState:
 				"magic_weapons":
 					var effect : BattleMagicEffect = load(CFG.hero_magic_weapon_effect)
 					var success : bool = result.try_adding_magic_effect(effect)
-					assert(success, "couldn't add passive effect to a hero unit upon it's placement")
+					assert(success, "couldn't add passive effect to a hero unit upon it's deployment")
 					for symbol in result.symbols:
 						if symbol.attack_power != 0:
 							symbol.attack_power = effect.magic_weapon_durability
@@ -1862,10 +1919,10 @@ class ArmyInBattleState:
 		return result
 
 
-	func unsummon(coord : Vector2i):
+	func undeploy(coord : Vector2i):
 		var target = battle_grid_state.get_ref().get_unit(coord)
 		units.erase(target)
-		units_to_summon.append(target.template)
+		units_to_deploy.append(target.template)
 		#gdlint: ignore=private-method-call
 		battle_grid_state.get_ref()._remove_unit(target)
 		target.unit_killed()  #TODO change this signal to a undo specific as to not mess with future animations and text bubbles

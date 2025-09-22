@@ -1,0 +1,82 @@
+[gd_scene load_steps=2 format=3 uid="uid://baltedrhixfl7"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Educational/Practice/tutorial_menu.gd" id="1_gtpmc"]
+
+[node name="Tutorials" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_gtpmc")
+battle_bot_path = "res://Resources/Battle/Bots/MCTS_Easy.tscn"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Tutorials"
+horizontal_alignment = 1
+
+[node name="Columns" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/Columns"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Content" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
+layout_mode = 2
+text = "Basic Tutorial"
+
+[node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
+layout_mode = 2
+text = "Mana Cyclone Timer"
+
+[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
+layout_mode = 2
+text = "Spears and Shields"
+
+[node name="Button4" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
+layout_mode = 2
+text = "Parry and Parry Break"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Description" type="Label" parent="MarginContainer/VBoxContainer/Columns/VBoxContainer"]
+custom_minimum_size = Vector2(1000, 0)
+layout_mode = 2
+text = "Cyclone Timer
+
+It's an Anti Draw Mechanic that supports Wizards
+by allowing them to play on the defensive.
+"
+
+[node name="PlayButton" type="Button" parent="MarginContainer/VBoxContainer/Columns/VBoxContainer"]
+layout_mode = 2
+text = "Play"
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Columns/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]

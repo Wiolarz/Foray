@@ -144,6 +144,47 @@ max_value = 120.0
 value = 2.0
 alignment = 1
 
+[node name="HBoxRacesAndPresets" type="HBoxContainer" parent="GeneralVContainer"]
+layout_mode = 2
+
+[node name="RaceNote" type="PanelContainer" parent="GeneralVContainer/HBoxRacesAndPresets"]
+custom_minimum_size = Vector2(250, 30)
+layout_direction = 2
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GeneralVContainer/HBoxRacesAndPresets/RaceNote"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Race:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OptionButtonRace" type="OptionButton" parent="GeneralVContainer/HBoxRacesAndPresets"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "Elves"
+popup/item_0/id = 0
+
+[node name="ArmyNote" type="PanelContainer" parent="GeneralVContainer/HBoxRacesAndPresets"]
+custom_minimum_size = Vector2(250, 30)
+layout_direction = 2
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GeneralVContainer/HBoxRacesAndPresets/ArmyNote"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Army Preset:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OptionButtonArmy" type="OptionButton" parent="GeneralVContainer/HBoxRacesAndPresets"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "Example_Army_Preset"
+popup/item_0/id = 0
+
 [node name="OptionButtonUnit1" type="OptionButton" parent="GeneralVContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2

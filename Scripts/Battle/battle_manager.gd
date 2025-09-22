@@ -287,8 +287,8 @@ func undo() -> void:
 
 	# VISUALS
 	for unit in revived_units:
-		_on_unit_summoned(unit)  # revive
-	_battle_ui.refresh_after_undo(_battle_grid_state.is_during_summoning_phase())
+		_on_unit_deployment(unit)  # revive
+	_battle_ui.refresh_after_undo(_battle_grid_state.is_during_deployment_phase())
 	_end_move()
 	ANIM.fast_forward()
 
@@ -325,8 +325,8 @@ func grid_input(coord : Vector2i) -> void:
 	var move_info : MoveInfo
 
 	match _battle_grid_state.state:
-		BattleGridState.STATE_SUMMONNING:
-			move_info = _grid_input_summon(coord)
+		BattleGridState.STATE_DEPLOYMENT:
+			move_info = _grid_input_deployment(coord)
 		BattleGridState.STATE_FIGHTING:
 			if _battle_ui.selected_spell == null:
 				move_info = _grid_input_fighting(coord)
@@ -417,28 +417,30 @@ func ai_move() -> void:
 #endregion AI Support
 
 
-#region Summon Phase
+#region Deployment Phase
 
 ## handles spawning unit form when unit is spawned on a gameplay map
 ## also connects animation related signals
-func _on_unit_summoned(unit : Unit) -> void:
+func _on_unit_deployment(unit : Unit) -> void:
 	var form := UnitForm.create(unit)
 	_unit_forms_node.add_child(form)
 	_unit_to_unit_form[unit] = form
+	form.set_effects()  # VISUAL makes hero passives visible on the unit
 
 	# apply correct BM position offset in world battles
 	form.global_position = get_tile_global_position(unit.coord)
 
-	var is_placement_phase_over : bool = not _battle_grid_state.is_during_summoning_phase()
-	_battle_ui.unit_summoned(is_placement_phase_over)
-	if is_placement_phase_over:
+	var is_deployment_phase_over : bool = not _battle_grid_state.is_during_deployment_phase()
+	_battle_ui.unit_deployed(is_deployment_phase_over)
+	if is_deployment_phase_over:
 		for row : Array in _tile_grid.hexes:
 			for tile : TileForm in row:
 				# TODO replace it with better map editor features
 				if tile.type in ["1_player_spawn", "2_player_spawn", "3_player_spawn", "4_player_spawn"]:
 					tile.get_node("Sprite2D").texture = load("res://Art/battle_map/grass_tile.png")
 
-	unit.unit_magic_effect.connect(_on_unit_magic_effect.bind(unit))  # spell icons UI
+	# TODO imo should be refactored
+	unit.unit_magic_effect.connect(func(_effect: BattleMagicEffect): _on_unit_magic_effect(unit))  # spell icons UI
 
 	unit.unit_died.connect(form.anim_die)
 	unit.unit_died.connect(_on_unit_death)  # TEXT BUBBLES
@@ -461,25 +463,23 @@ func _on_unit_summoned(unit : Unit) -> void:
 		form.anim_symbol(side, CFG.SymbolAnimationType.BLOCK, attacker_coord)
 	)
 
-	unit.unit_magic_effect.emit()
 
-
-## handles player input while during the summoning phase
-func _grid_input_summon(coord : Vector2i) -> MoveInfo:
-	assert(_battle_grid_state.state == _battle_grid_state.STATE_SUMMONNING, \
-			"_grid_input_summon called in an incorrect state")
+## handles player input while during the deployment phase
+func _grid_input_deployment(coord : Vector2i) -> MoveInfo:
+	assert(_battle_grid_state.state == _battle_grid_state.STATE_DEPLOYMENT, \
+			"_grid_input_deployment called in an incorrect state")
 
 	if _battle_ui._selected_unit_pointer == null:
-		return null # no unit selected to summon on ui
+		return null # no unit selected to deploy on ui
 
-	if not _battle_grid_state.current_player_can_summon_on(coord):
+	if not _battle_grid_state.current_player_can_deploy_on(coord):
 		return null
 
-	print(NET.get_role_name(), " input - summoning unit")
-	return MoveInfo.make_summon(_battle_ui._selected_unit_pointer, coord)
+	print(NET.get_role_name(), " input - deploying unit")
+	return MoveInfo.make_deploy(_battle_ui._selected_unit_pointer, coord)
 
 
-#endregion Summon Phase
+#endregion Deployment Phase
 
 
 #region Mana Cyclone Timer
@@ -595,7 +595,7 @@ func _try_select_unit(coord : Vector2i) -> bool:
 
 	_selected_unit = new_unit
 	_unit_to_unit_form[_selected_unit].set_selected(true)
-	_update_move_highlights(_selected_unit)
+	update_move_highlights()
 
 	if _scripted_battle:
 		var current_event := BattleEventDescription.generate_current_battle_event(_battle_grid_state)
@@ -614,17 +614,33 @@ func deselect_unit() -> void:
 	_selected_unit = null
 	_battle_ui.selected_spell = null
 	_battle_ui.reset_spells()
-	_update_move_highlights(null)
+	update_move_highlights()
 
 
-func _update_move_highlights(selected_unit: Unit):
+func update_move_highlights():
 	Helpers.remove_all_children(_move_highlights_node)
-	if not selected_unit:
+	if not _selected_unit:
+		return
+
+	# Process spell moves if spell selected, TODO magic consequences, check if BGS cloning is viable
+	if _battle_ui and _battle_ui.selected_spell != null:
+
+		var magic_moves = _battle_grid_state._get_magic_moves(
+			_selected_unit,
+			_battle_ui.selected_spell
+		)
+
+		for move in magic_moves:
+			var highlight = CFG.PLAN_POINTER_SCENE.instantiate() # TODO maybe dedicated highlight gfx
+			highlight.position = BM.to_position(move.target_tile_coord)
+			highlight.z_index = 2 # Render on top of the selected unit too
+			_move_highlights_node.add_child(highlight)
 		return
 
 	for move in _battle_grid_state.get_possible_moves():
-		if move.move_source != selected_unit.coord:
+		if move.move_source != _selected_unit.coord:
 			continue
+
 		if move.move_type != MoveInfo.TYPE_MOVE: # TODO highlighting other move types
 			continue
 
@@ -684,9 +700,15 @@ func _perform_move_info(move_info : MoveInfo) -> void:
 		MoveInfo.TYPE_MOVE, MoveInfo.TYPE_SACRIFICE, MoveInfo.TYPE_MAGIC:
 			_battle_grid_state.move_info_execute(move_info)
 
-		MoveInfo.TYPE_SUMMON:
-			var unit : Unit = _battle_grid_state.move_info_summon_unit(move_info)
-			_on_unit_summoned(unit)
+			# TODO verify if it's a good enough solution for summoning units
+			# as it's hard to create new visible units within battle grid state
+			if move_info.move_type == MoveInfo.TYPE_MAGIC and move_info.spell.name in ["Summon Dryad"]:
+				_on_unit_deployment(_battle_grid_state.get_unit(move_info.target_tile_coord))
+
+
+		MoveInfo.TYPE_DEPLOY:
+			var unit : Unit = _battle_grid_state.move_info_deploy_unit(move_info)
+			_on_unit_deployment(unit)
 
 		_ :
 			assert(false, "Move move_type not supported in perform, " + str(move_info.move_type))
@@ -746,7 +768,8 @@ func _on_battle_ended() -> void:
 
 		# show battle summary over world map
 		UI.ui_overlay.show_battle_summary(_current_summary, null)
-
+	elif IM.is_city_defense_active:
+		_end_city_battle()
 	elif _replay_is_playing:
 		_battle_ui.update_replay_controls(_replay_number_of_moves, _replay_number_of_moves, _current_summary)
 		# do not exit immediately
@@ -763,6 +786,13 @@ func _close_battle_and_return() -> void:
 
 	close_when_quitting_game()
 	WM.end_of_battle(state_for_world)
+
+
+func _end_city_battle() -> void:
+	var armies : Array[BattleGridState.ArmyInBattleState] = _battle_grid_state.armies_in_battle_state
+	close_when_quitting_game()
+	IM.end_city_defense_battle(armies)
+	IM.go_to_main_menu()
 
 
 func _close_custom_battle() -> void:

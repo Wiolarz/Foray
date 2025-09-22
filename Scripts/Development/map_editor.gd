@@ -107,10 +107,10 @@ func _mark_button():
 
 #region Saving Map
 
-# TODO should be static
+# TODO should be static, TODO make it detect empty sentinel tiles, to allow background sentinel tiles
 func _optimize_grid_size(local_tile_grid : Array) -> Array:
 	"""
-	checks for the first and last non-sentinel tile placement in each grid row and column.
+	checks for the first and last non-sentinel tile placed in each grid row and column.
 	Then it will remove all empty columns at map edges
 	this function should be called during saving of a scene
 	"""

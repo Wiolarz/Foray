@@ -4,7 +4,7 @@ Turn based game, set on hexagonal board. The goal of two opposing players is to 
 
 
 Units are represented as tokens with visible art and a set of special 'Symbols' on sides.
-Starting Placement
+Starting Deployment
 
 Players in subsequent turns place their units on their starting positions. Starting with the Elves faction, Player selects one of his units then chooses one of the starting tiles near his edge of the board. After all units are placed the game begins with the Elven player making the first move.
 Movement
@@ -47,5 +47,5 @@ Example: First player is orc - Second Elf, Third - Dwarf. Both during their "1st
 Orc is first so in any ties he looses, elf as a second wins any ties with orc by looses ties with dwarf.
 
 
-that better defensive positions 
+that better defensive positions
 			# have those players that are later in the array

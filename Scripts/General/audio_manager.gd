@@ -16,6 +16,7 @@ extends Node
 	"click": $Click,
 	"ingame_click": $IngameClick,
 	"parry": $Parry,
+	"magic_effect": $MagicEffect,
 	"unit_death": $UnitDeath,
 	"move": $Move,
 	"turn": $Turn

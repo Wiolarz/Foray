@@ -20,7 +20,7 @@ static func process_command(_server : Server, _peer : ENetPacketPeer, \
 		return FAILED
 	if not "target_tile_coord" in params or not params["target_tile_coord"] is Vector2i:
 		return FAILED
-	if not "summon_unit" in params or not params["summon_unit"] is String:
+	if not "deployed_unit" in params or not params["deployed_unit"] is String:
 		return FAILED
 	var move_info = OrderMakeBattleMove.create_from(params)
 	# TODO check move legality before performing on server

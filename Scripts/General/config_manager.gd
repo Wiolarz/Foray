@@ -80,6 +80,7 @@ const BATTLE_MAP_TILES_PATH = "res://Resources/Battle/Battle_tiles/"
 const WORLD_MAP_TILES_PATH = "res://Resources/World/World_tiles/"
 const SYMBOLS_PATH = "res://Resources/Battle/Symbols/"
 const BATTLE_BOTS_PATH = "res://Resources/Battle/Bots"
+const ARMY_PRESETS_PATH = "res://Resources/Presets/Custom_Armies/"
 
 const EMPTY_SYMBOL_PATH = "res://Resources/Battle/Symbols/empty.tres"
 @onready var EMPTY_SYMBOL : DataSymbol = load(EMPTY_SYMBOL_PATH)
@@ -104,16 +105,20 @@ const CAMPAIGN_BATTLES_ELVES_PATH = "res://Resources/Campaign/Elves/"
 
 var RACE_ELVES : DataRace = load("res://Resources/Races/elf.tres")
 var RACE_ORCS : DataRace = load("res://Resources/Races/orc.tres")
+var RACE_UNDEAD : DataRace = load("res://Resources/Races/undead.tres")
+var RACE_CYCLOPS : DataRace = load("res://Resources/Races/cyclops.tres")
 var RACES_LIST : Array[DataRace] = [
 	RACE_ELVES,
 	RACE_ORCS,
+	RACE_UNDEAD,
+	RACE_CYCLOPS,
 ]
 
 
 const UNIT_FORM_SCENE = preload("res://Scenes/Form/UnitForm.tscn")
 var HEX_TILE_FORM_SCENE := load("res://Scenes/Form/TileForm.tscn") as PackedScene
 
-const SUMMON_BUTTON_TEXTURE : Texture2D = preload("res://Art/battle_map/grass.png")
+const DEPLOY_BUTTON_TEXTURE : Texture2D = preload("res://Art/battle_map/grass.png")
 const EMPTY_SLOT_TEXTURE : Texture2D = preload("res://Art/items/hex_border_light.png")
 
 const DEFAULT_ARMY_FORM = preload("res://Scenes/Form/ArmyForm.tscn")
@@ -123,13 +128,13 @@ const PLAN_POINTER_SCENE = preload("res://Scenes/UI/Battle/BattlePlanPointer.tsc
 const PLAN_ARROW_END_SCENE = preload("res://Scenes/UI/Battle/BattlePlanArrowEnd.tscn")
 
 # Neutral Units armies
-const HUNT_WOOD_PATH : String = "res://Resources/Presets/Army/hunt_wood/"
-const HUNT_IRON_PATH : String = "res://Resources/Presets/Army/hunt_iron/"
-const HUNT_RUBY_PATH : String = "res://Resources/Presets/Army/hunt_ruby/"
+const HUNT_WOOD_PATH : String = "res://Resources/Presets/World_Armies/hunt_wood/"
+const HUNT_IRON_PATH : String = "res://Resources/Presets/World_Armies/hunt_iron/"
+const HUNT_RUBY_PATH : String = "res://Resources/Presets/World_Armies/hunt_ruby/"
 
-const OUTPOST_WOOD_PATH : String = "res://Resources/Presets/Army/outpost_defenders/outpost_wood_defender.tres"
-const OUTPOST_IRON_PATH : String = "res://Resources/Presets/Army/outpost_defenders/outpost_iron_defender.tres"
-const OUTPOST_RUBY_PATH : String = "res://Resources/Presets/Army/outpost_defenders/outpost_ruby_defender.tres"
+const OUTPOST_WOOD_PATH : String = "res://Resources/Presets/World_Armies/outpost_defenders/outpost_wood_defender.tres"
+const OUTPOST_IRON_PATH : String = "res://Resources/Presets/World_Armies/outpost_defenders/outpost_iron_defender.tres"
+const OUTPOST_RUBY_PATH : String = "res://Resources/Presets/World_Armies/outpost_defenders/outpost_ruby_defender.tres"
 
 #const HUNT_PATHS : Array[String] = [HUNT_WOOD_PATH, HUNT_IRON_PATH, HUNT_RUBY_PATH]
 
@@ -152,7 +157,12 @@ const _hero_talent_weak_weapons : String = "res://Resources/Battle/Hero_Passives
 const _hero_talent_wind_weapons : String = "res://Resources/Battle/Hero_Passives/wind_weapons.tres"
 
 
+const BALLISTA_PATH : String = "res://Resources/Battle/Units/Neutral/ballista.tres"
+
+const SUMMONING_SICKNESS_PATH : String = "res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/summoning_sickness.tres"
+
 #endregion File Paths
+
 
 #region Scene Tree Paths
 
@@ -325,16 +335,80 @@ var AUTO_START_GAME : bool :
 	get: return player_options.autostart_map
 
 
+#region Learn Tab
+
+## Lists below are ordered based on their appearance,
+## changing the order will mess up saved last page,
+## but it's a small issue as it only occurs between game updates
+## while the feature is made with a single game session in mind
+
 enum LearnTabs {
-	TUTORIAL = 1,
-	PUZZLE = 2,
-	CAMPAIGN = 3,
-	SYMBOLS_WIKI = 5,
-	MAGIC_WIKI = 6,
+	PRACTICE, # Works as a general tab for now too
+	BATTLE_WIKI,
+	WORLD_WIKI,
 }
+const LEARN_TABS_NAMES = {
+	LearnTabs.PRACTICE: "Practice",
+	LearnTabs.BATTLE_WIKI: "Battle WIKI",
+	LearnTabs.WORLD_WIKI: "World WIKI",
+}
+
+enum PracticeTabs {
+	BASIC,
+	TUTORIAL,
+	PUZZLE,
+	CAMPAIGN,
+}
+
+const PRACTICE_TABS_NAMES = {
+	PracticeTabs.BASIC: "Basic Information",
+	PracticeTabs.TUTORIAL: "Tutorial",
+	PracticeTabs.PUZZLE: "Puzzles",
+	PracticeTabs.CAMPAIGN: "Campaign",
+}
+
+
+enum BattleWiki {
+	SYMBOLS_WIKI,
+	MAGIC_WIKI,
+	TERRAIN,
+	MAGIC_CYCLONE,
+} # TODO add heroes battle passives
+
+const BATTLE_WIKI_TABS_NAMES = {
+	BattleWiki.SYMBOLS_WIKI: "Symbols",
+	BattleWiki.MAGIC_WIKI: "Magic",
+	BattleWiki.TERRAIN: "Terrain",
+	BattleWiki.MAGIC_CYCLONE: "Magic Cyclone",
+}
+
+enum WorldWiki {
+	FACTIONS,
+	ECONOMY,
+	TERRAIN,
+} # TODO add rituals + heroes world passives
+
+const WORLD_WIKI_TABS_NAMES = {
+	WorldWiki.FACTIONS: "Factions",
+	WorldWiki.ECONOMY: "Economy",
+	WorldWiki.TERRAIN: "Terrain",
+}
+
 
 var LAST_OPENED_LEARN_TAB : LearnTabs :
 	get: return player_options.last_open_learn_tab
+
+var LAST_OPENED_PRACTICE_TAB : PracticeTabs :
+	get: return player_options.last_open_practice_tab
+
+var LAST_OPENED_BATTLE_WIKI_TAB : BattleWiki :
+	get: return player_options.last_open_battle_wiki_tab
+
+var LAST_OPENED_WORLD_WIKI_TAB : WorldWiki :
+	get: return player_options.last_open_world_wiki_tab
+
+#endregion Learn Tab
+
 
 enum MainMenuTabs {
 	SERVER = 0,
@@ -343,6 +417,7 @@ enum MainMenuTabs {
 	CREDITS = 3,
 	REPLAYS = 4,
 	LEARN = 5,
+	DEFENSE = 6,
 }
 
 var LAST_OPENED_TAB : MainMenuTabs :
