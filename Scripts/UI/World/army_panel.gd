@@ -46,4 +46,3 @@ func simplified_display_load_army(army : PresetArmy):
 		$HeroIcon.texture = load(army.hero.data_unit.texture_path)
 	var empty_army := Army.new()
 	load_unit_buttons(empty_army, army.units, [units_box_first_row, units_box_second_row], UNIT_ICON_SIZE, false, false)
-

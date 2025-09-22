@@ -74,48 +74,7 @@ func should_react_to_changes() -> bool:
 
 #region Top Bar
 
-
-func init_bots_button():
-	button_bot.clear()
-	for bot_name in bot_paths:
-		button_bot.add_item(bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
-	button_bot.item_selected.connect(bot_changed)
-
-
-func init_hero_list(button : OptionButton) -> void:
-	button.clear() #XD
-	button.add_item(EMPTY_UNIT_TEXT)
-	for hero_path in hero_paths:
-		button.add_item(hero_path.trim_prefix(CFG.HEROES_PATH))
-	button.item_selected.connect(hero_in_army_changed.bind())
-
-
-func init_team_list(max_player_number : int) -> void:
-	team_list.clear()
-	team_list.add_item("No Team")
-	for idx in range(1, max_player_number + 1):
-		team_list.add_item("Team " + str(idx))
-
-
-
-func hero_in_army_changed(hero_index) -> void:
-	var hero_path = hero_list.get_item_text(hero_index)
-	var hero_data : DataHero = null
-	if hero_path != EMPTY_UNIT_TEXT:
-		hero_data = load(CFG.HEROES_PATH + "/" + hero_path)
-		level_up_button.disabled = false
-	else:
-		level_up_button.disabled = true
-	var slot_index = setup_ui.slot_to_index(self)
-
-	IM.game_setup_info.set_hero(slot_index, hero_data)
-	if NET.server:
-		NET.server.broadcast_full_game_setup(IM.game_setup_info) #TODO add multi support
-	if NET.client:
-		pass#NET.client.queue_lobby_set_unit(slot_index, unit_index, unit_data) #TODO STUB
-
-
-
+#region Taking Slot
 
 func try_to_take():
 	if not setup_ui:
@@ -129,26 +88,17 @@ func try_to_leave():
 	setup_ui.try_to_leave_slot(self)
 
 
-func cycle_color(backwards : bool = false):
-	if not setup_ui:
+func _on_button_take_leave_pressed():
+	if not should_react_to_changes():
 		return
-	setup_ui.cycle_color_slot(self, backwards)
-
-
-func set_visible_color(c : Color):
-	var style_box = get_theme_stylebox("panel")
-	if not style_box is StyleBoxFlat:
-		return
-	var style_box_flat = style_box as StyleBoxFlat
-	style_box_flat.bg_color = c
-
-
-func set_visible_name(player_name : String):
-	label_name.text = player_name
-
-
-func set_visible_team(team : int):
-	team_list.selected = team
+	match button_take_leave_state:
+		TakeLeaveButtonState.FREE:
+			try_to_take()
+		TakeLeaveButtonState.TAKEN_BY_YOU:
+			try_to_leave()
+		TakeLeaveButtonState.TAKEN_BY_OTHER:
+			if IM.is_slot_steal_allowed():
+				try_to_take()
 
 
 func set_visible_take_leave_button_state(state : TakeLeaveButtonState):
@@ -177,10 +127,51 @@ func set_visible_take_leave_button_state(state : TakeLeaveButtonState):
 			button_take_leave.text = "ghost"
 			button_take_leave.disabled = true
 
-#endregion Option Button Support
+
+#endregion Taking Slot
 
 
-#region Multiplayer/Preset Related
+#region Color
+
+func cycle_color(backwards : bool = false):
+	if not setup_ui:
+		return
+	setup_ui.cycle_color_slot(self, backwards)
+
+
+func set_visible_color(c : Color):
+	var style_box = get_theme_stylebox("panel")
+	if not style_box is StyleBoxFlat:
+		return
+	var style_box_flat = style_box as StyleBoxFlat
+	style_box_flat.bg_color = c
+
+
+func _on_button_color_pressed():
+	if not should_react_to_changes():
+		return
+	cycle_color()
+
+#endregion Color
+
+
+#region Name
+
+func set_visible_name(player_name : String):
+	label_name.text = player_name
+
+#endregion Name
+
+
+#region Hero list
+
+func init_hero_list(button : OptionButton) -> void:
+	button.clear() #XD
+	button.add_item(EMPTY_UNIT_TEXT)
+	for hero_path in hero_paths:
+		button.add_item(hero_path.trim_prefix(CFG.HEROES_PATH))
+	button.item_selected.connect(hero_in_army_changed.bind())
+
 
 func set_hero_option_button(slot_hero_template : DataHero) -> void:
 	if not slot_hero_template:
@@ -194,7 +185,44 @@ func set_hero_option_button(slot_hero_template : DataHero) -> void:
 			return
 	assert(false, "hero assigned to an army is not present in hero list")
 
-#endregion Multiplayer Related
+
+func hero_in_army_changed(hero_index) -> void:
+	var hero_path = hero_list.get_item_text(hero_index)
+	var hero_data : DataHero = null
+	if hero_path != EMPTY_UNIT_TEXT:
+		hero_data = load(CFG.HEROES_PATH + "/" + hero_path)
+		level_up_button.disabled = false
+	else:
+		level_up_button.disabled = true
+	var slot_index = setup_ui.slot_to_index(self)
+
+	IM.game_setup_info.set_hero(slot_index, hero_data)
+	if NET.server:
+		NET.server.broadcast_full_game_setup(IM.game_setup_info) #TODO add multi support
+	if NET.client:
+		pass#NET.client.queue_lobby_set_unit(slot_index, unit_index, unit_data) #TODO STUB
+
+
+func _on_button_level_up_pressed():
+	if not should_react_to_changes():
+		return
+
+	var slot_index : int = setup_ui.slot_to_index(self)
+
+	setup_ui.show_hero_level_up(slot_index)
+
+	UI.show_hero_level_up()
+
+#endregion Hero list
+
+
+#region Bots
+
+func init_bots_button():
+	button_bot.clear()
+	for bot_name in bot_paths:
+		button_bot.add_item(bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
+	button_bot.item_selected.connect(bot_changed)
 
 
 func bot_changed(bot_index):
@@ -209,31 +237,27 @@ func set_bot(new_bot_path: String):
 	button_bot.select(idx)
 	bot_changed(idx)
 
+#endregion Bots
 
-func fill_team_list(max_player_number : int) -> void:
+
+#region Teams
+
+func set_visible_team(team : int):
+	team_list.selected = team
+
+
+func init_team_list(max_player_number : int) -> void:
 	team_list.clear()
 	team_list.add_item("No Team")
 	for idx in range(1, max_player_number + 1):
 		team_list.add_item("Team " + str(idx))
 
 
-func _on_button_take_leave_pressed():
-	if not should_react_to_changes():
-		return
-	match button_take_leave_state:
-		TakeLeaveButtonState.FREE:
-			try_to_take()
-		TakeLeaveButtonState.TAKEN_BY_YOU:
-			try_to_leave()
-		TakeLeaveButtonState.TAKEN_BY_OTHER:
-			if IM.is_slot_steal_allowed():
-				try_to_take()
-
-
-func _on_button_color_pressed():
-	if not should_react_to_changes():
-		return
-	cycle_color()
+func fill_team_list(max_player_number : int) -> void:
+	team_list.clear()
+	team_list.add_item("No Team")
+	for idx in range(1, max_player_number + 1):
+		team_list.add_item("Team " + str(idx))
 
 
 func _on_option_button_team_item_selected(index : int):
@@ -247,16 +271,7 @@ func _on_option_button_team_item_selected(index : int):
 	if NET.client:
 		NET.client.queue_lobby_set_team(slot_index, index)
 
-
-func _on_button_level_up_pressed():
-	if not should_react_to_changes():
-		return
-
-	var slot_index : int = setup_ui.slot_to_index(self)
-
-	setup_ui.show_hero_level_up(slot_index)
-
-	UI.show_hero_level_up()
+#endregion Teams
 
 #endregion Top Bar
 
