@@ -159,7 +159,9 @@ const _hero_talent_wind_weapons : String = "res://Resources/Battle/Hero_Passives
 
 const BALLISTA_PATH : String = "res://Resources/Battle/Units/Neutral/ballista.tres"
 
+# Spell Effects
 const SUMMONING_SICKNESS_PATH : String = "res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/summoning_sickness.tres"
+const BURNING_PATH : String = "res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/burning.tres"
 
 #endregion File Paths
 

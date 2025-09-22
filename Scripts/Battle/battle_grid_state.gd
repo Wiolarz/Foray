@@ -1,6 +1,8 @@
 class_name BattleGridState
 extends GenericHexGrid
 
+signal tile_is_buring(coord : Vector2i)
+
 enum MoveConsequences {
 	NONE,
 	KILL,
@@ -690,6 +692,8 @@ func _switch_participant_turn() -> void:
 					break
 
 		STATE_FIGHTING:
+			_end_of_move_magic(prev_idx)
+
 			while not armies_in_battle_state[current_army_index].can_fight():
 				current_army_index += 1
 				current_army_index %= armies_in_battle_state.size()
@@ -719,8 +723,6 @@ func _switch_participant_turn() -> void:
 
 	var next_player := armies_in_battle_state[current_army_index]
 	# chess clock is updated in turn_ended() and turn_started()
-
-	_end_of_move_magic()
 
 	prev_player.turn_ended()
 
@@ -828,6 +830,8 @@ func _change_unit_coord(unit : Unit, target_coord : Vector2i) -> void:
 	if target_tile.is_mana_tile():
 		unit.unit_captured_mana.emit(target_coord)
 		capture_mana_well(target_tile, unit.army_in_battle)
+	if target_tile.fire:
+		unit.try_adding_magic_effect(load(CFG.BURNING_PATH))
 
 
 ## Used for movement, kills, undeploy(undo) [br]
@@ -1070,7 +1074,7 @@ func is_spell_target_valid(caster : Unit, coord : Vector2i, spell : BattleSpell)
 			var target = get_unit(coord)
 			if target and target.controller == caster.controller and target != caster:
 				return true
-		"Fireball": # any hex target is valid
+		"Fireball", "Fire Wall": # any hex target is valid
 			return true
 		"Anchor": # any unit
 			var target = get_unit(coord)
@@ -1162,7 +1166,24 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 			unit.spells = unit.template.spells.duplicate()
 			unit.spells.erase(spell)
 			_kill_unit(target)
+		"Fire Wall":
+			var target_tiles_coords : Array[Vector2i] = [target_tile_coord]
+			for direction in DIRECTION_TO_OFFSET:
+				target_tiles_coords.append(target_tile_coord + direction)
 
+			for tile_coord in target_tiles_coords:
+				if not is_on_grid(tile_coord):
+					continue
+				var hex : BattleHex = get_hex(tile_coord)
+				if not hex.is_basic_grass() and not hex.fire:
+					continue
+
+				hex.fire = true
+				tile_is_buring.emit(tile_coord)
+
+				var target : Unit = get_unit(tile_coord)
+				if target:
+					target.try_adding_magic_effect(load(CFG.BURNING_PATH))
 		_:
 			printerr("Spell perform not supported: ", spell.name)
 			return
@@ -1172,12 +1193,13 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 
 ## spell effects that occur after allmove related event already took place [br]
 ## runs for all units
-func _end_of_move_magic() -> void:
+func _end_of_move_magic(army_that_just_moved_idx : int) -> void:
 	for army in armies_in_battle_state:
 		if not battle_is_ongoing(): #TODO verify if thats a proper fix for spell combination, which results in a draw
 			return
 		for unit : Unit in army.units:
-			for magic_effect in unit.effects:
+			for effect_idx in range(unit.effects.size() -1, -1, -1):
+				var magic_effect : BattleMagicEffect = unit.effects[effect_idx]
 				match magic_effect.name:
 					"Blood Ritual":
 						if army.units.size() == 1:
@@ -1185,6 +1207,17 @@ func _end_of_move_magic() -> void:
 					"Death Mark":
 						_kill_unit(unit)
 						break
+					"Burning":
+						## checking if unit's turn just passed
+						if unit.army_in_battle != armies_in_battle_state[army_that_just_moved_idx]:
+							continue
+
+						if get_hex(unit.coord).fire:
+							_kill_unit(unit)
+							break
+						else:
+							unit.effects.pop_at(effect_idx)
+							unit.effect_state_changed()
 
 
 ## STUB for proper countdown system
@@ -1680,6 +1713,7 @@ class BattleHex:
 	var mana : bool = false
 	var pit : bool = false
 	var hill : bool = false
+	var fire : bool = false
 
 	## allows unit to "enter" the tile under the condition
 	## that it's facing it
@@ -1745,6 +1779,10 @@ class BattleHex:
 
 	func is_mana_tile() -> bool:
 		return mana
+
+	func is_basic_grass() -> bool:
+		return not mana and not swamp and not hill and not pit and not fire \
+		and can_be_moved_to and can_shoot_through
 
 
 class ArmyInBattleState:

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="BattleMagicEffect" load_steps=2 format=3 uid="uid://c5ag00rnwomgr"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/battle_magic_effect.gd" id="1_0l4a5"]
+
+[resource]
+script = ExtResource("1_0l4a5")
+name = "Burning"
+icon_path = "res://Art/magic/spell_icons/fireball.png"
+spell_effects = Array[ExtResource("1_0l4a5")]([])
+passive_effect = true

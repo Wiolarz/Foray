@@ -94,6 +94,7 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 	_battle_grid_state = BattleGridState.create(battle_map, new_armies)
 
 	# GRAPHICS GRID:
+	_battle_grid_state.tile_is_buring.connect(tile_burns)
 	_load_map(battle_map)
 	_grid_tiles_node.position.x = x_offset
 	horizontal_offset = x_offset
@@ -724,6 +725,11 @@ func _perform_move_info(move_info : MoveInfo) -> void:
 
 
 	_end_move()
+
+
+func tile_burns(coord : Vector2i) -> void:
+	#TODO move to CFG
+	_tile_grid.get_hex(coord).get_node("Sprite2D").texture = load("res://Art/magic/spell_icons/fireball.png")
 
 #endregion Fighting Phase
 
