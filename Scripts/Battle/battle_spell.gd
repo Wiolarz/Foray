@@ -2,6 +2,12 @@
 class_name BattleSpell
 extends Resource
 
+enum DirectionCast {ANY, FRONT, STRAIGHT}
+
+enum TargetType {ANY, UNIT, EMPTY_TILE}
+
+enum TargetUnitType {ANY, ALLY, ENEMY}
+
 @export var name : String = ""
 @export_file var icon_path : String = ""
 @export_multiline var description : String = ""
@@ -20,11 +26,8 @@ extends Resource
 		cast_range = value
 		notify_property_list_changed()
 
-enum DirectionCast {ANY, FRONT, STRAIGHT}
 @export var direction_cast := DirectionCast.ANY
 
-
-enum TargetType {ANY, UNIT, EMPTY_TILE}
 @export var target_type := TargetType.ANY :
 	set(value):
 		target_type = value
@@ -38,10 +41,8 @@ var needs_movable_tile : bool = false
 
 # Unit Category
 
-enum TargetUnitType {ANY, ALLY, ENEMY}
 var target_unit_type := TargetUnitType.ANY
 var not_self : bool = false
-
 
 
 func _get_property_list() -> Array[Dictionary]:
