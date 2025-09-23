@@ -11,14 +11,13 @@ extends Resource
 ## optional, used only by summon spells
 @export var summon_unit_data : DataUnit
 
-##STUB category
+
 @export_category("restrictions for spell targeting")
 
-
 ## -1 infinite | 0 allows only to cast on itself
-@export var axial_cast_range : int = -1 :
+@export var cast_range : int = -1 :
 	set(value):
-		axial_cast_range = value
+		cast_range = value
 		notify_property_list_changed()
 
 enum DirectionCast {ANY, FRONT, STRAIGHT}
@@ -26,7 +25,6 @@ enum DirectionCast {ANY, FRONT, STRAIGHT}
 
 
 enum TargetType {ANY, UNIT, EMPTY_TILE}
-
 @export var target_type := TargetType.ANY :
 	set(value):
 		target_type = value
@@ -59,7 +57,7 @@ func _get_property_list() -> Array[Dictionary]:
 	if target_type == TargetType.EMPTY_TILE:
 		tile_properties = PROPERTY_USAGE_DEFAULT
 
-	if axial_cast_range != 0 and not needs_movable_tile:
+	if cast_range != 0 and not needs_movable_tile:
 		not_self_property = PROPERTY_USAGE_DEFAULT
 
 	var properties :  Array[Dictionary] = []
@@ -110,10 +108,10 @@ func generate_description() -> String:
 			result += "any enemy unit which is not the last one alive"
 			return result
 
-	if axial_cast_range == 0:
+	if cast_range == 0:
 		return result + "caster can only target himself"
-	elif axial_cast_range != -1:
-		result += "Spell has a range of: " + str(axial_cast_range) + "\n"
+	elif cast_range != -1:
+		result += "Spell has a range of: " + str(cast_range) + "\n"
 
 	match direction_cast:
 		BattleSpell.DirectionCast.FRONT:

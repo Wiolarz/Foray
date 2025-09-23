@@ -1048,8 +1048,8 @@ func is_spell_target_valid(caster : Unit, coord : Vector2i, spell : BattleSpell)
 	if spell.not_self and caster.coord == coord:
 		return false
 
-	if spell.axial_cast_range != -1:
-		if GenericHexGrid.axial_distance(caster.coord, coord) > spell.axial_cast_range:
+	if spell.cast_range != -1:
+		if GenericHexGrid.axial_distance(caster.coord, coord) > spell.cast_range:
 			return false
 
 	match spell.direction_cast:

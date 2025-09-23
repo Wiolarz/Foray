@@ -12,7 +12,7 @@ if an enemy unit during their turn were to make a move, leading to this units de
 
 But if it were to be the last unit killed, spell won't take effect as the battle will be over."
 spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([ExtResource("2_gmkfr")])
-axial_cast_range = -1
+cast_range = -1
 direction_cast = 0
 target_type = 1
 needs_movable_tile = false
