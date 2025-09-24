@@ -102,7 +102,7 @@ func _to_string() -> String:
 
 func generate_description() -> String:
 	var result : String = description
-	result += "\n" + "Who spell can target:" + "\n"
+	result += "\n" + "Possible spell targets:" + "\n"
 
 	match name: # Unique spells
 		"Blood Ritual":
