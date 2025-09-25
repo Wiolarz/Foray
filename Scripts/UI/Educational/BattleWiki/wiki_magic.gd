@@ -16,11 +16,11 @@ func _ready():
 	generate_battle_spell_buttons()
 
 
-func load_spell(battle_spell : BattleSpell) -> void:
-	spell_information_title.text = battle_spell.name.capitalize()
-	spell_information_icon.texture = load(battle_spell.icon_path)
+func load_spell(spell : BattleSpell) -> void:
+	spell_information_title.text = spell.name.capitalize()
+	spell_information_icon.texture = load(spell.icon_path)
 
-	spell_information_description.text = battle_spell.description
+	spell_information_description.text = spell.generate_description()
 
 
 func generate_battle_spell_buttons() -> void:
