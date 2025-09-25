@@ -729,7 +729,7 @@ func _perform_move_info(move_info : MoveInfo) -> void:
 
 func tile_burns(coord : Vector2i) -> void:
 	#TODO move to CFG
-	_tile_grid.get_hex(coord).get_node("Sprite2D").texture = load("res://Art/magic/spell_icons/fireball.png")
+	_tile_grid.get_hex(coord).get_node("Sprite2D").texture = load("res://Art/battle_map/fire_tile.png")
 
 #endregion Fighting Phase
 

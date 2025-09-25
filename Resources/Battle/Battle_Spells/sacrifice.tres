@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_g2q60")
 name = "Sacrifice"
-icon_path = "res://Art/magic/spell_icons/vengence.png"
+icon_path = "res://Art/magic/spell_icons/sacrifice.png"
 description = "Sacrifice an ally unit to gain mana and refresh your spells."
 spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
 axial_cast_range = -1

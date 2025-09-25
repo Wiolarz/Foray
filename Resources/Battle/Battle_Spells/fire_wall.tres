@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_wxy6c")
 name = "Fire Wall"
-icon_path = "res://Art/magic/spell_icons/fireball.png"
+icon_path = "res://Art/magic/spell_icons/fire_wall.png"
 description = "Chosen tile alongside every adjacant grass tile is covered by fire. Any unit that ends their move on it dies."
 spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
 axial_cast_range = 0
