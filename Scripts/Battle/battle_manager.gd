@@ -99,6 +99,12 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 	# CORE GAMEPLAY logic initialization
 	_battle_grid_state = BattleGridState.create(battle_map, new_armies)
 
+	# DRUT - Assign battle IDs to bots so that they don't try to perform moves in battles they don't belong to
+	for army in _battle_grid_state.armies_in_battle_state:
+		var player := IM.get_player_by_index(army.army_reference.controller_index)
+		if player.bot_engine != null:
+			player.bot_engine.battle_id = _replay_battle_id
+
 	# GRAPHICS GRID:
 	_load_map(battle_map)
 	_grid_tiles_node.position.x = x_offset
@@ -265,6 +271,9 @@ func _on_turn_started(player : Player) -> void:
 			bot.cleanup_after_move()
 
 		if _battle_grid_state == null: # Player quit to main menu before finishing
+			return
+
+		if bot.battle_id != _replay_battle_id: # DRUT/Bugfix - bot outlived its own battle
 			return
 
 		if not my_cancel_token.is_canceled():

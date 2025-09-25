@@ -1192,6 +1192,12 @@ bool BattleManagerFast::is_occupied(Position pos, const Army& army, TeamRelation
 	return false;
 }
 
+void BattleManagerFast::_print_assert(const char* str) {
+	if(_debug_internals) {
+		WARN_PRINT(str);
+	}
+}
+
 #pragma endregion Other utility BM functions
 
 #pragma region Godot integration

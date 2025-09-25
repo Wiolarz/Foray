@@ -18,7 +18,7 @@
 #define BM_ASSERT_V(cond, v, ...)													\
 	do {																			\
 		if(!(cond)) {																\
-			WARN_PRINT(std::format("BMFast assert failed: " __VA_ARGS__).c_str());	\
+			_print_assert(std::format("BMFast assert failed: " __VA_ARGS__).c_str());\
 			_set_error_flag(); return v;											\
 		}																			\
 	} while(0)
@@ -86,6 +86,8 @@ class BattleManagerFast {
 	void _update_mana();
 	void _update_mana_target();
 	std::pair<size_t, size_t> _get_cyclone_worst_and_best_idx() const;
+
+	void _print_assert(const char* str);
 
 	friend class BattleManagerFastCpp;
 
@@ -296,6 +298,10 @@ public:
 
 	void set_debug_internals(bool state) {
 		bm.set_debug_internals(state);
+	}
+
+	void _print_assert(const char* str) {
+		bm._print_assert(str);
 	}
 };
 

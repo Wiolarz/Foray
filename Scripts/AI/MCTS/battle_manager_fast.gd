@@ -318,9 +318,9 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 			for spell in unit.spells:
 				spell_dict[spell.name] = spell_dict.get(spell.name, 0) + 1
 
-			for spell in spell_dict:
+			for spell : String in spell_dict:
 				if count_spell(army_id, unit_id, spell) != spell_dict.get(spell, 0):
-					push_error("BMFast mismatch - unit id ", unit_str, " fast does not have slow spell ", spell.name)
+					push_error("BMFast mismatch - unit id ", unit_str, " fast does not have slow spell ", spell)
 					is_ok = false
 
 			if get_unit_spell_count(army_id, unit_id) != unit.spells.size():

@@ -3,6 +3,9 @@ extends Node
 
 var me : Player
 
+# Bugfix - there was a chance that when a new battle is started,
+# a bot from the old one will try to perform a move
+var battle_id : int
 
 func set_player(controlled_player: Player):
 	me = controlled_player
