@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3 uid="uid://bves4yqr2fe4y"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://tb8mbcolcm4n"]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_61rs1"]
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_3rhym"]
+[ext_resource type="Resource" uid="uid://b7xp80rauu18d" path="res://Resources/Battle/Symbols/strong_sword.tres" id="3_5f5he"]
 [ext_resource type="Resource" uid="uid://dy85xcp8g7gbq" path="res://Resources/Battle/Symbols/sword.tres" id="3_j6n00"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="4_uiwmq"]
 
@@ -15,7 +16,7 @@ ruby = 0
 script = ExtResource("2_3rhym")
 unit_name = "Rigid"
 texture_path = "res://Art/units/fiends/fiend_hero_rigid.png"
-symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_j6n00"), ExtResource("3_j6n00"), ExtResource("3_j6n00"), ExtResource("4_uiwmq"), ExtResource("3_j6n00"), ExtResource("3_j6n00")])
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_5f5he"), ExtResource("3_j6n00"), ExtResource("3_j6n00"), ExtResource("4_uiwmq"), ExtResource("3_j6n00"), ExtResource("3_j6n00")])
 cost = SubResource("Resource_k8g4u")
 level = 1
 mana = 0

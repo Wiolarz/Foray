@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="DataRace" load_steps=15 format=3 uid="uid://dliueq8eloawq"]
+
+[ext_resource type="Script" path="res://Resources/Races/data_race.gd" id="1_nw0v3"]
+[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="1_q2ttk"]
+[ext_resource type="Resource" uid="uid://bdcjijsj36d16" path="res://Resources/Races/Buildings/Barracks_2.tres" id="2_j4rs3"]
+[ext_resource type="Resource" uid="uid://4to52cd5bq7w" path="res://Resources/Races/Buildings/Barracks_3.tres" id="3_kotkv"]
+[ext_resource type="Resource" uid="uid://c58tmflxit2cf" path="res://Resources/Races/Buildings/Sawmill.tres" id="4_h4i84"]
+[ext_resource type="Resource" uid="uid://d1feykna5ubfo" path="res://Resources/Battle/Heroes/Fiends/fiend_hero_prophet.tres" id="5_qpatp"]
+[ext_resource type="Resource" uid="uid://cjvk5ebevdqo" path="res://Resources/Battle/Heroes/Fiends/fiend_hero_enforcer.tres" id="6_njwc8"]
+[ext_resource type="Resource" uid="uid://dgnjky4w720c1" path="res://Resources/Battle/Heroes/Fiends/fiend_hero_rigid.tres" id="7_ejoag"]
+[ext_resource type="Resource" uid="uid://dhptbxwrrbtlu" path="res://Resources/Battle/Units/Fiends/fiend_1_servant.tres" id="9_fx7fc"]
+[ext_resource type="Resource" uid="uid://dik61pe44pl11" path="res://Resources/Battle/Units/Fiends/fiend_2_cultist.tres" id="10_51vy3"]
+[ext_resource type="Resource" path="res://Resources/Battle/Units/Fiends/fiend_3_impaler.tres" id="11_xltke"]
+[ext_resource type="Resource" uid="uid://dw8ubgqhc0opp" path="res://Resources/Battle/Units/Fiends/fiend_4_bruiser.tres" id="12_mfcmw"]
+[ext_resource type="Resource" uid="uid://cj2klucehwp7" path="res://Resources/Battle/Units/Fiends/fiend_5_sacrificer.tres" id="13_frp4v"]
+[ext_resource type="Resource" uid="uid://pea38874ip8m" path="res://Resources/Battle/Units/Fiends/fiend_6_pit_lord.tres" id="14_xqvb8"]
+
+[resource]
+script = ExtResource("1_nw0v3")
+race_name = "Fiends"
+units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("9_fx7fc"), ExtResource("10_51vy3"), ExtResource("11_xltke"), ExtResource("12_mfcmw"), ExtResource("13_frp4v"), ExtResource("14_xqvb8")])
+heroes = Array[Resource("res://Resources/Battle/data_hero.gd")]([ExtResource("5_qpatp"), ExtResource("6_njwc8"), ExtResource("7_ejoag")])
+buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_q2ttk"), ExtResource("2_j4rs3"), ExtResource("3_kotkv"), ExtResource("4_h4i84")])
+description = "T>M>P"

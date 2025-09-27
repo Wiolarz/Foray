@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" script_class="SymbolAnimation" load_steps=15 format=3 uid="uid://biq7crtur120v"]
+[gd_resource type="SpriteFrames" script_class="SymbolAnimation" load_steps=15 format=3 uid="uid://do183rew6gq2p"]
 
 [ext_resource type="Texture2D" uid="uid://b2d6kt7711p37" path="res://Art/animations/javelin_hit.png" id="1_1yv5t"]
 [ext_resource type="Script" path="res://Resources/Battle/symbol_animation.gd" id="1_y1b4n"]

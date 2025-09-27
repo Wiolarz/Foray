@@ -1,8 +1,10 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3 uid="uid://cj2klucehwp7"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://cj2klucehwp7"]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_n1sm8"]
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_3lhvc"]
+[ext_resource type="Resource" uid="uid://nj6pvy1ljot0" path="res://Resources/Battle/Battle_Spells/fire_wall.tres" id="3_1moph"]
 [ext_resource type="Resource" uid="uid://bpp7uuufysbuh" path="res://Resources/Battle/Symbols/sickle.tres" id="3_v0e2d"]
+[ext_resource type="Resource" uid="uid://rvifpr2apuv3" path="res://Resources/Battle/Battle_Spells/sacrifice.tres" id="4_avmik"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_5k6b7"]
 
 [sub_resource type="Resource" id="Resource_k8g4u"]
@@ -19,4 +21,4 @@ symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource(
 cost = SubResource("Resource_k8g4u")
 level = 5
 mana = 3
-spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([ExtResource("3_1moph"), ExtResource("4_avmik")])

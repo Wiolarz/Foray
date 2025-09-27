@@ -2,7 +2,7 @@ class_name DataSymbol
 extends Resource
 
 @export var symbol_name : String
-@export var texture_path : String
+@export_file var texture_path : String
 @export var symbol_animation : SymbolAnimation
 
 #region Statistics
