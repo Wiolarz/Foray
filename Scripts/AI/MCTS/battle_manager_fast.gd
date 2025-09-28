@@ -6,7 +6,7 @@ extends BattleManagerFastCpp
 
 var _integrity_check_move: MoveInfo
 
-## Maps BMFast's unit IDs (in format [army, unit]) and DataUnit
+## Maps BMFast's unit IDs (in format [army, unit]) and int
 var summon_mapping_cpp2gd: Dictionary = {}
 ## Maps BMFast's unit IDs (in format [army, unit]) and DataUnit
 var summon_mapping_gd2cpp: Dictionary = {}
@@ -88,15 +88,15 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 
 		# Deployment processing
 		for summon_idx in range(army.units_to_deploy.size()):
-			var unit = army.units_to_deploy[summon_idx]
-			var unit_idx = summon_idx + army.units.size()
+			var unit : Unit = army.units_to_deploy[summon_idx] # THIS PR: check how does it affect cpp
+			var unit_idx : int = summon_idx + army.units.size()
 
 			new.insert_unit(army_idx, unit_idx, Vector2i.ZERO, 0, true)
 			for i in range(6):
 				new.set_unit_symbol(army_idx, unit_idx, i, unit.symbols[i])
 
-			new.summon_mapping_cpp2gd[[army_idx, unit_idx]] = unit
-			new.summon_mapping_gd2cpp[unit] = [army_idx, unit_idx]
+			new.summon_mapping_cpp2gd[[army_idx, unit_idx]] = summon_idx
+			new.summon_mapping_gd2cpp[unit.template] = [army_idx, unit_idx]
 
 	new.finish_initialization()
 
@@ -128,6 +128,8 @@ func libspear_tuple_to_move_info(tuple: Array) -> MoveInfo:
 	if is_in_sacrifice_phase():
 		return MoveInfo.make_sacrifice(unit_position)
 	elif is_in_summoning_phase():
+
+
 		return MoveInfo.make_deploy(summon_mapping_cpp2gd[uid], position)
 	elif tuple.size() == 3: # Magic
 		return MoveInfo.make_magic(unit_position, position, spell_mapping[tuple[2]])

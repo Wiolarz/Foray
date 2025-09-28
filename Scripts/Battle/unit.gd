@@ -18,7 +18,11 @@ signal unit_captured_mana(target_tile : Vector2i)  # change visuals of the tile 
 
 
 ## TODO remove this
-var controller : Player
+var controller : Player :
+	get:
+		if army_in_battle:
+			return IM.get_player_by_index(army_in_battle.army_reference.controller_index)
+		return null
 ## reference to army to which the unit belongs
 var army_in_battle : BattleGridState.ArmyInBattleState
 

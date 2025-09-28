@@ -38,7 +38,7 @@ var current_player : int = 0
 
 ## used only for deployment unit tiles,
 ## points to currently selected unit/unit-button in deployment bar
-var _selected_unit_pointer : DataUnit = null
+var _selected_unit_pointer : Unit = null
 var _selected_unit_button_pointer : BaseButton = null
 
 ## used only for deployment unit tiles, points to currently hovered unit button in deployment bar
@@ -252,7 +252,7 @@ func on_player_selected(army_index : int, preview : bool = false):
 	var bg_color : DataPlayerColor = CFG.NEUTRAL_COLOR
 	if units_controller:
 		bg_color = units_controller.get_player_color()
-	for unit in armies_reference[army_index].units_to_deploy:
+	for unit : Unit in armies_reference[army_index].units_to_deploy:
 		# here is the place where unit buttons for deployment are
 
 		var button := TextureButton.new()

@@ -222,8 +222,8 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 		continue_button.disabled = true
 		return
 
-	for dead_unit in armies[0].dead_units:
-		current_roster.units.erase(dead_unit)
+	for dead_unit : Unit in armies[0].dead_units:
+		current_roster.units.erase(dead_unit.template)
 
 	# goods awards 0 is starting amount, so we always add + 1
 	if current_wave + 1 >= goods_awards.size():

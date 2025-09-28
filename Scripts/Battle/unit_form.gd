@@ -33,7 +33,7 @@ static func create(new_unit : Unit) -> UnitForm:
 	else:
 		color = new_unit.controller.get_player_color()
 
-	result.ready.connect(result.apply_graphics.bind(new_unit.template, color))
+	result.ready.connect(result.apply_graphics.bind(new_unit, color))
 
 	result.global_position = BM.get_tile_global_position(new_unit.coord)
 	result.rotation_degrees = new_unit.unit_rotation * 60
@@ -44,27 +44,63 @@ static func create(new_unit : Unit) -> UnitForm:
 
 ## HACK, this is for visuals only for deployment UI
 ## no underlying Unit exists
-static func create_for_deployment_ui(template: DataUnit, color : DataPlayerColor) -> UnitForm:
+static func create_for_deployment_ui(unit : Unit, color : DataPlayerColor) -> UnitForm:
 	var result = CFG.UNIT_FORM_SCENE.instantiate()
 	# defer apply_graphics to after the symbol forms are ready (they must be in order for this to work)
-	result.ready.connect(result.apply_graphics.bind(template, color))
+	result.ready.connect(result.apply_graphics.bind(unit, color))
 	return result
 
 
-func apply_graphics(template : DataUnit, color : DataPlayerColor):
-	var unit_texture = load(template.texture_path) as Texture2D
+static func create_for_trade_ui(unit_data : DataUnit, color : DataPlayerColor) -> UnitForm:
+	var result = CFG.UNIT_FORM_SCENE.instantiate()
+	# defer apply_graphics to after the symbol forms are ready (they must be in order for this to work)
+	result.ready.connect(result.data_apply_graphics.bind(unit_data, color))
+	return result
+
+
+func apply_graphics(unit : Unit, color : DataPlayerColor):
+	var unit_texture = load(unit.template.texture_path) as Texture2D
 	_set_texture(unit_texture)
 	_apply_color_texture(color)
-	_apply_level_and_mana_numbers(template.level, template.mana)
+	_apply_level_and_mana_numbers(unit.level, unit.mana)
 
 	for side in range(0,6):
 		var symbol_texture
 		if entity:   # effects may change symbols during battle
 			symbol_texture = entity.symbols[side].texture_path
 		else:  # Deployment screen
-			symbol_texture = template.symbols[side].texture_path
+			symbol_texture = unit.symbols[side].texture_path
 
-		var data_symbol = template.symbols[side]
+		var data_symbol = unit.symbols[side]
+		var symbol = get_symbol(side)
+		var unit_rotation = entity.unit_rotation if entity else 0
+		var side_local = (unit_rotation + side) % 6
+
+		symbol.apply_sprite(side_local, symbol_texture)
+		symbol.apply_activation_anim(data_symbol)
+
+	_flip_unit_sprite()
+	$RigidUI/SpellEffect1.texture = null
+	$RigidUI/SpellEffect2.texture = null
+	$RigidUI/SpellEffectCounter1.text = ""
+	$RigidUI/SpellEffectCounter2.text = ""
+	$RigidUI/TerrainEffect.texture = null
+
+
+func data_apply_graphics(unit_data : DataUnit, color : DataPlayerColor):
+	var unit_texture = load(unit_data.texture_path) as Texture2D
+	_set_texture(unit_texture)
+	_apply_color_texture(color)
+	_apply_level_and_mana_numbers(unit_data.level, unit_data.mana)
+
+	for side in range(0,6):
+		var symbol_texture
+		if entity:   # effects may change symbols during battle
+			symbol_texture = entity.symbols[side].texture_path
+		else:  # Deployment screen
+			symbol_texture = unit_data.symbols[side].texture_path
+
+		var data_symbol = unit_data.symbols[side]
 		var symbol = get_symbol(side)
 		var unit_rotation = entity.unit_rotation if entity else 0
 		var side_local = (unit_rotation + side) % 6
@@ -183,7 +219,7 @@ func anim_symbol(side : int, animation_type : int, target_coord: Vector2i = Vect
 
 		CFG.SymbolAnimationType.BLOCK:
 			var data_symbol : DataSymbol = \
-				other_unit.entity.template.symbols[opposite_side_local]
+				other_unit.entity.symbols[opposite_side_local]
 			var attack_tween_sync: ANIM.TweenSync
 
 			if data_symbol.does_it_shoot():

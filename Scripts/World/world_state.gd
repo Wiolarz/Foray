@@ -549,7 +549,7 @@ func end_combat(battle_results : Array[BattleGridState.ArmyInBattleState]) -> vo
 			remove_army(army)
 		else:
 			var dead_units_data : Array[DataUnit] = []
-			for unit in army_state.dead_units:
+			for unit : Unit in army_state.dead_units:
 				dead_units_data.append(unit.template)
 			army.apply_losses(dead_units_data)
 

@@ -476,7 +476,12 @@ func _grid_input_deployment(coord : Vector2i) -> MoveInfo:
 		return null
 
 	print(NET.get_role_name(), " input - deploying unit")
-	return MoveInfo.make_deploy(_battle_ui._selected_unit_pointer, coord)
+	var army : BattleGridState.ArmyInBattleState = \
+	 _battle_grid_state.armies_in_battle_state[_battle_grid_state.current_army_index]
+
+	var unit_idx : int = army.units_to_deploy.find(_battle_ui._selected_unit_pointer)
+
+	return MoveInfo.make_deploy(unit_idx, coord)
 
 
 #endregion Deployment Phase
@@ -840,8 +845,8 @@ func _create_summary() -> DataBattleSummary:
 		if army_in_battle.dead_units.size() == 0:
 			player_stats.losses = "< none >"
 		else:
-			for dead in army_in_battle.dead_units:
-				var unit_description = "%s\n" % dead.unit_name
+			for dead : Unit in army_in_battle.dead_units:
+				var unit_description = "%s\n" % dead.template.unit_name
 				player_stats.losses += unit_description
 				temp_points += dead.level
 

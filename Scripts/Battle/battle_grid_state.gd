@@ -81,11 +81,11 @@ static func create(map : DataBattleMap, new_armies : Array[Army]) -> BattleGridS
 func move_info_deploy_unit(move_info : MoveInfo) -> Unit:
 	assert(move_info.move_type == MoveInfo.TYPE_DEPLOY)
 	currently_processed_move_info = move_info
-	var unit_data := move_info.deployed_unit
+	var unit_idx : int = move_info.deployed_unit
 	var coord := move_info.target_tile_coord
 	var initial_rotation := _get_deploy_rotation(coord)
 	var army_state := armies_in_battle_state[current_army_index]
-	var unit := army_state.deploy_unit(unit_data, coord, initial_rotation)
+	var unit := army_state.deploy_unit(unit_idx, coord, initial_rotation)
 	move_info.army_idx = current_army_index
 	move_info.original_rotation = initial_rotation
 
@@ -783,8 +783,8 @@ func _perform_dash(unit : Unit, target_tile_coord : Vector2i, power : int = 3) -
 
 func _summon_a_unit(caster : Unit, summoned_unit : DataUnit, target_tile_coord : Vector2i) -> void:
 	var direction : int = GenericHexGrid.direction_to_adjacent(caster.coord, target_tile_coord)
-	var unit : Unit = caster.army_in_battle.deploy_unit(summoned_unit, target_tile_coord, direction)
-	unit.summoned = true
+	var unit : Unit = caster.army_in_battle.summon_unit(summoned_unit, target_tile_coord, direction)
+
 
 	# Apply summon sickness
 	var success : bool = unit.try_adding_magic_effect(load(CFG.SUMMONING_SICKNESS_PATH))
@@ -1279,7 +1279,7 @@ func _get_deployment_tiles(player : Player) -> Array[Vector2i]:
 	return result
 
 
-func _get_not_deployed_units(player : Player) -> Array[DataUnit]:
+func _get_not_deployed_units(player : Player) -> Array[Unit]:
 	var index = player.index if player else -1
 	for a in armies_in_battle_state:
 		if a.army_reference.controller_index == index:
@@ -1344,9 +1344,9 @@ func _get_all_deploy_moves() -> Array[MoveInfo]:
 	var me = get_current_player()
 	var spawn_tiles = _get_deployment_tiles(me)
 	var units = _get_not_deployed_units(me)
-	for unit in units:
+	for unit_idx in range(units.size()):
 		for spawn_tile in spawn_tiles:
-			legal_moves.append(MoveInfo.make_deploy(unit, spawn_tile))
+			legal_moves.append(MoveInfo.make_deploy(unit_idx, spawn_tile))
 
 	return legal_moves
 
@@ -1723,7 +1723,7 @@ class ArmyInBattleState:
 	## basic idx reference to which units are allies
 	var team : int = -1
 
-	var units_to_deploy : Array[DataUnit] = []
+	var units_to_deploy : Array[Unit] = []
 	## alive already deployed units
 	var units : Array[Unit] = []
 	## owned units that died during combat
@@ -1756,17 +1756,19 @@ class ArmyInBattleState:
 		result.battle_grid_state = weakref(state)
 		result.army_reference = army
 		if army.hero and not army.hero.wounded:
-			var hero_unit : DataUnit = army.hero.template.data_unit
-			hero_unit.level = army.hero.level  # TODO its giga broken
-			result.units_to_deploy.append(hero_unit)
+			var unit := Unit.create(army.controller, army.hero.template.data_unit,
+				Vector2i.ZERO, GenericHexGrid.GridDirections.LEFT, result)
+			unit.level = army.hero.level
+			result.units_to_deploy.append(unit)
 
 		# unit list
 		for unit : DataUnit in army.units_data:
-			result.units_to_deploy.append(unit)
+			result.units_to_deploy.append(Unit.create(army.controller, unit,
+				Vector2i.ZERO, GenericHexGrid.GridDirections.LEFT, result))
 
 			result.mana_points += unit.mana # MANA
 
-		result.apply_passive_effects(state)
+		result.apply_passive_effects(result, state)
 
 		#Temp solution for world map, where proper clock system isn't implemented yet
 		if army.timer_reserve_sec == 0:
@@ -1778,7 +1780,7 @@ class ArmyInBattleState:
 
 		return result
 
-	func apply_passive_effects(state : BattleGridState) -> void:
+	func apply_passive_effects(army_in_battle : ArmyInBattleState, state : BattleGridState) -> void:
 		if not hero:
 			return
 		for effect in hero.passive_effects:
@@ -1788,7 +1790,8 @@ class ArmyInBattleState:
 					if state.armies_in_battle_state.size() != 0:
 						continue  # only attacker can use ballista
 					var ballista : DataUnit = load(CFG.BALLISTA_PATH)
-					units_to_deploy.append(ballista)
+					units_to_deploy.append(Unit.create(army_in_battle.army_reference.controller,
+					ballista, Vector2i.ZERO, GenericHexGrid.GridDirections.LEFT, army_in_battle))
 
 
 	func turn_started() -> void:
@@ -1858,15 +1861,30 @@ class ArmyInBattleState:
 		return alive_not_summoned_units_number() > 0 or units_to_deploy.size() > 0
 
 
-	func deploy_unit(unit_data : DataUnit, coord : Vector2i, rotation : int) -> Unit:
-		units_to_deploy.erase(unit_data)
+	func summon_unit(unit_data : DataUnit, coord : Vector2i, rotation : int) -> Unit:
 		var player = IM.get_player_by_index(army_reference.controller_index)
 		var result = Unit.create(player, unit_data, coord, rotation, self)
+		result.summoned = true
+
 		units.append(result)
 
-		if not army_reference.hero or army_reference.hero.template.data_unit != unit_data:
+		return result
+
+
+	func deploy_unit(unit_idx : int, coord : Vector2i, rotation : int) -> Unit:
+		var player = IM.get_player_by_index(army_reference.controller_index)
+
+		var result = units_to_deploy[unit_idx]
+		result.coord = coord
+		result.unit_rotation = rotation
+		units_to_deploy.erase(result)
+		units.append(result)
+
+		if not army_reference.hero or \
+		army_reference.hero.template.data_unit.unit_name != result.unit_data.unit_name:
 			return result  # it's not a hero
 
+		## TODO move this to the creation of units to deploy list
 		## Applying hero passive effects
 		for passive_effect in army_reference.hero.passive_effects:
 			if not passive_effect:  # TEMP null check until all pasives in level_up_screen are present
@@ -1901,7 +1919,7 @@ class ArmyInBattleState:
 	func undeploy(coord : Vector2i):
 		var target = battle_grid_state.get_ref().get_unit(coord)
 		units.erase(target)
-		units_to_deploy.append(target.template)
+		units_to_deploy.append(target)
 		#gdlint: ignore=private-method-call
 		battle_grid_state.get_ref()._remove_unit(target)
 		target.unit_killed()  #TODO change this signal to a undo specific as to not mess with future animations and text bubbles

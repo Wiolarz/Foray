@@ -10,7 +10,7 @@ const TYPE_SURRENDER = "surrender"
 
 @export var move_type : String = ""
 ## if TYPE_DEPLOY, determines deployed unit
-@export var deployed_unit : DataUnit
+@export var deployed_unit : int
 ## used by: TYPE_MOVE, TYPE_MAGIC
 @export var move_source : Vector2i
 ## used by all move types
@@ -43,10 +43,10 @@ static func make_move(src : Vector2i, dst : Vector2i) -> MoveInfo:
 	return result
 
 
-static func make_deploy(unit : DataUnit, dst : Vector2i) -> MoveInfo:
+static func make_deploy(unit_idx : int, dst : Vector2i) -> MoveInfo:
 	var result := MoveInfo.new()
 	result.move_type = TYPE_DEPLOY
-	result.deployed_unit = unit
+	result.deployed_unit = unit_idx
 	result.target_tile_coord = dst
 	return result
 
@@ -84,7 +84,7 @@ func to_network_serializable() -> Dictionary:
 		"move_type" : move_type,
 		"move_source" : move_source,
 		"target_tile_coord": target_tile_coord,
-		"deployed_unit": DataUnit.get_network_id(deployed_unit),
+		"deployed_unit": deployed_unit,
 		"spell": BattleSpell.get_network_id(spell),
 	}
 
@@ -92,9 +92,7 @@ func to_network_serializable() -> Dictionary:
 static func from_network_serializable(dict : Dictionary) -> MoveInfo:
 	match dict["move_type"]:
 		MoveInfo.TYPE_DEPLOY:
-			return MoveInfo.make_deploy( \
-				DataUnit.from_network_id(dict["deployed_unit"]),\
-					dict["target_tile_coord"])
+			return MoveInfo.make_deploy(dict["deployed_unit"], dict["target_tile_coord"])
 		MoveInfo.TYPE_MOVE:
 			return MoveInfo.make_move(dict["move_source"],
 					dict["target_tile_coord"])
@@ -144,7 +142,7 @@ func _to_string() -> String:
 	if move_type == TYPE_MAGIC:
 		return "cast " + spell.name + " on " + str(target_tile_coord) + " from " + str(move_source)
 	elif move_type == TYPE_DEPLOY:
-		return TYPE_DEPLOY + " " + str(target_tile_coord) + " " + deployed_unit.unit_name
+		return TYPE_DEPLOY + " " + str(target_tile_coord) + " " + str(deployed_unit)
 	return move_type + " " + str(target_tile_coord) + " from " + str(move_source)
 
 

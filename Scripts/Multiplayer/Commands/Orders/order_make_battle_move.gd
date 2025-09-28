@@ -18,7 +18,7 @@ static func process_command(_client : Client, params : Dictionary) -> int:
 		return FAILED
 	if not "target_tile_coord" in params or not params["target_tile_coord"] is Vector2i:
 		return FAILED
-	if not "deployed_unit" in params or not params["deployed_unit"] is String:
+	if not "deployed_unit" in params or not params["deployed_unit"] is int:
 		return FAILED
 	var move_info = OrderMakeBattleMove.create_from(params)
 	BM.perform_network_move(move_info)
