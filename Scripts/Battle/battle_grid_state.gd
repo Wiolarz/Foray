@@ -1881,7 +1881,7 @@ class ArmyInBattleState:
 		units.append(result)
 
 		if not army_reference.hero or \
-		army_reference.hero.template.data_unit.unit_name != result.unit_data.unit_name:
+		army_reference.hero.template.data_unit.unit_name != result.template.unit_name:
 			return result  # it's not a hero
 
 		## TODO move this to the creation of units to deploy list
