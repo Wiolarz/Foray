@@ -71,6 +71,9 @@ static func create(new_controller : Player, \
 
 	result.controller = new_controller
 	result.army_in_battle = new_army_in_battle_state
+	result.template = new_template
+	result.symbols = new_template.duplicate_symbols()
+
 	result.coord = new_coord
 	result.unit_rotation = new_rotation
 	return result

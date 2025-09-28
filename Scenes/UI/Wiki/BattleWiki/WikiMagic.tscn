@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://p42st2s5b6o3"]
 
-[ext_resource type="Script" path="res://Scripts/UI/Educational/wiki_magic.gd" id="1_0tkxl"]
-[ext_resource type="PackedScene" uid="uid://w7gt7at72a2o" path="res://Scenes/UI/Wiki/wiki_spell_button.tscn" id="2_e84kj"]
-[ext_resource type="Texture2D" uid="uid://d1vofsv8lia8m" path="res://Art/items/claws.png" id="3_6wr1h"]
+[ext_resource type="Script" path="res://Scripts/UI/Educational/BattleWiki/wiki_magic.gd" id="1_0tkxl"]
+[ext_resource type="PackedScene" uid="uid://w7gt7at72a2o" path="res://Scenes/UI/Wiki/BattleWiki/wiki_spell_button.tscn" id="2_e84kj"]
+[ext_resource type="Texture2D" uid="uid://1hbpqpqeo60k" path="res://Art/magic/spell_icons/blood_curse.png" id="3_bsqid"]
 
 [node name="WikiMagic" type="Panel"]
 clip_contents = true
@@ -105,8 +105,8 @@ Spell cannot be casted if enemy has less than 3 units left."
 fit_content = true
 
 [node name="TextureRect" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/SpellInformationContainer/VBox"]
-custom_minimum_size = Vector2(100, 400)
+custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
 size_flags_horizontal = 4
-texture = ExtResource("3_6wr1h")
+texture = ExtResource("3_bsqid")
 expand_mode = 1

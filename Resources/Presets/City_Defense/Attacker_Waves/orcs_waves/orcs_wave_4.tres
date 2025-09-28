@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=8 format=3 uid="uid://ewp0mkc6d1kp"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_wgt38"]
+[ext_resource type="Resource" uid="uid://bwyu6qg7dsisg" path="res://Resources/Battle/Units/Classic/orc1.tres" id="2_ops4y"]
+[ext_resource type="Resource" uid="uid://3e7lgte3o0of" path="res://Resources/Battle/Units/Orcs/orc_2_brigand.tres" id="3_c0302"]
+[ext_resource type="Resource" uid="uid://bgu30lp3txcwv" path="res://Resources/Battle/Units/Orcs/orc_6_champion.tres" id="3_m33bl"]
+[ext_resource type="Resource" uid="uid://w4ycloqp51wx" path="res://Resources/Battle/Units/Orcs/orc_4_shaman.tres" id="4_5oyls"]
+[ext_resource type="Resource" uid="uid://d3v274u447pu7" path="res://Resources/Battle/Units/Orcs/orc_5_halbard.tres" id="4_m7btg"]
+[ext_resource type="Resource" uid="uid://bx2ya2olx578k" path="res://Resources/Battle/Units/Orcs/orc_unit_hero_executioner.tres" id="5_ylu71"]
+
+[resource]
+script = ExtResource("1_wgt38")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_ops4y"), ExtResource("3_c0302"), ExtResource("4_m7btg"), ExtResource("5_ylu71"), ExtResource("3_m33bl"), ExtResource("4_5oyls")])
+team = 0

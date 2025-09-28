@@ -82,6 +82,7 @@ popup/item_0/id = 0
 [node name="ButtonLevelUp" type="Button" parent="GeneralVContainer/TopBarHContainer"]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
+disabled = true
 text = "Level"
 
 [node name="OptionButtonHero" type="OptionButton" parent="GeneralVContainer/TopBarHContainer"]

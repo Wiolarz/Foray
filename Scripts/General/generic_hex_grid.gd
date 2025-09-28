@@ -107,3 +107,52 @@ static func adjacent_coord(coord : Vector2i, side : int) -> Vector2i:
 
 static func distant_coord(coord : Vector2i, side : int, distance:int) -> Vector2i:
 	return coord + distance * DIRECTION_TO_OFFSET[side]
+
+
+static func axial_distance(start_coord : Vector2i, end_coord : Vector2i) -> int:
+	return (abs(start_coord.x - end_coord.x) \
+		+ abs(start_coord.x + start_coord.y - end_coord.x - end_coord.y) \
+		+ abs(start_coord.y - end_coord.y)) / 2
+
+
+static func is_tile_faced(start_coord : Vector2i, end_coord : Vector2i) -> bool:
+	if start_coord.x + start_coord.y == end_coord.x + end_coord.y: # diagonal top right bot left
+		return true
+	elif start_coord.x == end_coord.x and start_coord.y != end_coord.y: # horizontal
+		return true
+	elif start_coord.x != end_coord.x and start_coord.y == end_coord.y: # diagonal top left bot right
+		return true
+	return false
+
+
+static func is_tile_in_straight_direction(start_coord : Vector2i, end_coord : Vector2i, direction : GridDirections) -> bool:
+	if start_coord == end_coord:
+		return true
+
+	match direction:
+		GridDirections.LEFT, GridDirections.RIGHT:
+			if start_coord.y != end_coord.y:
+				return false
+		GridDirections.TOP_LEFT, GridDirections.BOTTOM_RIGHT:
+			if start_coord.x != end_coord.x:
+				return false
+		GridDirections.TOP_RIGHT, GridDirections.BOTTOM_LEFT:
+			if start_coord.x + start_coord.y != end_coord.x + end_coord.y:
+				return false
+
+	match direction:
+		GridDirections.LEFT:
+			return start_coord.x > end_coord.x
+		GridDirections.RIGHT:
+			return start_coord.x < end_coord.x
+		GridDirections.TOP_LEFT:
+			return start_coord.y > end_coord.y
+		GridDirections.BOTTOM_RIGHT:
+			return start_coord.y < end_coord.y
+		GridDirections.TOP_RIGHT:
+			return start_coord.x < end_coord.x
+		GridDirections.BOTTOM_LEFT:
+			return start_coord.x > end_coord.x
+		_:
+			assert(false)
+			return false

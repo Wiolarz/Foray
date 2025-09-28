@@ -11,7 +11,7 @@ func _on_pressed():
 
 func load_symbol(symbol_ : DataSymbol) -> void:
 		symbol = symbol_
-		get_node("Label").text = symbol.symbol_name
+		get_node("Label").text = symbol.symbol_name.capitalize()
 
 		if symbol.symbol_name == "empty":
 			texture_normal = null

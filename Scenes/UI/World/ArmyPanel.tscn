@@ -7,11 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://by6lxadhw2amf" path="res://Art/items/hex_border_light.png" id="5_esqgq"]
 
 [node name="HBoxArmy" type="HBoxContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 512.0
+offset_bottom = 204.0
 script = ExtResource("1_07qff")
 
 [node name="ArmyLabel" type="Label" parent="."]
@@ -20,11 +17,11 @@ theme_override_font_sizes/font_size = 20
 text = "Hero Name"
 horizontal_alignment = 1
 
-[node name="HeroIcon" type="TextureRect" parent="."]
+[node name="HeroIcon" type="TextureButton" parent="."]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture = ExtResource("2_efg74")
-expand_mode = 1
+texture_normal = ExtResource("2_efg74")
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="."]

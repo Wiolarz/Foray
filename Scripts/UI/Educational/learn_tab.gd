@@ -1,7 +1,66 @@
 extends Panel
 
+
+@onready var general_learn_tabs_paired_with_scene = {
+	CFG.LearnTabs.PRACTICE: $MainContainer/TopMenu/TabBarPractice,
+	CFG.LearnTabs.BATTLE_WIKI: $MainContainer/TopMenu/TabBarBattleWiki,
+	CFG.LearnTabs.WORLD_WIKI: $MainContainer/TopMenu/TabBarWorldWiki,
+}
+
+@onready var practice_tabs_paired_with_scene = {
+	CFG.PracticeTabs.BASIC: $MainContainer/WikiIntroduction,
+	CFG.PracticeTabs.TUTORIAL: $MainContainer/Tutorials,
+	CFG.PracticeTabs.PUZZLE: $MainContainer/Puzzles,
+	CFG.PracticeTabs.CAMPAIGN: $MainContainer/CampaignBattles,
+}
+
+@onready var battle_wiki_tabs_paired_with_scene = {
+	CFG.BattleWiki.SYMBOLS_WIKI: $MainContainer/WikiSymbols,
+	CFG.BattleWiki.MAGIC_WIKI: $MainContainer/WikiMagic,
+	CFG.BattleWiki.TERRAIN: $MainContainer/WikiBattleTerrain,
+	CFG.BattleWiki.MAGIC_CYCLONE: $MainContainer/WikiMagicCyclone,
+}
+
+@onready var world_wiki_tabs_paired_with_scene = {
+	CFG.WorldWiki.FACTIONS: $MainContainer/WikiRaces,
+	CFG.WorldWiki.ECONOMY: $MainContainer/WikiEconomy,
+	CFG.WorldWiki.TERRAIN: $MainContainer/WikiWorldTerrain,
+}
+
+
+#region INIT
+
 func _ready():
-	_on_tabs_tab_changed(CFG.LAST_OPENED_LEARN_TAB)
+	_init_learn_tabs()
+
+	## Failsafe between UI version changes
+	var tab_bar_mode_selection : TabBar = $MainContainer/TopMenu/TabBarModeSelection
+	var last_selected_tab : int = CFG.LAST_OPENED_LEARN_TAB
+	if last_selected_tab > tab_bar_mode_selection.tab_count:
+		last_selected_tab = 0
+
+	tab_bar_mode_selection.current_tab = last_selected_tab
+	_on_tab_bar_mode_selection_tab_changed(last_selected_tab)
+
+
+func _init_learn_tabs() -> void:
+
+	var edited_tab_bar : TabBar = general_learn_tabs_paired_with_scene[CFG.LearnTabs.PRACTICE]
+	edited_tab_bar.clear_tabs()
+	for tab in CFG.PracticeTabs.values():
+		edited_tab_bar.add_tab(CFG.PRACTICE_TABS_NAMES[tab])
+
+	edited_tab_bar = general_learn_tabs_paired_with_scene[CFG.LearnTabs.BATTLE_WIKI]
+	edited_tab_bar.clear_tabs()
+	for tab in CFG.BattleWiki.values():
+		edited_tab_bar.add_tab(CFG.BATTLE_WIKI_TABS_NAMES[tab])
+
+	edited_tab_bar  = general_learn_tabs_paired_with_scene[CFG.LearnTabs.WORLD_WIKI]
+	edited_tab_bar.clear_tabs()
+	for tab in CFG.WorldWiki.values():
+		edited_tab_bar.add_tab(CFG.WORLD_WIKI_TABS_NAMES[tab])
+
+#endregion INIT
 
 
 func _clear_tabs():
@@ -10,44 +69,39 @@ func _clear_tabs():
 	$MainContainer/TopMenu.show()
 
 
-
-func _on_tutorial_button_pressed():
-	_clear_tabs()
-	$MainContainer/Tutorials.show()
-
-
-func _on_puzzle_button_pressed():
-	_clear_tabs()
-	$MainContainer/Puzzles.show()
-
-
-func _on_campaign_button_pressed():
-	_clear_tabs()
-	$MainContainer/CampaignBattles.show()
-
-
-func _on_symbols_wiki_button_pressed():
-	_clear_tabs()
-	$MainContainer/WikiSymbols.show()
-
-
-func _on_magic_wiki_button_pressed():
-	_clear_tabs()
-	$MainContainer/WikiMagic.show()
-
-
-func _on_tabs_tab_changed(tab_index : int):
-	assert(tab_index in CFG.LearnTabs.values(), "Disabled learn tab was selected")
+func _on_tab_bar_mode_selection_tab_changed(tab_index):
 	CFG.player_options.last_open_learn_tab = tab_index
 	CFG.save_player_options()
-	$MainContainer/TopMenu/TabBar.current_tab = tab_index
-	match tab_index:
-		0: pass  # disabled
-		CFG.LearnTabs.TUTORIAL: _on_tutorial_button_pressed()
-		CFG.LearnTabs.PUZZLE: _on_puzzle_button_pressed()
-		CFG.LearnTabs.CAMPAIGN: _on_campaign_button_pressed()
-		4: pass # disabled
-		CFG.LearnTabs.SYMBOLS_WIKI: _on_symbols_wiki_button_pressed()
-		CFG.LearnTabs.MAGIC_WIKI: _on_magic_wiki_button_pressed()
-		7: pass  # stub
-		_: push_error("_on_tabs_tab_changed index not supported: "+str(tab_index))
+
+	for tabbar in general_learn_tabs_paired_with_scene.values():
+		tabbar.hide()
+	general_learn_tabs_paired_with_scene[tab_index].show()
+
+	match CFG.LearnTabs.values()[tab_index]:
+		CFG.LearnTabs.PRACTICE:
+			_on_tab_bar_practice_tab_changed(CFG.LAST_OPENED_PRACTICE_TAB)
+		CFG.LearnTabs.BATTLE_WIKI:
+			_on_tab_bar_battle_wiki_tab_changed(CFG.LAST_OPENED_BATTLE_WIKI_TAB)
+		CFG.LearnTabs.WORLD_WIKI:
+			_on_tab_bar_world_wiki_tab_changed(CFG.LAST_OPENED_WORLD_WIKI_TAB)
+
+
+func _on_tab_bar_practice_tab_changed(tab_index):
+	CFG.player_options.last_open_practice_tab = tab_index
+	CFG.save_player_options()
+	_clear_tabs()
+	practice_tabs_paired_with_scene[tab_index].show()
+
+
+func _on_tab_bar_battle_wiki_tab_changed(tab_index):
+	CFG.player_options.last_open_battle_wiki_tab = tab_index
+	CFG.save_player_options()
+	_clear_tabs()
+	battle_wiki_tabs_paired_with_scene[tab_index].show()
+
+
+func _on_tab_bar_world_wiki_tab_changed(tab_index):
+	CFG.player_options.last_open_world_wiki_tab = tab_index
+	CFG.save_player_options()
+	_clear_tabs()
+	world_wiki_tabs_paired_with_scene[tab_index].show()

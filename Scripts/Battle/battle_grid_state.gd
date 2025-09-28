@@ -223,6 +223,7 @@ func _process_symbols(unit : Unit, move_type : E.MoveType) -> bool:
 		return true
 	return false
 
+
 ## Returns true if Enemy counter_attack can kill the target [br]
 ## Starts animation for stabbing in case
 func _should_die_to_counter_attack(unit : Unit) -> bool:
@@ -487,20 +488,7 @@ func is_move_possible(move: MoveInfo) -> bool:
 	return false
 
 
-## Checks if given tile relative to start tile is in specific direction within specific range [br]
-## start_tile, end_tile | direction = -1 search in all directions| reach = -1 with that value searh till the end of board
-func _is_faced_tile_in_range(start_coord : Vector2i, end_coord : Vector2i, direction : int, reach : int = -1) -> bool:
-	for angle in range(6):
-		var tile : Vector2i = start_coord
-		if direction != -1:
-			angle = direction
-		var idx = 0
-		while idx < reach:
-			idx += 1
-			tile += DIRECTION_TO_OFFSET[angle]
-			if tile == end_coord:
-				return true
-	return false
+
 
 
 # MAJOR FUNCTION that verifies if the unit move is legal [br]
@@ -841,7 +829,7 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 		match spell.name:
 			"Martyr":
 				target.effects.erase(spell)
-				target.effect_state_changed()
+				target.effect_state_changed()  # Visuals
 
 				for unit in target_army.units:
 					if replaced_target:
@@ -852,8 +840,19 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 							target = unit
 							new_target_pos = unit.coord
 							break
+			"Second Wind":
+				target.effects.erase(spell)
+				target.effect_state_changed()  # Visuals
+
+				#TODO consider getting info of the killer position to make it a knockback from them instead of just a push to the back
+
+				_push_enemy(target, GenericHexGrid.opposite_direction(target.unit_rotation), 3)
+
+				#_perform_teleport(replaced_target, new_target_pos, -1, true)
+				return
 
 	currently_processed_move_info.register_kill(target_army_index, target)
+
 
 	# killing starts - award exp
 	if spear_holding_killer_teams.size() > 0:
@@ -887,6 +886,7 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 	if replaced_target: # "Martyr" spell quick hack
 		_perform_teleport(replaced_target, new_target_pos, -1, true) # martyr teleport temp fix
 
+
 	# trigger any post death spell effect
 	for spell in target.effects:
 		#TEMP passing "currently_active_unit" here works only for vengeance
@@ -904,6 +904,7 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 	and units_on_board.has("orc_2"):
 		stalemate_failsafe_on = true
 		stalemate_failsafe_start = turn_counter
+
 
 ## Rare event when all players repeated their moves -> it pushes cyclone timer to activate next turn
 func end_stalemate() -> void:
@@ -996,6 +997,8 @@ func mana_values_changed() -> void:
 		new_cylone_counter = 20
 	elif mana_difference == 1:
 		new_cylone_counter = CFG.BIG_CYCLONE_COUNTER_VALUE
+	else: # mana_difference == 0
+		new_cylone_counter = CFG.BIG_CYCLONE_COUNTER_VALUE
 
 
 	if mana_difference > CFG.CYCLONE_MANA_THRESHOLD:
@@ -1032,49 +1035,48 @@ func capture_mana_well(hex : BattleHex, army : ArmyInBattleState):
 
 ## verifies if spell can be casted
 func is_spell_target_valid(caster : Unit, coord : Vector2i, spell : BattleSpell) -> bool:
-	match spell.name:
-		"Vengeance": # any current player controlled unit
-			var target = get_unit(coord)
-			if target and target.controller == caster.controller:
-				return true
-		"Martyr": # any current player controlled unit, but not the caster
-			var target = get_unit(coord)
-			if target and target.controller == caster.controller and target != caster:
-				return true
-		"Fireball": # any hex target is valid
-			return true
-		"Anchor": # any unit
-			var target = get_unit(coord)
-			if target:
-				return true
-		"Teleport", "Wind Dash": # tile in range that is in front of the caster
-			if get_unit(coord) or not _get_battle_hex(coord).can_be_moved_to:  # tile has to be empty
-				return false
-			var spell_range : int = 1
-			match spell.name:
-				"Teleport":
-					spell_range = 3
-				"Wind Dash":
-					spell_range = 1
-				_:
-					printerr("Unsupported spell range value")
+	if spell.not_self and caster.coord == coord:
+		return false
 
-			if _is_faced_tile_in_range(caster.coord, coord, caster.unit_rotation, spell_range):
-				return true
-		"Summon Dryad":  # adjacent empty tile to caster
-			if get_unit(coord) or not _get_battle_hex(coord).can_be_moved_to:
-				return false
-			return is_adjacent(caster.coord, coord)
-		"Blood Ritual":  # any enemy units -> when enemy has more than 1 unit
-			var target = get_unit(coord)
-			if target and target.controller.team != caster.controller.team and \
-				target.army_in_battle.units.size() >= 2:
-				return true
-		_:
-			printerr("Spell targeting not supported: ", spell.name)
+	if spell.cast_range != -1:
+		if GenericHexGrid.axial_distance(caster.coord, coord) > spell.cast_range:
 			return false
 
-	return false #TEMP
+	match spell.direction_cast:
+		BattleSpell.DirectionCast.FRONT:
+			if not GenericHexGrid.is_tile_in_straight_direction(
+				caster.coord, coord, caster.unit_rotation as GenericHexGrid.GridDirections):
+				return false
+		BattleSpell.DirectionCast.STRAIGHT:
+			if not GenericHexGrid.is_tile_faced(caster.coord, coord):
+				return false
+
+	match spell.target_type:
+		BattleSpell.TargetType.EMPTY_TILE:
+			if get_unit(coord):
+				return false
+			if spell.needs_movable_tile and not _get_battle_hex(coord).can_be_moved_to:
+				return false
+		BattleSpell.TargetType.UNIT:
+
+			var target : Unit = get_unit(coord)
+			if not target:
+				return false
+			match spell.target_unit_type:
+				BattleSpell.TargetUnitType.ALLY:
+					if target.army_in_battle.team != caster.army_in_battle.team:
+						return false
+				BattleSpell.TargetUnitType.ENEMY:
+					if target.army_in_battle.team == caster.army_in_battle.team:
+						return false
+
+
+	match spell.name:
+		"Blood Ritual":  # when enemy has more than 1 unit
+			var target = get_unit(coord)
+			if target.army_in_battle.alive_not_summoned_units_number() == 1:
+				return false
+	return true
 
 
 ## spell takes an effect
@@ -1844,12 +1846,16 @@ class ArmyInBattleState:
 			battle_grid_state.get_ref()._kill_unit(units[unit_idx])
 
 
-	func can_fight() -> bool:
+	func alive_not_summoned_units_number() -> int:
 		var alive_not_summoned_units : int = 0
 		for unit in units:
 			if not unit.summoned:
 				alive_not_summoned_units += 1
-		return alive_not_summoned_units > 0 or units_to_deploy.size() > 0
+		return alive_not_summoned_units
+
+
+	func can_fight() -> bool:
+		return alive_not_summoned_units_number() > 0 or units_to_deploy.size() > 0
 
 
 	func deploy_unit(unit_data : DataUnit, coord : Vector2i, rotation : int) -> Unit:
@@ -1863,9 +1869,11 @@ class ArmyInBattleState:
 
 		## Applying hero passive effects
 		for passive_effect in army_reference.hero.passive_effects:
+			if not passive_effect:  # TEMP null check until all pasives in level_up_screen are present
+				continue
 			match passive_effect.passive_name:
 				"magic_weapons":
-					var effect : BattleMagicEffect = load(CFG.tier_2_passive_1)
+					var effect : BattleMagicEffect = load(CFG.hero_magic_weapon_effect)
 					var success : bool = result.try_adding_magic_effect(effect)
 					assert(success, "couldn't add passive effect to a hero unit upon it's deployment")
 					for symbol in result.symbols:
@@ -1878,6 +1886,14 @@ class ArmyInBattleState:
 
 						if symbol.symbol_name == "empty": # TODO verify and note the choice in the documentation, if thats a proper way to verify symbol is empty
 							result.symbols[side] = weak_weapon.duplicate()
+				"wind_weapons":
+					for symbol in result.symbols:
+						if symbol.attack_power != 0:
+							symbol.push_power += 1
+				"second_wind":
+					var effect : BattleMagicEffect = load(CFG.hero_second_wind_effect)
+					var success : bool = result.try_adding_magic_effect(effect)
+					assert(success, "couldn't add passive effect to a hero unit upon it's placement")
 
 		return result
 

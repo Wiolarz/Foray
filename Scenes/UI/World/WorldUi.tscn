@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c7521eme06u5v"]
+[gd_scene load_steps=10 format=3 uid="uid://bpkvpkoi22q8"]
 
 [ext_resource type="Script" path="res://Scripts/UI/world_ui.gd" id="1_50wj5"]
 [ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="2_yv1kk"]
@@ -6,8 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://cukwcwy4fikm1" path="res://Art/elf_hero_noble.png" id="4_6gjua"]
 [ext_resource type="PackedScene" uid="uid://dm3oqhffhprfy" path="res://Scenes/UI/World/CityUI.tscn" id="4_r7awa"]
 [ext_resource type="PackedScene" uid="uid://c2tjldwjynnry" path="res://Scenes/UI/GameChat.tscn" id="5_kbxi4"]
-[ext_resource type="PackedScene" uid="uid://da3yl34ys750t" path="res://Scenes/UI/World/TradeScreen.tscn" id="6_qkgtt"]
-[ext_resource type="PackedScene" uid="uid://ciyo87ovmkwqh" path="res://Scenes/UI/World/ArmyPanel.tscn" id="8_h8r3o"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/World/TradeScreen.tscn" id="6_qkgtt"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/World/ArmyPanel.tscn" id="8_h8r3o"]
+[ext_resource type="PackedScene" uid="uid://5g2iqdyqmc75" path="res://Scenes/UI/LevelUp/LevelUpWorldScreen.tscn" id="9_os3st"]
 
 [node name="WorldUi" type="CanvasLayer"]
 script = ExtResource("1_50wj5")
@@ -88,9 +89,12 @@ anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
-offset_left = -314.0
+anchor_bottom = 1.0
+offset_left = -256.0
 offset_top = -204.0
-offset_right = 198.0
+offset_right = 256.0
+offset_bottom = 0.0
+grow_horizontal = 2
 grow_vertical = 0
 
 [node name="CityUi" parent="." instance=ExtResource("4_r7awa")]
@@ -104,6 +108,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
+
+[node name="LevelUpWorldScreen" parent="." instance=ExtResource("9_os3st")]
+visible = false
 
 [node name="Hide" type="Button" parent="."]
 visible = false

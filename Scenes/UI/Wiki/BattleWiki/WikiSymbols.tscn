@@ -1,0 +1,113 @@
+[gd_scene load_steps=4 format=3 uid="uid://bvh2qsh5v3et"]
+
+[ext_resource type="PackedScene" uid="uid://pfnqgp6b3k1u" path="res://Scenes/UI/Wiki/BattleWiki/wiki_symbol_button.tscn" id="1_b4rvb"]
+[ext_resource type="Script" path="res://Scripts/UI/Educational/BattleWiki/wiki_symbols.gd" id="1_j7wn1"]
+[ext_resource type="Texture2D" uid="uid://nqopde6ucyqy" path="res://Art/items/big_sword.png" id="3_hljqb"]
+
+[node name="WikiSymbols" type="Panel"]
+clip_contents = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_j7wn1")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Symbols"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox"]
+layout_mode = 2
+
+[node name="Column1" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SymbolButton" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column1" instance=ExtResource("1_b4rvb")]
+layout_mode = 2
+
+[node name="SymbolButton2" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column1" instance=ExtResource("1_b4rvb")]
+layout_mode = 2
+
+[node name="Column2" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SymbolButton3" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column2" instance=ExtResource("1_b4rvb")]
+layout_mode = 2
+
+[node name="SymbolButton4" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column2" instance=ExtResource("1_b4rvb")]
+layout_mode = 2
+
+[node name="Column3" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SymbolButton3" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column3" instance=ExtResource("1_b4rvb")]
+layout_mode = 2
+
+[node name="SymbolButton4" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column3" instance=ExtResource("1_b4rvb")]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="SymbolInformationContainer" type="ScrollContainer" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/SymbolInformationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WeaponName" type="Label" parent="Margin/VBoxContainer/HBoxContainer/SymbolInformationContainer/VBox"]
+layout_mode = 2
+text = "Big Sword"
+horizontal_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/SymbolInformationContainer/VBox"]
+layout_mode = 2
+text = "Attack  : 2
+Defense : 1
+
+Tags:
+- Parry"
+fit_content = true
+
+[node name="TextureRect" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/SymbolInformationContainer/VBox"]
+custom_minimum_size = Vector2(100, 400)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_hljqb")
+expand_mode = 1

@@ -8,7 +8,6 @@ var unit_editor
 var tile_editor
 var host_lobby
 var client_lobby
-var hero_level_up
 
 var camera : PolyCamera
 var current_camera_position = E.CameraPosition.WORLD
@@ -26,14 +25,12 @@ func _ready():
 	map_editor   = load("res://Scenes/UI/Editors/MapEditor.tscn").instantiate()
 	unit_editor  = load("res://Scenes/UI/Editors/UnitEditor.tscn").instantiate()
 	tile_editor  = load("res://Scenes/UI/Editors/TileEditor.tscn").instantiate()
-	hero_level_up = load("res://Scenes/UI/LevelUp/LevelUpScreen.tscn").instantiate()
 
 	add_child(main_menu)
 	add_child(map_editor)
 	add_child(unit_editor)
 	add_child(tile_editor)
 	add_child(ui_overlay)
-	add_child(hero_level_up)
 
 	_hide_all()
 
@@ -83,28 +80,7 @@ func go_to_map_editor():
 	BG.set_player_colors(CFG.NEUTRAL_COLOR)
 
 
-## TEMP
-func show_hero_level_up():
-	hero_level_up.hidden = false
-	hero_level_up.show()
-
-
-func close_hero_level_up():
-	hero_level_up.hidden = true
-	hero_level_up.hide()
-
-
-func hide_hero_level_up():
-	hero_level_up._on_button_hide_pressed()
-
-
 #region Input Support
-
-func _process(delta):
-	# we do not want to process camera when game is paused
-	if camera and not get_tree().paused:
-		camera.process_camera(delta)
-
 
 func _unhandled_input(event : InputEvent) -> void:
 	if event.is_action_pressed("KEY_EXIT_GAME"):
@@ -181,6 +157,15 @@ func grid_planning_input_listener(tile_coord : Vector2i, \
 
 	BM.planning_input(tile_coord, is_it_pressed)
 
+#endregion Input Support
+
+#region Camera
+
+func _process(delta):
+	# we do not want to process camera when game is paused
+	if camera and not get_tree().paused:
+		camera.process_camera(delta)
+
 
 func ensure_camera_is_spawned() -> void:
 	if not camera:
@@ -205,6 +190,10 @@ func set_camera(pos : E.CameraPosition, reset_position : bool = true) -> void:
 	else :
 		camera.set_bounds(WM.get_bounds_global_position(), reset_position)
 
+#endregion Camera
+
+
+#region Fullscreen
 
 ## NOTE: fullscreen uses old style exclusive fullscreen because of Godot bug
 func set_fullscreen(fullscreen: bool):
@@ -224,6 +213,10 @@ func toggle_fullscreen():
 	CFG.save_player_options()
 	update_settings.emit()
 
+#endregion Fullscreen
+
+
+#region Debug Tools
 
 ## Toggle of default godot Debug tool - visible collision shapes
 func toggle_collision_debug():
@@ -243,3 +236,5 @@ func toggle_collision_debug():
 				node.collision_visibility_mode = TileMap.VISIBILITY_MODE_FORCE_HIDE
 				node.collision_visibility_mode = TileMap.VISIBILITY_MODE_DEFAULT
 			node_stack.append_array(node.get_children())
+
+#endregion Debug Tools

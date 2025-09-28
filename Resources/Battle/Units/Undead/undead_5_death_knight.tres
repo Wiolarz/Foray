@@ -9,15 +9,15 @@
 
 [sub_resource type="Resource" id="Resource_vofdp"]
 script = ExtResource("1_ry680")
-wood = 2
+wood = 7
 iron = 0
-ruby = 0
+ruby = 3
 
 [resource]
 script = ExtResource("3_3lntu")
 unit_name = "Death Knight"
 texture_path = "res://Art/units/undead/undead_5_death_knight.png"
-symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_pksk3"), ExtResource("5_2mgcj"), ExtResource("5_2mgcj"), ExtResource("6_xufcr"), ExtResource("5_2mgcj"), ExtResource("5_2mgcj")])
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("5_2mgcj"), ExtResource("4_pksk3"), ExtResource("6_xufcr"), ExtResource("6_xufcr"), ExtResource("6_xufcr"), ExtResource("4_pksk3")])
 cost = SubResource("Resource_vofdp")
 required_building = ExtResource("2_kwrgb")
 level = 5
