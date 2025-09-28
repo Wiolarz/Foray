@@ -204,7 +204,7 @@ struct Army {
 	std::array<Unit, MAX_UNITS_IN_ARMY> units{};
 
 
-	int find_unit_id_to_deploy(int from = 0) const;
+	int find_unit_id_to_deploy(unsigned from = 0) const;
 	int find_empty_unit_slot() const;
 	bool is_defeated() const;
 

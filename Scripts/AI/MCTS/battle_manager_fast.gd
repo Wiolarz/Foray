@@ -159,14 +159,14 @@ func move_info_to_libspear_tuple(move: MoveInfo) -> Array:
 			pos = Vector2i.ZERO
 		MoveInfo.TYPE_MAGIC:
 			unit = get_unit_id_on_position(move.move_source)[1]
-			return [unit, pos, find_spell(get_current_participant(), unit, move.spell)]
+			return [unit, pos, find_spell_idx(get_current_participant(), unit, move.spell)]
 		_:
 			assert(false, "Unknown move type '%s'" % [move.move_type])
 
 	return [unit, pos]
 
 
-func find_spell(army_idx: int, unit_idx: int, spell: BattleSpell) -> int:
+func find_spell_idx(army_idx: int, unit_idx: int, spell: BattleSpell) -> int:
 	for i in spell_mapping.size():
 		if spell_mapping[i] == spell \
 				and spell_army_id_mapping[i] == army_idx \

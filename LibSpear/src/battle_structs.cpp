@@ -1,8 +1,8 @@
 
 #include "battle_structs.hpp"
 
-int Army::find_unit_id_to_deploy(int i) const {
-	for(; i < 5; i++) {
+int Army::find_unit_id_to_deploy(unsigned i) const {
+	for(; i < MAX_UNITS_IN_ARMY; i++) {
 		if(units[i].status == UnitStatus::DEPLOYING) {
 			return i;
 		}
@@ -11,7 +11,7 @@ int Army::find_unit_id_to_deploy(int i) const {
 }
 
 int Army::find_empty_unit_slot() const {
-	for(int i = 0; i < 5; i++) {
+	for(unsigned i = 0; i < MAX_UNITS_IN_ARMY; i++) {
 		if(units[i].status == UnitStatus::DEAD) {
 			return i;
 		}

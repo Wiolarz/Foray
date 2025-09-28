@@ -33,7 +33,7 @@ var _scripted_battle : ScriptedBattle
 
 var _fuzzing_iterations := 0
 var _fuzzing_failed_iterations := 0
-var fuzzing_is_iteration_failed = false
+var fuzzing_is_iteration_failed := false
 
 signal move_animation_done()
 
@@ -262,6 +262,7 @@ func _on_turn_started(player : Player) -> void:
 		latest_ai_cancel_token = my_cancel_token
 
 		var bot = player.bot_engine
+		var battle_id = bot.battle_id
 
 		var thinking_begin_s = Time.get_ticks_msec() / 1000.0
 		var move = await bot.choose_move(_battle_grid_state)
@@ -273,7 +274,7 @@ func _on_turn_started(player : Player) -> void:
 		if _battle_grid_state == null: # Player quit to main menu before finishing
 			return
 
-		if bot.battle_id != _replay_battle_id: # DRUT/Bugfix - bot outlived its own battle
+		if battle_id != _replay_battle_id: # DRUT/Bugfix - bot outlived its own battle
 			return
 
 		if not my_cancel_token.is_canceled():

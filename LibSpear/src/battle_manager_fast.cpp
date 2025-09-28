@@ -485,9 +485,15 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 		case BattleSpell::State::SENTINEL:
 			BM_ASSERT(false, "Invalid spell id chosen in a move");
 			return;
-		// No default case - rely on compiler for compile time warnings
+		#ifndef NDEBUG // debug-only
+		default:
+			BM_ASSERT(false, "Invalid spell type");
+			return;
+		#endif //DEBUG
+		//  When compiling for release - rely on compiler for compile time warnings
 		// sadly we can't have both default case for runtime checking for 
 		// (unlikely) corrupted states and compile time warning
+		// This is probably the best compromise
 	}
 	spell.state = BattleSpell::State::NONE;
 	spell.unit = NO_UNIT;
@@ -820,6 +826,11 @@ void BattleManagerFast::_spells_append_moves() {
 			case BattleSpell::State::NONE:
 			case BattleSpell::State::SENTINEL:
 				break;
+			#ifndef NDEBUG // debug-only, as in _process_spell
+			default:
+				BM_ASSERT(false, "Invalid spell type (in _spells_append_moves)");
+				return;
+			#endif //DEBUG
 		}
 	}
 }
