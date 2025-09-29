@@ -106,6 +106,7 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 			player.bot_engine.battle_id = _replay_battle_id
 
 	# GRAPHICS GRID:
+	_battle_grid_state.tile_changed.connect(change_tile_sprite)
 	_load_map(battle_map)
 	_grid_tiles_node.position.x = x_offset
 	horizontal_offset = x_offset
@@ -743,8 +744,19 @@ func _perform_move_info(move_info : MoveInfo) -> void:
 
 	BG.set_player_colors(get_current_slot_color(), bg_transition_tween)
 
-
 	_end_move()
+
+
+func change_tile_sprite(coord : Vector2i) -> void:
+	var hex : BattleGridState.BattleHex = _battle_grid_state.get_hex(coord)
+
+	var sprite : Sprite2D = _tile_grid.get_hex(coord).get_node("Sprite2D")
+
+	if hex.fire:
+		#TODO move to CFG
+		sprite.texture = load("res://Art/battle_map/fire_tile.png")
+	if hex.is_basic_grass:
+		sprite.texture = load("res://Art/battle_map/burned_grass.png")
 
 #endregion Fighting Phase
 

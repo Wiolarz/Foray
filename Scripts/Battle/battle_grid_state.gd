@@ -1,6 +1,12 @@
 class_name BattleGridState
 extends GenericHexGrid
 
+## gameplay logic state managed by Battle Manager (BM) singleton
+
+
+## emitted when tile transforms into new one.
+signal tile_changed(coord : Vector2i)
+
 enum MoveConsequences {
 	NONE,
 	KILL,
@@ -225,10 +231,11 @@ func _undo_push(_move : MoveInfo , pushed : MoveInfo.PushedUnit) -> void:
 ## returns true when unit should stop processing further steps
 ## it died or battle ended
 func _process_symbols(unit : Unit, move_type : E.MoveType) -> bool:
+	_process_offensive_symbols(unit, move_type, true)
 	if _should_die_to_counter_attack(unit):
 		_kill_unit(unit)
 		return true
-	_process_offensive_symbols(unit, move_type)
+	_process_offensive_symbols(unit, move_type, false)
 	if not battle_is_ongoing():
 		return true
 	return false
@@ -272,9 +279,12 @@ func _should_die_to_counter_attack(unit : Unit) -> bool:
 	return false
 
 
-func _process_offensive_symbols(unit : Unit, move_type : E.MoveType) -> void:
+func _process_offensive_symbols(unit : Unit, move_type : E.MoveType, swift : bool = false) -> void:
 	for side in range(6):
 		var unit_weapon = unit.get_symbol(side)
+		## during swift attack phase normal weapons don't attack, it works the same way in reverse
+		if unit_weapon.swift_attack != swift:
+			continue
 		if not unit_weapon.is_offensive(move_type):
 			continue  # We don't have any weapon
 		if unit_weapon.does_it_shoot():
@@ -674,6 +684,8 @@ func _switch_participant_turn() -> void:
 					break
 
 		STATE_FIGHTING:
+			_end_of_move_magic(prev_idx)
+
 			while not armies_in_battle_state[current_army_index].can_fight():
 				current_army_index += 1
 				current_army_index %= armies_in_battle_state.size()
@@ -703,8 +715,6 @@ func _switch_participant_turn() -> void:
 
 	var next_player := armies_in_battle_state[current_army_index]
 	# chess clock is updated in turn_ended() and turn_started()
-
-	_end_of_move_magic()
 
 	prev_player.turn_ended()
 
@@ -812,6 +822,8 @@ func _change_unit_coord(unit : Unit, target_coord : Vector2i) -> void:
 	if target_tile.is_mana_tile():
 		unit.unit_captured_mana.emit(target_coord)
 		capture_mana_well(target_tile, unit.army_in_battle)
+	if target_tile.fire:
+		unit.try_adding_magic_effect(load(CFG.BURNING_PATH))
 
 
 ## Used for movement, kills, undeploy(undo) [br]
@@ -1040,6 +1052,7 @@ func is_spell_target_valid(caster : Unit, coord : Vector2i, spell : BattleSpell)
 		BattleSpell.DirectionCast.FRONT:
 			if not GenericHexGrid.is_tile_in_straight_direction(
 				caster.coord, coord, caster.unit_rotation as GenericHexGrid.GridDirections):
+
 				return false
 		BattleSpell.DirectionCast.STRAIGHT:
 			if not GenericHexGrid.is_tile_faced(caster.coord, coord):
@@ -1122,7 +1135,31 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 
 		"Summon Dryad":
 			_summon_a_unit(unit, spell.summon_unit_data, target_tile_coord)
+		"Sacrifice":
+			var target : Unit = get_unit(target_tile_coord)
+			assert(target)
+			#unit.template.mana += 6 # TEMP
+			unit.spells = unit.template.spells.duplicate()
+			unit.spells.erase(spell)
+			_kill_unit(target)
+		"Fire Wall":
+			var target_tiles_coords : Array[Vector2i] = [target_tile_coord]
+			for direction in DIRECTION_TO_OFFSET:
+				target_tiles_coords.append(target_tile_coord + direction)
 
+			for tile_coord in target_tiles_coords:
+				if not is_on_grid(tile_coord):
+					continue
+				var hex : BattleHex = get_hex(tile_coord)
+				if not hex.is_basic_grass() and not hex.fire:
+					continue
+
+				hex.fire = true
+				tile_changed.emit(tile_coord)
+
+				var target : Unit = get_unit(tile_coord)
+				if target:
+					target.try_adding_magic_effect(load(CFG.BURNING_PATH))
 		_:
 			printerr("Spell perform not supported: ", spell.name)
 			return
@@ -1132,12 +1169,13 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 
 ## spell effects that occur after allmove related event already took place [br]
 ## runs for all units
-func _end_of_move_magic() -> void:
+func _end_of_move_magic(army_that_just_moved_idx : int) -> void:
 	for army in armies_in_battle_state:
 		if not battle_is_ongoing(): #TODO verify if thats a proper fix for spell combination, which results in a draw
 			return
 		for unit : Unit in army.units:
-			for magic_effect in unit.effects:
+			for effect_idx in range(unit.effects.size() -1, -1, -1):
+				var magic_effect : BattleMagicEffect = unit.effects[effect_idx]
 				match magic_effect.name:
 					"Blood Ritual":
 						if army.units.size() == 1:
@@ -1145,6 +1183,17 @@ func _end_of_move_magic() -> void:
 					"Death Mark":
 						_kill_unit(unit)
 						break
+					"Burning":
+						## checking if unit's turn just passed
+						if unit.army_in_battle != armies_in_battle_state[army_that_just_moved_idx]:
+							continue
+
+						if get_hex(unit.coord).fire:
+							_kill_unit(unit)
+							break
+						else:
+							unit.effects.pop_at(effect_idx)
+							unit.effect_state_changed()
 
 
 ## STUB for proper countdown system
@@ -1627,7 +1676,6 @@ func get_move_consequences(move : MoveInfo) -> MoveConsequences:
 #endregion AI Helpers
 
 
-
 #region Subclasses
 
 class BattleHex:
@@ -1642,6 +1690,7 @@ class BattleHex:
 	var mana : bool = false
 	var pit : bool = false
 	var hill : bool = false
+	var fire : bool = false
 
 	## allows unit to "enter" the tile under the condition
 	## that it's facing it
@@ -1707,6 +1756,10 @@ class BattleHex:
 
 	func is_mana_tile() -> bool:
 		return mana
+
+	func is_basic_grass() -> bool:
+		return not mana and not swamp and not hill and not pit and not fire \
+		and can_be_moved_to and can_shoot_through
 
 
 class ArmyInBattleState:

@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://brj4l3rsqhct5"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://dhpbh4go40wia"]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_jqg4w"]
 [ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_3nf68"]
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_uywif"]
-[ext_resource type="Resource" uid="uid://dcxon0wq646p5" path="res://Resources/Battle/Symbols/mace.tres" id="4_8irw5"]
+[ext_resource type="Resource" uid="uid://0fkofgfvnjtq" path="res://Resources/Battle/Symbols/flail.tres" id="4_jiihf"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_2y3bl"]
 
 [sub_resource type="Resource" id="Resource_vofdp"]
@@ -15,8 +15,8 @@ ruby = 0
 [resource]
 script = ExtResource("3_uywif")
 unit_name = "Ghoul"
-texture_path = "res://Art/units/undead/undead_2_hammer_ghoul.png"
-symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_8irw5"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl")])
+texture_path = "res://Art/units/undead/undead_2_flail_ghoul.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_jiihf"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl")])
 cost = SubResource("Resource_vofdp")
 required_building = ExtResource("2_3nf68")
 level = 2

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://ce1ewd5lcvfex"]
+
+[ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_3uqc5"]
+[ext_resource type="SpriteFrames" uid="uid://d0cc3nmwaam1c" path="res://Art/animations/bow.tres" id="2_spdmf"]
+
+[resource]
+script = ExtResource("1_3uqc5")
+symbol_name = "Throwing Knife"
+texture_path = "res://Art/items/throwing_knife.png"
+symbol_animation = ExtResource("2_spdmf")
+attack_power = 2
+defense_power = 0
+push_power = 0
+counter_attack = false
+swift_attack = false
+parry = false
+parry_break = false
+reach = 3
+activate_turn = true
+activate_move = false

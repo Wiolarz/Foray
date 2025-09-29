@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3 uid="uid://cm26lu3vyqiue"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_inklx"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_r7nm4"]
+[ext_resource type="Resource" uid="uid://bcbpi42x3dur" path="res://Resources/Battle/Symbols/strong_flail.tres" id="3_vcqp7"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="4_dqbk6"]
+
+[sub_resource type="Resource" id="Resource_k8g4u"]
+script = ExtResource("1_inklx")
+wood = 1
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("2_r7nm4")
+unit_name = "Berserk"
+texture_path = "res://Art/units/dwarves/dwarf_5_berserk.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_vcqp7"), ExtResource("3_vcqp7"), ExtResource("4_dqbk6"), ExtResource("4_dqbk6"), ExtResource("4_dqbk6"), ExtResource("3_vcqp7")])
+cost = SubResource("Resource_k8g4u")
+level = 5
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

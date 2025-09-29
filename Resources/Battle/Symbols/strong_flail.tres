@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://bcbpi42x3dur"]
+
+[ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_7hryl"]
+[ext_resource type="SpriteFrames" uid="uid://fch32vlpkdg" path="res://Art/animations/slash.tres" id="2_gaeiy"]
+
+[resource]
+script = ExtResource("1_7hryl")
+symbol_name = "strong flail"
+texture_path = "res://Art/items/red_flail.png"
+symbol_animation = ExtResource("2_gaeiy")
+attack_power = 3
+defense_power = 1
+push_power = 0
+counter_attack = false
+swift_attack = false
+parry = false
+parry_break = true
+reach = 0
+activate_turn = true
+activate_move = true

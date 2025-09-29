@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://mp2ftndlivvp"]
+
+[ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_yoceg"]
+[ext_resource type="SpriteFrames" uid="uid://d0cc3nmwaam1c" path="res://Art/animations/bow.tres" id="2_xiyk1"]
+
+[resource]
+script = ExtResource("1_yoceg")
+symbol_name = "Crossbow"
+texture_path = "res://Art/items/crossbow.png"
+symbol_animation = ExtResource("2_xiyk1")
+attack_power = 3
+defense_power = 0
+push_power = 0
+counter_attack = false
+swift_attack = false
+parry = false
+parry_break = false
+reach = 5
+activate_turn = true
+activate_move = false
