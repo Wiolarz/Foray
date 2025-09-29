@@ -10,5 +10,5 @@ description = "Chosen tile explodes killing every nearby unit in range of 1 tile
 
 Currently enemy unit are killed first, but soon it will be reversed."
 spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
-axial_cast_range = 0
-only_in_front = false
+axial_cast_range = 2
+only_in_front = true

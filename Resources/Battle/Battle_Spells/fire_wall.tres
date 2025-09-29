@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="BattleSpell" load_steps=2 format=3 uid="uid://nj6pvy1ljot0"]
+[gd_resource type="Resource" script_class="BattleSpell" load_steps=2 format=3 uid="uid://dsu5xmagba1jb"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_spell.gd" id="1_wxy6c"]
 
@@ -8,5 +8,5 @@ name = "Fire Wall"
 icon_path = "res://Art/magic/spell_icons/fire_wall.png"
 description = "Chosen tile alongside every adjacant grass tile is covered by fire. Any unit that ends their move on it dies."
 spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
-axial_cast_range = 0
+axial_cast_range = 3
 only_in_front = false
