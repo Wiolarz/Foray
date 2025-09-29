@@ -1,8 +1,11 @@
 class_name BattleGridState
 extends GenericHexGrid
 
-## TODO replace it with generic signal replacing tiles sprites
-signal tile_is_burning(coord : Vector2i)
+## gameplay logic state managed by Battle Manager (BM) singleton
+
+
+## emitted when tile transforms into new one.
+signal tile_changed(coord : Vector2i)
 
 enum MoveConsequences {
 	NONE,
@@ -1152,7 +1155,7 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 					continue
 
 				hex.fire = true
-				tile_is_burning.emit(tile_coord)
+				tile_changed.emit(tile_coord)
 
 				var target : Unit = get_unit(tile_coord)
 				if target:
