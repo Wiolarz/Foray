@@ -33,6 +33,7 @@ NET="*res://Scripts/Multiplayer/NET_manager.gd"
 UI="*res://Scripts/UI/ui_manager.gd"
 ANIM="*res://Scripts/General/animation_manager.gd"
 DISCORD="*res://Scripts/General/discord_manager.gd"
+RES="*res://Scripts/General/resource_manager.gd"
 
 [debug]
 

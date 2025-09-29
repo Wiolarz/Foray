@@ -9,7 +9,9 @@ icon_path = "res://Art/magic/spell_icons/fireball.png"
 description = "Chosen tile explodes killing every nearby unit in range of 1 tile
 
 Currently enemy unit are killed first, but soon it will be reversed."
+
 spell_effects = Array[Resource("res://Scripts/Battle/data_magic_effect.gd")]([])
+
 cast_range = 2
 direction_cast = 1
 target_type = 1

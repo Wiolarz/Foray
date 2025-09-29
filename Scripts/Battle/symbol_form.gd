@@ -20,7 +20,7 @@ func apply_sprite(side_local : int, texture_path : String) -> void:
 		sprite.texture = null
 		sprite.hide()
 		return
-	sprite.texture = load(texture_path)
+	sprite.texture = RES.load(texture_path)
 
 	flip_sprite(side_local)
 

@@ -17,6 +17,11 @@ func _process(_delta: float) -> void:
 	DiscordRPC.run_callbacks()
 
 
+func refresh():
+	if CFG.player_options.discord_rpc:
+		DiscordRPC.refresh()
+
+
 func init_discord_rich_presence() -> void:
 	DiscordRPC.app_id = 1406284593891643483  # Application ID
 	DiscordRPC.state = "Sitting in main menu"
@@ -24,7 +29,7 @@ func init_discord_rich_presence() -> void:
 
 	DiscordRPC.start_timestamp = int(Time.get_unix_time_from_system())
 
-	DiscordRPC.refresh()  # Always refresh after changing the values!
+	refresh()  # Always refresh after changing the values!
 
 
 ## Change state in rich presence [br]
@@ -32,7 +37,7 @@ func init_discord_rich_presence() -> void:
 func change_state(state: String) -> void:
 	DiscordRPC.state = state
 
-	DiscordRPC.refresh()
+	refresh()
 
 
 ## Change details in rich presence [br]
@@ -40,7 +45,7 @@ func change_state(state: String) -> void:
 func change_details(details: String) -> void:
 	DiscordRPC.details = details
 
-	DiscordRPC.refresh()
+	refresh()
 
 
 ## Change party size in rich presence [br]
@@ -50,4 +55,4 @@ func change_party_size(current_party_size: int, max_party_size: int) -> void:
 	DiscordRPC.current_party_size = current_party_size
 	DiscordRPC.max_party_size = max_party_size
 
-	DiscordRPC.refresh()
+	refresh()

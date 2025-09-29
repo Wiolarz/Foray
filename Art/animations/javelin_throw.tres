@@ -1,9 +1,9 @@
-[gd_resource type="SpriteFrames" script_class="SymbolAnimation" load_steps=31 format=3 uid="uid://clbps7vh8fgcl"]
+[gd_resource type="SpriteFrames" script_class="SymbolAnimation" load_steps=31 format=3 uid="uid://cllk0gaalq3a4"]
 
 [ext_resource type="Texture2D" uid="uid://doskv82n8btte" path="res://Art/animations/empty_texture.tres" id="1_eqf8p"]
 [ext_resource type="Texture2D" uid="uid://d0fdelje8xe38" path="res://Art/animations/javelin_throw.png" id="1_j7p2w"]
 [ext_resource type="Script" path="res://Resources/Battle/symbol_animation.gd" id="1_w3hx2"]
-[ext_resource type="SpriteFrames" uid="uid://biq7crtur120v" path="res://Art/animations/javelin_hit.tres" id="2_obi5y"]
+[ext_resource type="SpriteFrames" uid="uid://do183rew6gq2p" path="res://Art/animations/javelin_hit.tres" id="2_obi5y"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y7sx8"]
 atlas = ExtResource("1_j7p2w")

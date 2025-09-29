@@ -110,12 +110,12 @@ layout_mode = 2
 modulate = Color(1, 1, 0, 1)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
-text = "       Music      "
+text = "       Toksyczna      "
 horizontal_alignment = 1
 
 [node name="Title" type="Label" parent="MarginContainer/ScrollContainer/MainBoxContainer/CreditsBoxContainer/CurrentDevelopersBoxContainer2/HBoxContainer/Toksyczna"]
 layout_mode = 2
-text = "Toksyczna"
+text = "Music"
 horizontal_alignment = 1
 
 [node name="Bartollo" type="VBoxContainer" parent="MarginContainer/ScrollContainer/MainBoxContainer/CreditsBoxContainer/CurrentDevelopersBoxContainer2/HBoxContainer"]

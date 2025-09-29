@@ -23,5 +23,6 @@ cost = SubResource("Resource_pcl0g")
 revive_cost = SubResource("Resource_fpywl")
 data_unit = ExtResource("2_hf5ab")
 starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([])
+starting_level = 1
 max_army_size = 3
 max_movement_points = 3

@@ -76,10 +76,13 @@ extends Resource
 @export var autostart_map : bool = false
 
 
-## if true, compares BattleGridState and LibSpear's BattleManagerFast
+## Controls behavior when detecting mismatches in integrity check [br]
+## Integrity check compares BattleGridState and LibSpear's BattleManagerFast
 ## for mismatches before and after each battle move, activating an assert on mismatch
-@export var bmfast_integrity_checks : bool = false
+@export var bmfast_integrity_check_mode := CFG.BMFastIntegrityCheckMode.PUSH_ERROR_ONLY
 
+## Automatically start new battle as soon as the old one ends for LibSpear fuzzing purposes
+@export var enable_fuzzing_mode := false
 
 # Automatically wins battles for the local player
 @export var auto_win : bool = false
@@ -123,5 +126,11 @@ extends Resource
 
 ## if true, peer ip addresses are hidden
 @export var streamer_mode : bool = false
+
+@export var discord_rpc : bool = true:
+	set(new):
+		discord_rpc = new
+		if DISCORD:
+			DISCORD.refresh()
 
 #endregion Multiplayer

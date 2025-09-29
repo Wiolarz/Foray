@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=8 format=3 uid="uid://cdwap445knil2"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_xuyol"]
+[ext_resource type="Resource" uid="uid://ckctq24fgxtb6" path="res://Resources/Battle/Units/Dwarves/dwarf_2_guard.tres" id="2_ippgr"]
+[ext_resource type="Resource" uid="uid://c7wrr5lpekesk" path="res://Resources/Battle/Units/Dwarves/dwarf_3_mercenary.tres" id="3_ojmyf"]
+[ext_resource type="Resource" uid="uid://b5bfulbxq4h0u" path="res://Resources/Battle/Units/Dwarves/dwarf_hero_tribune.tres" id="4_ccqvo"]
+[ext_resource type="Resource" uid="uid://bupuvg1cr7byg" path="res://Resources/Battle/Units/Dwarves/dwarf_4_arbalister.tres" id="5_dtqo5"]
+[ext_resource type="Resource" uid="uid://cm26lu3vyqiue" path="res://Resources/Battle/Units/Dwarves/dwarf_5_berserk.tres" id="6_rafwk"]
+[ext_resource type="Resource" uid="uid://b6exiq5t4mtn5" path="res://Resources/Battle/Units/Dwarves/dwarf_hero_breacher.tres" id="7_8uuqo"]
+
+[resource]
+script = ExtResource("1_xuyol")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_ippgr"), ExtResource("3_ojmyf"), ExtResource("4_ccqvo"), ExtResource("5_dtqo5"), ExtResource("6_rafwk"), ExtResource("7_8uuqo")])
+team = 0
