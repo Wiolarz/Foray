@@ -52,7 +52,7 @@ static func create_for_deployment_ui(template: DataUnit, color : DataPlayerColor
 
 
 func apply_graphics(template : DataUnit, color : DataPlayerColor):
-	var unit_texture = load(template.texture_path) as Texture2D
+	var unit_texture = RES.load(template.texture_path) as Texture2D
 	_set_texture(unit_texture)
 	_apply_color_texture(color)
 	_apply_level_and_mana_numbers(template.level, template.mana)
@@ -98,7 +98,7 @@ func _set_texture(texture : Texture2D) -> void:
 func _apply_color_texture(color : DataPlayerColor) -> void:
 	var color_texture_name : String = color.hexagon_texture
 	var path = "%s%s.png" % [CFG.PLAYER_COLORS_PATH, color_texture_name]
-	var texture = load(path) as Texture2D
+	var texture = RES.load(path) as Texture2D
 	assert(texture, "failed to load background " + path)
 	$sprite_color.texture = texture
 
@@ -208,7 +208,7 @@ func anim_magic(effect: BattleMagicEffect):
 		return
 
 	var sprite := Sprite2D.new()
-	sprite.texture = load(effect.icon_path)
+	sprite.texture = RES.load(effect.icon_path)
 	sprite.visible = false
 	add_child(sprite)
 	sprite.global_rotation = 0
@@ -237,11 +237,11 @@ func _rotation_symbol_flip():
 func set_effects() -> void:
 	# Terrain effects
 	if entity.is_on_swamp:
-		$RigidUI/TerrainEffect.texture = load(CFG.SWAMP_ICON_PATH)
+		$RigidUI/TerrainEffect.texture = RES.load(CFG.SWAMP_ICON_PATH)
 	elif entity.is_on_rock:
-		$RigidUI/TerrainEffect.texture = load(CFG.ROCK_ICON_PATH)
+		$RigidUI/TerrainEffect.texture = RES.load(CFG.ROCK_ICON_PATH)
 	elif entity.is_on_mana:
-		$RigidUI/TerrainEffect.texture = load(CFG.MANA_ICON_PATH)
+		$RigidUI/TerrainEffect.texture = RES.load(CFG.MANA_ICON_PATH)
 	else:
 		$RigidUI/TerrainEffect.texture = null
 
@@ -255,7 +255,7 @@ func set_effects() -> void:
 	$RigidUI/SpellEffectCounter2.text = ""
 	assert(entity.effects.size() <= 2, "Unit has too many spell effects")
 	for slot_idx in range(entity.effects.size()):
-		var spell_texture = load(entity.effects[slot_idx].icon_path)  #TEMP spell icon path
+		var spell_texture = RES.load(entity.effects[slot_idx].icon_path)  #TEMP spell icon path
 		spell_effects_slots[slot_idx].texture = spell_texture
 		if not entity.effects[slot_idx].passive_effect:  # passive effect are pernament
 			spell_counters_slots[slot_idx].text = str(entity.effects[slot_idx].duration_counter)

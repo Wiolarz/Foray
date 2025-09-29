@@ -264,10 +264,20 @@ const DEFAULT_PLAYER_NAME = "player"
 
 #region Battle Map properties
 
-#TEMP variables until better mana equation is implemented
-const BIG_CYCLONE_COUNTER_VALUE = 30
-const SMALL_CYCLONE_COUNTER_VALUE = 15
-const CYCLONE_MANA_THRESHOLD = 3
+# Number above which cyclone value doesn't change
+const CYCLONE_COUNTER_VALUES_MAX_MANA_DIFFERENCE = 11
+
+func get_cyclone_value(mana_difference: int, _mana_wells: int):
+	if mana_difference < 2:
+		return 30
+	if mana_difference < 4:
+		return 20
+	if mana_difference < 8:
+		return 15
+	if mana_difference < 11:
+		return 10
+	return 5
+
 
 #endregion Battle Map properties
 
@@ -308,13 +318,20 @@ const CHESS_CLOCK_BATTLE_TURN_INCREMENT_MS = 2 * 1000
 
 #region Debugging & tests
 
+enum BMFastIntegrityCheckMode {
+	ASSERT = 1,
+	NOTIFY_ON_CHAT = 2,
+	PUSH_ERROR_ONLY = 3,
+	DISABLE = 0
+}
+
 # Also documented in Documentation/libspear.md
 ## Checks each time a move is done whether results of a move replicated in BattleManagerFast match results in a regular BM
 var debug_check_bmfast_integrity : bool :
-	get: return player_options.bmfast_integrity_checks
+	get: return player_options.bmfast_integrity_check_mode != BMFastIntegrityCheckMode.DISABLE
 ## Enables additional BattleManagerFast internal integrity checks, which may slightly reduce performance
 var debug_check_bmfast_internals : bool :
-	get: return player_options.bmfast_integrity_checks
+	get: return player_options.bmfast_integrity_check_mode != BMFastIntegrityCheckMode.DISABLE
 ## When greater than zero, saves replays from playouts where errors were detected
 var debug_mcts_max_saved_fail_replays := 16
 ## When true, immediately save replays from BattleManagerFast mismatches with an appropriate name with a suffix "BMFast Mismatch"

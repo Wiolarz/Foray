@@ -505,20 +505,7 @@ func is_move_possible(move: MoveInfo) -> bool:
 	return false
 
 
-## Checks if given tile relative to start tile is in specific direction within specific range [br]
-## start_tile, end_tile | direction = -1 search in all directions| reach = -1 with that value searh till the end of board
-func _is_faced_tile_in_range(start_coord : Vector2i, end_coord : Vector2i, direction : int, reach : int = -1) -> bool:
-	for angle in range(6):
-		var tile : Vector2i = start_coord
-		if direction != -1:
-			angle = direction
-		var idx = 0
-		while idx < reach:
-			idx += 1
-			tile += DIRECTION_TO_OFFSET[angle]
-			if tile == end_coord:
-				return true
-	return false
+
 
 
 # MAJOR FUNCTION that verifies if the unit move is legal [br]
@@ -1018,24 +1005,8 @@ func mana_values_changed() -> void:
 
 	var mana_difference = current_best.mana_points - current_worst.mana_points
 	## TODO consider moving it to a sepereta balance file instead of CFG
-	var new_cylone_counter = 0
-	if mana_difference >= 11:
-		new_cylone_counter = 5
-	elif mana_difference >= 8:
-		new_cylone_counter = 10
-	elif mana_difference >= 4:
-		new_cylone_counter = 15
-	elif mana_difference >= 2:
-		new_cylone_counter = 20
-	elif mana_difference == 1:
-		new_cylone_counter = CFG.BIG_CYCLONE_COUNTER_VALUE
-	else: # mana_difference == 0
-		new_cylone_counter = CFG.BIG_CYCLONE_COUNTER_VALUE
 
-
-	if mana_difference > CFG.CYCLONE_MANA_THRESHOLD:
-		new_cylone_counter = CFG.SMALL_CYCLONE_COUNTER_VALUE
-
+	var new_cylone_counter = CFG.get_cyclone_value(mana_difference, number_of_mana_wells)
 
 	if current_worst.cyclone_timer == 0:  # Cyclone just killed a unit, so now it resets
 		current_worst.cyclone_timer = new_cylone_counter
@@ -1067,49 +1038,49 @@ func capture_mana_well(hex : BattleHex, army : ArmyInBattleState):
 
 ## verifies if spell can be casted
 func is_spell_target_valid(caster : Unit, coord : Vector2i, spell : BattleSpell) -> bool:
-	match spell.name:
-		"Vengeance": # any current player controlled unit
-			var target = get_unit(coord)
-			if target and target.controller == caster.controller:
-				return true
-		"Martyr", "Sacrifice": # any current player controlled unit, but not the caster
-			var target = get_unit(coord)
-			if target and target.controller == caster.controller and target != caster:
-				return true
-		"Fireball", "Fire Wall": # any hex target is valid
-			return true
-		"Anchor": # any unit
-			var target = get_unit(coord)
-			if target:
-				return true
-		"Teleport", "Wind Dash": # tile in range that is in front of the caster
-			if get_unit(coord) or not _get_battle_hex(coord).can_be_moved_to:  # tile has to be empty
-				return false
-			var spell_range : int = 1
-			match spell.name:
-				"Teleport":
-					spell_range = 3
-				"Wind Dash":
-					spell_range = 1
-				_:
-					printerr("Unsupported spell range value")
+	if spell.not_self and caster.coord == coord:
+		return false
 
-			if _is_faced_tile_in_range(caster.coord, coord, caster.unit_rotation, spell_range):
-				return true
-		"Summon Dryad":  # adjacent empty tile to caster
-			if get_unit(coord) or not _get_battle_hex(coord).can_be_moved_to:
-				return false
-			return is_adjacent(caster.coord, coord)
-		"Blood Ritual":  # any enemy units -> when enemy has more than 1 unit
-			var target = get_unit(coord)
-			if target and target.controller.team != caster.controller.team and \
-				target.army_in_battle.units.size() >= 2:
-				return true
-		_:
-			printerr("Spell targeting not supported: ", spell.name)
+	if spell.cast_range != -1:
+		if GenericHexGrid.axial_distance(caster.coord, coord) > spell.cast_range:
 			return false
 
-	return false #TEMP
+	match spell.direction_cast:
+		BattleSpell.DirectionCast.FRONT:
+			if not GenericHexGrid.is_tile_in_straight_direction(
+				caster.coord, coord, caster.unit_rotation as GenericHexGrid.GridDirections):
+
+				return false
+		BattleSpell.DirectionCast.STRAIGHT:
+			if not GenericHexGrid.is_tile_faced(caster.coord, coord):
+				return false
+
+	match spell.target_type:
+		BattleSpell.TargetType.EMPTY_TILE:
+			if get_unit(coord):
+				return false
+			if spell.needs_movable_tile and not _get_battle_hex(coord).can_be_moved_to:
+				return false
+		BattleSpell.TargetType.UNIT:
+
+			var target : Unit = get_unit(coord)
+			if not target:
+				return false
+			match spell.target_unit_type:
+				BattleSpell.TargetUnitType.ALLY:
+					if target.army_in_battle.team != caster.army_in_battle.team:
+						return false
+				BattleSpell.TargetUnitType.ENEMY:
+					if target.army_in_battle.team == caster.army_in_battle.team:
+						return false
+
+
+	match spell.name:
+		"Blood Ritual":  # when enemy has more than 1 unit
+			var target = get_unit(coord)
+			if target.army_in_battle.alive_not_summoned_units_number() == 1:
+				return false
+	return true
 
 
 ## spell takes an effect
@@ -1235,6 +1206,7 @@ func _end_of_turn_magic() -> void:
 					magic_effect.duration_counter -= 1
 					if magic_effect.duration_counter == 0:
 						unit.effects.pop_at(effect_idx)
+						unit.effect_state_changed()
 						if magic_effect.name == "Summoning Sickness":
 							unit.try_adding_magic_effect(magic_effect.spell_effects[0])
 						continue
@@ -1920,12 +1892,16 @@ class ArmyInBattleState:
 			battle_grid_state.get_ref()._kill_unit(units[unit_idx])
 
 
-	func can_fight() -> bool:
+	func alive_not_summoned_units_number() -> int:
 		var alive_not_summoned_units : int = 0
 		for unit in units:
 			if not unit.summoned:
 				alive_not_summoned_units += 1
-		return alive_not_summoned_units > 0 or units_to_deploy.size() > 0
+		return alive_not_summoned_units
+
+
+	func can_fight() -> bool:
+		return alive_not_summoned_units_number() > 0 or units_to_deploy.size() > 0
 
 
 	func deploy_unit(unit_data : DataUnit, coord : Vector2i, rotation : int) -> Unit:

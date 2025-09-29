@@ -18,7 +18,7 @@
 #define BM_ASSERT_V(cond, v, ...)													\
 	do {																			\
 		if(!(cond)) {																\
-			WARN_PRINT(std::format("BMFast assert failed: " __VA_ARGS__).c_str());	\
+			_print_assert(std::format("BMFast assert failed: " __VA_ARGS__).c_str());\
 			_set_error_flag(); return v;											\
 		}																			\
 	} while(0)
@@ -41,9 +41,8 @@ class BattleManagerFast {
 	ArmyList _armies{};
 	std::array<BattleSpell, MAX_SPELLS> _spells{};
 	TileGridFast _tiles{};
-	int8_t _big_cyclone_counter_value = -1;
-	int8_t _small_cyclone_counter_value = -1;
-	int8_t _cyclone_mana_threshold = -1;
+	
+	std::array<int8_t, 16> _cyclone_counter_values{-1};
 	int8_t _mana_well_power = -1;
 
 	BattleResult _result{};
@@ -54,6 +53,7 @@ class BattleManagerFast {
 	bool _moves_dirty = true;
 	bool _heuristic_moves_dirty = true;
 	bool _debug_internals = false;
+
 
 	void _process_unit(UnitID uid, MovePhase phase);
 	void _process_bow(UnitID uid, MovePhase phase);
@@ -71,19 +71,23 @@ class BattleManagerFast {
 
 	void _append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max);
 	void _append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max);
+	void _append_moves_neighbors(UnitID uid, int8_t spell_id, Position center, IncludeImpassable include_impassable);
 
 	void _refresh_legal_moves();
 	void _refresh_heuristically_good_moves();
-	void _refresh_heuristically_good_summon_moves();
+	void _refresh_heuristically_good_deploy_moves();
 
 	void _move_unit(UnitID id, Position pos);
 	void _kill_unit(UnitID id, UnitID killer_id);
+	void _summon_unit(Unit& unit, Army& army, Position target);
 
 	void _next_army();
 
 	void _update_mana();
 	void _update_mana_target();
 	std::pair<size_t, size_t> _get_cyclone_worst_and_best_idx() const;
+
+	void _print_assert(const char* str);
 
 	friend class BattleManagerFastCpp;
 
@@ -182,12 +186,13 @@ public:
 	int play_move(godot::Array libspear_tuple);
 	int play_moves(godot::Array libspear_tuple_array);
 
-	void insert_unit(int army, int idx, Vector2i pos, int rotation, bool is_summoning);
+	void insert_unit(int army, int idx, Vector2i pos, int rotation, bool is_deploying);
 	void set_army_team(int army, int team);
 	void set_unit_symbol(
 		int army, int unit, int side,
 		int attack_strength, int defense_strength, int ranged_reach,
-		bool is_counter, int push_force, bool parries, bool breaks_parry
+		bool is_counter, int push_force, bool parries, bool breaks_parry,
+		bool activate_on_leap, bool activate_on_turn
 	);
 
 	void set_unit_mana(int army, int idx, int mana);
@@ -201,7 +206,7 @@ public:
 	void set_army_cyclone_timer(int army, int timer);
 	void set_tile_grid(TileGridFastCpp* tilegrid);
 	void set_current_participant(int army);
-	void set_cyclone_constants(int big, int small, int threshold, int mana_well_power);
+	void set_cyclone_constants(godot::PackedInt32Array cyclone_values, int mana_well_power);
 
 	void finish_initialization() {
 		bm.finish_initialization();
@@ -252,16 +257,16 @@ public:
 		return bm._armies[army].units[unit].status == UnitStatus::ALIVE;
 	}
 
-	bool is_unit_being_summoned(int army, int unit) const {
-		return bm._armies[army].units[unit].status == UnitStatus::SUMMONING;
+	bool is_unit_being_deployed(int army, int unit) const {
+		return bm._armies[army].units[unit].status == UnitStatus::DEPLOYING;
 	}
 
 	bool is_in_sacrifice_phase() const {
 		return bm._state == BattleState::SACRIFICE;
 	}
 
-	bool is_in_summoning_phase() const {
-		return bm._state == BattleState::SUMMONING;
+	bool is_in_deployment_phase() const {
+		return bm._state == BattleState::DEPLOYMENT;
 	}
 
 	bool get_unit_effect(int army, int idx, godot::String str) const {
@@ -293,6 +298,10 @@ public:
 
 	void set_debug_internals(bool state) {
 		bm.set_debug_internals(state);
+	}
+
+	void _print_assert(const char* str) {
+		bm._print_assert(str);
 	}
 };
 

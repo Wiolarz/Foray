@@ -11,5 +11,9 @@ description = "Chosen a friendly unit -> it along with casters are now connected
 
 If one were to die, the other one dies instead and the first one is teleport to the sacrificed unit spot"
 spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([ExtResource("2_uu874")])
-axial_cast_range = 0
-only_in_front = false
+cast_range = -1
+direction_cast = 0
+target_type = 1
+needs_movable_tile = false
+target_unit_type = 1
+not_self = true

@@ -21,6 +21,7 @@ var _selected_unit : Unit
 
 var _replay_data : BattleReplay
 var _replay_is_playing : bool = false
+var _replay_battle_id : int = 0 # differentiates consecutive replays so that perform_replay shuts down correctly
 var _replay_move_counter : int = 0
 var _replay_number_of_moves : int = 0
 
@@ -29,6 +30,10 @@ var _ai_move_preview : AIMovePreview = null
 var _painter_node : BattlePainter
 
 var _scripted_battle : ScriptedBattle
+
+var _fuzzing_iterations := 0
+var _fuzzing_failed_iterations := 0
+var fuzzing_is_iteration_failed := false
 
 signal move_animation_done()
 
@@ -78,6 +83,7 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 	_scripted_battle = scripted_battle
 
 	_replay_move_counter = 0
+	_replay_battle_id += 1
 
 	if not _replay_is_playing and not replay_template:
 		_replay_data.save()
@@ -92,6 +98,12 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 
 	# CORE GAMEPLAY logic initialization
 	_battle_grid_state = BattleGridState.create(battle_map, new_armies)
+
+	# DRUT - Assign battle IDs to bots so that they don't try to perform moves in battles they don't belong to
+	for army in _battle_grid_state.armies_in_battle_state:
+		var player := IM.get_player_by_index(army.army_reference.controller_index)
+		if player.bot_engine != null:
+			player.bot_engine.battle_id = _replay_battle_id
 
 	# GRAPHICS GRID:
 	_battle_grid_state.tile_is_burning.connect(tile_burns)
@@ -251,13 +263,19 @@ func _on_turn_started(player : Player) -> void:
 		latest_ai_cancel_token = my_cancel_token
 
 		var bot = player.bot_engine
+		var battle_id = bot.battle_id
 
 		var thinking_begin_s = Time.get_ticks_msec() / 1000.0
 		var move = await bot.choose_move(_battle_grid_state)
 		await _ai_thinking_delay(thinking_begin_s) # moving too fast feels weird
 
-		bot.cleanup_after_move()
+		if is_instance_valid(bot): # it may have been destroyed after thinking delay
+			bot.cleanup_after_move()
+
 		if _battle_grid_state == null: # Player quit to main menu before finishing
+			return
+
+		if battle_id != _replay_battle_id: # DRUT/Bugfix - bot outlived its own battle
 			return
 
 		if not my_cancel_token.is_canceled():
@@ -410,6 +428,9 @@ func ai_move() -> void:
 		return
 
 	if _replay_is_playing:
+		return
+
+	if _battle_grid_state.state == BattleGridState.STATE_BATTLE_FINISHED:
 		return
 
 	var move := AiBotStateRandom.choose_move_static(_battle_grid_state)
@@ -759,6 +780,19 @@ func _on_battle_ended() -> void:
 	_disable_ai_preview()
 	_battle_ui.update_mana()
 
+	if CFG.player_options.enable_fuzzing_mode:
+		_fuzzing_iterations += 1
+		if fuzzing_is_iteration_failed:
+			_fuzzing_failed_iterations += 1
+		fuzzing_is_iteration_failed = false
+
+		NET.append_to_local_chat_log("Next fuzzing iteration: %s/%s failed" \
+			% [_fuzzing_failed_iterations, _fuzzing_iterations]
+		)
+		# Do not wait 2 seconds and immediately start new game
+		IM.start_game()
+		return
+
 	await get_tree().create_timer(2).timeout # TEMP, don't exit immediately # TODO get signal from last animation ending
 
 	_current_summary = _create_summary()
@@ -893,12 +927,13 @@ func _create_summary() -> DataBattleSummary:
 ## Plays a replay and returns to the normal state afterwards
 func perform_replay(replay : BattleReplay) -> void:
 	_replay_is_playing = true # _replay_is_playing is reset in close_when_quitting_game
+	var current_replay_battle_id := _replay_battle_id
 	_battle_ui.show_replay_controls()
 	_battle_grid_state.set_clock_enabled(false)
 	_replay_number_of_moves = replay.moves.size()
 
 	for m in replay.moves:
-		if not _battle_is_ongoing:
+		if not _battle_is_ongoing or _replay_battle_id != current_replay_battle_id:
 			return # terminating battle while watching
 		_perform_replay_move(m)
 		await _replay_move_delay()
