@@ -20,4 +20,3 @@ cost = SubResource("Resource_6r5q3")
 level = 2
 mana = 0
 spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])
-summoned = true

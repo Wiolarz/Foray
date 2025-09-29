@@ -1819,8 +1819,10 @@ class ArmyInBattleState:
 					if state.armies_in_battle_state.size() != 0:
 						continue  # only attacker can use ballista
 					var ballista : DataUnit = load(CFG.BALLISTA_PATH)
-					units_to_deploy.append(Unit.create(army_in_battle.army_reference.controller,
-					ballista, Vector2i.ZERO, GenericHexGrid.GridDirections.LEFT, army_in_battle))
+					var unit := Unit.create(army_in_battle.army_reference.controller,
+					ballista, Vector2i.ZERO, GenericHexGrid.GridDirections.LEFT, army_in_battle)
+					unit.summoned = true
+					units_to_deploy.append(unit)
 
 
 	func turn_started() -> void:

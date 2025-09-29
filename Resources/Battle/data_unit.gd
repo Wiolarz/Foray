@@ -19,9 +19,6 @@ extends Resource
 
 @export var spells : Array[BattleSpell] = []
 
-## is unit created using magic
-@export var summoned : bool = false
-
 
 ## godot deep copy doesn't support arrays within objects [br]
 ## symbols.duplicate(true) wouldn't work
