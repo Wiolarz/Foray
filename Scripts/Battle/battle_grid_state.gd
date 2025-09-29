@@ -37,9 +37,6 @@ const MANA_WELL_POWER : int = 5
 var spear_holding_killer_teams : Array[int] = []
 
 
-var stalemate_failsafe_on : bool = false
-var stalemate_failsafe_start : int = 0
-
 #region init
 
 func _init(width_ : int, height_ : int):
@@ -893,17 +890,6 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 		spell.apply_effect(currently_active_unit, "post death spell effect")
 
 	mana_values_changed() # TEMP occurs every time after death
-
-	var units_on_board : Dictionary = {}
-
-	for army in armies_in_battle_state:
-		for unit in army.units:
-			units_on_board[unit.template.unit_name] = unit
-
-	if units_on_board.size() == 2 and units_on_board.has("elf_3") \
-	and units_on_board.has("orc_2"):
-		stalemate_failsafe_on = true
-		stalemate_failsafe_start = turn_counter
 
 
 ## Rare event when all players repeated their moves -> it pushes cyclone timer to activate next turn
