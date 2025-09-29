@@ -1749,6 +1749,34 @@ class ArmyInBattleState:
 	var start_turn_clock_time_left_ms = CFG.CHESS_CLOCK_BATTLE_TIME_PER_PLAYER_MS
 	## time to add when turn ends
 	var turn_increment_ms = CFG.CHESS_CLOCK_BATTLE_TURN_INCREMENT_MS
+	
+	static func _apply_hero_passives(hero_unit : Unit, hero : Hero) -> void:
+		for passive_effect in hero.passive_effects:
+			if not passive_effect:  # TEMP null check until all pasives in level_up_screen are present
+				continue
+			match passive_effect.passive_name:
+				"magic_weapons":
+					var effect : BattleMagicEffect = load(CFG.hero_magic_weapon_effect)
+					var success : bool = hero_unit.try_adding_magic_effect(effect)
+					assert(success, "couldn't add passive effect to a hero unit at the start of the battle")
+					for symbol in hero_unit.symbols:
+						if symbol.attack_power != 0:
+							symbol.attack_power = effect.magic_weapon_durability
+				"weak_weapons":
+					var weak_weapon : DataSymbol = load(CFG.weak_weapon)
+					for side in range(6):
+						var symbol = hero_unit.symbols[side]
+
+						if symbol.symbol_name == "empty": # TODO verify and note the choice in the documentation, if thats a proper way to verify symbol is empty
+							hero_unit.symbols[side] = weak_weapon.duplicate()
+				"wind_weapons":
+					for symbol in hero_unit.symbols:
+						if symbol.attack_power != 0:
+							symbol.push_power += 1
+				"second_wind":
+					var effect : BattleMagicEffect = load(CFG.hero_second_wind_effect)
+					var success : bool = hero_unit.try_adding_magic_effect(effect)
+					assert(success, "couldn't add passive effect to a hero unit at the start of the battle")
 
 
 	static func create_from(army : Army, state : BattleGridState) -> ArmyInBattleState:
@@ -1760,6 +1788,7 @@ class ArmyInBattleState:
 				Vector2i.ZERO, GenericHexGrid.GridDirections.LEFT, result)
 			unit.level = army.hero.level
 			result.units_to_deploy.append(unit)
+			_apply_hero_passives(unit, army.hero)
 
 		# unit list
 		for unit : DataUnit in army.units_data:
@@ -1879,39 +1908,6 @@ class ArmyInBattleState:
 		result.unit_rotation = rotation
 		units_to_deploy.erase(result)
 		units.append(result)
-
-		if not army_reference.hero or \
-		army_reference.hero.template.data_unit.unit_name != result.template.unit_name:
-			return result  # it's not a hero
-
-		## TODO move this to the creation of units to deploy list
-		## Applying hero passive effects
-		for passive_effect in army_reference.hero.passive_effects:
-			if not passive_effect:  # TEMP null check until all pasives in level_up_screen are present
-				continue
-			match passive_effect.passive_name:
-				"magic_weapons":
-					var effect : BattleMagicEffect = load(CFG.hero_magic_weapon_effect)
-					var success : bool = result.try_adding_magic_effect(effect)
-					assert(success, "couldn't add passive effect to a hero unit upon it's deployment")
-					for symbol in result.symbols:
-						if symbol.attack_power != 0:
-							symbol.attack_power = effect.magic_weapon_durability
-				"weak_weapons":
-					var weak_weapon : DataSymbol = load(CFG.weak_weapon)
-					for side in range(6):
-						var symbol = result.symbols[side]
-
-						if symbol.symbol_name == "empty": # TODO verify and note the choice in the documentation, if thats a proper way to verify symbol is empty
-							result.symbols[side] = weak_weapon.duplicate()
-				"wind_weapons":
-					for symbol in result.symbols:
-						if symbol.attack_power != 0:
-							symbol.push_power += 1
-				"second_wind":
-					var effect : BattleMagicEffect = load(CFG.hero_second_wind_effect)
-					var success : bool = result.try_adding_magic_effect(effect)
-					assert(success, "couldn't add passive effect to a hero unit upon it's placement")
 
 		return result
 
