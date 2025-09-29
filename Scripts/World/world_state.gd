@@ -548,7 +548,10 @@ func end_combat(battle_results : Array[BattleGridState.ArmyInBattleState]) -> vo
 		if not army_state.can_fight():
 			remove_army(army)
 		else:
-			army.apply_losses(army_state.dead_units)
+			var dead_units_data : Array[DataUnit] = []
+			for unit : Unit in army_state.dead_units:
+				dead_units_data.append(unit.template)
+			army.apply_losses(dead_units_data)
 
 	# TODO document this variable, and how it works better
 	if move_hold_on_combat.size() < 1:

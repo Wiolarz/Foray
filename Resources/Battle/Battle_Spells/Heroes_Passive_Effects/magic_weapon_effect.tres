@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="BattleMagicEffect" load_steps=2 format=3 uid="uid://ya07yeeiibnb"]
+[gd_resource type="Resource" script_class="DataMagicEffect" load_steps=2 format=3 uid="uid://ya07yeeiibnb"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/battle_magic_effect.gd" id="1_leoht"]
+[ext_resource type="Script" path="res://Scripts/Battle/data_magic_effect.gd" id="1_44sd0"]
 
 [resource]
-script = ExtResource("1_leoht")
+script = ExtResource("1_44sd0")
 name = "Magic Weapon"
 icon_path = "res://Art/orc_hero_fighter.png"
-spell_effects = Array[ExtResource("1_leoht")]([])
+spell_effects = Array[ExtResource("1_44sd0")]([])
 passive_effect = true

@@ -6,7 +6,7 @@ extends Resource
 @export var unit_name : String
 @export var texture_path : String
 @export var symbols : Array[DataSymbol] = [null,null,null,null,null,null]
-@export var cost : Goods = Goods.new()
+@export var cost : Goods
 @export var required_building : DataBuilding = null #TEMP
 ## determines ability to award expirience to a hero
 @export var level : int = 1
@@ -18,9 +18,6 @@ extends Resource
 ## each spell is single use only - resets every battle
 
 @export var spells : Array[BattleSpell] = []
-
-## is unit created using magic
-var summoned : bool = false
 
 
 ## godot deep copy doesn't support arrays within objects [br]

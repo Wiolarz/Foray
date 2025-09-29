@@ -1,11 +1,11 @@
-[gd_resource type="Resource" script_class="BattleMagicEffect" load_steps=3 format=3 uid="uid://bwcl7n1wyv8um"]
+[gd_resource type="Resource" script_class="DataMagicEffect" load_steps=3 format=3 uid="uid://bwcl7n1wyv8um"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/battle_magic_effect.gd" id="1_oh7ep"]
+[ext_resource type="Script" path="res://Scripts/Battle/data_magic_effect.gd" id="1_skuml"]
 [ext_resource type="Resource" uid="uid://dx6lffk7q0vf8" path="res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/vengeance_death.tres" id="2_qcan4"]
 
 [resource]
-script = ExtResource("1_oh7ep")
+script = ExtResource("1_skuml")
 name = "Summoning Sickness"
 icon_path = "res://Art/magic/spell_icons/ressurection.png"
-spell_effects = Array[ExtResource("1_oh7ep")]([ExtResource("2_qcan4")])
+spell_effects = Array[ExtResource("1_skuml")]([ExtResource("2_qcan4")])
 passive_effect = false

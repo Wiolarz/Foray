@@ -6,7 +6,7 @@ extends BattleManagerFastCpp
 
 var _integrity_check_move: MoveInfo
 
-## Maps BMFast's unit IDs (in format [army, unit]) and DataUnit
+## Maps BMFast's unit IDs (in format [army, unit]) and int
 var summon_mapping_cpp2gd: Dictionary = {}
 ## Maps BMFast's unit IDs (in format [army, unit]) and DataUnit
 var summon_mapping_gd2cpp: Dictionary = {}
@@ -67,11 +67,11 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 				continue
 
 			new.insert_unit(army_idx, unit_idx, unit.coord, unit.unit_rotation, false)
-			new.set_unit_score(army_idx, unit_idx, unit.template.level)
-			new.set_unit_mana(army_idx, unit_idx, unit.template.mana)
+			new.set_unit_score(army_idx, unit_idx, unit.level)
+			new.set_unit_mana(army_idx, unit_idx, unit.mana)
 
 			for i in range(6):
-				new.set_unit_symbol(army_idx, unit_idx, i, unit.template.symbols[i])
+				new.set_unit_symbol(army_idx, unit_idx, i, unit.symbols[i])
 
 			for spell in unit.spells:
 				new.insert_spell(army_idx, unit_idx, new.spell_mapping.size(), spell.name)
@@ -97,15 +97,15 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 
 		# Deployment processing
 		for summon_idx in range(army.units_to_deploy.size()):
-			var unit = army.units_to_deploy[summon_idx]
-			var unit_idx = summon_idx + army.units.size()
+			var unit : Unit = army.units_to_deploy[summon_idx]
+			var unit_idx : int = summon_idx + army.units.size()
 
 			new.insert_unit(army_idx, unit_idx, Vector2i.ZERO, 0, true)
 			for i in range(6):
 				new.set_unit_symbol(army_idx, unit_idx, i, unit.symbols[i])
 
-			new.summon_mapping_cpp2gd[[army_idx, unit_idx]] = unit
-			new.summon_mapping_gd2cpp[unit] = [army_idx, unit_idx]
+			new.summon_mapping_cpp2gd[[army_idx, unit_idx]] = summon_idx
+			new.summon_mapping_gd2cpp[unit.template] = [army_idx, unit_idx]
 
 	new.finish_initialization()
 

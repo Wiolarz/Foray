@@ -11,7 +11,7 @@ Caster traverses 3 tiles forward attacking before getting hit by enemy spears.
 
 If unit along casters path were to survive his attacks. (ex. because it had a shield)
 Caster will be squashed"
-spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
+spell_effects = Array[Resource("res://Scripts/Battle/data_magic_effect.gd")]([])
 cast_range = 1
 direction_cast = 1
 target_type = 0
