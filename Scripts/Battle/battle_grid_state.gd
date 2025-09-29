@@ -1160,7 +1160,7 @@ func _end_of_turn_magic() -> void:
 	for army in armies_in_battle_state:
 		for unit : Unit in army.units:
 			for effect_idx in range(unit.effects.size() -1, -1, -1):
-				var magic_effect : BattleMagicEffect = unit.effects[effect_idx]
+				var magic_effect : MagicEffect = unit.effects[effect_idx]
 
 				if not magic_effect.passive_effect:  # Duration
 					magic_effect.duration_counter -= 1
@@ -1756,7 +1756,7 @@ class ArmyInBattleState:
 				continue
 			match passive_effect.passive_name:
 				"magic_weapons":
-					var effect : BattleMagicEffect = load(CFG.hero_magic_weapon_effect)
+					var effect : DataMagicEffect = load(CFG.hero_magic_weapon_effect)
 					var success : bool = hero_unit.try_adding_magic_effect(effect)
 					assert(success, "couldn't add passive effect to a hero unit at the start of the battle")
 					for symbol in hero_unit.symbols:
@@ -1774,7 +1774,7 @@ class ArmyInBattleState:
 						if symbol.attack_power != 0:
 							symbol.push_power += 1
 				"second_wind":
-					var effect : BattleMagicEffect = load(CFG.hero_second_wind_effect)
+					var effect : DataMagicEffect = load(CFG.hero_second_wind_effect)
 					var success : bool = hero_unit.try_adding_magic_effect(effect)
 					assert(success, "couldn't add passive effect to a hero unit at the start of the battle")
 

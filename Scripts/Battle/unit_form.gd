@@ -241,7 +241,7 @@ func anim_symbol(side : int, animation_type : int, target_coord: Vector2i = Vect
 
 
 
-func anim_magic(effect: BattleMagicEffect):
+func anim_magic(effect: MagicEffect):
 	if not effect:
 		return
 

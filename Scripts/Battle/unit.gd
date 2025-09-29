@@ -4,7 +4,7 @@ extends RefCounted # default
 signal unit_died()
 signal unit_turned()
 signal unit_moved()
-signal unit_magic_effect(effect : BattleMagicEffect)
+signal unit_magic_effect(effect : MagicEffect)
 
 const MAX_EFFECTS_PER_UNIT = 2
 
@@ -49,7 +49,7 @@ var level : int
 var spells : Array[BattleSpell] = []
 
 ## magic effects, size_limit == 2
-var effects : Array[BattleMagicEffect] = []
+var effects : Array[MagicEffect] = []
 
 var mana : int = 0
 
@@ -70,7 +70,6 @@ static func create(new_controller : Player, \
 	result.symbols = new_template.symbols.duplicate(true) # TEMP TODO fix symbols to another type too
 	result.level = new_template.level
 	result.mana = new_template.mana
-	result.summoned = new_template.summoned
 	result.spells = new_template.spells.duplicate() # spells reset every battle
 
 	result.controller = new_controller
@@ -144,9 +143,11 @@ func get_front_symbol() -> DataSymbol:
 
 ## attempts to add magical effect to a unit (there is limit of 2) [br]
 ## returns bool if it was succesful
-func try_adding_magic_effect(effect : BattleMagicEffect) -> bool:
+func try_adding_magic_effect(data_effect : DataMagicEffect) -> bool:
 	if effects.size() >= MAX_EFFECTS_PER_UNIT:
 		return false
+
+	var effect := MagicEffect.create_effect(data_effect)
 	effects.append(effect)
 	unit_magic_effect.emit(effect)
 	return true

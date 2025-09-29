@@ -440,7 +440,7 @@ func _on_unit_deployment(unit : Unit) -> void:
 					tile.get_node("Sprite2D").texture = load("res://Art/battle_map/grass_tile.png")
 
 	# TODO imo should be refactored
-	unit.unit_magic_effect.connect(func(_effect: BattleMagicEffect): _on_unit_magic_effect(unit))  # spell icons UI
+	unit.unit_magic_effect.connect(func(_effect: MagicEffect): _on_unit_magic_effect(unit))  # spell icons UI
 
 	unit.unit_died.connect(form.anim_die)
 	unit.unit_died.connect(_on_unit_death)  # TEXT BUBBLES
