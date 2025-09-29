@@ -9,15 +9,22 @@ func _ready():
 	_declare_toggle("streamer_mode", $ToggleStreamerMode)
 	_declare_toggle("fullscreen", $ToggleFullscreen)
 	_declare_toggle("keep_main_menu_windowed", $ToggleAutoFullscreen)
-	_declare_toggle("bmfast_integrity_checks", $ToggleBMFastIntegrityChecks)
 	_declare_toggle("background_color_follows_players", $ToggleBackgroundColorFollowsPlayers)
 	_declare_toggle("auto_win", $ToggleAutoWin)
 	_declare_toggle("auto_win_against_neutrals", $ToggleAutoWinAgainstNeutrals)
 	_declare_toggle("world_god_mode", $ToggleWorldGodMode)
+	_declare_toggle("enable_fuzzing_mode", $EnableFuzzingMode)
+	_declare_toggle("discord_rpc", $ToggleDiscordRPC)
 	_declare_enum_list("gui_animation_mode", $OptionGuiAnimationMode/Option, {
 		CFG.GuiAnimationMode.NONE: "None",
 		CFG.GuiAnimationMode.NON_DISTRACTION: "Only non-distracting",
 		CFG.GuiAnimationMode.FULL: "All"
+	})
+	_declare_enum_list("bmfast_integrity_check_mode", $LibSpearIntegrityChecks/Option, {
+		CFG.BMFastIntegrityCheckMode.ASSERT: "Assert",
+		CFG.BMFastIntegrityCheckMode.NOTIFY_ON_CHAT: "Notify on chat",
+		CFG.BMFastIntegrityCheckMode.PUSH_ERROR_ONLY: "Only write error log",
+		CFG.BMFastIntegrityCheckMode.DISABLE: "Disable",
 	})
 	_declare_volume_slider("volume_master", $VolumeContainer/Sliders/Master)
 	_declare_volume_slider("volume_music", $VolumeContainer/Sliders/Music)

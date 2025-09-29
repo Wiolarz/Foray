@@ -68,12 +68,15 @@ struct Unit {
 private:
 	UnitID _martyr_id = NO_UNIT;
 public:
+	static const int8_t EFFECT_INFINITE = -1;
 
 	static const EffectMask FLAG_ON_SWAMP = 0x01;
 	static const EffectMask FLAG_EFFECT_VENGEANCE = 0x02;
 	static const EffectMask FLAG_EFFECT_DEATH_MARK = 0x04;
 	static const EffectMask FLAG_EFFECT_MARTYR = 0x08;
 	static const EffectMask FLAG_EFFECT_BLOOD_CURSE = 0x10;
+	static const EffectMask FLAG_EFFECT_ANCHOR = 0x20;
+	static const EffectMask FLAG_EFFECT_SUMMONING_SICKNESS = 0x40;
 	/// Add new effect types/flags before this line
 
 	Symbol symbol_when_rotated(int side) const {
@@ -132,13 +135,9 @@ public:
 			if(eff.counter == 0 || eff.mask == 0) {
 				continue;
 			}
-			switch (eff.mask) {
-				case FLAG_EFFECT_BLOOD_CURSE:
-					continue;
 
-				default:
-					eff.counter--;
-					break;
+			if(eff.counter > 0) {
+				eff.counter--;
 			}
 
 			if(eff.counter == 0) {
@@ -151,7 +150,7 @@ public:
 		}
 	}
 
-	static uint8_t effect_string_to_flag(godot::String str) {
+	static EffectMask effect_string_to_flag(godot::String str) {
 		if(str == godot::String("Vengeance")) {
 			return FLAG_EFFECT_VENGEANCE;
 		}
@@ -163,6 +162,12 @@ public:
 		}
 		else if(str == godot::String("Blood Ritual")) {
 			return FLAG_EFFECT_BLOOD_CURSE;
+		}
+		else if(str == godot::String("Anchor")) {
+			return FLAG_EFFECT_ANCHOR;
+		}
+		else if(str == godot::String("Summoning Sickness")) {
+			return FLAG_EFFECT_SUMMONING_SICKNESS;
 		}
 		/// Add new effect-string mappings before this line
 		else {
@@ -199,14 +204,15 @@ struct Army {
 	std::array<Unit, MAX_UNITS_IN_ARMY> units{};
 
 
-	int find_unit_id_to_summon(int from = 0) const;
+	int find_unit_id_to_deploy(unsigned from = 0) const;
+	int find_empty_unit_slot() const;
 	bool is_defeated() const;
 
 	/// Counts number of alive and undeployed units
 	int count_alive_units() const {
 		int result = 0;
 		for (const Unit& unit : units) {
-			if (unit.status == UnitStatus::SUMMONING || unit.status == UnitStatus::ALIVE) {
+			if (unit.status == UnitStatus::DEPLOYING || unit.status == UnitStatus::ALIVE) {
 				result++;
 			}
 		}

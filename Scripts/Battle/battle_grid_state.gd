@@ -996,24 +996,8 @@ func mana_values_changed() -> void:
 
 	var mana_difference = current_best.mana_points - current_worst.mana_points
 	## TODO consider moving it to a sepereta balance file instead of CFG
-	var new_cylone_counter = 0
-	if mana_difference >= 11:
-		new_cylone_counter = 5
-	elif mana_difference >= 8:
-		new_cylone_counter = 10
-	elif mana_difference >= 4:
-		new_cylone_counter = 15
-	elif mana_difference >= 2:
-		new_cylone_counter = 20
-	elif mana_difference == 1:
-		new_cylone_counter = CFG.BIG_CYCLONE_COUNTER_VALUE
-	else: # mana_difference == 0
-		new_cylone_counter = CFG.BIG_CYCLONE_COUNTER_VALUE
 
-
-	if mana_difference > CFG.CYCLONE_MANA_THRESHOLD:
-		new_cylone_counter = CFG.SMALL_CYCLONE_COUNTER_VALUE
-
+	var new_cylone_counter = CFG.get_cyclone_value(mana_difference, number_of_mana_wells)
 
 	if current_worst.cyclone_timer == 0:  # Cyclone just killed a unit, so now it resets
 		current_worst.cyclone_timer = new_cylone_counter
@@ -1176,6 +1160,7 @@ func _end_of_turn_magic() -> void:
 					magic_effect.duration_counter -= 1
 					if magic_effect.duration_counter == 0:
 						unit.effects.pop_at(effect_idx)
+						unit.effect_state_changed()
 						if magic_effect.name == "Summoning Sickness":
 							unit.try_adding_magic_effect(magic_effect.spell_effects[0])
 						continue

@@ -48,6 +48,10 @@ text = "Players start as AI"
 layout_mode = 2
 text = "Streamer mode"
 
+[node name="ToggleDiscordRPC" type="CheckBox" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Discord RPC"
+
 [node name="ToggleFullscreen" type="CheckBox" parent="Margin/Scroll/VBox"]
 layout_mode = 2
 text = "Fullscreen"
@@ -56,13 +60,26 @@ text = "Fullscreen"
 layout_mode = 2
 text = "Auto FullScreen - Main menu is windowed, but game is kept in fullscreen"
 
+[node name="LibSpearIntegrityChecks" type="HBoxContainer" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Margin/Scroll/VBox/LibSpearIntegrityChecks"]
+layout_mode = 2
+text = "LibSpear integrity checks:      "
+
+[node name="Option" type="OptionButton" parent="Margin/Scroll/VBox/LibSpearIntegrityChecks"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text_overrun_behavior = 3
+fit_to_longest_item = false
+
+[node name="EnableFuzzingMode" type="CheckBox" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Enable fuzzing mode (auto-restart battle when it ends)"
+
 [node name="ToggleBackgroundColorFollowsPlayers" type="CheckBox" parent="Margin/Scroll/VBox"]
 layout_mode = 2
 text = "Background color changes with player's turns"
-
-[node name="ToggleBMFastIntegrityChecks" type="CheckBox" parent="Margin/Scroll/VBox"]
-layout_mode = 2
-text = "Check LibSpear integrity"
 
 [node name="ToggleAutoWin" type="CheckBox" parent="Margin/Scroll/VBox"]
 layout_mode = 2
