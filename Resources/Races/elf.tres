@@ -18,3 +18,4 @@ race_name = "elf"
 units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("9_dabp8"), ExtResource("10_fe1kj"), ExtResource("11_5sx00")])
 heroes = Array[Resource("res://Resources/Battle/data_hero.gd")]([ExtResource("5_6hi7f"), ExtResource("6_upuhb"), ExtResource("7_5ndp3")])
 buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_ivls3"), ExtResource("2_3jrvc"), ExtResource("3_3qdd6"), ExtResource("4_dggrk")])
+description = "Magic > Elite > Horde"

@@ -20,3 +20,4 @@ race_name = "cyclops"
 units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("9_sbtbe"), ExtResource("10_0xen0"), ExtResource("11_ydssi"), ExtResource("12_g584v"), ExtResource("13_x4oaf")])
 heroes = Array[Resource("res://Resources/Battle/data_hero.gd")]([ExtResource("5_k105s"), ExtResource("6_t5ayo"), ExtResource("7_e7ytf")])
 buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_dt4cj"), ExtResource("2_5fxsu"), ExtResource("3_ktbvq"), ExtResource("4_cwvi5")])
+description = "Elite > Magic > Horde"

@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=6 format=3 uid="uid://b0fo4hmp5yws1"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_3b6pg"]
+[ext_resource type="Resource" uid="uid://c3d8o8qw4dfa4" path="res://Resources/Battle/Units/Cyclops/cyclops_1_axer.tres" id="2_td4fx"]
+[ext_resource type="Resource" uid="uid://7v686d60r2xe" path="res://Resources/Battle/Units/Cyclops/cyclops_4_hammer.tres" id="3_0p51p"]
+[ext_resource type="Resource" uid="uid://cir43eqa3uet2" path="res://Resources/Battle/Units/Cyclops/cyclops_5_shield_halbard.tres" id="4_ybfy4"]
+[ext_resource type="Resource" uid="uid://b4ajym7wahumg" path="res://Resources/Battle/Units/Cyclops/cyclops_3_javelin.tres" id="5_ii8my"]
+
+[resource]
+script = ExtResource("1_3b6pg")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_td4fx"), ExtResource("3_0p51p"), ExtResource("4_ybfy4"), ExtResource("5_ii8my")])
+team = 0

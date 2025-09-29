@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://q0k58xy6fkre"]
+[gd_scene load_steps=2 format=3 uid="uid://baltedrhixfl7"]
 
-[ext_resource type="Script" path="res://Scripts/UI/Educational/campaign_battles_menu.gd" id="1_cvlrg"]
+[ext_resource type="Script" path="res://Scripts/UI/Educational/Practice/tutorial_menu.gd" id="1_gtpmc"]
 
-[node name="CampaignBattles" type="Panel"]
+[node name="Tutorials" type="Panel"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -10,7 +10,8 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("1_cvlrg")
+script = ExtResource("1_gtpmc")
+battle_bot_path = "res://Resources/Battle/Bots/MCTS_Easy.tscn"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -26,7 +27,7 @@ layout_mode = 2
 [node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 100
-text = "Campaign Elves"
+text = "Tutorials"
 horizontal_alignment = 1
 
 [node name="Columns" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
@@ -46,19 +47,19 @@ theme_override_constants/separation = 8
 
 [node name="Button" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
 layout_mode = 2
-text = "Duel - Mission 1"
+text = "Basic Tutorial"
 
 [node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
 layout_mode = 2
-text = "First Monster Encounter - Mission 1"
+text = "Mana Cyclone Timer"
 
 [node name="Button3" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
 layout_mode = 2
-text = "Desperate Defense - Mission 1"
+text = "Spears and Shields"
 
 [node name="Button4" type="Button" parent="MarginContainer/VBoxContainer/Columns/ScrollContainer/Content"]
 layout_mode = 2
-text = "Final Siege - Mission 6"
+text = "Parry and Parry Break"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Columns"]
 layout_mode = 2
@@ -67,21 +68,15 @@ size_flags_horizontal = 3
 [node name="Description" type="Label" parent="MarginContainer/VBoxContainer/Columns/VBoxContainer"]
 custom_minimum_size = Vector2(1000, 0)
 layout_mode = 2
-text = "Duel
+text = "Cyclone Timer
 
-First Scripted battle from Elves campaign
+It's an Anti Draw Mechanic that supports Wizards
+by allowing them to play on the defensive.
 "
 
 [node name="PlayButton" type="Button" parent="MarginContainer/VBoxContainer/Columns/VBoxContainer"]
 layout_mode = 2
 text = "Play"
-
-[node name="AIDifficulty" type="OptionButton" parent="MarginContainer/VBoxContainer/Columns/VBoxContainer"]
-layout_mode = 2
-item_count = 1
-selected = 0
-popup/item_0/text = "/Random.tscn"
-popup/item_0/id = 0
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Columns/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]

@@ -8,13 +8,13 @@
 
 [sub_resource type="Resource" id="Resource_vofdp"]
 script = ExtResource("1_jqg4w")
-wood = 2
-iron = 0
+wood = 0
+iron = 3
 ruby = 0
 
 [resource]
 script = ExtResource("3_uywif")
-unit_name = "Bone Archer"
+unit_name = "Ghoul"
 texture_path = "res://Art/units/undead/undead_2_hammer_ghoul.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_8irw5"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl"), ExtResource("5_2y3bl")])
 cost = SubResource("Resource_vofdp")

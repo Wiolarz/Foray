@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://pfnqgp6b3k1u"]
 
 [ext_resource type="Texture2D" uid="uid://nqopde6ucyqy" path="res://Art/items/big_sword.png" id="1_lb17c"]
-[ext_resource type="Script" path="res://Scripts/UI/Educational/wiki_symbol_button.gd" id="2_086qf"]
+[ext_resource type="Script" path="res://Scripts/UI/Educational/BattleWiki/wiki_symbol_button.gd" id="2_086qf"]
 
 [node name="SymbolButton" type="TextureButton"]
 custom_minimum_size = Vector2(100, 400)

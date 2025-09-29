@@ -1,9 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://dm3oqhffhprfy"]
+[gd_scene load_steps=2 format=3 uid="uid://dm3oqhffhprfy"]
 
 [ext_resource type="Script" path="res://Scripts/UI/city_ui.gd" id="1_f0888"]
-[ext_resource type="Texture2D" uid="uid://cyl65pr2i8wia" path="res://Art/elf_hero_druid.png" id="2_m2kmy"]
-[ext_resource type="Texture2D" uid="uid://mohmdyii2gpf" path="res://Art/elf_hero_stalker.png" id="3_q41od"]
-[ext_resource type="Texture2D" uid="uid://cukwcwy4fikm1" path="res://Art/elf_hero_noble.png" id="4_xj4nu"]
 
 [node name="CityUi" type="Control"]
 layout_mode = 3
@@ -32,7 +29,6 @@ layout_mode = 2
 
 [node name="HeroImage" type="TextureRect" parent="HeroRecruitment/RecruitHeroLayout"]
 layout_mode = 2
-texture = ExtResource("2_m2kmy")
 expand_mode = 5
 
 [node name="BuyHeroButton" type="Button" parent="HeroRecruitment/RecruitHeroLayout"]
@@ -47,7 +43,6 @@ layout_mode = 2
 
 [node name="HeroImage" type="TextureRect" parent="HeroRecruitment/RecruitHeroLayout2"]
 layout_mode = 2
-texture = ExtResource("3_q41od")
 expand_mode = 5
 
 [node name="BuyHeroButton" type="Button" parent="HeroRecruitment/RecruitHeroLayout2"]
@@ -62,7 +57,6 @@ layout_mode = 2
 
 [node name="HeroImage" type="TextureRect" parent="HeroRecruitment/RecruitHeroLayout3"]
 layout_mode = 2
-texture = ExtResource("4_xj4nu")
 expand_mode = 5
 
 [node name="BuyHeroButton" type="Button" parent="HeroRecruitment/RecruitHeroLayout3"]
@@ -72,7 +66,6 @@ text = "Buy Hero
 0 🪓| 0 ⛏️| 0 💎"
 
 [node name="RecruitUnits" type="HBoxContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

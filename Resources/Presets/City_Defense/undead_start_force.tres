@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=5 format=3 uid="uid://bnju1t3kr22j5"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_wfqf5"]
+[ext_resource type="Resource" uid="uid://3x0qi3t8cq" path="res://Resources/Battle/Units/Undead/undead_1_skelly.tres" id="2_7xrqu"]
+[ext_resource type="Resource" uid="uid://d0cockm8rdoxt" path="res://Resources/Battle/Units/Undead/undead_5_death_knight.tres" id="3_g3nct"]
+[ext_resource type="Resource" uid="uid://clxq0oak6mwep" path="res://Resources/Battle/Units/Undead/undead_4_archer.tres" id="4_lf1ya"]
+
+[resource]
+script = ExtResource("1_wfqf5")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_7xrqu"), ExtResource("3_g3nct"), ExtResource("4_lf1ya")])
+team = 0

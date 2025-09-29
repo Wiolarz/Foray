@@ -142,10 +142,20 @@ const OUTPOST_RUBY_PATH : String = "res://Resources/Presets/World_Armies/outpost
 ## Heroes Passive Effects
 
 ## magic weapon - all weapons have an attack power of 4, but each kills lowers that value by 1 to a min. of 1
-const tier_2_passive_1 : String = "res://Resources/Battle/Battle_Spells/Heroes_Passive_Effects/magic_weapon.tres"
+const hero_magic_weapon_effect : String = "res://Resources/Battle/Battle_Spells/Heroes_Passive_Effects/magic_weapon_effect.tres"
+const hero_second_wind_effect : String = "res://Resources/Battle/Battle_Spells/Heroes_Passive_Effects/second_wind_effect.tres"
+
 
 ## used for passive that replaces all empty symbols with weak weapons
 const weak_weapon : String = "res://Resources/Battle/Symbols/club.tres"
+
+## Hero Passives
+
+const _hero_talent_second_wind : String = "res://Resources/Battle/Hero_Passives/second_wind.tres"
+const _hero_talent_magic_weapons : String = "res://Resources/Battle/Hero_Passives/magic_weapons.tres"
+const _hero_talent_weak_weapons : String = "res://Resources/Battle/Hero_Passives/weak_weapons.tres"
+const _hero_talent_wind_weapons : String = "res://Resources/Battle/Hero_Passives/wind_weapons.tres"
+
 
 const BALLISTA_PATH : String = "res://Resources/Battle/Units/Neutral/ballista.tres"
 
@@ -159,6 +169,32 @@ const SUMMONING_SICKNESS_PATH : String = "res://Resources/Battle/Battle_Spells/B
 var NODE_GAMESETUP_PATH : String = "/root/UI/MainMenu/MainContainer/HostLobby/HostMenu/PanelContainer/GameSetup"
 
 #endregion Scene Tree Paths
+
+
+
+#region Heroes Level Up
+##STUB
+@onready var _tier_1_talents : Array[HeroPassive] = [load(_hero_talent_second_wind),
+													load(_hero_talent_magic_weapons),
+													load(_hero_talent_weak_weapons)]
+
+@onready var _tier_2_talents : Array[HeroPassive] = [load(_hero_talent_wind_weapons), null, null]
+
+@onready var _tier_3_talents : Array[HeroPassive] = [null, null, null]
+
+@onready var talents : Array = [_tier_1_talents, _tier_2_talents, _tier_3_talents]
+
+
+@onready var _tier_1_abilities : Array[HeroPassive] = [null, null, null]
+
+@onready var _tier_2_abilities : Array[HeroPassive] = [null, null, null]
+
+@onready var _tier_3_abilities : Array[HeroPassive] = [null, null, null]
+
+@onready var abilities : Array = [_tier_1_abilities, _tier_2_abilities, _tier_3_abilities]
+
+
+#endregion Heroes Level Up
 
 
 #region Colors
@@ -316,16 +352,80 @@ var AUTO_START_GAME : bool :
 	get: return player_options.autostart_map
 
 
+#region Learn Tab
+
+## Lists below are ordered based on their appearance,
+## changing the order will mess up saved last page,
+## but it's a small issue as it only occurs between game updates
+## while the feature is made with a single game session in mind
+
 enum LearnTabs {
-	TUTORIAL = 1,
-	PUZZLE = 2,
-	CAMPAIGN = 3,
-	SYMBOLS_WIKI = 5,
-	MAGIC_WIKI = 6,
+	PRACTICE, # Works as a general tab for now too
+	BATTLE_WIKI,
+	WORLD_WIKI,
 }
+const LEARN_TABS_NAMES = {
+	LearnTabs.PRACTICE: "Practice",
+	LearnTabs.BATTLE_WIKI: "Battle WIKI",
+	LearnTabs.WORLD_WIKI: "World WIKI",
+}
+
+enum PracticeTabs {
+	BASIC,
+	TUTORIAL,
+	PUZZLE,
+	CAMPAIGN,
+}
+
+const PRACTICE_TABS_NAMES = {
+	PracticeTabs.BASIC: "Basic Information",
+	PracticeTabs.TUTORIAL: "Tutorial",
+	PracticeTabs.PUZZLE: "Puzzles",
+	PracticeTabs.CAMPAIGN: "Campaign",
+}
+
+
+enum BattleWiki {
+	SYMBOLS_WIKI,
+	MAGIC_WIKI,
+	TERRAIN,
+	MAGIC_CYCLONE,
+} # TODO add heroes battle passives
+
+const BATTLE_WIKI_TABS_NAMES = {
+	BattleWiki.SYMBOLS_WIKI: "Symbols",
+	BattleWiki.MAGIC_WIKI: "Magic",
+	BattleWiki.TERRAIN: "Terrain",
+	BattleWiki.MAGIC_CYCLONE: "Magic Cyclone",
+}
+
+enum WorldWiki {
+	FACTIONS,
+	ECONOMY,
+	TERRAIN,
+} # TODO add rituals + heroes world passives
+
+const WORLD_WIKI_TABS_NAMES = {
+	WorldWiki.FACTIONS: "Factions",
+	WorldWiki.ECONOMY: "Economy",
+	WorldWiki.TERRAIN: "Terrain",
+}
+
 
 var LAST_OPENED_LEARN_TAB : LearnTabs :
 	get: return player_options.last_open_learn_tab
+
+var LAST_OPENED_PRACTICE_TAB : PracticeTabs :
+	get: return player_options.last_open_practice_tab
+
+var LAST_OPENED_BATTLE_WIKI_TAB : BattleWiki :
+	get: return player_options.last_open_battle_wiki_tab
+
+var LAST_OPENED_WORLD_WIKI_TAB : WorldWiki :
+	get: return player_options.last_open_world_wiki_tab
+
+#endregion Learn Tab
+
 
 enum MainMenuTabs {
 	SERVER = 0,
@@ -334,6 +434,7 @@ enum MainMenuTabs {
 	CREDITS = 3,
 	REPLAYS = 4,
 	LEARN = 5,
+	DEFENSE = 6,
 }
 
 var LAST_OPENED_TAB : MainMenuTabs :

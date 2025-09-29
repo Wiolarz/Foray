@@ -71,6 +71,7 @@ static func construct_hero(data_hero : DataHero,
 	new_hero.max_army_size = data_hero.max_army_size
 	new_hero.max_movement_points = data_hero.max_movement_points
 	new_hero.passive_effects = data_hero.starting_passives
+	new_hero.level = data_hero.starting_level
 	return new_hero
 
 

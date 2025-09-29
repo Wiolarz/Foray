@@ -16,7 +16,7 @@ func _ready():
 
 
 func load_symbol(symbol : DataSymbol) -> void:
-	symbol_information_title.text = symbol.symbol_name
+	symbol_information_title.text = symbol.symbol_name.capitalize()
 	if symbol.symbol_name == "empty":
 		symbol_information_icon.texture = null
 	else:
@@ -92,7 +92,7 @@ func generate_data_symbol_buttons() -> void:
 		if symbol_idx == 0:
 			load_symbol(data_symbol)
 
-		var button : WikiSymbolButton = load("res://Scenes/UI/Wiki/wiki_symbol_button.tscn").instantiate()
+		var button : WikiSymbolButton = load("res://Scenes/UI/Wiki/BattleWiki/wiki_symbol_button.tscn").instantiate()
 		button_columns[symbol_idx % button_columns.size()].add_child(button)
 		button.load_symbol(data_symbol)
 

@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://blx0kj8gah080"]
+[gd_scene load_steps=8 format=3 uid="uid://blx0kj8gah080"]
 
 [ext_resource type="Script" path="res://Scripts/UI/Lobby/battle_setup.gd" id="1_dfdeh"]
 [ext_resource type="StyleBox" uid="uid://c2e7veyqebiaa" path="res://Art/UI/background_frames/pale_green.tres" id="2_1dtuq"]
 [ext_resource type="StyleBox" uid="uid://c4pw3ug8ebg0e" path="res://Art/UI/background_frames/dark.tres" id="2_c6lvt"]
+[ext_resource type="PackedScene" uid="uid://8gkshp6dgl0f" path="res://Scenes/UI/LevelUp/LevelUpLobbyScreen.tscn" id="2_sstiq"]
 [ext_resource type="PackedScene" uid="uid://j6n24hs0xavf" path="res://Scenes/UI/Lobby/BattlePlayerSlotPanel.tscn" id="2_vpapl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jgcdk"]
@@ -33,6 +34,17 @@ size_flags_vertical = 3
 theme_override_constants/margin_top = 0
 theme_override_constants/margin_bottom = 0
 script = ExtResource("1_dfdeh")
+
+[node name="VBoxLevelUp" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 2
+
+[node name="LevelUpLobbyScreen" parent="VBoxLevelUp" instance=ExtResource("2_sstiq")]
+layout_mode = 2
+
+[node name="LevelUpConfirmButton" type="Button" parent="VBoxLevelUp"]
+layout_mode = 2
+text = "Confirm"
 
 [node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -95,5 +107,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_jgcdk")
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_e6gkv")
 
+[connection signal="pressed" from="VBoxLevelUp/LevelUpConfirmButton" to="." method="_on_level_up_confirm_button_pressed"]
 [connection signal="item_selected" from="VBox/PresetSelect/ColorRect/PresetList" to="." method="_on_preset_list_item_selected"]
 [connection signal="item_selected" from="VBox/MapSelect/ColorRect/MapList" to="." method="_on_map_list_item_selected"]

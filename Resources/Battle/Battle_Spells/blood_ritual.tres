@@ -7,9 +7,13 @@
 script = ExtResource("1_eiqgu")
 name = "Blood Ritual"
 icon_path = "res://Art/magic/spell_icons/blood_curse.png"
-description = "Chosen enemy unit will die after it becomes the last unit left alive on the enemy side 
+description = "Chosen enemy unit will die after it becomes the last unit left alive on the enemy side
 
 Spell cannot be casted if enemy has less than 3 units left."
 spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([ExtResource("2_wa4lf")])
-axial_cast_range = 0
-only_in_front = false
+cast_range = -1
+direction_cast = 0
+target_type = 1
+needs_movable_tile = false
+target_unit_type = 2
+not_self = false
