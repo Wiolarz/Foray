@@ -1,7 +1,8 @@
 class_name BattleGridState
 extends GenericHexGrid
 
-signal tile_is_buring(coord : Vector2i)
+## TODO replace it with generic signal replacing tiles sprites
+signal tile_is_burning(coord : Vector2i)
 
 enum MoveConsequences {
 	NONE,
@@ -278,6 +279,7 @@ func _should_die_to_counter_attack(unit : Unit) -> bool:
 func _process_offensive_symbols(unit : Unit, move_type : E.MoveType, swift : bool = false) -> void:
 	for side in range(6):
 		var unit_weapon = unit.get_symbol(side)
+		## during swift attack phase normal weapons don't attack, it works the same way in reverse
 		if unit_weapon.swift_attack != swift:
 			continue
 		if not unit_weapon.is_offensive(move_type):
@@ -1179,7 +1181,7 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 					continue
 
 				hex.fire = true
-				tile_is_buring.emit(tile_coord)
+				tile_is_burning.emit(tile_coord)
 
 				var target : Unit = get_unit(tile_coord)
 				if target:

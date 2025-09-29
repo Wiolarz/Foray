@@ -94,7 +94,7 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 	_battle_grid_state = BattleGridState.create(battle_map, new_armies)
 
 	# GRAPHICS GRID:
-	_battle_grid_state.tile_is_buring.connect(tile_burns)
+	_battle_grid_state.tile_is_burning.connect(tile_burns)
 	_load_map(battle_map)
 	_grid_tiles_node.position.x = x_offset
 	horizontal_offset = x_offset
