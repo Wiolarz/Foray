@@ -479,6 +479,7 @@ func _grid_input_deployment(coord : Vector2i) -> MoveInfo:
 	var army : BattleGridState.ArmyInBattleState = \
 	 _battle_grid_state.armies_in_battle_state[_battle_grid_state.current_army_index]
 
+	## TODO refactor deploy phase
 	var unit_idx : int = army.units_to_deploy.find(_battle_ui._selected_unit_pointer)
 
 	return MoveInfo.make_deploy(unit_idx, coord)

@@ -67,15 +67,13 @@ static func create(new_controller : Player, \
 		new_army_in_battle_state : BattleGridState.ArmyInBattleState) -> Unit:
 	var result = Unit.new()
 	result.template = new_template
-	result.symbols = new_template.symbols.duplicate(true) # TEMP TODO fix symbols to another type too
 	result.level = new_template.level
 	result.mana = new_template.mana
+	result.symbols = new_template.duplicate_symbols() # TODO consider separate symbol class
 	result.spells = new_template.spells.duplicate() # spells reset every battle
 
 	result.controller = new_controller
 	result.army_in_battle = new_army_in_battle_state
-	result.template = new_template
-	result.symbols = new_template.duplicate_symbols()
 
 	result.coord = new_coord
 	result.unit_rotation = new_rotation

@@ -1735,7 +1735,7 @@ class ArmyInBattleState:
 	var start_turn_clock_time_left_ms = CFG.CHESS_CLOCK_BATTLE_TIME_PER_PLAYER_MS
 	## time to add when turn ends
 	var turn_increment_ms = CFG.CHESS_CLOCK_BATTLE_TURN_INCREMENT_MS
-	
+
 	static func _apply_hero_passives(hero_unit : Unit, hero : Hero) -> void:
 		for passive_effect in hero.passive_effects:
 			if not passive_effect:  # TEMP null check until all pasives in level_up_screen are present
@@ -1838,9 +1838,9 @@ class ArmyInBattleState:
 	func kill_unit(target : Unit) -> void:
 		print("killing ", target.coord, " ",target.template.unit_name)
 		assert(target in units)
-		if target.mana > 0:
-			mana_points -= target.mana
-			# mana_value changed gets called after every kill anyway
+
+		# mana_values_changed is called in main _kill_unit after this reduction
+		mana_points -= target.mana
 
 		units.erase(target)
 

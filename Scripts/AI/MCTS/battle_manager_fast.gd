@@ -88,7 +88,7 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 
 		# Deployment processing
 		for summon_idx in range(army.units_to_deploy.size()):
-			var unit : Unit = army.units_to_deploy[summon_idx] # THIS PR: check how does it affect cpp
+			var unit : Unit = army.units_to_deploy[summon_idx]
 			var unit_idx : int = summon_idx + army.units.size()
 
 			new.insert_unit(army_idx, unit_idx, Vector2i.ZERO, 0, true)

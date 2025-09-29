@@ -15,11 +15,10 @@ var duration_counter : int = 6
 
 #region Specific spells Variables
 
-
 var magic_weapon_durability : int = 4
 
-
 #endregion Specific spells Variables
+
 
 static func create_effect(data_effect : DataMagicEffect) -> MagicEffect:
 	var result := MagicEffect.new()
