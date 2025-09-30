@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="BattleMagicEffect" load_steps=2 format=3 uid="uid://bxf3nvia2676a"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/battle_magic_effect.gd" id="1_lcdfw"]
+
+[resource]
+script = ExtResource("1_lcdfw")
+name = "Anchor"
+icon_path = "res://Art/magic/spell_icons/anchor.png"
+spell_effects = Array[ExtResource("1_lcdfw")]([])
+passive_effect = false

@@ -5,5 +5,5 @@
 [resource]
 script = ExtResource("1_7nhkj")
 type = "city 1"
-texture_path = "res://Art/world_map/simple_city_blue.png"
+texture_path = "res://Art/world_map/simple_city_orange.png"
 flip_horizontal = false

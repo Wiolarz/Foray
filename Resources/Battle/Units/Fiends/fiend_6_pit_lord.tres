@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3 uid="uid://pea38874ip8m"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_j5uch"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_n3muo"]
+[ext_resource type="Resource" uid="uid://0fkofgfvnjtq" path="res://Resources/Battle/Symbols/flail.tres" id="3_qr7ix"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="4_bpgkr"]
+
+[sub_resource type="Resource" id="Resource_k8g4u"]
+script = ExtResource("1_j5uch")
+wood = 1
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("2_n3muo")
+unit_name = "Pit Lord"
+texture_path = "res://Art/units/fiends/fiend_6_pit_lord.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_qr7ix"), ExtResource("3_qr7ix"), ExtResource("3_qr7ix"), ExtResource("4_bpgkr"), ExtResource("3_qr7ix"), ExtResource("3_qr7ix")])
+cost = SubResource("Resource_k8g4u")
+level = 6
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

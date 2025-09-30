@@ -1,0 +1,135 @@
+[gd_scene load_steps=10 format=3 uid="uid://bpkvpkoi22q8"]
+
+[ext_resource type="Script" path="res://Scripts/UI/world_ui.gd" id="1_50wj5"]
+[ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="2_yv1kk"]
+[ext_resource type="Texture2D" uid="uid://cyl65pr2i8wia" path="res://Art/elf_hero_druid.png" id="3_jbob5"]
+[ext_resource type="Texture2D" uid="uid://cukwcwy4fikm1" path="res://Art/elf_hero_noble.png" id="4_6gjua"]
+[ext_resource type="PackedScene" uid="uid://dm3oqhffhprfy" path="res://Scenes/UI/World/CityUI.tscn" id="4_r7awa"]
+[ext_resource type="PackedScene" uid="uid://c2tjldwjynnry" path="res://Scenes/UI/GameChat.tscn" id="5_kbxi4"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/World/TradeScreen.tscn" id="6_qkgtt"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/World/ArmyPanel.tscn" id="8_h8r3o"]
+[ext_resource type="PackedScene" uid="uid://5g2iqdyqmc75" path="res://Scenes/UI/LevelUp/LevelUpWorldScreen.tscn" id="9_os3st"]
+
+[node name="WorldUi" type="CanvasLayer"]
+script = ExtResource("1_50wj5")
+
+[node name="Menu" type="Button" parent="."]
+offset_left = 20.0
+offset_top = 30.0
+offset_right = 138.0
+offset_bottom = 93.0
+scale = Vector2(2.04, 2.04)
+shortcut = ExtResource("2_yv1kk")
+shortcut_in_tooltip = false
+text = "Menu"
+
+[node name="End Turn" type="Button" parent="."]
+offset_left = 1548.0
+offset_top = 21.0
+offset_right = 1721.0
+offset_bottom = 84.0
+scale = Vector2(2.04, 2.04)
+text = "End turn"
+
+[node name="Players" type="VBoxContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -290.0
+offset_top = 169.0
+offset_right = -32.0
+offset_bottom = 358.0
+grow_horizontal = 0
+
+[node name="Label" type="Label" parent="Players"]
+layout_mode = 2
+text = "Players:"
+horizontal_alignment = 2
+
+[node name="Button" type="Button" parent="Players"]
+layout_mode = 2
+text = "Player1"
+
+[node name="Button2" type="Button" parent="Players"]
+layout_mode = 2
+text = "Player2"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+offset_left = 987.0
+offset_top = 25.0
+offset_right = 1315.0
+offset_bottom = 80.0
+
+[node name="GoodsLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "0 🪓| 0 ⛏️| 0 💎"
+
+[node name="HeroesList" type="HBoxContainer" parent="."]
+offset_left = 304.0
+offset_top = 25.0
+offset_right = 632.0
+offset_bottom = 125.0
+
+[node name="TextureButton" type="TextureButton" parent="HeroesList"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("3_jbob5")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureButton2" type="TextureButton" parent="HeroesList"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("4_6gjua")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Army_Panel" parent="." instance=ExtResource("8_h8r3o")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -256.0
+offset_top = -204.0
+offset_right = 256.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="CityUi" parent="." instance=ExtResource("4_r7awa")]
+
+[node name="GameChat" parent="." instance=ExtResource("5_kbxi4")]
+
+[node name="TradeScreen" parent="." instance=ExtResource("6_qkgtt")]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+
+[node name="LevelUpWorldScreen" parent="." instance=ExtResource("9_os3st")]
+visible = false
+
+[node name="Hide" type="Button" parent="."]
+visible = false
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -157.0
+offset_top = -86.0
+offset_right = -33.0
+offset_bottom = -9.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 60
+shortcut_feedback = false
+shortcut_in_tooltip = false
+text = "Hide"
+
+[connection signal="pressed" from="Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="End Turn" to="." method="_on_end_turn_pressed"]
+[connection signal="pressed" from="Hide" to="." method="_on_hide_pressed"]

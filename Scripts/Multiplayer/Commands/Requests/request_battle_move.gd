@@ -2,11 +2,11 @@ class_name RequestBattleMove
 
 const COMMAND_NAME = "battle_move"
 
-static func register(commands : Dictionary):
+static func register(commands : Dictionary) -> void:
 	commands[COMMAND_NAME] = \
 			Command.create_on_server(RequestBattleMove.process_command)
 
-static func create_packet(move: MoveInfo):
+static func create_packet(move: MoveInfo) -> Dictionary:
 	var dict = move.to_network_serializable()
 	dict["name"] = COMMAND_NAME
 	return dict
@@ -20,7 +20,7 @@ static func process_command(_server : Server, _peer : ENetPacketPeer, \
 		return FAILED
 	if not "target_tile_coord" in params or not params["target_tile_coord"] is Vector2i:
 		return FAILED
-	if not "summon_unit" in params or not params["summon_unit"] is String:
+	if not "deployed_unit" in params or not params["deployed_unit"] is String:
 		return FAILED
 	var move_info = OrderMakeBattleMove.create_from(params)
 	# TODO check move legality before performing on server

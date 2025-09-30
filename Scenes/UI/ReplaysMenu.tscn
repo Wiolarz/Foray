@@ -296,8 +296,18 @@ size_flags_horizontal = 3
 
 [node name="ReplayDescription" type="Label" parent="MarginContainer/VBoxContainer/Columns/VBoxContainer"]
 layout_mode = 2
-text = "Replay Desc
-"
+text = "2025-03-29T20_35_36-Młody_Pierożek.tres
+ map : basic5x5.tres
+ moves : 35
+Młody army:  [03:00 +2s/turn]
+  - ☠️ chaplain_unit
+  - ☠️ crusader_unit
+  - ☠️ Brigand
+  - ☠️ executioner_unit
+👑 Pierożek army:  [03:00 +2s/turn]
+  - ☠️ druid_unit
+  - Swordsmen
+  - ☠️ elf_3"
 
 [node name="PlayButton" type="Button" parent="MarginContainer/VBoxContainer/Columns/VBoxContainer"]
 layout_mode = 2

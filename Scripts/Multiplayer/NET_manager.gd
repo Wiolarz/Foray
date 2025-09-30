@@ -15,7 +15,10 @@ signal chat_log_cleared
 ## IM.game_setup_info_changed
 signal server_settings_changed
 
+
+# Debug info
 func get_role_name() -> String:
+	assert(not(server and client), "game thinks it's a server and a client at the same time")
 	if server:
 		return "server"
 	if client:
@@ -98,6 +101,7 @@ func get_current_login() -> String: # TODO rename username to login
 		return client.username
 	return CFG.DEFAULT_USER_NAME # TODO rename to PLACEHOLDER_LOGIN
 
+
 func send_chat_message(message : String) -> void:
 	if not client:
 		append_message_to_local_chat_log(message, get_current_login())
@@ -121,7 +125,9 @@ func clear_local_chat_log() -> void:
 	chat_log = ""
 	chat_log_cleared.emit()
 
-## tries to determine probable address by witch a server running on this
+
+## Poly API - not currently maintained by anyone [br]
+## tries to determine probable address by which a server running on this
 ## machine could be reached, usually by making a call to an external
 ## HTTP service that will check where request came from
 func fetch_external_address_guess() -> String:

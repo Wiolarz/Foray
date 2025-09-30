@@ -73,6 +73,10 @@ func start_world(map : DataWorldMap,
 				if army_preset:
 					spawn_army_from_preset(army_preset, coord, \
 						hex.place.controller_index)
+					if hex.place is City:
+						hex.army.controller_index = hex.place.controller_index
+						hex.army.faction = hex.place.faction
+						hex.place.garrison_reserve = hex.army
 
 			if saved_state and coord in saved_state.army_hexes:
 				var loaded : Dictionary = saved_state.army_hexes[coord]
@@ -227,13 +231,13 @@ func check_start_trade(source : Vector2i, target : Vector2i) -> String:
 	var army : Army = get_army_at(source)
 	if not army:
 		return "please choose army to start trade"
-	var city : City = get_city_at(target)
-	if not city:
-		return "please choose city to start trade"
+	var second_army : Army = get_army_at(target)
+	if not second_army:
+		return "please choose valid army to start trade"
 	if army.controller_index != current_player_index:
-		return "this army has not turn now"
-	if city.controller_index != current_player_index:
-		return "this city has not turn now"
+		return "it's not this army turn"
+	if second_army.controller_index != current_player_index:
+		return ""
 	return ""
 
 
@@ -241,13 +245,14 @@ func check_recruit_unit(data_unit : DataUnit, city_coord : Vector2i,
 		army_coord : Vector2i) -> String:
 	var army : Army = get_army_at(army_coord)
 	var army_controller_state = player_states[army.controller_index]
+	var unit_cost = get_city_at(city_coord).get_unit_cost(data_unit)
 
 	if not army:
 		return "no army at coord"
 	if army.controller_index != current_player_index:
 		return "target army has not turn now"
-	if army.hero and army.units_data.size() >= army.hero.max_army_size:
-		return "this hero has maximum size of army now"
+	if army.units_data.size() >= army.max_army_size:
+		return "this army has maximum size now"
 	var city = get_city_at(city_coord)
 	if not city:
 		return "no city chosen"
@@ -261,16 +266,16 @@ func check_recruit_unit(data_unit : DataUnit, city_coord : Vector2i,
 		return "cannot recruit such unit in this city"
 	if not city.unit_has_required_building(data_unit):
 		return "not all required buildings are build in this city"
-	if not army_controller_state.goods.has_enough(data_unit.cost):
-		return "not enough resources for this unit, need %s" % data_unit.cost
+	if not army_controller_state.goods.has_enough(unit_cost):
+		return "not enough resources for this unit, need %s" % unit_cost
 	return ""
 
 
 func check_recruit_hero(player_index : int, data_hero : DataHero,
 		coord : Vector2i) -> String:
-	if get_army_at(coord):
+	if get_army_at(coord).hero:
 		#TODO based on that information change the UI to show what causes the problem to the player
-		return "cannot recruit hero where some army already is"
+		return "cannot recruit hero where hero is already present"
 	var player_faction : Faction = player_states[player_index]
 	var city : City = get_city_at(coord)
 	if not city:
@@ -441,9 +446,14 @@ func do_recruit_unit(data_unit : DataUnit, city_coord : Vector2i,
 		push_error(problem)
 		return false
 	var army : Army = get_army_at(army_coord)
-	var purchased : bool = army.faction.try_to_pay(data_unit.cost)
+	var city : City = get_city_at(city_coord)
+	var cost : Goods = city.get_unit_cost(data_unit)
+	var purchased : bool = army.faction.try_to_pay(cost)
 	assert(purchased)
+	city.on_purchase(data_unit.required_building)
 	army.units_data.append(data_unit)
+	army.leader_unit_changed.emit()
+	WM.world_ui.refresh_army_panel()
 	return true
 
 
@@ -475,11 +485,20 @@ func do_recruit_hero(data_hero : DataHero,
 			hero = dead_hero
 	if not hero: # means no hero is revived
 		hero = Hero.construct_hero(data_hero, current_player_index)
+		army.units_data.append(player_state.race.units_data[0])  # fresh hero starts with a level 1 unit
 
 	army.hero = hero
 	army.controller_index = city.controller_index
 	army.coord = coord
 	army.faction = WS.player_states[city.controller_index]
+
+	# Absorbs city garrison
+	army.units_data.append_array(city.garrison_reserve.units_data)
+	city.garrison_reserve.units_data = []
+	WM.world_ui.load_army_to_panel(army)
+	WM.world_ui.refresh_army_panel()
+
+	city.move_to_reserve()
 
 	grid.get_hex(coord).army = army
 	player_state.hero_armies.append(army)
@@ -504,10 +523,10 @@ func do_build_building(coord : Vector2i, building : DataBuilding) -> bool:
 #region Combat
 
 func start_combat_by_attack(armies : Array[Army], source : Vector2i, \
-		target : Vector2i) -> bool:
+		target : Vector2i) -> void:
 	move_hold_on_combat = [source, target]
 	WM.start_combat(armies, target)
-	return true
+
 
 
 ## Awards exp, applies losses, moves armies that were on hold duo to battle taking place
@@ -582,18 +601,23 @@ func do_army_travel(source : Vector2i, target : Vector2i) -> bool:
 	if problem != "":
 		push_error(problem)
 		return false
+	WM.world_ui.try_to_close_context_menu() # TODO awaits server authorative to properly block players from still trading while being away
+
 	var army : Army = get_army_at(source)
 
 	if is_enemy_at(target, army.controller_index):
-		var fighting_armies : Array[Army] = [army, get_army_at(target)]
-		var has_combat_started : bool = start_combat_by_attack(fighting_armies, \
-			source, target)
-		return has_combat_started
+		var enemy_army : Army = get_army_at(target)
+		if not enemy_army.hero and enemy_army.units_data.size() == 0:  # checks if player isn't attacking an empty city
+			get_city_at(target).move_to_reserve()
+		else:
+			var fighting_armies : Array[Army] = [army, enemy_army]
+			start_combat_by_attack(fighting_armies, source, target)
+			return true
 
 	var spent = army_spend_movement_points(army, 1)
 	assert(spent)
 
-	print("moving ", army," to ",target)
+	print("moving ", army," to ", target)
 	change_army_position(army, target)
 	get_place_at(target).interact(army)
 	return true
@@ -616,9 +640,47 @@ func change_army_position(army : Army, target_coord : Vector2i) -> void:
 	assert(not target_hex.army, \
 		"can't place armies on occupied tile %s" % target_coord)
 	source_hex.army = null
+	if source_hex.place is City:
+		army.hero.is_in_city = false
+		var number_of_units_to_be_left : int = army.units_data.size() - army.max_army_size
+
+		for unit_over_limit_idx in range(number_of_units_to_be_left):
+			source_hex.place.garrison_reserve.units_data.append(army.units_data[-unit_over_limit_idx - 1])
+			army.units_data.pop_back()
+
+		WM.world_ui.refresh_army_panel()
+		source_hex.place.move_out_of_reserve()
 	target_hex.army = army
 	army.coord = target_coord
 	WM.callback_army_updated(army)
+
+
+func swap_armies(first_army : Army, second_army : Army) -> void:
+	var source : Vector2i = first_army.coord
+	var target : Vector2i = second_army.coord
+	first_army.hero.movement_points -= 1
+	if second_army.hero:
+		# Not entering city, assumes both armies have sufficient movement points
+		assert(first_army.hero.movement_points > 0 and second_army.hero.movement_points > 0,
+		"attempt to swap armies that don't have sufficient movement points")
+
+		second_army.hero.movement_points -= 1
+
+		var source_hex = grid.get_hex(first_army.coord)
+		var target_hex = grid.get_hex(second_army.coord)
+		source_hex.army = second_army
+		target_hex.army = first_army
+		first_army.coord = target
+		second_army.coord = source
+		WM.callback_army_updated(first_army)
+		WM.callback_army_updated(second_army)
+
+	else: # attempt to enter a city
+		var city_coord : Vector2i = target  # during trade city is always treated as second army
+		var city : City = WS.get_city_at(city_coord)
+		city.move_to_reserve()
+		change_army_position(first_army, target)
+
 
 #endregion Army Movement
 
@@ -685,9 +747,7 @@ func perform_game_over_checks() -> bool:
 		if faction.has_faction_lost():
 			player_states.erase(faction)
 			defeated_factions.append(faction)
-			print("\n\n\n\n\n\n")
-			print(faction.controller.get_full_player_description(), "has been defeated")
-			print("\n\n\n\n\n\n")
+			#print(faction.controller.get_full_player_description(), "has been defeated")
 			if player_states.size() == 1:
 				WM.player_has_won_a_game()
 				return true

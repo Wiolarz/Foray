@@ -13,6 +13,9 @@ var players : Array[Player] = []
 ## flag for MAP EDITOR
 var in_map_editor : bool = false
 
+## flag for City Defense game mode
+var is_city_defense_active : bool = false
+
 
 func init_game_setup():
 	game_setup_info = GameSetupInfo.create_empty()
@@ -39,8 +42,7 @@ func get_battle_maps_list() -> Array[String]:
 
 
 func _prepare_to_start_game() -> void:
-	for player in players:
-		player.queue_free()
+	_clear_players()
 
 	# Assigning unique team id's to player's without a team
 	# To avoid players without a team being treated as allies
@@ -61,7 +63,6 @@ func _prepare_to_start_game() -> void:
 			new_team_idx += 1
 
 
-	players = []
 	for slot in game_setup_info.slots:
 		var player := Player.create(slot)
 		players.append(player)
@@ -92,6 +93,7 @@ func start_game(world_state : SerializableWorldState = null,
 
 		_start_game_battle(battle_state, replay_template)
 		UI.set_camera(E.CameraPosition.BATTLE)
+		DISCORD.change_state("Playing custom battle")
 
 	elif game_setup_info.is_in_mode_world():
 		# in world mode we can have no states, only world state or both states
@@ -106,6 +108,7 @@ func start_game(world_state : SerializableWorldState = null,
 			for army_coord in battle_state.world_armies:
 				armies.append(WS.get_army_at(army_coord))
 			WM.start_combat(armies, battle_state.combat_coord, battle_state)
+		DISCORD.change_state("Exploring the world map")
 
 	if NET.server:
 		NET.server.broadcast_start_game()
@@ -146,6 +149,7 @@ func go_to_map_editor():
 	in_map_editor = true
 	UI.go_to_map_editor()
 
+
 ## Full game - World game mode
 ## new game <=> world_state == null
 func _start_game_world(world_state : SerializableWorldState = null):
@@ -185,16 +189,28 @@ func create_army_for(slot : Slot) -> Army:
 	var army = Army.new()
 	army.controller_index = slot.index
 
-	var hero_data : DataHero = slot.slot_hero
-	if hero_data:
-		var new_hero = Hero.construct_hero(hero_data, slot.index)
-		army.hero = new_hero
+	army.hero = slot.slot_hero
 
 	army.units_data = slot.get_units_list()
 
 	#TEMP
 	army.timer_reserve_sec = slot.timer_reserve_sec
 	army.timer_increment_sec = slot.timer_increment_sec
+
+	return army
+
+
+## Creates army based on army_preset and assigns controller
+func create_army_from_preset(army_preset : PresetArmy, player_index : int) -> Army:
+	var army = Army.new()
+	army.controller_index = player_index
+
+	var hero_data : DataHero = army_preset.hero
+	if hero_data:
+		var new_hero = Hero.construct_hero(hero_data, player_index)
+		army.hero = new_hero
+
+	army.units_data = army_preset.units
 
 	return army
 
@@ -220,6 +236,40 @@ func get_default_or_last_battle_preset() -> Dictionary:
 		"name": presets[0].trim_prefix(CFG.BATTLE_PRESETS_PATH)
 	}
 
+
+func start_scripted_battle(scripted_battle : ScriptedBattle, battle_bot_path : String = "",
+							player_controlled_side : int = 0) -> void:
+	print("started scripted battle: ", scripted_battle.scenario_name)
+
+	_prepare_to_start_game()
+
+	var armies : Array[Army]  = []
+	_clear_players()
+
+	var player_idx : int = -1
+	for army_preset in scripted_battle.armies:
+		player_idx += 1
+		var new_controller : Player
+		if player_controlled_side == player_idx:
+			new_controller = Player.create_for_tutorial(player_idx)
+		else:
+			new_controller = Player.create_for_tutorial(player_idx, battle_bot_path)
+
+
+		players.append(new_controller)
+		add_child(new_controller)
+
+		armies.append(create_army_from_preset(army_preset, player_idx))
+
+	BM.start_battle(armies, scripted_battle.battle_map, 0, null, null, scripted_battle)
+	UI.set_camera(E.CameraPosition.BATTLE)
+
+
+func _clear_players() -> void:
+	for player in players:
+		player.queue_free()
+	players = []
+
 #endregion Game setup
 
 
@@ -230,15 +280,11 @@ func go_to_main_menu():
 	if CFG.FULLSCREEN_AUTO_TOGGLE:
 		UI.set_fullscreen(false)
 
+	AUDIO.play_music("menu")
 	in_map_editor = false
 	BM.close_when_quitting_game()
 	WM.clear_world()
 	UI.go_to_main_menu()
-
-
-func toggle_in_game_menu():
-	UI.toggle_in_game_menu()
-	set_game_paused(UI.requests_pause())
 
 #endregion Gameplay UI
 
@@ -303,3 +349,11 @@ func is_slot_steal_allowed() -> bool:
 	return true # local game
 
 #endregion Information
+
+
+#region City Defense
+
+func end_city_defense_battle(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
+	UI.main_menu.get_node("MainContainer/CityDefense").battle_ended(armies)  # TEMP
+
+#endregion City Defense

@@ -1,9 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://dm3oqhffhprfy"]
+[gd_scene load_steps=2 format=3 uid="uid://dm3oqhffhprfy"]
 
 [ext_resource type="Script" path="res://Scripts/UI/city_ui.gd" id="1_f0888"]
-[ext_resource type="Texture2D" uid="uid://bul31ap566nua" path="res://Art/world_heroes/elf_druid.png" id="1_wb616"]
-[ext_resource type="Texture2D" uid="uid://cm7cmywivoyey" path="res://Art/world_heroes/elf_stalker.png" id="3_iev4l"]
-[ext_resource type="Texture2D" uid="uid://c6xx0gugwhq82" path="res://Art/world_heroes/elf_noble.png" id="4_jhtcp"]
 
 [node name="CityUi" type="Control"]
 layout_mode = 3
@@ -32,7 +29,6 @@ layout_mode = 2
 
 [node name="HeroImage" type="TextureRect" parent="HeroRecruitment/RecruitHeroLayout"]
 layout_mode = 2
-texture = ExtResource("1_wb616")
 expand_mode = 5
 
 [node name="BuyHeroButton" type="Button" parent="HeroRecruitment/RecruitHeroLayout"]
@@ -47,7 +43,6 @@ layout_mode = 2
 
 [node name="HeroImage" type="TextureRect" parent="HeroRecruitment/RecruitHeroLayout2"]
 layout_mode = 2
-texture = ExtResource("3_iev4l")
 expand_mode = 5
 
 [node name="BuyHeroButton" type="Button" parent="HeroRecruitment/RecruitHeroLayout2"]
@@ -62,7 +57,6 @@ layout_mode = 2
 
 [node name="HeroImage" type="TextureRect" parent="HeroRecruitment/RecruitHeroLayout3"]
 layout_mode = 2
-texture = ExtResource("4_jhtcp")
 expand_mode = 5
 
 [node name="BuyHeroButton" type="Button" parent="HeroRecruitment/RecruitHeroLayout3"]
@@ -72,7 +66,6 @@ text = "Buy Hero
 0 🪓| 0 ⛏️| 0 💎"
 
 [node name="RecruitUnits" type="HBoxContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -108,6 +101,10 @@ layout_mode = 2
 text = "Unit3"
 
 [node name="Button5" type="Button" parent="RecruitUnits/UnitsToBuy"]
+layout_mode = 2
+text = "Unit3"
+
+[node name="Button6" type="Button" parent="RecruitUnits/UnitsToBuy"]
 layout_mode = 2
 text = "Unit3"
 
@@ -209,11 +206,6 @@ text = "Recruit Units"
 layout_mode = 2
 text = "Buildings"
 
-[node name="EnterCity" type="Button" parent="OpenButtons"]
-layout_mode = 2
-text = "EnterCity"
-
 [connection signal="pressed" from="OpenButtons/ShowRecruitHeroesUI" to="." method="_on_show_recruit_heroes_ui_pressed"]
 [connection signal="pressed" from="OpenButtons/ShowRecruitUnitsUI" to="." method="_on_show_recruit_units_ui_pressed"]
 [connection signal="pressed" from="OpenButtons/ShowBuildUi" to="." method="_on_show_build_ui_pressed"]
-[connection signal="pressed" from="OpenButtons/EnterCity" to="." method="_on_enter_city_pressed"]

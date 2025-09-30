@@ -1,0 +1,175 @@
+[gd_scene load_steps=13 format=3 uid="uid://cwv8isdmpg34u"]
+
+[ext_resource type="Script" path="res://Scripts/Development/tile_editor.gd" id="1_x074o"]
+[ext_resource type="Shader" path="res://Art/UI/background.gdshader" id="2_812di"]
+[ext_resource type="StyleBox" uid="uid://cr3cpjlxxfm4r" path="res://Art/UI/marble_box.tres" id="3_occqe"]
+[ext_resource type="PackedScene" uid="uid://ceurpxmgmn5c1" path="res://Scenes/Form/TileForm.tscn" id="4_r3svn"]
+[ext_resource type="Shader" path="res://Art/tile_overall_shader.gdshader" id="5_3icxv"]
+[ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="6_6n0xr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ea3xn"]
+shader = ExtResource("2_812di")
+shader_parameter/color1 = Color(1, 1, 1, 1)
+shader_parameter/color2 = Color(0, 0.54902, 0.709804, 1)
+shader_parameter/scrollAmount = Vector2(0.04, 0.04)
+shader_parameter/multiplierAmount = 0.05
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nf1n4"]
+bg_color = Color(0.0235294, 0.227451, 0.372549, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_utxcc"]
+resource_local_to_scene = true
+shader = ExtResource("5_3icxv")
+shader_parameter/highlight_intensity = 0.0
+shader_parameter/contrast_boost = 0.0
+shader_parameter/modulate_intensity = 0.0
+shader_parameter/modulate_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q6bfp"]
+bg_color = Color(0.240985, 0.446397, 0.234178, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4ju6"]
+bg_color = Color(0.510906, 0.167793, 0.125219, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_srvm0"]
+bg_color = Color(0.188235, 0.317647, 0.105882, 1)
+
+[node name="TileEditor" type="CanvasLayer"]
+script = ExtResource("1_x074o")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Edition" type="PanelContainer" parent="HBoxContainer"]
+texture_filter = 2
+texture_repeat = 2
+material = SubResource("ShaderMaterial_ea3xn")
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = ExtResource("3_occqe")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Edition"]
+layout_mode = 2
+
+[node name="Top" type="MarginContainer" parent="HBoxContainer/Edition/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="HBoxContainer/Edition/VBoxContainer/Top"]
+layout_mode = 2
+
+[node name="SwitchMode" type="Button" parent="HBoxContainer/Edition/VBoxContainer/Top/HBox"]
+layout_mode = 2
+text = "World Tiles"
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/Edition/VBoxContainer/Top/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResourceName" type="Label" parent="HBoxContainer/Edition/VBoxContainer/Top/HBox/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Tile name
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="Preview" type="CenterContainer" parent="HBoxContainer/Edition/VBoxContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Center" type="Control" parent="HBoxContainer/Edition/VBoxContainer/Preview"]
+layout_mode = 2
+
+[node name="PickArt" type="Button" parent="HBoxContainer/Edition/VBoxContainer/Preview/Center"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = 375.0
+offset_right = 100.0
+offset_bottom = 442.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_nf1n4")
+text = "pick art"
+metadata/_edit_use_anchors_ = true
+
+[node name="ResourcePreview" parent="HBoxContainer/Edition/VBoxContainer/Preview/Center" instance=ExtResource("4_r3svn")]
+material = SubResource("ShaderMaterial_utxcc")
+scale = Vector2(0.4, 0.4)
+
+[node name="Bottom" type="MarginContainer" parent="HBoxContainer/Edition/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="HBoxContainer/Edition/VBoxContainer/Bottom"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="HBoxContainer/Edition/VBoxContainer/Bottom/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+shortcut = ExtResource("6_6n0xr")
+shortcut_in_tooltip = false
+text = "Back"
+
+[node name="Sep" type="Control" parent="HBoxContainer/Edition/VBoxContainer/Bottom/HBox"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResourceName" type="TextEdit" parent="HBoxContainer/Edition/VBoxContainer/Bottom/HBox"]
+custom_minimum_size = Vector2(400, 60)
+layout_mode = 2
+text = "New_Tile"
+
+[node name="Add" type="Button" parent="HBoxContainer/Edition/VBoxContainer/Bottom/HBox"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_q6bfp")
+text = "Add"
+metadata/_edit_use_anchors_ = true
+
+[node name="Delete" type="Button" parent="HBoxContainer/Edition/VBoxContainer/Bottom/HBox"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_o4ju6")
+text = "Delete"
+metadata/_edit_use_anchors_ = true
+
+[node name="Save" type="Button" parent="HBoxContainer/Edition/VBoxContainer/Bottom/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_srvm0")
+text = "Save"
+metadata/_edit_use_anchors_ = true
+
+[node name="ResourceBrowserTree" type="Tree" parent="HBoxContainer"]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="PickArtDialog" type="FileDialog" parent="."]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(600, 600)
+ok_button_text = "Open"
+file_mode = 0
+root_subfolder = "res://Art"
+filters = PackedStringArray("*.png ; PNG Images")
+use_native_dialog = true
+
+[connection signal="pressed" from="HBoxContainer/Edition/VBoxContainer/Top/HBox/SwitchMode" to="." method="_on_switch_mode_pressed"]
+[connection signal="pressed" from="HBoxContainer/Edition/VBoxContainer/Preview/Center/PickArt" to="." method="_on_pick_art_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Edition/VBoxContainer/Bottom/HBox/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Edition/VBoxContainer/Bottom/HBox/Add" to="." method="_on_add_pressed"]
+[connection signal="pressed" from="HBoxContainer/Edition/VBoxContainer/Bottom/HBox/Delete" to="." method="_on_delete_pressed"]
+[connection signal="pressed" from="HBoxContainer/Edition/VBoxContainer/Bottom/HBox/Save" to="." method="_on_save_pressed"]
+[connection signal="file_selected" from="PickArtDialog" to="." method="_on_pick_art_dialog_file_selected"]

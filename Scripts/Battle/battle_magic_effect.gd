@@ -2,7 +2,7 @@ class_name BattleMagicEffect
 extends Resource
 
 @export var name : String = ""
-@export var icon_path : String = ""
+@export_file var icon_path : String = ""
 
 @export var spell_effects : Array[BattleMagicEffect]
 

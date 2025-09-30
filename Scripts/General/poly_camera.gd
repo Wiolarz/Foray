@@ -123,9 +123,10 @@ func process_camera_drag():
 
 
 ## set camera bounds
-func set_bounds(bounds_global_position : Rect2) -> void:
+func set_bounds(bounds_global_position : Rect2, reset_position : bool = true) -> void:
 	bounds = bounds_global_position
-	position = bounds_global_position.get_center()
-	zoom_pivot = position
-	current_zoom_power = START_ZOOM
-	target_zoom_power = START_ZOOM_TARGET
+	if reset_position:
+		position = bounds_global_position.get_center()
+		zoom_pivot = position
+		current_zoom_power = START_ZOOM
+		target_zoom_power = START_ZOOM_TARGET

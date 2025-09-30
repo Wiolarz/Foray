@@ -1,7 +1,7 @@
 class_name BattleUI
 extends CanvasLayer
 
-@export var placement_unit_button_size = 200.0
+@export var deployment_unit_button_size = 200.0
 
 @onready var players_box : BoxContainer = $TopR/PlayersContainer/Players
 
@@ -9,7 +9,6 @@ extends CanvasLayer
 
 @onready var camera_button : Button = $TopL/SwitchCamera
 
-@onready var summary_container : Container = $SummaryContainer
 
 @onready var clock = $TopC/TurnsBG/VBox/ClockLeft
 @onready var turns = $TopC/TurnsBG/VBox/TurnCount
@@ -28,8 +27,8 @@ extends CanvasLayer
 # announcement nodes
 @onready var announcement_sacrifice = $SacrificeAnnouncement
 @onready var announcement_sacrifice_player_name_label = $SacrificeAnnouncement/CycloneTarget
-@onready var announcement_end_of_placement_phase = $EndPlacementPhaseAnnouncement
-@onready var announcement_end_of_placement_phase_player_name_label = $EndPlacementPhaseAnnouncement/FirstPlayerToMoveName
+@onready var announcement_end_of_deployment_phase = $EndDeploymentPhaseAnnouncement
+@onready var announcement_end_of_deployment_phase_player_name_label = $EndDeploymentPhaseAnnouncement/FirstPlayerToMoveName
 
 var fighting_players_idx = []
 var armies_reference : Array[BattleGridState.ArmyInBattleState]
@@ -37,12 +36,12 @@ var armies_reference : Array[BattleGridState.ArmyInBattleState]
 var current_player : int = 0
 
 
-## used only for placement unit tiles, points to currently selected unit/unit-button in placement
+## used only for deployment unit tiles, points to currently selected unit/unit-button in deployment
 ## bar
 var _selected_unit_pointer : DataUnit = null
 var _selected_unit_button_pointer : BaseButton = null
 
-## used only for placement unit tiles, points to currently hovered unit button in placement bar
+## used only for deployment unit tiles, points to currently hovered unit button in deployment bar
 ## (same set of buttons as _`selected_unit_button_pointer` points to
 var _hovered_unit_button_pointer : BaseButton = null
 
@@ -57,6 +56,14 @@ var selected_spell_button : TextureButton = null
 var _shown_sacrifice_announcement : bool = false
 
 #region INIT
+
+## Cleans UI
+func _ready():
+	for child in get_children():
+		child.show()
+	$TextBubble.hide()
+	replay_controls.hide()
+
 
 func load_armies(army_list : Array[BattleGridState.ArmyInBattleState]):
 	# Disable "Switch camera" button for non world map gameplay
@@ -193,10 +200,33 @@ func update_replay_controls(move_nr: int, total_replay_moves: int, summary: Data
 	else:
 		replay_show_summary.disabled = true
 
+
+func _on_pause_pressed():
+	CFG.animation_speed_frames = CFG.AnimationSpeed.NORMAL
+	CFG.bot_speed_frames = CFG.BotSpeed.FREEZE
+
+
+func _on_step_pressed():
+	# TODO improve/un-DRUTify playback (especially step) controls
+	CFG.animation_speed_frames = CFG.AnimationSpeed.NORMAL
+	CFG.bot_speed_frames = CFG.BotSpeed.NORMAL
+	await get_tree().create_timer(0.1).timeout
+	CFG.bot_speed_frames = CFG.BotSpeed.FREEZE
+
+
+func _on_play_pressed():
+	CFG.animation_speed_frames = CFG.AnimationSpeed.NORMAL
+	CFG.bot_speed_frames = CFG.BotSpeed.NORMAL
+
+
+func _on_fast_pressed():
+	CFG.animation_speed_frames = CFG.AnimationSpeed.INSTANT
+	CFG.bot_speed_frames = CFG.BotSpeed.FAST
+
 #endregion Replay Controls
 
 
-#region Summon Phase
+#region Deployment Phase
 
 func on_player_selected(army_index : int, preview : bool = false):
 	_selected_unit_pointer = null
@@ -222,16 +252,16 @@ func on_player_selected(army_index : int, preview : bool = false):
 	var bg_color : DataPlayerColor = CFG.NEUTRAL_COLOR
 	if units_controller:
 		bg_color = units_controller.get_player_color()
-	for unit in armies_reference[army_index].units_to_summon:
-		# here is the place where unit buttons for placement are
+	for unit in armies_reference[army_index].units_to_deploy:
+		# here is the place where unit buttons for deployment are
 
 		var button := TextureButton.new()
-		button.texture_normal = CFG.SUMMON_BUTTON_TEXTURE
-		button.custom_minimum_size = Vector2.ONE * placement_unit_button_size
+		button.texture_normal = CFG.DEPLOY_BUTTON_TEXTURE
+		button.custom_minimum_size = Vector2.ONE * deployment_unit_button_size
 		button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		button.ignore_texture_size = true
 
-		var unit_display := UnitForm.create_for_summon_ui(unit, bg_color)
+		var unit_display := UnitForm.create_for_deployment_ui(unit, bg_color)
 		unit_display.position = button.texture_normal.get_size()/2
 		var center_container = CenterContainer.new()
 		button.add_child(center_container)
@@ -243,7 +273,7 @@ func on_player_selected(army_index : int, preview : bool = false):
 
 		# TEMP need to find out good way to calculate scale, the constant number
 		# here was find empirically
-		var calculated_scale = 0.00058 * placement_unit_button_size
+		var calculated_scale = 0.00058 * deployment_unit_button_size
 		unit_display.scale = Vector2.ONE * calculated_scale
 
 		units_box.add_child(button)
@@ -277,22 +307,22 @@ func on_player_selected(army_index : int, preview : bool = false):
 		button.mouse_exited.connect(lambda_hover.bind(false))
 
 
-func unit_summoned(summon_phase_end : bool):
+func unit_deployed(deployment_phase_end : bool):
 	_selected_unit_pointer = null
 	_selected_unit_button_pointer = null
 
-	if summon_phase_end:
-		announcement_end_of_placement_phase_player_name_label.text = BM.get_current_player_name()
-		announcement_end_of_placement_phase.modulate = BM.get_current_slot_color().color
+	if deployment_phase_end:
+		announcement_end_of_deployment_phase_player_name_label.text = BM.get_current_player_name()
+		announcement_end_of_deployment_phase.modulate = BM.get_current_slot_color().color
 		#IM.get_player_by_index(army.army_reference.controller_index)
 
-		announcement_end_of_placement_phase.modulate.a = 1
+		announcement_end_of_deployment_phase.modulate.a = 1
 		var tween = ANIM.ui_tween()
 		tween.tween_interval(1.5)
-		tween.tween_property(announcement_end_of_placement_phase, "modulate:a", 0, 0.5)
+		tween.tween_property(announcement_end_of_deployment_phase, "modulate:a", 0, 0.5)
 		ANIM.play_tween(tween, ANIM.TweenPlaybackSettings.speed_independent())
 
-#endregion Summon Phase
+#endregion Deployment Phase
 
 
 #region Grid
@@ -301,7 +331,9 @@ func unit_summoned(summon_phase_end : bool):
 ## Clears any hovering of grid tiles and units.
 func reset_grid_hover() -> void:
 	if BM.battle_is_active():
-		if _hovered_unit_form_pointer:
+		if _hovered_unit_form_pointer != null:
+			# sometimes it's a bugged null which isn't detected with just "if value:"
+			# Bug is fixed in Godot 4.4
 			_hovered_unit_form_pointer.set_hovered(false)
 	if _hovered_tile_form_pointer and is_instance_valid(_hovered_tile_form_pointer):
 		_hovered_tile_form_pointer.set_hovered(false)
@@ -379,10 +411,18 @@ func load_spells(army_index : int, spells : Array[BattleSpell], preview : bool =
 	for spell in spells:
 		var button := TextureButton.new()
 
-		#TODO create a proper icon creation (after higher resolution update)
+		button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT
+		button.custom_minimum_size = Vector2(400, 400)
+		button.ignore_texture_size = true
 
-		button.texture_normal = CFG.SUMMON_BUTTON_TEXTURE
+		button.texture_normal = CFG.DEPLOY_BUTTON_TEXTURE
 		button.texture_normal = load(spell.icon_path)
+
+		button.tooltip_text = spell.description
+
+		button.ignore_texture_size = true
+		button.stretch_mode = TextureButton.STRETCH_SCALE
+		button.custom_minimum_size = Vector2(200, 200)
 
 		book.add_child(button)
 		var lambda = func on_click():
@@ -398,6 +438,8 @@ func load_spells(army_index : int, spells : Array[BattleSpell], preview : bool =
 				selected_spell = spell
 				selected_spell_button = button
 				selected_spell_button.modulate = Color.RED
+
+			BM.update_move_highlights()
 		button.pressed.connect(lambda)
 
 
@@ -415,8 +457,8 @@ func start_player_turn(army_index : int):
 
 
 
-func refresh_after_undo(summon_phase_active : bool):
-	units_box.visible = summon_phase_active
+func refresh_after_undo(deploy_phase_active : bool):
+	units_box.visible = deploy_phase_active
 
 
 func _on_switch_camera_pressed():
@@ -428,27 +470,17 @@ func _on_switch_camera_pressed():
 
 
 func _on_menu_pressed():
-	IM.toggle_in_game_menu()
+	UI.main_menu.open_in_game_menu()
 
 
-func _on_pause_pressed():
-	CFG.animation_speed_frames = CFG.AnimationSpeed.NORMAL
-	CFG.bot_speed_frames = CFG.BotSpeed.FREEZE
+func show_text_bubble(text_bubble : TextBubble) -> void:
+	$TextBubble.show()
+	$TextBubble/Title.text = text_bubble.title
+	$TextBubble/Text.text = text_bubble.text
+	$TextBubble/Icon.texture = load(text_bubble.icon_path)
+	IM.set_game_paused(true)
 
 
-func _on_step_pressed():
-	# TODO improve/un-DRUTify playback (especially step) controls
-	CFG.animation_speed_frames = CFG.AnimationSpeed.NORMAL
-	CFG.bot_speed_frames = CFG.BotSpeed.NORMAL
-	await get_tree().create_timer(0.1).timeout
-	CFG.bot_speed_frames = CFG.BotSpeed.FREEZE
-
-
-func _on_play_pressed():
-	CFG.animation_speed_frames = CFG.AnimationSpeed.NORMAL
-	CFG.bot_speed_frames = CFG.BotSpeed.NORMAL
-
-
-func _on_fast_pressed():
-	CFG.animation_speed_frames = CFG.AnimationSpeed.INSTANT
-	CFG.bot_speed_frames = CFG.BotSpeed.FAST
+func _on_text_bubble_button_pressed():
+	IM.set_game_paused(false)
+	$TextBubble.hide()

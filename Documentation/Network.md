@@ -218,8 +218,8 @@ Every command should have values at keys:
 * `target_tile_coord` -- target coord of a move. Also `Vector2` and mandatory,
   like source.
   TODO change name to `target_coord` and make it optional.
-* `summon_unit` -- name of unit which is to be summoned. String. Mandatory.
-  For actions which does not summon anything, it should be just an empty
+* `deploy_unit` -- name of unit which is to be deployed. String. Mandatory.
+  For actions which does not deploy anything, it should be just an empty
   string.
 
 If an action needs other parameters, they can be defined freely at any unused

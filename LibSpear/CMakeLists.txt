@@ -34,7 +34,7 @@ if (NICE_COMPILER)
     "-Werror=nonnull"
     "-Werror=cast-qual"
     "-Werror=cast-align"
-    "-Werror=dangling-pointer"
+    "-Werror=return-local-addr"
     "-Werror=date-time"
     "-Wno-type-limits"
     "-Wno-unused-parameter"
@@ -42,7 +42,7 @@ if (NICE_COMPILER)
     "-Wno-useless-cast"
   )
 
-  if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+  if (CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
     list (APPEND SPEAR_COMPILE_OPTIONS
       "-Werror=null-dereference"
     )
@@ -87,6 +87,8 @@ set_target_properties(libspear PROPERTIES PREFIX "")
 # set_target_properties(libspear PROPERTIES OUTPUT_NAME "")
 
 if (CMAKE_BUILD_TYPE STREQUAL "")
+  set (BUILD_TYPE_LOWERCASE debug)
+elseif (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   set (BUILD_TYPE_LOWERCASE debug)
 else ()
   string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE_LOWERCASE)

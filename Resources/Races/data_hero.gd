@@ -10,8 +10,15 @@ extends Resource
 
 @export var starting_passives : Array[HeroPassive] = []
 
-## COMMAND
+
+## GENERAL
+@export var starting_level : int = 1
+
+
+## CAMPAIGN
 @export var max_army_size : int = 3
+
+@export var max_movement_points : int = 3
 
 @export var starting_rituals : Array[Ritual] = []
 

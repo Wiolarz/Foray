@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="BattleSpell" load_steps=3 format=3 uid="uid://bk4vt1njy2ic2"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/battle_spell.gd" id="1_oialf"]
+[ext_resource type="Resource" uid="uid://bxf3nvia2676a" path="res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/anchor_effect.tres" id="2_gjbnk"]
+
+[resource]
+script = ExtResource("1_oialf")
+name = "Anchor"
+icon_path = "res://Art/magic/spell_icons/anchor.png"
+description = "Make the target unable to move, only rotate toward the tiles it would like to move to"
+spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([ExtResource("2_gjbnk")])
+cast_range = 3
+direction_cast = 2
+target_type = 1
+needs_movable_tile = false
+target_unit_type = 0
+not_self = false

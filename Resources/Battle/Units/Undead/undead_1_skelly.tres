@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://3x0qi3t8cq"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_y83wb"]
+[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_xg032"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_yu33o"]
+[ext_resource type="Resource" uid="uid://dy85xcp8g7gbq" path="res://Resources/Battle/Symbols/sword.tres" id="4_34xh8"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="6_ng4rr"]
+
+[sub_resource type="Resource" id="Resource_vofdp"]
+script = ExtResource("1_y83wb")
+wood = 2
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("3_yu33o")
+unit_name = "Skelly"
+texture_path = "res://Art/units/undead/undead_1_skeleton_grunt.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_34xh8"), ExtResource("6_ng4rr"), ExtResource("6_ng4rr"), ExtResource("6_ng4rr"), ExtResource("6_ng4rr"), ExtResource("6_ng4rr")])
+cost = SubResource("Resource_vofdp")
+required_building = ExtResource("2_xg032")
+level = 1
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

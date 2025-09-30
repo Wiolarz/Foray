@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://b7fpb6r5mluj1"]
+
+[ext_resource type="Script" path="res://Scripts/UI/LevelUp/tier_talent_panel.gd" id="1_3y1pe"]
+[ext_resource type="PackedScene" uid="uid://d030cg7m2orr1" path="res://Scenes/UI/LevelUp/PassiveButton.tscn" id="2_pbd4n"]
+
+[node name="TierTalentPanel" type="PanelContainer"]
+offset_right = 731.0
+offset_bottom = 133.0
+size_flags_stretch_ratio = 0.0
+script = ExtResource("1_3y1pe")
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 23
+
+[node name="TierLabel" type="Label" parent="MainContainer"]
+layout_mode = 2
+text = "Tier 1"
+
+[node name="TierUpgrades" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="PowerPassiveButton" parent="MainContainer/TierUpgrades" instance=ExtResource("2_pbd4n")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TacticPassiveButton" parent="MainContainer/TierUpgrades" instance=ExtResource("2_pbd4n")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MagicPassiveButton" parent="MainContainer/TierUpgrades" instance=ExtResource("2_pbd4n")]
+layout_mode = 2
+size_flags_horizontal = 3

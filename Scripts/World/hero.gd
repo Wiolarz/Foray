@@ -15,7 +15,15 @@ var target_tile : TileForm
 # gameplay
 var hero_name : String
 
-var max_army_size : int
+## provides bonus to max_army_size while in the city
+var is_in_city : bool = true  # normally hero starts in a city
+
+var max_army_size : int :
+	get:
+		if is_in_city:
+			return max_army_size + CFG.CITY_MAX_ARMY_SIZE
+		return max_army_size
+
 
 var max_movement_points : int = 3 :
 	get:
@@ -79,13 +87,14 @@ static func construct_hero(data_hero : DataHero,
 	new_hero.controller_index = player_index
 	new_hero.data_unit = data_hero.data_unit
 	new_hero.max_army_size = data_hero.max_army_size
+	new_hero.level = data_hero.starting_level
 
 	#TODO check if duplicate could be useful in the future
 	new_hero.passive_effects = data_hero.starting_passives.duplicate()
 	new_hero.rituals_book = data_hero.starting_rituals.duplicate()
 	new_hero.rituals = new_hero.rituals_book.duplicate()
-	return new_hero
 
+	return new_hero
 
 
 func _init():

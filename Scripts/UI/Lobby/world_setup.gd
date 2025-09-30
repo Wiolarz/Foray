@@ -145,8 +145,6 @@ func fill_maps_list():
 	if not maps_list:
 		return
 	var maps = IM.get_world_maps_list()
-	if maps_list.item_count > 0:
-		return
 	maps_list.clear()
 	for map_name in maps:
 		maps_list.add_item(map_name)

@@ -18,7 +18,7 @@ var controller_index : int:  # network simplification
 			return faction.controller_index
 		return -1
 
-var defender_army : Army
+
 var coord : Vector2i
 var movable : bool = false
 

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3 uid="uid://bupuvg1cr7byg"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_thj5i"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_hgdgo"]
+[ext_resource type="Resource" uid="uid://mp2ftndlivvp" path="res://Resources/Battle/Symbols/crossbow.tres" id="3_t4amn"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_0qi5c"]
+
+[sub_resource type="Resource" id="Resource_k8g4u"]
+script = ExtResource("1_thj5i")
+wood = 1
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("2_hgdgo")
+unit_name = "Arbalister"
+texture_path = "res://Art/units/dwarves/dwarf_4_arbalister.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_t4amn"), ExtResource("5_0qi5c"), ExtResource("5_0qi5c"), ExtResource("5_0qi5c"), ExtResource("5_0qi5c"), ExtResource("5_0qi5c")])
+cost = SubResource("Resource_k8g4u")
+level = 4
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

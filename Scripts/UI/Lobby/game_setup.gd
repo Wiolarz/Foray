@@ -169,7 +169,7 @@ func _select_setup_page(page):
 	container.add_child(setup)
 	if client_side:
 		setup.make_client_side()
-	setup.refresh() #TODO verify if its needed here -- WTF it is
+	setup.refresh() #updates map list
 
 
 func select_world():

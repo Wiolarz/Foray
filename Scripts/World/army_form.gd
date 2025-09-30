@@ -16,8 +16,10 @@ var travel_path:
 		assert(entity and entity.hero, "attempt to set a path to non existing hero")
 		entity.hero.travel_path = new_path
 	get:
-		assert(entity and entity.hero, "attempt to get a path from not existing hero")
-		return entity.hero.travel_path
+		#assert(entity and entity.hero, "attempt to get a path from not existing hero")
+		if entity.hero: # TEMP armyform class will not be used by game manager to handle pathfiding
+			return entity.hero.travel_path
+		return null
 
 
 func _init():
@@ -39,16 +41,26 @@ static func create_form_of_army(hex : WorldHex, position_ : Vector2) \
 	var result : ArmyForm = CFG.DEFAULT_ARMY_FORM.instantiate()
 	var army : Army = hex.army
 	result.entity = army
-	var image = null
+	result.entity.leader_unit_changed.connect(result.change_visual_unit_leader)
+
 	if army.hero:
 		result.name = army.hero.hero_name
-		image = load(army.hero.data_unit.texture_path)
+		var image : Texture2D = load(army.hero.data_unit.texture_path)
+		result.get_node("sprite_unit").texture = image
+		result.get_node("sprite_color").texture = CFG.TEAM_COLOR_TEXTURES[army.controller.color_idx]
 	else:
-		result.name = "Neutral army TODO some name"
-		image = load(army.units_data[0].texture_path)
+		if army.controller:
+			result.name = "City Garrison " + str(army.coord)
+			result.get_node("sprite_color").texture = CFG.TEAM_COLOR_TEXTURES[army.controller.color_idx]
+		else:
+			result.name = "Neutral army " + str(army.coord)
+			result.get_node("sprite_color").texture = CFG.NEUTRAL_COLOR_TEXTURE
+		result.change_visual_unit_leader()
 		result.get_node("MoveLabel").text = ""
 		result.get_node("DescriptionLabel").text = ""
-	result.get_node("sprite_unit").texture = image
+		
+
+
 	result.position = position_
 	return result
 
@@ -57,6 +69,7 @@ func has_movement_points() -> bool:
 	return entity.hero.movement_points > 0
 
 
+##STUB
 func place_on(tile):
 	position = tile.position
 
@@ -72,3 +85,16 @@ func set_selected(is_selected : bool) -> void:
 
 func apply_losses(losses : Array[DataUnit]):
 	entity.apply_losses(losses)
+
+
+func change_visual_unit_leader() -> void:
+	if entity.hero:
+		return
+	var new_sprite : Texture2D = null  # City Garrison doesn't need units
+	var highest_unit_level : int = 0
+	for unit in entity.units_data:
+		if highest_unit_level < unit.level:
+			highest_unit_level = unit.level
+			new_sprite = load(unit.texture_path)
+
+	get_node("sprite_unit").texture = new_sprite

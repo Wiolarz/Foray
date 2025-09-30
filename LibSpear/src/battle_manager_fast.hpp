@@ -18,7 +18,7 @@
 #define BM_ASSERT_V(cond, v, ...)													\
 	do {																			\
 		if(!(cond)) {																\
-			WARN_PRINT(std::format("BMFast assert failed: " __VA_ARGS__).c_str());	\
+			_print_assert(std::format("BMFast assert failed: " __VA_ARGS__).c_str());\
 			_set_error_flag(); return v;											\
 		}																			\
 	} while(0)
@@ -41,9 +41,8 @@ class BattleManagerFast {
 	ArmyList _armies{};
 	std::array<BattleSpell, MAX_SPELLS> _spells{};
 	TileGridFast _tiles{};
-	int8_t _big_cyclone_counter_value = -1;
-	int8_t _small_cyclone_counter_value = -1;
-	int8_t _cyclone_mana_threshold = -1;
+	
+	std::array<int8_t, 16> _cyclone_counter_values{-1};
 	int8_t _mana_well_power = -1;
 
 	BattleResult _result{};
@@ -55,32 +54,40 @@ class BattleManagerFast {
 	bool _heuristic_moves_dirty = true;
 	bool _debug_internals = false;
 
+
 	void _process_unit(UnitID uid, MovePhase phase);
 	void _process_bow(UnitID uid, MovePhase phase);
 	void _process_push(UnitID pushed, UnitID pusher, Position direction, uint8_t max_power);
 	void _process_spell(UnitID uid, int8_t spell_id, Position target);
 	void _update_move_end();
 	void _update_turn_end();
+	void _check_blood_curse(int8_t army_id);
 
 	void _spells_append_moves();
 
-	void _append_moves_unit(UnitID uid, int8_t spell_id, TeamRelation relation, bool include_self);
-	void _append_moves_all_tiles(UnitID uid, int8_t spell_id, bool include_impassable);
+	void _append_moves_unit(UnitID uid, int8_t spell_id, TeamRelation relation, IncludeSelf include_self);
+  void _append_curse_moves_unit(UnitID uid, int8_t spell_id, TeamRelation relation, IncludeSelf include_self, int8_t min_units);
+	void _append_moves_all_tiles(UnitID uid, int8_t spell_id, IncludeImpassable include_impassable);
+
 	void _append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max);
 	void _append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max);
+	void _append_moves_neighbors(UnitID uid, int8_t spell_id, Position center, IncludeImpassable include_impassable);
 
 	void _refresh_legal_moves();
 	void _refresh_heuristically_good_moves();
-	void _refresh_heuristically_good_summon_moves();
+	void _refresh_heuristically_good_deploy_moves();
 
 	void _move_unit(UnitID id, Position pos);
 	void _kill_unit(UnitID id, UnitID killer_id);
+	void _summon_unit(Unit& unit, Army& army, Position target);
 
 	void _next_army();
 
 	void _update_mana();
 	void _update_mana_target();
 	std::pair<size_t, size_t> _get_cyclone_worst_and_best_idx() const;
+
+	void _print_assert(const char* str);
 
 	friend class BattleManagerFastCpp;
 
@@ -93,7 +100,7 @@ public:
 	/// Get winner team, or -1 if the battle has not yet ended. On error returns -2.
 	int get_winner_team();
 	BattleResult& get_result() {return _result;}
-	
+
 	const std::vector<Move>& get_legal_moves();
 	unsigned get_move_count();
 	/// Get moves that are likely to increase score/win the game/avoid losses. If there are no notable moves, returns all moves
@@ -107,7 +114,7 @@ public:
 	int get_army_team(int army) {
 		return _armies[army].team;
 	}
-	
+
 	bool skip_army(const Army& army, const Army& other_army, TeamRelation relation) const {
 		switch(relation) {
 			case TeamRelation::ME:
@@ -120,7 +127,7 @@ public:
 				return false;
 		}
 		return false;
-	} 
+	}
 
 	int get_current_participant() const {
 		return _current_army;
@@ -146,7 +153,7 @@ private:
 			return {};
 		}
 
-		BM_ASSERT_V(unsigned(id.army) < _armies.size(), {}, "Invalid army id {}", id.army); 
+		BM_ASSERT_V(unsigned(id.army) < _armies.size(), {}, "Invalid army id {}", id.army);
 		BM_ASSERT_V(unsigned(id.unit) < _armies[id.army].units.size(), {}, "Invalid unit id {}/{}", id.army, id.unit);
 
 		return UnitRef{_armies[id.army].units[id.unit], _armies[id.army]};
@@ -178,13 +185,14 @@ public:
 
 	int play_move(godot::Array libspear_tuple);
 	int play_moves(godot::Array libspear_tuple_array);
-	
-	void insert_unit(int army, int idx, Vector2i pos, int rotation, bool is_summoning);
+
+	void insert_unit(int army, int idx, Vector2i pos, int rotation, bool is_deploying);
 	void set_army_team(int army, int team);
 	void set_unit_symbol(
-		int army, int unit, int side, 
+		int army, int unit, int side,
 		int attack_strength, int defense_strength, int ranged_reach,
-		bool is_counter, int push_force, bool parries, bool breaks_parry
+		bool is_counter, int push_force, bool parries, bool breaks_parry,
+		bool activate_on_leap, bool activate_on_turn
 	);
 
 	void set_unit_mana(int army, int idx, int mana);
@@ -192,12 +200,13 @@ public:
 
 	void set_unit_effect(int army, int idx, godot::String effect, int duration);
 	void set_unit_martyr(int army, int idx, int martyr_id, int duration);
+	void set_unit_solo_martyr(int army, int martyr_id, int duration);
 
 	void insert_spell(int army, int unit, int spell_id, godot::String spell_name);
 	void set_army_cyclone_timer(int army, int timer);
 	void set_tile_grid(TileGridFastCpp* tilegrid);
 	void set_current_participant(int army);
-	void set_cyclone_constants(int big, int small, int threshold, int mana_well_power);
+	void set_cyclone_constants(godot::PackedInt32Array cyclone_values, int mana_well_power);
 
 	void finish_initialization() {
 		bm.finish_initialization();
@@ -219,12 +228,12 @@ public:
 	int get_previous_participant() const {
 		return bm.get_previous_participant();
 	}
-	
+
 	int count_spell(int army, int idx, godot::String name);
 	int get_unit_spell_count(int army, int idx);
 
 	Vector2i get_unit_position(int army, int unit) const {
-		auto p = bm._armies[army].units[unit].pos; 
+		Position p = bm._armies[army].units[unit].pos; 
 		return Vector2i(p.x, p.y);
 	}
 
@@ -248,16 +257,16 @@ public:
 		return bm._armies[army].units[unit].status == UnitStatus::ALIVE;
 	}
 
-	bool is_unit_being_summoned(int army, int unit) const {
-		return bm._armies[army].units[unit].status == UnitStatus::SUMMONING;
+	bool is_unit_being_deployed(int army, int unit) const {
+		return bm._armies[army].units[unit].status == UnitStatus::DEPLOYING;
 	}
 
 	bool is_in_sacrifice_phase() const {
 		return bm._state == BattleState::SACRIFICE;
 	}
 
-	bool is_in_summoning_phase() const {
-		return bm._state == BattleState::SUMMONING;
+	bool is_in_deployment_phase() const {
+		return bm._state == BattleState::DEPLOYMENT;
 	}
 
 	bool get_unit_effect(int army, int idx, godot::String str) const {
@@ -269,7 +278,7 @@ public:
 	}
 
 	int get_unit_effect_count(int army, int idx);
-	
+
 	int get_unit_martyr_id(int army, int idx) const {
 		return bm._armies[army].units[idx].get_martyr_id().unit;
 	}
@@ -289,6 +298,10 @@ public:
 
 	void set_debug_internals(bool state) {
 		bm.set_debug_internals(state);
+	}
+
+	void _print_assert(const char* str) {
+		bm._print_assert(str);
 	}
 };
 

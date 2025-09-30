@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dy1m42bfkq2wv"]
+[gd_scene load_steps=13 format=3 uid="uid://dy1m42bfkq2wv"]
 
 [ext_resource type="Script" path="res://Scripts/Development/unit_editor.gd" id="1_77kxj"]
 [ext_resource type="StyleBox" uid="uid://cr3cpjlxxfm4r" path="res://Art/UI/marble_box.tres" id="2_bfpmc"]
@@ -24,6 +24,12 @@ shader_parameter/modulate_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nf1n4"]
 bg_color = Color(0.0235294, 0.227451, 0.372549, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_igpg0"]
+bg_color = Color(0.240985, 0.446397, 0.234178, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jisvi"]
+bg_color = Color(0.510906, 0.167793, 0.125219, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_srvm0"]
 bg_color = Color(0.188235, 0.317647, 0.105882, 1)
@@ -55,7 +61,8 @@ layout_mode = 2
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/Edition/VBoxContainer/Top"]
 layout_mode = 2
 
-[node name="UnitName" type="Label" parent="HBoxContainer/Edition/VBoxContainer/Top/PanelContainer"]
+[node name="ResourceName" type="Label" parent="HBoxContainer/Edition/VBoxContainer/Top/PanelContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 40
 text = "Unit name"
@@ -71,7 +78,7 @@ size_flags_vertical = 3
 [node name="Center" type="Control" parent="HBoxContainer/Edition/VBoxContainer/Preview"]
 layout_mode = 2
 
-[node name="UnitPreview" parent="HBoxContainer/Edition/VBoxContainer/Preview/Center" instance=ExtResource("3_yftbb")]
+[node name="ResourcePreview" parent="HBoxContainer/Edition/VBoxContainer/Preview/Center" instance=ExtResource("3_yftbb")]
 material = SubResource("ShaderMaterial_ttf1t")
 scale = Vector2(0.4, 0.4)
 
@@ -203,8 +210,26 @@ shortcut_in_tooltip = false
 text = "Back"
 
 [node name="Sep" type="Control" parent="HBoxContainer/Edition/VBoxContainer/Bottom/HBox"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="ResourceName" type="TextEdit" parent="HBoxContainer/Edition/VBoxContainer/Bottom/HBox"]
+custom_minimum_size = Vector2(400, 60)
+layout_mode = 2
+text = "New_Unit"
+
+[node name="Add" type="Button" parent="HBoxContainer/Edition/VBoxContainer/Bottom/HBox"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_igpg0")
+text = "Add"
+metadata/_edit_use_anchors_ = true
+
+[node name="Delete" type="Button" parent="HBoxContainer/Edition/VBoxContainer/Bottom/HBox"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_jisvi")
+text = "Delete"
+metadata/_edit_use_anchors_ = true
 
 [node name="Save" type="Button" parent="HBoxContainer/Edition/VBoxContainer/Bottom/HBox"]
 layout_mode = 2
@@ -213,7 +238,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_srvm0")
 text = "Save"
 metadata/_edit_use_anchors_ = true
 
-[node name="UnitBrowserTree" type="Tree" parent="HBoxContainer"]
+[node name="ResourceBrowserTree" type="Tree" parent="HBoxContainer"]
 custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
 metadata/_edit_use_anchors_ = true
@@ -230,5 +255,7 @@ use_native_dialog = true
 
 [connection signal="pressed" from="HBoxContainer/Edition/VBoxContainer/Preview/Center/PickArt" to="." method="_on_pick_art_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/Edition/VBoxContainer/Bottom/HBox/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/Edition/VBoxContainer/Bottom/HBox/Add" to="." method="_on_add_pressed"]
+[connection signal="pressed" from="HBoxContainer/Edition/VBoxContainer/Bottom/HBox/Delete" to="." method="_on_delete_pressed"]
 [connection signal="pressed" from="HBoxContainer/Edition/VBoxContainer/Bottom/HBox/Save" to="." method="_on_save_pressed"]
 [connection signal="file_selected" from="PickArtDialog" to="." method="_on_pick_art_dialog_file_selected"]

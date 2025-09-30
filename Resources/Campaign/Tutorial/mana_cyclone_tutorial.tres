@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="ScriptedBattle" load_steps=8 format=3 uid="uid://b3u1chtv84cjv"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_1ed2t"]
+[ext_resource type="Script" path="res://Resources/Campaign/scripted_battle.gd" id="1_mewck"]
+[ext_resource type="Resource" uid="uid://bwyu6qg7dsisg" path="res://Resources/Battle/Units/Classic/orc1.tres" id="2_tih0y"]
+[ext_resource type="Resource" uid="uid://cv2ncwgk45l1e" path="res://Resources/Battle/Units/Classic/elf2.tres" id="3_om47b"]
+[ext_resource type="Resource" uid="uid://bo4iyqbmgyn8r" path="res://Resources/Battle/Battle_Maps/mana_cyclone_tutorial.tres" id="4_edu3i"]
+
+[sub_resource type="Resource" id="Resource_qwp47"]
+resource_name = "Player's single orc"
+script = ExtResource("1_1ed2t")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_tih0y")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_1kyu4"]
+resource_name = "Archer's Wall"
+script = ExtResource("1_1ed2t")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("3_om47b"), ExtResource("3_om47b"), ExtResource("3_om47b")])
+team = 0
+
+[resource]
+script = ExtResource("1_mewck")
+scenario_name = "Mana Cyclone Timer"
+description = "Anti Draw Mechanic that supports Wizard
+with a defender advanatage."
+player_side = 0
+armies = Array[ExtResource("1_1ed2t")]([SubResource("Resource_qwp47"), SubResource("Resource_1kyu4")])
+battle_map = ExtResource("4_edu3i")
+text_bubbles = Array[Resource("res://Resources/Campaign/text_bubble.gd")]([])

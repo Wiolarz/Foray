@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="ScriptedBattle" load_steps=8 format=3 uid="uid://0l4pxlo5wi02"]
+
+[ext_resource type="Script" path="res://Resources/Campaign/scripted_battle.gd" id="1_grfgo"]
+[ext_resource type="Resource" uid="uid://bi7fwl6i8o6a3" path="res://Resources/Battle/Heroes/Elves/elf_hero_druid.tres" id="1_l22ta"]
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="2_vf6oe"]
+[ext_resource type="Resource" uid="uid://dvcmnrwfkynkj" path="res://Resources/Battle/Heroes/Elves/elf_hero_noble.tres" id="3_dip8m"]
+[ext_resource type="Resource" uid="uid://8gda8ctnlvdv" path="res://Resources/Battle/Battle_Maps/classic5x5.tres" id="4_pbyum"]
+
+[sub_resource type="Resource" id="Resource_chnei"]
+resource_name = "Archamage"
+script = ExtResource("2_vf6oe")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([])
+hero = ExtResource("1_l22ta")
+team = 0
+
+[sub_resource type="Resource" id="Resource_2emi5"]
+resource_name = "Noble"
+script = ExtResource("2_vf6oe")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([])
+hero = ExtResource("3_dip8m")
+team = 0
+
+[resource]
+script = ExtResource("1_grfgo")
+scenario_name = "Duel"
+description = "First introductory fight"
+player_side = 0
+armies = Array[ExtResource("2_vf6oe")]([SubResource("Resource_chnei"), SubResource("Resource_2emi5")])
+battle_map = ExtResource("4_pbyum")
+text_bubbles = Array[Resource("res://Resources/Campaign/text_bubble.gd")]([])

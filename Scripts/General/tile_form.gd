@@ -18,7 +18,7 @@ static func create_world_editor_tile(data_tile : DataTile, coord_ : Vector2i,
 	result.name = "Tile_%s_%s" % [ coord_.x, coord_.y ]
 	result.position = new_position
 	if data_tile:
-		var image = load(data_tile.texture_path)
+		var image = RES.load(data_tile.texture_path)
 		result.type = data_tile.type
 		result._set_texture(image)
 	return result
@@ -48,7 +48,7 @@ static func create_world_tile(data: DataTile, new_coord : Vector2i, \
 		new_place : Place) -> TileForm:
 	var result = CFG.HEX_TILE_FORM_SCENE.instantiate()
 	result._set_coord(new_coord)
-	result._set_texture(load(data.texture_path))
+	result._set_texture(RES.load(data.texture_path))
 	result.type = data.type
 	result.place = new_place
 	result.name = "Tile_" + str(new_coord) + "_" + data.type
@@ -60,7 +60,7 @@ static func create_battle_tile(data: DataTile, new_coord : Vector2i) -> TileForm
 	result.grid_type = GameSetupInfo.GameMode.BATTLE
 	result.type = data.type
 	result._set_coord(new_coord)
-	result._set_texture(load(data.texture_path))
+	result._set_texture(RES.load(data.texture_path))
 	result.name = "Tile_" + str(new_coord) + "_" + data.type
 	return result
 
@@ -69,7 +69,7 @@ func _on_input_event(_viewport : Node, event : InputEvent, _shape_idx : int):
 	# normal gameplay - on click
 	if event.is_action_pressed("KEY_SELECT"):
 		UI.grid_input_listener(coord, grid_type, false)
-	
+
 	# normal gameplay - on right click (purely visual "planning tool" for players to draw chess arrows)
 	if Input.is_action_pressed("KEY_PLAN"):
 		UI.grid_planning_input_listener(coord, grid_type, true)
@@ -92,7 +92,7 @@ func controller_changed():
 	var controller : Player = IM.get_player_by_index(hex.place.controller_index)
 	var color_name : String = controller.get_player_color().name
 	var path =  "%s%s_color.png" % [CFG.PLAYER_COLORS_PATH, color_name]
-	var texture = load(path) as Texture2D
+	var texture = RES.load(path) as Texture2D
 	assert(texture, "failed to load background " + path)
 	$ControlerSprite.texture = texture
 
@@ -100,7 +100,7 @@ func controller_changed():
 ## for map editor only
 func paint(brush : DataTile) -> void:
 	type = brush.type
-	$Sprite2D.texture = load(brush.texture_path)
+	$Sprite2D.texture = RES.load(brush.texture_path)
 
 
 func set_hovered(is_hovered : bool):

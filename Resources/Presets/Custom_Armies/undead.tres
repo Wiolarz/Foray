@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=7 format=3 uid="uid://cqptha5n3agx0"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_4cth0"]
+[ext_resource type="Resource" uid="uid://3x0qi3t8cq" path="res://Resources/Battle/Units/Undead/undead_1_skelly.tres" id="2_18ne8"]
+[ext_resource type="Resource" uid="uid://cth0g7ulnnwj6" path="res://Resources/Battle/Units/Undead/undead_3_caster.tres" id="3_cuqsn"]
+[ext_resource type="Resource" uid="uid://d0cockm8rdoxt" path="res://Resources/Battle/Units/Undead/undead_5_death_knight.tres" id="4_005jd"]
+[ext_resource type="Resource" uid="uid://dfe0ek2xxvv6m" path="res://Resources/Battle/Units/Undead/undead_6_lich.tres" id="5_g4fx3"]
+[ext_resource type="Resource" uid="uid://d18rrv3v75dk6" path="res://Resources/Battle/Units/Undead/undead_hero_reaper.tres" id="6_5vwat"]
+
+[resource]
+script = ExtResource("1_4cth0")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_18ne8"), ExtResource("3_cuqsn"), ExtResource("4_005jd"), ExtResource("5_g4fx3"), ExtResource("6_5vwat")])
+team = 0

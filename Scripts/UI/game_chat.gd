@@ -147,8 +147,12 @@ func _on_message_arrived(content : String):
 		refresh_short_log()
 
 
-func _on_chat_line_edit_text_submitted(new_text):
+func _on_chat_line_edit_text_submitted(new_text : String):
 	# Check if message is a cheat
+	if new_text.length() <= 4 and (new_text.begins_with("gg") or new_text.begins_with("GG")):
+		BM.force_surrender() # TODO add check in which game mode player is in
+
+
 	if new_text.length() >= 1 and new_text[0] == '/':
 		# Split message by arguments
 		var args = new_text.split(" ", false)
@@ -161,6 +165,8 @@ func _on_chat_line_edit_text_submitted(new_text):
 
 		# Cheats
 		match cheat:
+			"help":
+				send_chat_message("money, fast, brain, levelup (optional number of levels), maxupgrade, win")
 			"r":
 				WM.temp_cast_first_ritual()
 			"money":
@@ -178,6 +184,13 @@ func _on_chat_line_edit_text_submitted(new_text):
 			"maxupgrade":
 				WM.city_upgrade_cheat()
 				print("city max upgrade cheat")
+			"win":
+				BM.force_win_battle()
+				print("force win cheat")
+			"gg":
+				send_chat_message("GG WP")
+				BM.force_surrender() # TODO add check in which game mode player is in
+
 			_:
 				print("unknown cheat")
 

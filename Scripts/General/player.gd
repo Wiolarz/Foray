@@ -67,6 +67,32 @@ static func create(new_slot : Slot) -> Player:
 	return result
 
 
+static func create_for_tutorial(player_index : int, battle_bot_path : String = "") -> Player:
+	var result := Player.new()
+
+	if battle_bot_path.length() == 0:
+		result.name = "Player"
+		result.occupier = ""
+	else:
+		result.name = "AI"
+		result.occupier = 1  # TODO assign a proper difficulty rating
+
+		result.bot_engine = load(battle_bot_path).instantiate()
+
+		assert(result.bot_engine, "Bot '%s' does not exist" % battle_bot_path)
+
+		result.add_child(result.bot_engine)
+		result.bot_engine.set_player(result)
+
+
+	result.index = player_index
+	result.team = player_index
+	result.color_idx = player_index
+
+	return result
+
+
+
 #region Getters
 
 func is_local() -> bool:

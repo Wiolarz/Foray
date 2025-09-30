@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://c2nauydgma0r"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_iw2n0"]
+[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_hjg34"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_pmd65"]
+[ext_resource type="Resource" uid="uid://cngonnqsgsd6e" path="res://Resources/Battle/Symbols/axe.tres" id="4_nbmid"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_nhi0s"]
+
+[sub_resource type="Resource" id="Resource_vofdp"]
+script = ExtResource("1_iw2n0")
+wood = 2
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("3_pmd65")
+unit_name = "Scavenger"
+texture_path = "res://Art/units/undead/undead_hero_scavenger.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("5_nhi0s"), ExtResource("4_nbmid"), ExtResource("4_nbmid"), ExtResource("5_nhi0s"), ExtResource("4_nbmid"), ExtResource("4_nbmid")])
+cost = SubResource("Resource_vofdp")
+required_building = ExtResource("2_hjg34")
+level = 3
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

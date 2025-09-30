@@ -1,5 +1,4 @@
 class_name DataTile
-
 extends Resource
 
 ## hardcoded name in SCREAMING_SNAKE_CASE like WALL or EMPTY [br]

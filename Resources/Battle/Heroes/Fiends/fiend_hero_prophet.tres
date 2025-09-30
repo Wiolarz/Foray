@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="DataHero" load_steps=6 format=3 uid="uid://d1feykna5ubfo"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_o3omn"]
+[ext_resource type="Resource" uid="uid://dn5n3c1ldk4bj" path="res://Resources/Battle/Units/Fiends/fiend_hero_prophet.tres" id="2_tdrhl"]
+[ext_resource type="Script" path="res://Resources/Battle/data_hero.gd" id="3_6qf4q"]
+
+[sub_resource type="Resource" id="Resource_xuw1e"]
+script = ExtResource("1_o3omn")
+wood = 0
+iron = 0
+ruby = 0
+
+[sub_resource type="Resource" id="Resource_4eiij"]
+script = ExtResource("1_o3omn")
+wood = 0
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("3_6qf4q")
+hero_name = "Prophet"
+cost = SubResource("Resource_xuw1e")
+revive_cost = SubResource("Resource_4eiij")
+data_unit = ExtResource("2_tdrhl")
+starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([])
+starting_level = 1
+max_army_size = 3
+max_movement_points = 3

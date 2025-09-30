@@ -28,12 +28,11 @@ func _exit_tree():
 	WM.world_move_done.disconnect(_refresh_all)
 
 
-func show_trade_ui(viewed_city : City):
+func set_viewed_city(viewed_city : City):
 	city = viewed_city
 
 	_refresh_all()
-	if not unit_panels.visible and trading_hero_army:
-		_on_show_recruit_units_ui_pressed()
+
 
 
 func _refresh_all():
@@ -77,18 +76,30 @@ func _refresh_units_to_buy():
 			if not city.unit_has_required_building(unit):
 				b.text += "\n" + "needs 🏛"
 			else:
-				b.text += "\n" + unit.cost.to_string_short("free")
+				var cost : Goods = city.get_unit_cost(unit)
+				b.text += "\n" + cost.to_string_short("free")
 			b.pressed.connect(_buy_unit.bind(unit))
-			b.disabled = true if not WM.selected_hero else \
-				(WS.check_recruit_unit(unit, city.coord, \
-					WM.selected_hero.coord) != "")
+
+			var should_button_be_disabled := true  # if false, player can purchase this unit
+
+			if WM.selected_hero and \
+				WS.check_recruit_unit(unit, city.coord, WM.selected_hero.coord) == "":
+					should_button_be_disabled = false
+
+			#TODO look into scenarios where player is without city
+			elif WM.selected_city and \
+				WS.check_recruit_unit(unit, city.coord, city.coord) == "":
+					should_button_be_disabled = false
+
+			b.disabled = should_button_be_disabled
+
 
 
 func _refresh_army_display():
 	#TODO CLEAN
 	var army_children : Array = $RecruitUnits/VisitingHeroArmy.get_children()
 	if trading_hero_army:
-		army_children[0].text = "Max size %s" % trading_hero_army.hero.max_army_size
+		army_children[0].text = "Max size %s" % trading_hero_army.max_army_size
 	else:
 		army_children[0].text = "No hero"
 	for i in range(army_children.size()-1):
@@ -101,8 +112,10 @@ func _refresh_army_display():
 
 func _buy_unit(unit : DataUnit):
 	print("trying to buy ", unit.unit_name)
-
-	WM.try_recruit_unit(city.coord, WM.selected_hero.coord, unit)
+	if trading_hero_army:
+		WM.try_recruit_unit(city.coord, WM.selected_hero.coord, unit)
+	else:
+		WM.try_recruit_unit(city.coord, city.coord, unit)  # recruit straight to garrison
 
 
 func _on_buy_hero_button_pressed(hero_index : int):
@@ -168,11 +181,3 @@ func _on_show_build_ui_pressed():
 	unit_panels.hide()
 	_refresh_buildings_display()
 	building_buttons.visible = not building_buttons.visible
-
-
-func _on_enter_city_pressed():
-	if not trading_hero_army:
-		return
-	var move = WorldMoveInfo.make_world_travel(
-		trading_hero_army.coord, city.coord)
-	WM.try_do_move(move)

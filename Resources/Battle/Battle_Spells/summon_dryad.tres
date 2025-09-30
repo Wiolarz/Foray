@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="BattleSpell" load_steps=3 format=3 uid="uid://bs4srjn1vj6wf"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/battle_spell.gd" id="1_udpvt"]
+[ext_resource type="Resource" uid="uid://vetcam2arfu" path="res://Resources/Battle/Units/Neutral/wood_dryad.tres" id="2_v2swd"]
+
+[resource]
+script = ExtResource("1_udpvt")
+name = "Summon Dryad"
+icon_path = "res://Art/units/neutral/wood_dryad.png"
+description = "Summons a dryad unit on an adjacent hex. Unit lasts only for 6 rounds adn posses 3 front weak weapons."
+spell_effects = Array[Resource("res://Scripts/Battle/battle_magic_effect.gd")]([])
+summon_unit_data = ExtResource("2_v2swd")
+cast_range = 1
+direction_cast = 0
+target_type = 2
+needs_movable_tile = true
+target_unit_type = 0
+not_self = false

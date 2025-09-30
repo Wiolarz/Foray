@@ -1,7 +1,7 @@
 [gd_resource type="Theme" load_steps=11 format=3 uid="uid://dmv43h86d07fy"]
 
 [ext_resource type="StyleBox" uid="uid://bsh0ggg3l5fvh" path="res://Art/UI/focus.tres" id="1_2dd0h"]
-[ext_resource type="FontFile" uid="uid://dc8ww6fwlcbuv" path="res://Art/UI/fonts/kurland/Kurland.ttf" id="1_8bjnq"]
+[ext_resource type="FontFile" uid="uid://da2ubx3hyhcma" path="res://Art/UI/fonts/kurland/Kurland.ttf" id="1_8bjnq"]
 [ext_resource type="FontVariation" uid="uid://cwve433e1tc2u" path="res://Art/UI/default_font.tres" id="1_rnx0e"]
 [ext_resource type="Texture2D" uid="uid://cqqthjwghrygb" path="res://Art/UI/checkbox_checked.png" id="1_wwvms"]
 [ext_resource type="Texture2D" uid="uid://domt8tx0d2lu3" path="res://Art/UI/checkbox_unchecked.png" id="2_whbsa"]

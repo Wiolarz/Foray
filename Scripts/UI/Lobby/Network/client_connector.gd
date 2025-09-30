@@ -52,7 +52,11 @@ func get_port() -> int:
 
 
 func get_username()-> String:
-	return username_line.text
+	var user_name : String = username_line.text
+	if user_name.is_empty():
+		user_name = CFG.DEFAULT_PLAYER_NAME
+	username_line.text = user_name
+	return user_name
 
 func _randomise(username : String) -> String:
 	return "%s_%04d" % [username, randi_range(0000, 9999)]

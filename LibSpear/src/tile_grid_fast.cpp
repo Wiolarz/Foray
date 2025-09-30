@@ -8,11 +8,11 @@ void TileGridFast::set_tile(Position pos, Tile type) {
 		printf("ERROR - invalid tile position %d %d (idx - %d, dims - %dx%d)\n", pos.x, pos.y, idx, _dims.x, _dims.y);
 		return;
 	}
-	auto old_army = _tiles[idx].get_spawning_army();
-	auto new_army = type.get_spawning_army();
+	int old_army = _tiles[idx].get_spawning_army();
+	int new_army = type.get_spawning_army();
 
 	if(old_army != -1) {
-		auto old_spawn = std::find(_spawns[old_army].begin(), _spawns[old_army].end(), pos);
+		Position* old_spawn = std::find(_spawns[old_army].begin(), _spawns[old_army].end(), pos);
 		// Put the last spawn position in the place of replaced spawn position
 		*old_spawn = _spawns[old_army][_numbers_of_spawns[old_army]-1];
 		_numbers_of_spawns[old_army]--;

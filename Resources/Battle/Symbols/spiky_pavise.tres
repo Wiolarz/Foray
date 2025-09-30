@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://b1msg12gcamo5"]
+
+[ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_1kxs6"]
+[ext_resource type="SpriteFrames" uid="uid://bdi10bbb15c3x" path="res://Art/animations/attack_shield.tres" id="2_jaw42"]
+
+[resource]
+script = ExtResource("1_1kxs6")
+symbol_name = "Spiky Pavise"
+texture_path = "res://Art/items/spiky_pavise.png"
+symbol_animation = ExtResource("2_jaw42")
+attack_power = 2
+defense_power = 2
+push_power = 1
+counter_attack = false
+swift_attack = false
+parry = false
+parry_break = false
+reach = 0
+activate_turn = true
+activate_move = true

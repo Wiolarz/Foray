@@ -88,6 +88,9 @@ Unreal - C++
 - Carcinizer
 - Deathguard12 (bartoszstepien01)
 - Toksyczna
+- Bartollo
+- Mienso
+- Majones (MarcinMarszewski)
 
 ## Former Contributors
 

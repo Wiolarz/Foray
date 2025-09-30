@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://b44kr1rcexp3v"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://b44kr1rcexp3v"]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_vcx17"]
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_6kbtx"]
 [ext_resource type="Resource" uid="uid://bp747guikipcb" path="res://Resources/Battle/Symbols/spear.tres" id="3_bi52n"]
+[ext_resource type="Resource" uid="uid://bmrgon7ovm2hl" path="res://Resources/Battle/Battle_Spells/teleport.tres" id="3_hql8w"]
 [ext_resource type="Resource" uid="uid://sr1570kq7sm8" path="res://Resources/Battle/Symbols/shield.tres" id="4_iqq4y"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_6pgeb"]
 
@@ -18,6 +19,6 @@ unit_name = "noble_unit"
 texture_path = "res://Art/elf_hero_noble.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_bi52n"), ExtResource("4_iqq4y"), ExtResource("5_6pgeb"), ExtResource("5_6pgeb"), ExtResource("5_6pgeb"), ExtResource("4_iqq4y")])
 cost = SubResource("Resource_o8yk3")
-level = 1
-mana = 0
-spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])
+level = 3
+mana = 3
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([ExtResource("3_hql8w")])

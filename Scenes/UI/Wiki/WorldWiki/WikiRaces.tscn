@@ -1,0 +1,114 @@
+[gd_scene load_steps=5 format=3 uid="uid://d4jfwmwytwjsc"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Educational/WorldWiki/wiki_races.gd" id="1_xg12o"]
+[ext_resource type="PackedScene" uid="uid://j7u7m68we3um" path="res://Scenes/UI/Wiki/WorldWiki/WikiRaceButton.tscn" id="2_3a22u"]
+[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/elf_spearmen.png" id="3_et0l7"]
+[ext_resource type="PackedScene" uid="uid://cupju7ycvfwo6" path="res://Scenes/UI/Wiki/BattleWiki/WikiUnitButton.tscn" id="4_n1nhb"]
+
+[node name="WikiRaces" type="Panel"]
+clip_contents = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_xg12o")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Races"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxRaceSelection" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="WorldFactionButton" parent="Margin/VBoxContainer/HBoxContainer/VBoxRaceSelection" instance=ExtResource("2_3a22u")]
+layout_mode = 2
+
+[node name="WorldFactionButton2" parent="Margin/VBoxContainer/HBoxContainer/VBoxRaceSelection" instance=ExtResource("2_3a22u")]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="RaceInformationContainer" type="ScrollContainer" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RaceName" type="Label" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox"]
+layout_mode = 2
+text = "Elves"
+horizontal_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox"]
+layout_mode = 2
+text = "Magic > Elite > Horde"
+fit_content = true
+
+[node name="TextureRect" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_et0l7")
+expand_mode = 1
+
+[node name="HeroesLabel" type="Label" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox"]
+layout_mode = 2
+text = "Heroes"
+horizontal_alignment = 1
+
+[node name="HBoxHeroes" type="HBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="BattleUnitButton" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox/HBoxHeroes" instance=ExtResource("4_n1nhb")]
+layout_mode = 2
+
+[node name="BattleUnitButton2" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox/HBoxHeroes" instance=ExtResource("4_n1nhb")]
+layout_mode = 2
+
+[node name="BattleUnitButton3" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox/HBoxHeroes" instance=ExtResource("4_n1nhb")]
+layout_mode = 2
+
+[node name="UnitsLabel" type="Label" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox"]
+layout_mode = 2
+text = "Units"
+horizontal_alignment = 1
+
+[node name="HBoxUnits" type="HBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="BattleUnitButton" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox/HBoxUnits" instance=ExtResource("4_n1nhb")]
+layout_mode = 2
+
+[node name="BattleUnitButton2" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox/HBoxUnits" instance=ExtResource("4_n1nhb")]
+layout_mode = 2
+
+[node name="BattleUnitButton3" parent="Margin/VBoxContainer/HBoxContainer/RaceInformationContainer/VBox/HBoxUnits" instance=ExtResource("4_n1nhb")]
+layout_mode = 2

@@ -11,7 +11,11 @@ var summon_mapping_cpp2gd: Dictionary = {}
 ## Maps BMFast's unit IDs (in format [army, unit]) and DataUnit
 var summon_mapping_gd2cpp: Dictionary = {}
 ## Maps BMFast's spell IDs to BattleSpells
-var spell_mapping: Array = []
+var spell_mapping: Array[BattleSpell] = []
+## Maps BMFast's spell IDs to the army ID of the unit that has this spell
+var spell_army_id_mapping: Array[int] = []
+## Maps BMFast's spell IDs to the unit ID that has this spell
+var spell_unit_id_mapping: Array[int] = []
 
 ## Maps team ids to BMFast's team ids (BMFast's team ids must be less than max army number)
 var team_mapping: Dictionary = {}
@@ -27,10 +31,12 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 	new.set_tile_grid(tgrid)
 	new.set_current_participant(bgstate.current_army_index)
 
+	var cyclone_counter_values: PackedInt32Array = []
+	for mana_difference in range(CFG.CYCLONE_COUNTER_VALUES_MAX_MANA_DIFFERENCE+1):
+		cyclone_counter_values.push_back(CFG.get_cyclone_value(mana_difference, bgstate.number_of_mana_wells))
+
 	new.set_cyclone_constants(
-		CFG.BIG_CYCLONE_COUNTER_VALUE,
-		CFG.SMALL_CYCLONE_COUNTER_VALUE,
-		CFG.CYCLONE_MANA_THRESHOLD,
+		cyclone_counter_values,
 		BattleGridState.MANA_WELL_POWER
 	)
 
@@ -70,6 +76,8 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 			for spell in unit.spells:
 				new.insert_spell(army_idx, unit_idx, new.spell_mapping.size(), spell.name)
 				new.spell_mapping.push_back(spell)
+				new.spell_army_id_mapping.push_back(army_idx)
+				new.spell_unit_id_mapping.push_back(unit_idx)
 
 			for eff in unit.effects:
 				match eff.name:
@@ -77,16 +85,19 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 						martyrs.push_back(unit_idx)
 						martyr_duration = eff.duration_counter
 					_:
-						new.set_unit_effect(army_idx, unit_idx, eff.name, eff.duration_counter)
+						var duration_counter = -1 if eff.passive_effect else eff.duration_counter
+						new.set_unit_effect(army_idx, unit_idx, eff.name, duration_counter)
 
 		# TODO in future there might potentially be more martyrs simultaneously
 		assert(martyrs.size() in [0,1,2], "Unsupported martyr number")
 		if martyrs.size() == 2:
 			new.set_unit_martyr(army_idx, martyrs[0], martyrs[1], martyr_duration)
+		elif martyrs.size() == 1:
+			new.set_unit_solo_martyr(army_idx, martyrs[0], martyr_duration)
 
-		# Summon processing
-		for summon_idx in range(army.units_to_summon.size()):
-			var unit = army.units_to_summon[summon_idx]
+		# Deployment processing
+		for summon_idx in range(army.units_to_deploy.size()):
+			var unit = army.units_to_deploy[summon_idx]
 			var unit_idx = summon_idx + army.units.size()
 
 			new.insert_unit(army_idx, unit_idx, Vector2i.ZERO, 0, true)
@@ -110,7 +121,8 @@ func set_unit_symbol(army_idx: int, unit_idx: int, symbol_idx: int, symbol: Data
 	set_unit_symbol_cpp(
 		army_idx, unit_idx, symbol_idx,
 		symbol.attack_power, symbol.defense_power, symbol.reach,
-		symbol.counter_attack, symbol.push_power, symbol.parry, symbol.parry_break
+		symbol.counter_attack, symbol.push_power, symbol.parry, symbol.parry_break,
+		symbol.activate_move, symbol.activate_turn
 	)
 
 #region Libspear tuple <-> MoveInfo conversion
@@ -125,20 +137,21 @@ func libspear_tuple_to_move_info(tuple: Array) -> MoveInfo:
 
 	if is_in_sacrifice_phase():
 		return MoveInfo.make_sacrifice(unit_position)
-	elif is_in_summoning_phase():
-		return MoveInfo.make_summon(summon_mapping_cpp2gd[uid], position)
+	elif is_in_deployment_phase():
+		return MoveInfo.make_deploy(summon_mapping_cpp2gd[uid], position)
 	elif tuple.size() == 3: # Magic
 		return MoveInfo.make_magic(unit_position, position, spell_mapping[tuple[2]])
 	else:
 		return MoveInfo.make_move(unit_position, position)
+
 
 func move_info_to_libspear_tuple(move: MoveInfo) -> Array:
 	var unit: int
 	var pos = move.target_tile_coord
 
 	match move.move_type:
-		MoveInfo.TYPE_SUMMON:
-			unit = summon_mapping_gd2cpp[move.summon_unit][1]
+		MoveInfo.TYPE_DEPLOY:
+			unit = summon_mapping_gd2cpp[move.deployed_unit][1]
 		MoveInfo.TYPE_MOVE:
 			unit = get_unit_id_on_position(move.move_source)[1]
 		MoveInfo.TYPE_SACRIFICE:
@@ -146,11 +159,22 @@ func move_info_to_libspear_tuple(move: MoveInfo) -> Array:
 			pos = Vector2i.ZERO
 		MoveInfo.TYPE_MAGIC:
 			unit = get_unit_id_on_position(move.move_source)[1]
-			return [unit, pos, spell_mapping.find(move.spell)]
+			return [unit, pos, find_spell_idx(get_current_participant(), unit, move.spell)]
 		_:
 			assert(false, "Unknown move type '%s'" % [move.move_type])
 
 	return [unit, pos]
+
+
+func find_spell_idx(army_idx: int, unit_idx: int, spell: BattleSpell) -> int:
+	for i in spell_mapping.size():
+		if spell_mapping[i] == spell \
+				and spell_army_id_mapping[i] == army_idx \
+				and spell_unit_id_mapping[i] == unit_idx:
+			return i
+
+	push_warning("Spell %s not found for unit %s/%s")
+	return -1
 
 #endregion
 
@@ -162,16 +186,16 @@ func check_integrity_before_move(bgs: BattleGridState, move: MoveInfo):
 
 	set_debug_internals(true)
 
-	assert_integrity_check(compare_move_list(bgs), "Integrity check failed before move")
-	assert_integrity_check(compare_grid_state(bgs), "Integrity check failed before move")
+	assert_integrity_check(compare_move_list(bgs), "Integrity check failed BEFORE move (move list)")
+	assert_integrity_check(compare_grid_state(bgs), "Integrity check failed BEFORE move (grid state)")
 
-	if move.move_type == MoveInfo.TYPE_SUMMON: # Do not check summon after move
+	if move.move_type == MoveInfo.TYPE_DEPLOY: # Do not check summon after move
 		move = null
 		return
 
 	var unit = bgs.get_unit(move.move_source)
 	var unit_id = bgs.armies_in_battle_state[bgs.current_army_index].units.find(unit)
-	assert_integrity_check(unit_id != -1, "BMFast Integrity check failed before move - unit on coords %s not found in fast" % move.move_source)
+	assert_integrity_check(unit_id != -1, "BMFast Integrity check failed BEFORE move - unit on coords %s not found in fast" % move.move_source)
 
 	play_move(move_info_to_libspear_tuple(move))
 	_integrity_check_move = move
@@ -183,18 +207,32 @@ func check_integrity_after_move(bgs: BattleGridState):
 	#assert(compare_move_list(bgs), "BMFast Integrity check failed after move")
 
 	if _integrity_check_move: # Only check ongoing battle moves
-		assert_integrity_check(compare_grid_state(bgs), "Integrity check failed after move")
+		assert_integrity_check(compare_grid_state(bgs), "Integrity check failed AFTER move")
 
 
 func assert_integrity_check(condition: bool, message: String):
 	if not condition:
+		BM.fuzzing_is_iteration_failed = true
 		if CFG.debug_save_failed_bmfast_integrity:
 			BM._replay_data.save_as("BMFast Mismatch")
-		assert(false, "BMFast - %s  - check error log for details" % [message])
+
+		push_warning("---------- END %s ----------", message)
+		match CFG.player_options.bmfast_integrity_check_mode:
+			CFG.BMFastIntegrityCheckMode.ASSERT:
+				assert(false, "BMFast - %s - check error log for details" % [message])
+			CFG.BMFastIntegrityCheckMode.NOTIFY_ON_CHAT:
+				# TODO dedicated CHAT singleton?
+				NET.append_to_local_chat_log("%s - failed replay saved - you can report this by sending it to us on Discord" % [message])
+			CFG.BMFastIntegrityCheckMode.PUSH_ERROR_ONLY, CFG.BMFastIntegrityCheckMode.DISABLE:
+				pass
+			_:
+				assert(false, "Integrity check mode %s not implemented" % CFG.player_options.bmfast_integrity_check_mode)
 
 
 func compare_grid_state(bgs: BattleGridState) -> bool:
 	var is_ok = true
+
+	#region Global battle state
 
 	if bgs.current_army_index != get_current_participant():
 		push_error("BMFast mismatch - current army: slow ", bgs.current_army_index, ", fast ", get_current_participant())
@@ -204,11 +242,11 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 		push_error("BMFast mismatch - state mismatch - fast: sacrifice, slow: " + bgs.state)
 		is_ok = false
 
-	if is_in_summoning_phase() and bgs.state != bgs.STATE_SUMMONNING:
+	if is_in_deployment_phase() and bgs.state != bgs.STATE_DEPLOYMENT:
 		push_error("BMFast mismatch - state mismatch - fast: summoning, slow: " + bgs.state)
 		is_ok = false
 
-	if not is_in_sacrifice_phase() and not is_in_summoning_phase() and bgs.state != bgs.STATE_FIGHTING:
+	if not is_in_sacrifice_phase() and not is_in_deployment_phase() and bgs.state != bgs.STATE_FIGHTING:
 		push_error("BMFast mismatch - state mismatch - fast: fighting, slow: " + bgs.state)
 		is_ok = false
 
@@ -217,12 +255,15 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 		push_error("BMFast mismatch - cyclone target - fast: %s, slow: %s" % [get_cyclone_target(), slow_cyclone_target])
 		is_ok = false
 
+	#endregion Global battle state
+
 	for army_id in range(bgs.armies_in_battle_state.size()):
 		var units_nr = get_max_units_in_army()
 		var army = bgs.armies_in_battle_state[army_id]
 
+		#region Per-army state
 		assert(
-			army.units.size() + army.units_to_summon.size() <= get_max_units_in_army(),
+			army.units.size() + army.units_to_deploy.size() <= get_max_units_in_army(),
 			"No support for more than %s units in fast BM" % [get_max_units_in_army()]
 		)
 
@@ -241,6 +282,9 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 			])
 			is_ok = false
 
+		#endregion Per-army state
+
+		#region Units
 		for unit in army.units:
 			var uid = get_unit_id_on_position(unit.coord)
 			if uid[1] == -1:
@@ -268,10 +312,15 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 						   ",  ", " vs fast's rotation ", get_unit_rotation(army_id, unit_id))
 				is_ok = false
 
+			# Dictionary[String, int] - numbers of spells
+			var spell_dict := {}
+
 			for spell in unit.spells:
-				# TODO check when there are several instances of the same spell?
-				if count_spell(army_id, unit_id, spell.name) != 1:
-					push_error("BMFast mismatch - unit id ", unit_str, " fast does not have slow spell ", spell.name)
+				spell_dict[spell.name] = spell_dict.get(spell.name, 0) + 1
+
+			for spell : String in spell_dict:
+				if count_spell(army_id, unit_id, spell) != spell_dict.get(spell, 0):
+					push_error("BMFast mismatch - unit id ", unit_str, " fast does not have slow spell ", spell)
 					is_ok = false
 
 			if get_unit_spell_count(army_id, unit_id) != unit.spells.size():
@@ -295,19 +344,25 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 							push_error("BMFast mismatch - effect '%s' present in slow but not fast" % [eff.name])
 							is_ok = false
 				var duration_fast = get_unit_effect_duration_counter(army_id, unit_id, eff.name)
-				if eff.duration_counter != duration_fast:
+				if eff.passive_effect and duration_fast != -1:
+					push_error("BMFast mismatch - passive effect '%s' has duration %s in fast (should be -1 for indefinite effects)" % [eff.name, eff.duration_counter, duration_fast])
+					is_ok = false
+				elif not eff.passive_effect and eff.duration_counter != duration_fast:
 					push_error("BMFast mismatch - effect '%s' has duration %s in slow and %s in fast" % [eff.name, eff.duration_counter, duration_fast])
 					is_ok = false
 
-			if is_martyr != (get_unit_martyr_id(army_id, unit_id) != -1):
-				push_error("BMFast mismatch - martyr status for unit %s - slow %s vs fast %s"
-						   % [unit_str ,is_martyr, get_unit_martyr_id(army_id, unit_id) != -1])
-				is_ok = false
+			# TEMP awaits Maryr code rework
+			#if is_martyr != (get_unit_martyr_id(army_id, unit_id) != -1):
+				#push_error("BMFast mismatch - martyr status for unit %s - slow %s vs fast %s"
+						   #% [unit_str ,is_martyr, get_unit_martyr_id(army_id, unit_id) != -1])
+				#is_ok = false
 
 		var units_alive_in_army = army.units.filter(func(x): return not x.dead).size()
 		if units_nr != units_alive_in_army:
 			push_error("BMFast mismatch - number of units in army ", army_id, ": slow ", units_alive_in_army, ", fast ", units_nr)
 			is_ok = false
+
+		#endregion Units
 
 	return is_ok
 

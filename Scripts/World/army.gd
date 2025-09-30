@@ -1,10 +1,13 @@
 class_name Army
 extends RefCounted # RefCounted is default
 
-var units_data : Array[DataUnit]
+signal leader_unit_changed()
+
+var units_data : Array[DataUnit] = []
 
 var hero : Hero
 
+#TODO change either this or faction to a getter
 var controller_index : int
 
 ## after battle starts, control over this army is assigned to a player, [br]
@@ -21,6 +24,12 @@ var controller : Player:
 
 var coord : Vector2i
 
+var max_army_size : int :
+	get:
+		if hero:
+			return hero.max_army_size
+		else:
+			return CFG.CITY_MAX_ARMY_SIZE
 
 #TEMP
 var timer_reserve_sec : int
@@ -45,6 +54,8 @@ func apply_losses(losses : Array[DataUnit]):
 
 
 func heal_in_city():
+	if hero:
+		hero.is_in_city = true
 	if hero and hero.wounded:
 		hero.wounded = false
 		print("hero healed")

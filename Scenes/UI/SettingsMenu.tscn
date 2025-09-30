@@ -48,6 +48,10 @@ text = "Players start as AI"
 layout_mode = 2
 text = "Streamer mode"
 
+[node name="ToggleDiscordRPC" type="CheckBox" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Discord RPC"
+
 [node name="ToggleFullscreen" type="CheckBox" parent="Margin/Scroll/VBox"]
 layout_mode = 2
 text = "Fullscreen"
@@ -56,13 +60,39 @@ text = "Fullscreen"
 layout_mode = 2
 text = "Auto FullScreen - Main menu is windowed, but game is kept in fullscreen"
 
+[node name="LibSpearIntegrityChecks" type="HBoxContainer" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Margin/Scroll/VBox/LibSpearIntegrityChecks"]
+layout_mode = 2
+text = "LibSpear integrity checks:      "
+
+[node name="Option" type="OptionButton" parent="Margin/Scroll/VBox/LibSpearIntegrityChecks"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+text_overrun_behavior = 3
+fit_to_longest_item = false
+
+[node name="EnableFuzzingMode" type="CheckBox" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Enable fuzzing mode (auto-restart battle when it ends)"
+
 [node name="ToggleBackgroundColorFollowsPlayers" type="CheckBox" parent="Margin/Scroll/VBox"]
 layout_mode = 2
 text = "Background color changes with player's turns"
 
-[node name="ToggleBMFastIntegrityChecks" type="CheckBox" parent="Margin/Scroll/VBox"]
+[node name="ToggleAutoWin" type="CheckBox" parent="Margin/Scroll/VBox"]
 layout_mode = 2
-text = "Check LibSpear integrity"
+text = "Auto Win"
+
+[node name="ToggleAutoWinAgainstNeutrals" type="CheckBox" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Auto Win against Neutrals"
+
+[node name="ToggleWorldGodMode" type="CheckBox" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "World God Mode - Automatically calls cheats like: 
+FAST, MONEY, MAX_UPGRADE, LEVELUP, whenever city/hero is selected"
 
 [node name="OptionGuiAnimationMode" type="HBoxContainer" parent="Margin/Scroll/VBox"]
 layout_mode = 2
@@ -95,10 +125,10 @@ title = "Master"
 layout_mode = 2
 title = "Music"
 
-[node name="Game FX" parent="Margin/Scroll/VBox/VolumeContainer/Sliders" instance=ExtResource("2_brx2j")]
+[node name="Game" parent="Margin/Scroll/VBox/VolumeContainer/Sliders" instance=ExtResource("2_brx2j")]
 layout_mode = 2
 title = "Game FX"
 
-[node name="GUI" parent="Margin/Scroll/VBox/VolumeContainer/Sliders" instance=ExtResource("2_brx2j")]
+[node name="UI" parent="Margin/Scroll/VBox/VolumeContainer/Sliders" instance=ExtResource("2_brx2j")]
 layout_mode = 2
 title = "GUI"

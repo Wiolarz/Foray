@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://8sgv5vp7hj0p"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_ueljs"]
+[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_8g2gv"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_g8rsd"]
+[ext_resource type="Resource" uid="uid://bp747guikipcb" path="res://Resources/Battle/Symbols/spear.tres" id="4_s81pu"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="6_fb1sj"]
+
+[sub_resource type="Resource" id="Resource_8qfgt"]
+script = ExtResource("1_ueljs")
+wood = 4
+iron = 1
+ruby = 0
+
+[resource]
+script = ExtResource("3_g8rsd")
+unit_name = "Spearmen"
+texture_path = "res://Art/units/neutral/mermaid.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_s81pu"), ExtResource("4_s81pu"), ExtResource("6_fb1sj"), ExtResource("6_fb1sj"), ExtResource("6_fb1sj"), ExtResource("4_s81pu")])
+cost = SubResource("Resource_8qfgt")
+required_building = ExtResource("2_8g2gv")
+level = 1
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

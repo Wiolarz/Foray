@@ -124,7 +124,7 @@ func close():
 	server_username = ""
 	print("Server stopped")
 
-#endregion
+#endregion Connection
 
 
 #region Communication
@@ -270,7 +270,8 @@ func roll() -> void:
 					pass
 	if broken:
 		close()
-#endregion
+
+#endregion Communication
 
 ## info on an accepted network connection to the client
 class Session:

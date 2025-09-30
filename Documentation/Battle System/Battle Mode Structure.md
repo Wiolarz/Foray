@@ -1,4 +1,4 @@
-All of battles are managed by: `battle_manager.gd` -> main singleton  
+All of battles are managed by: `battle_manager.gd` -> main singleton
 To calculate gameplay logic it uses `battle_grid_state.gd`.
 
 # Battle Manager
@@ -6,10 +6,10 @@ To calculate gameplay logic it uses `battle_grid_state.gd`.
 ## Battle Setup
 Two main functions:
 
-`start_battle()` - main method which uses `_load_map()` and initiates its `_battle_grid_state`.  
+`start_battle()` - main method which uses `_load_map()` and initiates its `_battle_grid_state`.
 Function ends by calling `_on_turn_started()` for the first player.
 ## Battle End
-Only one public function: `close_when_quitting_game()` as it's safe to use, it gets called everywhere.  
+Only one public function: `close_when_quitting_game()` as it's safe to use, it gets called everywhere.
 Second way to end a battle is by having a `battle_grid_state` in a state == STATE_BATTLE_FINISHED during the `end_move()` function call. Which then calls `_on_battle_ended()`.
 ## Additional mechanics
 
@@ -32,10 +32,10 @@ For cheats which lead to the immediate end of the battle, wrapper concludes the 
 
 ### Chess clock
 
-Operates on milliseconds represented by integers.  
+Operates on milliseconds represented by integers.
 Chess clock is updated on `_process` and constantly accessed by a `_process` on `BattleUi`
 
-  
+
 
 # Battle Grid State
 Major file almost 1500 lines of code.
@@ -51,7 +51,7 @@ List of functions which execute given player move.
 `move_info_execute()` as all `move_info support` functions it starts out by performing records for Replay and Undo systems.
 Given overlap in different move types some actions are performed always like retrieving a unit from given starting coordinates. But later function splits through a match method
 
-`move_info_summon_unit() -> Unit` unique function as it additionally returns generated Unit object based on given unit data and placement position. Which then is used by Battle Manager to generate `UnitForm.gd` object.
+`move_info_deploy_unit() -> Unit` unique function as it additionally returns generated Unit object based on given unit data and deployment position. Which then is used by Battle Manager to generate `UnitForm.gd` object.
 
 # Units
 Are split into gameplay `Unit.gd` and visual `UnitForm.gd` only the visual side has a reference of the gameplay "entity" so to communicate gameplay changes affecting it like movement, rotation or death it uses signals.

@@ -8,7 +8,7 @@ extends AIInterface
 ## Probability of choosing a heuristically sensible move when choosing a random move
 @export_range(0.0, 1.0) var heuristic_probability := 0.85
 ## Prior reward to encourage taking heuristically sensible moves,
-## for example during the summoning phase
+## for example during the deployment phase
 @export_range(0.0, 0.25) var heuristic_prior_reward_per_iteration := 0.01
 ## Number of max concurrent playouts per node visit/mcts iteration. [br]
 ## Higher value yields better performance on multicore systems
@@ -38,22 +38,22 @@ func choose_move(state: BattleGridState) -> MoveInfo:
 	mcts.max_playouts_per_visit = max_playouts_per_visit
 	mcts.debug_bmfast_internals = CFG.debug_check_bmfast_internals
 	mcts.debug_max_saved_fail_replays = CFG.debug_mcts_max_saved_fail_replays
-	
+
 	# Roundabout way to ensure the signal is handled by the main thread
 	mcts.complete.connect(func():
-		iterate_complete_mutex.lock() 
+		iterate_complete_mutex.lock()
 		set_deferred("is_iterate_complete", true)
 		iterate_complete_mutex.unlock()
 	)
-	
+
 	thread = Thread.new()
-	
+
 	thread.start(
-		mcts.iterate.bind(iterations), 
+		mcts.iterate.bind(iterations),
 		Thread.PRIORITY_HIGH
 	)
 	await complete
-	
+
 	# Replaying failed playouts for debugging purposes
 	# To debug, set a breakpoint in GDB on BattleManagerFastCpp::play_moves
 	var i = 0
@@ -62,7 +62,7 @@ func choose_move(state: BattleGridState) -> MoveInfo:
 		var debugbm = BattleManagerFast.from(state)
 		debugbm.set_debug_internals(true)
 		debugbm.play_moves(moves)
-		
+
 		var replay: BattleReplay = BM._replay_data.duplicate()
 		var bm_replay_helper = BattleManagerFast.from(state)
 		for move in moves:
@@ -73,18 +73,18 @@ func choose_move(state: BattleGridState) -> MoveInfo:
 	mcts.debug_print_move_lists = true
 	var tuple = mcts.get_optimal_move(reward_per_visit_dither)
 	var move = bm.libspear_tuple_to_move_info(tuple)
-	
+
 	# Just in case of bugs
 	if move.target_tile_coord.x < 0 or move.target_tile_coord.y < 0:
 		push_warning("Moves: %s" % [mcts.get_move_scores()])
-		
+
 		if CFG.debug_check_bmfast_integrity:
 			assert(false, "MCTS AI tried to perform an invalid move")
 		else:
 			push_error("MCTS AI tried to perform an invalid move, falling back to random...")
-		
+
 		return AiBotStateRandom.choose_move_static(state)
-	
+
 	mcts.queue_free()
 	return move
 
@@ -102,7 +102,7 @@ func _process(_delta):
 	iterate_complete_mutex.unlock()
 
 func _exit_tree():
-	# Force graceful exit, good enough for now, but 
+	# Force graceful exit, good enough for now, but
 	# TODO consider making it not hang the game for the duration of AI finishing its thinking
 	if thread:
 		thread.wait_to_finish()

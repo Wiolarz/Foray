@@ -16,6 +16,10 @@ var client_side_map_label : Label
 @onready var presets_list : OptionButton = \
 	preset_select.get_node("ColorRect/PresetList")
 
+@onready var hero_level_up_container : VBoxContainer = $VBoxLevelUp
+@onready var hero_level_up : Control = $VBoxLevelUp/LevelUpLobbyScreen
+@onready var main_container : VBoxContainer = $VBox
+
 var uninitialized : bool = true
 var settings_are_being_refreshed : bool = false
 
@@ -24,6 +28,7 @@ var settings_are_being_refreshed : bool = false
 func _ready():
 	fill_maps_list()
 	fill_presets_list()
+	UI.resources_list_changed.connect(refresh_after_resource_list_changed)
 
 
 ## It is used to know if changes in gui are made by user and should be passed to
@@ -31,6 +36,13 @@ func _ready():
 ## gui to state in backend
 func should_react_to_changes() -> bool:
 	return not settings_are_being_refreshed and not uninitialized
+
+
+func refresh_after_resource_list_changed() -> void:
+	fill_maps_list()
+	for slot : BattlePlayerSlotPanel in player_list.get_children():
+		slot.load_unit_buttons()
+	apply_preset_by_name(CFG.LAST_USED_BATTLE_PRESET_NAME)
 
 
 func fill_maps_list() -> void:
@@ -78,6 +90,7 @@ func make_client_side() -> void:
 	map_select.get_node("Label").text = "Selected map"
 	maps_list.queue_free()
 	maps_list = null
+	UI.resources_list_changed.disconnect(refresh_after_resource_list_changed)  #TODO look into compatibility with multiplayer of resource list changes
 	client_side_map_label = Label.new()
 	client_side_map_label.text = "some map"
 	map_select.get_node("ColorRect").add_child(client_side_map_label)
@@ -128,6 +141,10 @@ func _refresh_slot(index : int) -> void:
 	var team : int = 0
 	if logic_slot:
 		ui_slot.set_army(logic_slot.units_list)
+		if logic_slot.slot_hero:
+			ui_slot.set_hero_option_button(logic_slot.slot_hero.template)
+		else:
+			ui_slot.set_hero_option_button(null)
 		if logic_slot.occupier is String:
 			if logic_slot.occupier == "":
 				username = NET.get_current_login()
@@ -193,7 +210,7 @@ func apply_preset_by_name(preset_name : String) -> bool:
 
 	if NET.server:
 		NET.server.broadcast_full_game_setup(IM.game_setup_info)
-
+	refresh() # TODO look into those refreshes
 	return true
 
 
@@ -238,7 +255,7 @@ func prepare_player_slots() -> void:
 			player_list.remove_child(ui_slot)
 			ui_slot.queue_free()
 		else:
-			ui_slot.fill_team_list(logic_slots_count)
+			ui_slot.init_team_list(logic_slots_count)
 
 
 func try_to_take_slot(slot) -> bool: # true means something changed
@@ -279,5 +296,23 @@ func cycle_race_slot(slot : BattlePlayerSlotPanel, backwards : bool) -> bool:
 	if changed:
 		_refresh_slot(index)
 	return changed
+
+
+func show_hero_level_up(slot_index : int) -> void:
+	var slot : Slot = IM.game_setup_info.slots[slot_index]
+	hero_level_up.load_lobby_level_up_screen(slot.slot_hero)
+	hero_level_up_container.show()
+	main_container.hide()
+
+
+func hide_hero_level_up() -> void:
+	hero_level_up_container.hide()
+	main_container.show()
+
+
+func _on_level_up_confirm_button_pressed():
+	hero_level_up.selected_hero.passive_effects.clear()
+	hero_level_up.apply_talents_and_abilities()
+	hide_hero_level_up()
 
 #endregion

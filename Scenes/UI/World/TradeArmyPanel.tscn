@@ -1,0 +1,63 @@
+[gd_scene load_steps=6 format=3 uid="uid://cyu8o32kcgtcv"]
+
+[ext_resource type="Script" path="res://Scripts/UI/World/trade_army_panel.gd" id="1_2sslo"]
+[ext_resource type="Texture2D" uid="uid://cyl65pr2i8wia" path="res://Art/elf_hero_druid.png" id="2_s4aeh"]
+[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/elf_spearmen.png" id="3_wvjos"]
+[ext_resource type="Texture2D" uid="uid://d0l8icvbxebbs" path="res://Art/elf_archer.png" id="4_in78f"]
+[ext_resource type="Texture2D" uid="uid://by6lxadhw2amf" path="res://Art/items/hex_border_light.png" id="5_anv2s"]
+
+[node name="VBoxTradeArmy" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2sslo")
+
+[node name="ArmyLabel" type="Label" parent="."]
+layout_mode = 2
+text = "Hero Name"
+horizontal_alignment = 1
+
+[node name="HeroButton" type="TextureButton" parent="."]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("2_s4aeh")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Unit Roster"
+horizontal_alignment = 1
+
+[node name="Units" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="FirstColumn" type="VBoxContainer" parent="Units"]
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="Units/FirstColumn"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("3_wvjos")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="TextureButton2" type="TextureButton" parent="Units/FirstColumn"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("4_in78f")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="SecondColumn" type="VBoxContainer" parent="Units"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Units/SecondColumn"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture = ExtResource("5_anv2s")
+expand_mode = 1
+stretch_mode = 5

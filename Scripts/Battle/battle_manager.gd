@@ -21,12 +21,19 @@ var _selected_unit : Unit
 
 var _replay_data : BattleReplay
 var _replay_is_playing : bool = false
+var _replay_battle_id : int = 0 # differentiates consecutive replays so that perform_replay shuts down correctly
 var _replay_move_counter : int = 0
 var _replay_number_of_moves : int = 0
 
 var _batch_mode : bool = false # flagged true when recreating game state
 var _ai_move_preview : AIMovePreview = null
 var _painter_node : BattlePainter
+
+var _scripted_battle : ScriptedBattle
+
+var _fuzzing_iterations := 0
+var _fuzzing_failed_iterations := 0
+var fuzzing_is_iteration_failed := false
 
 signal move_animation_done()
 
@@ -42,7 +49,7 @@ func _ready():
 	_unit_forms_node = Node2D.new()
 	_unit_forms_node.name = "UNITS"
 	add_child(_unit_forms_node)
-	
+
 	_painter_node = load("res://Scenes/UI/Battle/BattlePlanPainter.tscn").instantiate()
 	add_child(_painter_node)
 
@@ -62,8 +69,9 @@ func _process(_delta):
 ## x_offset is used to place battle to the right of world map
 ## replay_template - used in replays to avoid juggling player data
 func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
-		x_offset : float, battle_state : SerializableBattleState = null, 
-		replay_template : BattleReplay = null) -> void:
+		x_offset : float, battle_state : SerializableBattleState = null,
+		replay_template : BattleReplay = null,
+		scripted_battle : ScriptedBattle = null) -> void:
 
 	assert(_is_clear(), "cannot start battle map, map already loaded")
 
@@ -71,9 +79,12 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 		_replay_data = BattleReplay.from_template(replay_template)
 	else:
 		_replay_data = BattleReplay.create(new_armies, battle_map)
-	
+
+	_scripted_battle = scripted_battle
+
 	_replay_move_counter = 0
-	
+	_replay_battle_id += 1
+
 	if not _replay_is_playing and not replay_template:
 		_replay_data.save()
 
@@ -88,10 +99,17 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 	# CORE GAMEPLAY logic initialization
 	_battle_grid_state = BattleGridState.create(battle_map, new_armies)
 
+	# DRUT - Assign battle IDs to bots so that they don't try to perform moves in battles they don't belong to
+	for army in _battle_grid_state.armies_in_battle_state:
+		var player := IM.get_player_by_index(army.army_reference.controller_index)
+		if player.bot_engine != null:
+			player.bot_engine.battle_id = _replay_battle_id
+
 	# GRAPHICS GRID:
+	_battle_grid_state.tile_changed.connect(change_tile_sprite)
 	_load_map(battle_map)
 	_grid_tiles_node.position.x = x_offset
-
+	horizontal_offset = x_offset
 	_battle_ui.load_armies(_battle_grid_state.armies_in_battle_state)
 
 	if battle_state: # recreate state if present
@@ -104,15 +122,18 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 	for player in IM.players:
 		if player.is_local():
 			is_spectator = false
-	
+
 	if is_spectator and CFG.ENABLE_AUTO_BRAIN:
 		_enable_ai_preview()
-	
+
 	# Set first player's color
 	BG.set_player_colors(get_current_slot_color())
-	
+
 	# first turn does not get a signal emit
 	_on_turn_started(_battle_grid_state.get_current_player())
+
+	# Play battle music
+	AUDIO.play_music("battle")
 
 
 func _load_map(map : DataBattleMap) -> void:
@@ -144,7 +165,7 @@ func get_bounds_global_position() -> Rect2:
 	var size : Vector2 = bottom_right_tile_position - top_left_tile_position
 	return Rect2(top_left_tile_position, size)
 
-#endregion
+#endregion Battle Setup
 
 
 #region helpers
@@ -219,6 +240,10 @@ func _on_turn_started(player : Player) -> void:
 	if not _battle_is_ongoing:
 		return
 
+	if _scripted_battle:
+		var current_event := BattleEventDescription.generate_current_battle_event(_battle_grid_state)
+		_scripted_battle.show_text_bubbles(current_event)
+
 	_battle_ui.start_player_turn(_battle_grid_state.current_army_index)
 	if _replay_is_playing:
 		_battle_ui.update_replay_controls(_replay_move_counter, _replay_number_of_moves)
@@ -232,21 +257,27 @@ func _on_turn_started(player : Player) -> void:
 
 	if player.bot_engine and not NET.client: # AI is simulated on server only
 		print("AI starts thinking")
-		
+
 		var my_cancel_token = CancellationToken.new()
 		#assert(latest_ai_cancel_token == null)
 		latest_ai_cancel_token = my_cancel_token
-		
+
 		var bot = player.bot_engine
-		
+		var battle_id = bot.battle_id
+
 		var thinking_begin_s = Time.get_ticks_msec() / 1000.0
 		var move = await bot.choose_move(_battle_grid_state)
 		await _ai_thinking_delay(thinking_begin_s) # moving too fast feels weird
-		
-		bot.cleanup_after_move()
+
+		if is_instance_valid(bot): # it may have been destroyed after thinking delay
+			bot.cleanup_after_move()
+
 		if _battle_grid_state == null: # Player quit to main menu before finishing
 			return
-		
+
+		if battle_id != _replay_battle_id: # DRUT/Bugfix - bot outlived its own battle
+			return
+
 		if not my_cancel_token.is_canceled():
 			assert(_battle_grid_state.is_move_possible(move), "AI tried to perform an invalid move")
 			_perform_move_info(move)
@@ -275,9 +306,10 @@ func undo() -> void:
 
 	# VISUALS
 	for unit in revived_units:
-		_on_unit_summoned(unit)  # revive
-	_battle_ui.refresh_after_undo(_battle_grid_state.is_during_summoning_phase())
+		_on_unit_deployment(unit)  # revive
+	_battle_ui.refresh_after_undo(_battle_grid_state.is_during_deployment_phase())
 	_end_move()
+	ANIM.fast_forward()
 
 
 ## STUB
@@ -312,8 +344,8 @@ func grid_input(coord : Vector2i) -> void:
 	var move_info : MoveInfo
 
 	match _battle_grid_state.state:
-		BattleGridState.STATE_SUMMONNING:
-			move_info = _grid_input_summon(coord)
+		BattleGridState.STATE_DEPLOYMENT:
+			move_info = _grid_input_deployment(coord)
 		BattleGridState.STATE_FIGHTING:
 			if _battle_ui.selected_spell == null:
 				move_info = _grid_input_fighting(coord)
@@ -365,7 +397,7 @@ func _end_move() -> void:
 	if _battle_grid_state.battle_is_ongoing():
 		if _ai_move_preview:
 			_ai_move_preview.update(_battle_grid_state)
-		
+
 		_battle_ui.update_mana() # TEMP placement here
 		_on_turn_started(_battle_grid_state.get_current_player())
 	else:
@@ -394,40 +426,46 @@ func ai_move() -> void:
 	if latest_ai_cancel_token:
 		push_warning("ai is already moving, dont stack two simultaneous ai moves race")
 		return
-	
+
 	if _replay_is_playing:
 		return
-	
+
+	if _battle_grid_state.state == BattleGridState.STATE_BATTLE_FINISHED:
+		return
+
 	var move := AiBotStateRandom.choose_move_static(_battle_grid_state)
 	_perform_move_info(move)
 
 #endregion AI Support
 
 
-#region Summon Phase
+#region Deployment Phase
 
 ## handles spawning unit form when unit is spawned on a gameplay map
 ## also connects animation related signals
-func _on_unit_summoned(unit : Unit) -> void:
+func _on_unit_deployment(unit : Unit) -> void:
 	var form := UnitForm.create(unit)
 	_unit_forms_node.add_child(form)
 	_unit_to_unit_form[unit] = form
+	form.set_effects()  # VISUAL makes hero passives visible on the unit
 
 	# apply correct BM position offset in world battles
 	form.global_position = get_tile_global_position(unit.coord)
 
-	var is_placement_phase_over : bool = not _battle_grid_state.is_during_summoning_phase()
-	_battle_ui.unit_summoned(is_placement_phase_over)
-	if is_placement_phase_over:
+	var is_deployment_phase_over : bool = not _battle_grid_state.is_during_deployment_phase()
+	_battle_ui.unit_deployed(is_deployment_phase_over)
+	if is_deployment_phase_over:
 		for row : Array in _tile_grid.hexes:
 			for tile : TileForm in row:
 				# TODO replace it with better map editor features
 				if tile.type in ["1_player_spawn", "2_player_spawn", "3_player_spawn", "4_player_spawn"]:
 					tile.get_node("Sprite2D").texture = load("res://Art/battle_map/grass_tile.png")
 
-	unit.unit_magic_effect.connect(_on_unit_magic_effect.bind(unit))  # spell icons UI
+	# TODO imo should be refactored
+	unit.unit_magic_effect.connect(func(_effect: BattleMagicEffect): _on_unit_magic_effect(unit))  # spell icons UI
 
 	unit.unit_died.connect(form.anim_die)
+	unit.unit_died.connect(_on_unit_death)  # TEXT BUBBLES
 	unit.unit_turned.connect(form.anim_turn)
 	unit.unit_moved.connect(form.anim_move)
 	unit.unit_magic_effect.connect(form.anim_magic)  # STUB
@@ -448,22 +486,22 @@ func _on_unit_summoned(unit : Unit) -> void:
 	)
 
 
-## handles player input while during the summoning phase
-func _grid_input_summon(coord : Vector2i) -> MoveInfo:
-	assert(_battle_grid_state.state == _battle_grid_state.STATE_SUMMONNING, \
-			"_grid_input_summon called in an incorrect state")
+## handles player input while during the deployment phase
+func _grid_input_deployment(coord : Vector2i) -> MoveInfo:
+	assert(_battle_grid_state.state == _battle_grid_state.STATE_DEPLOYMENT, \
+			"_grid_input_deployment called in an incorrect state")
 
 	if _battle_ui._selected_unit_pointer == null:
-		return null # no unit selected to summon on ui
+		return null # no unit selected to deploy on ui
 
-	if not _battle_grid_state.current_player_can_summon_on(coord):
+	if not _battle_grid_state.current_player_can_deploy_on(coord):
 		return null
 
-	print(NET.get_role_name(), " input - summoning unit")
-	return MoveInfo.make_summon(_battle_ui._selected_unit_pointer, coord)
+	print(NET.get_role_name(), " input - deploying unit")
+	return MoveInfo.make_deploy(_battle_ui._selected_unit_pointer, coord)
 
 
-#endregion Summon Phase
+#endregion Deployment Phase
 
 
 #region Mana Cyclone Timer
@@ -484,7 +522,7 @@ func get_player_mana(player : Player) -> int:
 ## visually captures the well
 ## unit get's their coord updated during animation
 func capture_mana_well(coord : Vector2i, unit : Unit) -> void:
-	
+
 	var controller_sprite = _tile_grid.get_hex(coord).get_node("ControlerSprite")
 	controller_sprite.visible = true
 	var data_color : DataPlayerColor = unit.controller.get_player_color()
@@ -560,7 +598,6 @@ func _grid_input_fighting(coord : Vector2i) -> MoveInfo:
 	return move_info
 
 
-
 ## Select friendly Unit on a given coord [br]
 ## returns true if unit was selected
 func _try_select_unit(coord : Vector2i) -> bool:
@@ -580,7 +617,11 @@ func _try_select_unit(coord : Vector2i) -> bool:
 
 	_selected_unit = new_unit
 	_unit_to_unit_form[_selected_unit].set_selected(true)
-	_update_move_highlights(_selected_unit)
+	update_move_highlights()
+
+	if _scripted_battle:
+		var current_event := BattleEventDescription.generate_current_battle_event(_battle_grid_state)
+		_scripted_battle.show_text_bubbles(current_event)
 
 	# attempt to display spells available to selected unit
 	_show_spells(_selected_unit)
@@ -595,17 +636,33 @@ func deselect_unit() -> void:
 	_selected_unit = null
 	_battle_ui.selected_spell = null
 	_battle_ui.reset_spells()
-	_update_move_highlights(null)
+	update_move_highlights()
 
 
-func _update_move_highlights(selected_unit: Unit):
+func update_move_highlights():
 	Helpers.remove_all_children(_move_highlights_node)
-	if not selected_unit:
+	if not _selected_unit:
+		return
+
+	# Process spell moves if spell selected, TODO magic consequences, check if BGS cloning is viable
+	if _battle_ui and _battle_ui.selected_spell != null:
+
+		var magic_moves = _battle_grid_state._get_magic_moves(
+			_selected_unit,
+			_battle_ui.selected_spell
+		)
+
+		for move in magic_moves:
+			var highlight = CFG.PLAN_POINTER_SCENE.instantiate() # TODO maybe dedicated highlight gfx
+			highlight.position = BM.to_position(move.target_tile_coord)
+			highlight.z_index = 2 # Render on top of the selected unit too
+			_move_highlights_node.add_child(highlight)
 		return
 
 	for move in _battle_grid_state.get_possible_moves():
-		if move.move_source != selected_unit.coord:
+		if move.move_source != _selected_unit.coord:
 			continue
+
 		if move.move_type != MoveInfo.TYPE_MOVE: # TODO highlighting other move types
 			continue
 
@@ -645,19 +702,19 @@ func _perform_move_info(move_info : MoveInfo) -> void:
 	if not _battle_is_ongoing:
 		return
 	print(NET.get_role_name(), " performing move ", move_info)
-	
+
 	ANIM.fast_forward()
 	var bg_transition_tween = ANIM.subtween(
-		ANIM.main_tween(), 
+		ANIM.main_tween(),
 		ANIM.TweenPlaybackSettings.always_smooth()
 	)
-	
+
 	_replay_move_counter += 1
 
 	if not _replay_is_playing:
 		_replay_data.record_move(move_info, get_current_time_left_ms())
 		_replay_data.save()
-	
+
 	if NET.server:
 		NET.server.broadcast_move(move_info)
 
@@ -665,13 +722,19 @@ func _perform_move_info(move_info : MoveInfo) -> void:
 		MoveInfo.TYPE_MOVE, MoveInfo.TYPE_SACRIFICE, MoveInfo.TYPE_MAGIC:
 			_battle_grid_state.move_info_execute(move_info)
 
-		MoveInfo.TYPE_SUMMON:
-			var unit : Unit = _battle_grid_state.move_info_summon_unit(move_info)
-			_on_unit_summoned(unit)
+			# TODO verify if it's a good enough solution for summoning units
+			# as it's hard to create new visible units within battle grid state
+			if move_info.move_type == MoveInfo.TYPE_MAGIC and move_info.spell.name in ["Summon Dryad"]:
+				_on_unit_deployment(_battle_grid_state.get_unit(move_info.target_tile_coord))
+
+
+		MoveInfo.TYPE_DEPLOY:
+			var unit : Unit = _battle_grid_state.move_info_deploy_unit(move_info)
+			_on_unit_deployment(unit)
 
 		_ :
 			assert(false, "Move move_type not supported in perform, " + str(move_info.move_type))
-	
+
 	# Make sure there's anything to tween to avoid errors
 	ANIM.main_tween().parallel().tween_interval(0.01)
 	# When the animation's done, emit a signal
@@ -680,9 +743,20 @@ func _perform_move_info(move_info : MoveInfo) -> void:
 	ANIM.main_tween().play()
 
 	BG.set_player_colors(get_current_slot_color(), bg_transition_tween)
-	
 
 	_end_move()
+
+
+func change_tile_sprite(coord : Vector2i) -> void:
+	var hex : BattleGridState.BattleHex = _battle_grid_state.get_hex(coord)
+
+	var sprite : Sprite2D = _tile_grid.get_hex(coord).get_node("Sprite2D")
+
+	if hex.fire:
+		#TODO move to CFG
+		sprite.texture = load("res://Art/battle_map/fire_tile.png")
+	if hex.is_basic_grass:
+		sprite.texture = load("res://Art/battle_map/burned_grass.png")
 
 #endregion Fighting Phase
 
@@ -695,7 +769,7 @@ func close_when_quitting_game() -> void:
 	_turn_off_battle_ui()
 	_reset_grid_and_unit_forms()
 	_disable_ai_preview()
-	
+
 	_replay_is_playing = false # revert to default value for the next battle
 
 
@@ -712,23 +786,41 @@ func _on_battle_ended() -> void:
 	_disable_ai_preview()
 	_battle_ui.update_mana()
 
+	if CFG.player_options.enable_fuzzing_mode:
+		_fuzzing_iterations += 1
+		if fuzzing_is_iteration_failed:
+			_fuzzing_failed_iterations += 1
+		fuzzing_is_iteration_failed = false
+
+		NET.append_to_local_chat_log("Next fuzzing iteration: %s/%s failed" \
+			% [_fuzzing_failed_iterations, _fuzzing_iterations]
+		)
+		# Do not wait 2 seconds and immediately start new game
+		IM.start_game()
+		return
+
 	await get_tree().create_timer(2).timeout # TEMP, don't exit immediately # TODO get signal from last animation ending
 
 	_current_summary = _create_summary()
 	if not _replay_is_playing:
 		_replay_data.summary = _current_summary
 		_replay_data.save()
-	
+
 	if WM.world_game_is_active():
-		_close_battle_and_return()  # it may change the state if the world is still active
+		# as battle may lead to the world victory condition
+		# it would deactivate the world,
+		# in that case world summary will be generated by the WM victory check
+		_close_battle_and_return()
+
 		# show battle summary over world map
 		UI.ui_overlay.show_battle_summary(_current_summary, null)
-
+	elif IM.is_city_defense_active:
+		_end_city_battle()
 	elif _replay_is_playing:
 		_battle_ui.update_replay_controls(_replay_number_of_moves, _replay_number_of_moves, _current_summary)
 		# do not exit immediately
 	else:
-		UI.ui_overlay.show_summary(_current_summary, _close_battle_and_return)
+		AUDIO.play_music("victory")
 		UI.ui_overlay.show_battle_summary(_current_summary, _close_custom_battle)
 
 
@@ -740,6 +832,13 @@ func _close_battle_and_return() -> void:
 
 	close_when_quitting_game()
 	WM.end_of_battle(state_for_world)
+
+
+func _end_city_battle() -> void:
+	var armies : Array[BattleGridState.ArmyInBattleState] = _battle_grid_state.armies_in_battle_state
+	close_when_quitting_game()
+	IM.end_city_defense_battle(armies)
+	IM.go_to_main_menu()
 
 
 func _close_custom_battle() -> void:
@@ -834,12 +933,13 @@ func _create_summary() -> DataBattleSummary:
 ## Plays a replay and returns to the normal state afterwards
 func perform_replay(replay : BattleReplay) -> void:
 	_replay_is_playing = true # _replay_is_playing is reset in close_when_quitting_game
+	var current_replay_battle_id := _replay_battle_id
 	_battle_ui.show_replay_controls()
 	_battle_grid_state.set_clock_enabled(false)
 	_replay_number_of_moves = replay.moves.size()
 
 	for m in replay.moves:
-		if not _battle_is_ongoing:
+		if not _battle_is_ongoing or _replay_battle_id != current_replay_battle_id:
 			return # terminating battle while watching
 		_perform_replay_move(m)
 		await _replay_move_delay()
@@ -848,13 +948,13 @@ func perform_replay(replay : BattleReplay) -> void:
 func _replay_move_delay() -> void:
 	var begin = Time.get_ticks_msec()
 	await move_animation_done
-	
+
 	var elapsed_ms = Time.get_ticks_msec() - begin
 	# Minimal allowed animation duration - 1 second in normal speed
 	var min_duration = CFG.bot_speed_frames / CFG.BotSpeed.NORMAL
 	var delay = max(min_duration - elapsed_ms/1000.0, min_duration/10.0)
 	await get_tree().create_timer(delay).timeout
-	
+
 	while IM.is_game_paused() or CFG.bot_speed_frames == CFG.BotSpeed.FREEZE:
 		await get_tree().create_timer(0.1).timeout
 		if not _battle_is_ongoing:
@@ -887,10 +987,10 @@ func _enable_ai_preview():
 	if not _battle_grid_state:
 		push_error("Failed to enahle AI preview - _battle_grid_state == null")
 		return
-	
+
 	if _ai_move_preview:
 		return
-	
+
 	_ai_move_preview = AIMovePreview.new()
 	add_child(_ai_move_preview)
 	_ai_move_preview.name = "AIMovePreview"
@@ -960,5 +1060,22 @@ func planning_input(tile_coord : Vector2i, is_it_pressed : bool) -> void:
 
 #endregion Painting
 
+
+#region UI
+
 func _on_unit_magic_effect(unit : Unit) -> void:
 	_unit_to_unit_form[unit].set_effects()
+
+#endregion UI
+
+
+#region Scripted Battles
+
+func _on_unit_death() -> void:
+	if not _scripted_battle:
+		return
+
+	var current_event := BattleEventDescription.generate_current_battle_event(_battle_grid_state)
+	_scripted_battle.show_text_bubbles(current_event)
+
+#endregion Scripted Battles

@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="ScriptedBattle" load_steps=8 format=3 uid="uid://df8h3kvp2gu4j"]
+
+[ext_resource type="Script" path="res://Resources/Campaign/scripted_battle.gd" id="1_luqo0"]
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_nx2o0"]
+[ext_resource type="Resource" uid="uid://bxb7842q7rrib" path="res://Resources/Battle/Units/Classic/orc3.tres" id="2_qk7h4"]
+[ext_resource type="Resource" uid="uid://bwyu6qg7dsisg" path="res://Resources/Battle/Units/Classic/orc1.tres" id="3_o8a1k"]
+[ext_resource type="Resource" uid="uid://bkla74bu46in0" path="res://Resources/Battle/Battle_Maps/8x7duel_10maxUnits.tres" id="4_ks26a"]
+
+[sub_resource type="Resource" id="Resource_exq3w"]
+resource_name = "Halbards"
+script = ExtResource("1_nx2o0")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_qk7h4"), ExtResource("2_qk7h4"), ExtResource("2_qk7h4")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_t4t1b"]
+resource_name = "Horde"
+script = ExtResource("1_nx2o0")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k")])
+team = 0
+
+[resource]
+script = ExtResource("1_luqo0")
+scenario_name = "Horde vs Halbard"
+description = "Try to kill as many enemy units using your weak forces.
+----
+Try to kill all enemy units while minimazing your losses."
+player_side = 0
+armies = Array[ExtResource("1_nx2o0")]([SubResource("Resource_exq3w"), SubResource("Resource_t4t1b")])
+battle_map = ExtResource("4_ks26a")
+text_bubbles = Array[Resource("res://Resources/Campaign/text_bubble.gd")]([])

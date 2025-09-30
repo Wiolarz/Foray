@@ -1,6 +1,12 @@
 class_name BattleGridState
 extends GenericHexGrid
 
+## gameplay logic state managed by Battle Manager (BM) singleton
+
+
+## emitted when tile transforms into new one.
+signal tile_changed(coord : Vector2i)
+
 enum MoveConsequences {
 	NONE,
 	KILL,
@@ -8,7 +14,7 @@ enum MoveConsequences {
 	KAMIKAZE # Both kills and dies
 }
 
-const STATE_SUMMONNING = "summonning"
+const STATE_DEPLOYMENT = "deployment"
 const STATE_FIGHTING = "fighting"
 const STATE_SACRIFICE = "sacrifice"
 const STATE_BATTLE_FINISHED = "battle_finished"
@@ -18,7 +24,10 @@ const MOVE_IS_INVALID = -1
 ## BM._check_for_stalemate() doesn't yet handle bigger number of allowed repeats than 2
 const STALEMATE_TURN_REPEATS = 2  # number of repeated moves that fast forward Mana Cyclon Timer
 
-var state : String = STATE_SUMMONNING
+var state : String = STATE_DEPLOYMENT
+
+## Visible to players counter which works alongside Mana Cyclone system [br]
+## Is incremented after units move/cast_a_spell -> Doesn't after unit placement/sacrifice
 var turn_counter : int = 0
 var current_army_index : int = 0
 var armies_in_battle_state : Array[ArmyInBattleState] = []
@@ -28,7 +37,7 @@ var currently_active_unit : Unit = null
 
 var number_of_mana_wells : int = 0
 var cyclone_target : ArmyInBattleState
-const MANA_WELL_POWER : int = 100
+const MANA_WELL_POWER : int = 5
 
 #TEMP HACK for proper awarding of exp in spear kills
 var spear_holding_killer_teams : Array[int] = []
@@ -75,14 +84,14 @@ static func create(map : DataBattleMap, new_armies : Array[Army]) -> BattleGridS
 
 ## Unpacker of MoveInfo class [br]
 ## returns Unit (RefCounted) to the BM for there to be created Node2D object
-func move_info_summon_unit(move_info : MoveInfo) -> Unit:
-	assert(move_info.move_type == MoveInfo.TYPE_SUMMON)
+func move_info_deploy_unit(move_info : MoveInfo) -> Unit:
+	assert(move_info.move_type == MoveInfo.TYPE_DEPLOY)
 	currently_processed_move_info = move_info
-	var unit_data := move_info.summon_unit
+	var unit_data := move_info.deployed_unit
 	var coord := move_info.target_tile_coord
-	var initial_rotation := _get_spawn_rotation(coord)
+	var initial_rotation := _get_deploy_rotation(coord)
 	var army_state := armies_in_battle_state[current_army_index]
-	var unit := army_state.summon_unit(unit_data, coord, initial_rotation)
+	var unit := army_state.deploy_unit(unit_data, coord, initial_rotation)
 	move_info.army_idx = current_army_index
 	move_info.original_rotation = initial_rotation
 
@@ -162,10 +171,10 @@ func move_info_execute(move_info : MoveInfo) -> void:
 ## returns array of revived units
 func undo(move_info : MoveInfo) -> Array[Unit]:
 	var killed_units : Array[Unit] = []
-	if move_info.move_type == MoveInfo.TYPE_SUMMON:
+	if move_info.move_type == MoveInfo.TYPE_DEPLOY:
 		current_army_index = move_info.army_idx
-		armies_in_battle_state[current_army_index].unsummon(move_info.target_tile_coord)
-		state = STATE_SUMMONNING
+		armies_in_battle_state[current_army_index].undeploy(move_info.target_tile_coord)
+		state = STATE_DEPLOYMENT
 
 	if move_info.move_type == MoveInfo.TYPE_MOVE:
 		# revert turn change
@@ -220,13 +229,15 @@ func _undo_push(_move : MoveInfo , pushed : MoveInfo.PushedUnit) -> void:
 ## returns true when unit should stop processing further steps
 ## it died or battle ended
 func _process_symbols(unit : Unit, move_type : E.MoveType) -> bool:
+	_process_offensive_symbols(unit, move_type, true)
 	if _should_die_to_counter_attack(unit):
 		_kill_unit(unit)
 		return true
-	_process_offensive_symbols(unit, move_type)
+	_process_offensive_symbols(unit, move_type, false)
 	if not battle_is_ongoing():
 		return true
 	return false
+
 
 ## Returns true if Enemy counter_attack can kill the target [br]
 ## Starts animation for stabbing in case
@@ -266,9 +277,12 @@ func _should_die_to_counter_attack(unit : Unit) -> bool:
 	return false
 
 
-func _process_offensive_symbols(unit : Unit, move_type : E.MoveType) -> void:
+func _process_offensive_symbols(unit : Unit, move_type : E.MoveType, swift : bool = false) -> void:
 	for side in range(6):
 		var unit_weapon = unit.get_symbol(side)
+		## during swift attack phase normal weapons don't attack, it works the same way in reverse
+		if unit_weapon.swift_attack != swift:
+			continue
 		if not unit_weapon.is_offensive(move_type):
 			continue  # We don't have any weapon
 		if unit_weapon.does_it_shoot():
@@ -330,6 +344,7 @@ func _process_passive_symbols(unit : Unit) -> void:
 		var opposite_side := GenericHexGrid.opposite_direction(side)
 		var enemy_weapon = enemy.get_symbol(opposite_side)
 		if enemy_weapon.does_parry(unit_symbol):
+			enemy.unit_is_blocking.emit(opposite_side, unit.coord)
 			continue  # parry disables all melee symbols
 
 		# we check if attacking symbol power is able to kill
@@ -436,8 +451,8 @@ func is_move_valid(unit : Unit, coord : Vector2i) -> bool:
 	return _get_move_direction_if_valid(unit, coord) != MOVE_IS_INVALID
 
 
-func is_during_summoning_phase() -> bool:
-	return state == STATE_SUMMONNING
+func is_during_deployment_phase() -> bool:
+	return state == STATE_DEPLOYMENT
 
 #endregion public helpers
 
@@ -471,6 +486,7 @@ func _get_shot_target(coord : Vector2i, direction : int, reach : int = -1) -> Un
 	assert(reach != 0, "attempt to shoot with non ranged weapon")
 	var target_coord := GenericHexGrid.adjacent_coord(coord, direction)
 	var hex := _get_battle_hex(target_coord)
+	reach -= 1
 	while not hex.unit and not hex.blocks_shots():
 		if reach == 0:
 			break
@@ -490,20 +506,7 @@ func is_move_possible(move: MoveInfo) -> bool:
 	return false
 
 
-## Checks if given tile relative to start tile is in specific direction within specific range [br]
-## start_tile, end_tile | direction = -1 search in all directions| reach = -1 with that value searh till the end of board
-func _is_faced_tile_in_range(start_coord : Vector2i, end_coord : Vector2i, direction : int, reach : int = -1) -> bool:
-	for angle in range(6):
-		var tile : Vector2i = start_coord
-		if direction != -1:
-			angle = direction
-		var idx = 0
-		while idx < reach:
-			idx += 1
-			tile += DIRECTION_TO_OFFSET[angle]
-			if tile == end_coord:
-				return true
-	return false
+
 
 
 # MAJOR FUNCTION that verifies if the unit move is legal [br]
@@ -543,7 +546,7 @@ func _get_move_direction_if_valid(unit : Unit, coord : Vector2i) -> int:
 		# check if a landing spot is a viable move
 		var jump_spot : Vector2i = GenericHexGrid.adjacent_coord(coord, move_direction)
 		hex = _get_battle_hex(jump_spot)
-		if not hex.can_be_moved_to:  # landing spot cannot be a special_move place
+		if not hex.can_be_moved_to:  # landing spot cannot be a special_move tile
 			return MOVE_IS_INVALID
 
 		# is unit present on landing spot
@@ -665,20 +668,22 @@ func _switch_participant_turn() -> void:
 	print(NET.get_role_name(), " _switch_participant_turn ", current_army_index)
 
 	match state:
-		STATE_SUMMONNING:
+		STATE_DEPLOYMENT:
 			var skip_count = 0
-			# skip players with nothing to summon
-			while armies_in_battle_state[current_army_index].units_to_summon.size() == 0:
+			# skip players with nothing to deploy
+			while armies_in_battle_state[current_army_index].units_to_deploy.size() == 0:
 				current_army_index += 1
 				current_army_index %= armies_in_battle_state.size()
 				skip_count += 1
-				# no player has anything to summon, go to next phase
+				# no player has anything to deploy, go to next phase
 				if skip_count == armies_in_battle_state.size():
 					state = STATE_FIGHTING
 					current_army_index = 0  # first army is always present
 					break
 
 		STATE_FIGHTING:
+			_end_of_move_magic(prev_idx)
+
 			while not armies_in_battle_state[current_army_index].can_fight():
 				current_army_index += 1
 				current_army_index %= armies_in_battle_state.size()
@@ -709,8 +714,6 @@ func _switch_participant_turn() -> void:
 	var next_player := armies_in_battle_state[current_army_index]
 	# chess clock is updated in turn_ended() and turn_started()
 
-	_end_of_move_magic()
-
 	prev_player.turn_ended()
 
 	next_player.turn_started()
@@ -725,6 +728,15 @@ func _perform_move(unit : Unit, direction : int, target_tile_coord : Vector2i) -
 	if _process_symbols(unit, E.MoveType.TURN):
 		return
 	currently_processed_move_info.register_turning_complete()
+
+	var anchored := false
+	for effect in unit.effects:
+		if effect.name == "Anchor":
+			anchored = true
+
+	if anchored:
+		return
+
 	# MOVE
 	var target_tile : BattleGridState.BattleHex = _get_battle_hex(target_tile_coord)
 	if target_tile.pit:
@@ -787,6 +799,18 @@ func _perform_dash(unit : Unit, target_tile_coord : Vector2i, power : int = 3) -
 		_kill_unit(unit)
 
 
+func _summon_a_unit(caster : Unit, summoned_unit : DataUnit, target_tile_coord : Vector2i) -> void:
+	summoned_unit.summoned = true
+	var direction : int = GenericHexGrid.direction_to_adjacent(caster.coord, target_tile_coord)
+	var unit : Unit = caster.army_in_battle.deploy_unit(summoned_unit, target_tile_coord, direction)
+
+	# Apply summon sickness
+	var success : bool = unit.try_adding_magic_effect(load(CFG.SUMMONING_SICKNESS_PATH))
+	assert(success, "failure to apply summoning sickness effect")
+
+	_put_unit_on_grid(unit, target_tile_coord)
+
+
 ## changes coordinates of the unit ONLY (doesn't activate attack or anything like that)
 func _change_unit_coord(unit : Unit, target_coord : Vector2i) -> void:
 	_remove_unit(unit)
@@ -796,9 +820,11 @@ func _change_unit_coord(unit : Unit, target_coord : Vector2i) -> void:
 	if target_tile.is_mana_tile():
 		unit.unit_captured_mana.emit(target_coord)
 		capture_mana_well(target_tile, unit.army_in_battle)
+	if target_tile.fire:
+		unit.try_adding_magic_effect(load(CFG.BURNING_PATH))
 
 
-## Used for movement, kills, unsummon(undo) [br]
+## Used for movement, kills, undeploy(undo) [br]
 ## removes Unit from logic hex tile
 func _remove_unit(unit : Unit) -> void:
 	var hex := _get_battle_hex(unit.coord)
@@ -823,7 +849,7 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 		match spell.name:
 			"Martyr":
 				target.effects.erase(spell)
-				target.effect_state_changed()
+				target.effect_state_changed()  # Visuals
 
 				for unit in target_army.units:
 					if replaced_target:
@@ -834,8 +860,19 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 							target = unit
 							new_target_pos = unit.coord
 							break
+			"Second Wind":
+				target.effects.erase(spell)
+				target.effect_state_changed()  # Visuals
+
+				#TODO consider getting info of the killer position to make it a knockback from them instead of just a push to the back
+
+				_push_enemy(target, GenericHexGrid.opposite_direction(target.unit_rotation), 3)
+
+				#_perform_teleport(replaced_target, new_target_pos, -1, true)
+				return
 
 	currently_processed_move_info.register_kill(target_army_index, target)
+
 
 	# killing starts - award exp
 	if spear_holding_killer_teams.size() > 0:
@@ -856,8 +893,6 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 					if symbol.attack_power != 0:
 						symbol.attack_power = effect.magic_weapon_durability
 
-
-
 	# removal of unit
 	target_army.kill_unit(target)
 	_remove_unit(target) # remove reference from hextile
@@ -870,6 +905,7 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 
 	if replaced_target: # "Martyr" spell quick hack
 		_perform_teleport(replaced_target, new_target_pos, -1, true) # martyr teleport temp fix
+
 
 	# trigger any post death spell effect
 	for spell in target.effects:
@@ -889,6 +925,7 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 		stalemate_failsafe_on = true
 		stalemate_failsafe_start = turn_counter
 
+
 ## Rare event when all players repeated their moves -> it pushes cyclone timer to activate next turn
 func end_stalemate() -> void:
 	print_rich("[color=pink]END OF STALEMATE")
@@ -902,29 +939,29 @@ func end_stalemate() -> void:
 #endregion Gameplay Events
 
 
-#region Summon Phase
+#region Deployment Phase
 
-func current_player_can_summon_on(coord : Vector2i) -> bool:
-	return _can_summon_on(current_army_index, coord)
+func current_player_can_deploy_on(coord : Vector2i) -> bool:
+	return _can_deploy_on(current_army_index, coord)
 
 
-func _can_summon_on(army_idx : int, coord : Vector2i) -> bool:
+func _can_deploy_on(army_idx : int, coord : Vector2i) -> bool:
 	var hex := _get_battle_hex(coord)
 	return  hex.spawn_point_army_idx == army_idx and hex.unit == null
 
 
-func _get_spawn_rotation(coord : Vector2i) -> int:
+func _get_deploy_rotation(coord : Vector2i) -> int:
 	return _get_battle_hex(coord).spawn_direction
 
 
 func _put_unit_on_grid(unit : Unit, coord : Vector2i) -> void:
 	var hex := _get_battle_hex(coord)
 	# TODO discuss this assert as it conflicts with special move tiles
-	#assert(hex.can_be_moved_to, "summoning unit to an invalid tile")
-	assert(not hex.unit, "summoning unit to an occupied tile")
+	#assert(hex.can_be_moved_to, "deployed unit to an invalid tile")
+	assert(not hex.unit, "deploying unit to an occupied tile")
 	hex.unit = unit
 
-#endregion Summon Phase
+#endregion Deployment Phase
 
 
 #region Timer
@@ -966,11 +1003,11 @@ func mana_values_changed() -> void:
 			current_best = army
 
 	cyclone_target = current_worst
-	var mana_difference = current_best.mana_points - current_worst.mana_points
-	var new_cylone_counter = CFG.BIG_CYCLONE_COUNTER_VALUE
-	if mana_difference > CFG.CYCLONE_MANA_THRESHOLD:
-		new_cylone_counter = CFG.SMALL_CYCLONE_COUNTER_VALUE
 
+	var mana_difference = current_best.mana_points - current_worst.mana_points
+	## TODO consider moving it to a sepereta balance file instead of CFG
+
+	var new_cylone_counter = CFG.get_cyclone_value(mana_difference, number_of_mana_wells)
 
 	if current_worst.cyclone_timer == 0:  # Cyclone just killed a unit, so now it resets
 		current_worst.cyclone_timer = new_cylone_counter
@@ -1002,49 +1039,56 @@ func capture_mana_well(hex : BattleHex, army : ArmyInBattleState):
 
 ## verifies if spell can be casted
 func is_spell_target_valid(caster : Unit, coord : Vector2i, spell : BattleSpell) -> bool:
-	match spell.name:
-		"Vengeance": # any current player controlled unit
-			var target = get_unit(coord)
-			if target and target.controller == caster.controller:
-				return true
-		"Martyr": # any current player controlled unit, but not the caster
-			var target = get_unit(coord)
-			if target and target.controller == caster.controller and target != caster:
-				return true
-		"Fireball": # any hex target is valid
-			return true
-		"Teleport", "Wind Dash": # tile in range that is in front of the caster
-			if get_unit(coord) or not _get_battle_hex(coord).can_be_moved_to:  # tile has to be empty
-				return false
-			var spell_range : int = 1
-			match spell.name:
-				"Teleport":
-					spell_range = 3
-				"Wind Dash":
-					spell_range = 1
-				_:
-					printerr("Unsupported spell range value")
+	if spell.not_self and caster.coord == coord:
+		return false
 
-			if _is_faced_tile_in_range(caster.coord, coord, caster.unit_rotation, spell_range):
-				return true
-
-		"Blood Ritual":  # any enemy units
-			var target = get_unit(coord)
-			#if target and target.controller.team != caster.controller.team: #TEMP awaits major world refactor
-			if target: #TEMP
-				return true
-		_:
-			printerr("Spell targeting not supported: ", spell.name)
+	if spell.cast_range != -1:
+		if GenericHexGrid.axial_distance(caster.coord, coord) > spell.cast_range:
 			return false
 
-	return false #TEMP
+	match spell.direction_cast:
+		BattleSpell.DirectionCast.FRONT:
+			if not GenericHexGrid.is_tile_in_straight_direction(
+				caster.coord, coord, caster.unit_rotation as GenericHexGrid.GridDirections):
+
+				return false
+		BattleSpell.DirectionCast.STRAIGHT:
+			if not GenericHexGrid.is_tile_faced(caster.coord, coord):
+				return false
+
+	match spell.target_type:
+		BattleSpell.TargetType.EMPTY_TILE:
+			if get_unit(coord):
+				return false
+			if spell.needs_movable_tile and not _get_battle_hex(coord).can_be_moved_to:
+				return false
+		BattleSpell.TargetType.UNIT:
+
+			var target : Unit = get_unit(coord)
+			if not target:
+				return false
+			match spell.target_unit_type:
+				BattleSpell.TargetUnitType.ALLY:
+					if target.army_in_battle.team != caster.army_in_battle.team:
+						return false
+				BattleSpell.TargetUnitType.ENEMY:
+					if target.army_in_battle.team == caster.army_in_battle.team:
+						return false
+
+
+	match spell.name:
+		"Blood Ritual":  # when enemy has more than 1 unit
+			var target = get_unit(coord)
+			if target.army_in_battle.alive_not_summoned_units_number() == 1:
+				return false
+	return true
 
 
 ## spell takes an effect
 func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpell) -> void:
 
 	match spell.name:
-		"Vengeance", "Blood Ritual":
+		"Vengeance", "Blood Ritual", "Anchor":
 			spell.cast_effect(get_unit(target_tile_coord), "casting")
 			#print(get_unit(target_tile_coord).effects)
 
@@ -1087,6 +1131,33 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 		"Wind Dash":
 			_perform_dash(unit, target_tile_coord)
 
+		"Summon Dryad":
+			_summon_a_unit(unit, spell.summon_unit_data, target_tile_coord)
+		"Sacrifice":
+			var target : Unit = get_unit(target_tile_coord)
+			assert(target)
+			#unit.template.mana += 6 # TEMP
+			unit.spells = unit.template.spells.duplicate()
+			unit.spells.erase(spell)
+			_kill_unit(target)
+		"Fire Wall":
+			var target_tiles_coords : Array[Vector2i] = [target_tile_coord]
+			for direction in DIRECTION_TO_OFFSET:
+				target_tiles_coords.append(target_tile_coord + direction)
+
+			for tile_coord in target_tiles_coords:
+				if not is_on_grid(tile_coord):
+					continue
+				var hex : BattleHex = get_hex(tile_coord)
+				if not hex.is_basic_grass() and not hex.fire:
+					continue
+
+				hex.fire = true
+				tile_changed.emit(tile_coord)
+
+				var target : Unit = get_unit(tile_coord)
+				if target:
+					target.try_adding_magic_effect(load(CFG.BURNING_PATH))
 		_:
 			printerr("Spell perform not supported: ", spell.name)
 			return
@@ -1096,12 +1167,13 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 
 ## spell effects that occur after allmove related event already took place [br]
 ## runs for all units
-func _end_of_move_magic() -> void:
+func _end_of_move_magic(army_that_just_moved_idx : int) -> void:
 	for army in armies_in_battle_state:
 		if not battle_is_ongoing(): #TODO verify if thats a proper fix for spell combination, which results in a draw
 			return
 		for unit : Unit in army.units:
-			for magic_effect in unit.effects:
+			for effect_idx in range(unit.effects.size() -1, -1, -1):
+				var magic_effect : BattleMagicEffect = unit.effects[effect_idx]
 				match magic_effect.name:
 					"Blood Ritual":
 						if army.units.size() == 1:
@@ -1109,6 +1181,17 @@ func _end_of_move_magic() -> void:
 					"Death Mark":
 						_kill_unit(unit)
 						break
+					"Burning":
+						## checking if unit's turn just passed
+						if unit.army_in_battle != armies_in_battle_state[army_that_just_moved_idx]:
+							continue
+
+						if get_hex(unit.coord).fire:
+							_kill_unit(unit)
+							break
+						else:
+							unit.effects.pop_at(effect_idx)
+							unit.effect_state_changed()
 
 
 ## STUB for proper countdown system
@@ -1124,6 +1207,9 @@ func _end_of_turn_magic() -> void:
 					magic_effect.duration_counter -= 1
 					if magic_effect.duration_counter == 0:
 						unit.effects.pop_at(effect_idx)
+						unit.effect_state_changed()
+						if magic_effect.name == "Summoning Sickness":
+							unit.try_adding_magic_effect(magic_effect.spell_effects[0])
 						continue
 
 				match magic_effect:
@@ -1162,10 +1248,31 @@ func _check_battle_end() -> void:
 
 
 func force_win_battle():
+	var controller_player_armies : Array[int] = []
+	var teams_not_controlled_by_cheating_player : Array[int] = []
+
+	# Collect infomration about armies to target
+	for army_idx : int in range(armies_in_battle_state.size()):
+		var army : ArmyInBattleState = armies_in_battle_state[army_idx]
+		if IM.players[army.army_reference.controller_index].is_local():  # TODO apply controllers to army in custom battles
+			controller_player_armies.append(army_idx)
+		else:
+			teams_not_controlled_by_cheating_player.append(army.team)
+
+	# unique case where player cheating controlls some part fo every side of the conflict
+	if teams_not_controlled_by_cheating_player.size() == 0:
+		# kill every army expect the current one
+		for army_idx in range(armies_in_battle_state.size()):
+			if army_idx == current_army_index:
+				continue
+			_kill_army(army_idx)
+			return
+
+	# kill all armies that player is not a team member of
 	for army_idx in range(armies_in_battle_state.size()):
-		if army_idx == current_army_index:
-			continue
-		_kill_army(army_idx)
+		var army : ArmyInBattleState = armies_in_battle_state[army_idx]
+		if army.team in teams_not_controlled_by_cheating_player:
+			_kill_army(army_idx)
 
 
 func surrender_on_timeout():
@@ -1173,10 +1280,21 @@ func surrender_on_timeout():
 
 
 func force_surrender():
-	for army_idx in range(armies_in_battle_state.size()):
-		if army_idx != current_army_index:
-			continue
+	var controller_player_army_to_surrender : Array[int] = []
+	var teams_not_controlled_by_surrendering_player : Array[int] = []
+	for army_idx : int in range(armies_in_battle_state.size()):
+		var army : ArmyInBattleState = armies_in_battle_state[army_idx]
+		if IM.players[army.army_reference.controller_index].is_local():  # TODO apply controllers to army in custom battles
+			controller_player_army_to_surrender.append(army_idx)
+		else:
+			teams_not_controlled_by_surrendering_player.append(army.team)
+	if teams_not_controlled_by_surrendering_player.size() == 0:
+		_kill_army(current_army_index)
+		return
+
+	for army_idx in controller_player_army_to_surrender:
 		_kill_army(army_idx)
+
 
 #endregion End Battle
 
@@ -1184,31 +1302,31 @@ func force_surrender():
 #region AI Helpers
 
 func get_possible_moves() -> Array[MoveInfo]:
-	if is_during_summoning_phase():
-		return _get_all_spawn_moves()
+	if is_during_deployment_phase():
+		return _get_all_deploy_moves()
 	if state == STATE_SACRIFICE:
 		return _get_all_sacrifice_moves()
 
 	return _get_all_unit_moves()
 
 
-func _get_summon_tiles(player : Player) -> Array[Vector2i]:
+func _get_deployment_tiles(player : Player) -> Array[Vector2i]:
 	var army_idx = _find_army_idx(player)
 	var result : Array[Vector2i] = []
 	for x in range(width):
 		for y in range(height):
 			var coord := Vector2i(x,y)
-			if _can_summon_on(army_idx, coord):
+			if _can_deploy_on(army_idx, coord):
 				result.append(coord)
 	return result
 
 
-func _get_not_summoned_units(player : Player) -> Array[DataUnit]:
+func _get_not_deployed_units(player : Player) -> Array[DataUnit]:
 	var index = player.index if player else -1
 	for a in armies_in_battle_state:
 		if a.army_reference.controller_index == index:
-			return a.units_to_summon.duplicate()
-	assert(false, "ai asked for units to summon but it doesn't control any army")
+			return a.units_to_deploy.duplicate()
+	assert(false, "ai asked for units to deploy but it doesn't control any army")
 	return []
 
 
@@ -1230,7 +1348,7 @@ func _find_army_idx(player : Player) -> int:
 	return -1
 
 
-## not summons, only units already placed
+## get's all move action not deploy/magic/sacrifice ones
 func _get_all_unit_moves() -> Array[MoveInfo]:
 	var legal_moves : Array[MoveInfo] = []
 	var my_units := _get_units(get_current_player())
@@ -1263,14 +1381,14 @@ func _get_all_sacrifice_moves() -> Array[MoveInfo]:
 	return legal_moves
 
 
-func _get_all_spawn_moves() -> Array[MoveInfo]:
+func _get_all_deploy_moves() -> Array[MoveInfo]:
 	var legal_moves: Array[MoveInfo] = []
 	var me = get_current_player()
-	var spawn_tiles = _get_summon_tiles(me)
-	var units = _get_not_summoned_units(me)
+	var spawn_tiles = _get_deployment_tiles(me)
+	var units = _get_not_deployed_units(me)
 	for unit in units:
 		for spawn_tile in spawn_tiles:
-			legal_moves.append(MoveInfo.make_summon(unit, spawn_tile))
+			legal_moves.append(MoveInfo.make_deploy(unit, spawn_tile))
 
 	return legal_moves
 
@@ -1440,7 +1558,7 @@ func get_move_consequences(move : MoveInfo) -> MoveConsequences:
 	var kill_registered = false
 
 	if move.move_type != MoveInfo.TYPE_MOVE:  # TODO add support for spells and sacrifices
-		return MoveConsequences.NONE # summons don't kill
+		return MoveConsequences.NONE # deployment doesn't kill
 
 	var attacker = get_unit(move.move_source)
 	var move_direction : int = GenericHexGrid.direction_to_adjacent( \
@@ -1556,7 +1674,6 @@ func get_move_consequences(move : MoveInfo) -> MoveConsequences:
 #endregion AI Helpers
 
 
-
 #region Subclasses
 
 class BattleHex:
@@ -1571,6 +1688,7 @@ class BattleHex:
 	var mana : bool = false
 	var pit : bool = false
 	var hill : bool = false
+	var fire : bool = false
 
 	## allows unit to "enter" the tile under the condition
 	## that it's facing it
@@ -1637,6 +1755,10 @@ class BattleHex:
 	func is_mana_tile() -> bool:
 		return mana
 
+	func is_basic_grass() -> bool:
+		return not mana and not swamp and not hill and not pit and not fire \
+		and can_be_moved_to and can_shoot_through
+
 
 class ArmyInBattleState:
 	## used only for undo and cheats
@@ -1647,8 +1769,8 @@ class ArmyInBattleState:
 	## basic idx reference to which units are allies
 	var team : int = -1
 
-	var units_to_summon : Array[DataUnit] = []
-	## alive already summoned units
+	var units_to_deploy : Array[DataUnit] = []
+	## alive already deployed units
 	var units : Array[Unit] = []
 	## owned units that died during combat
 	var dead_units : Array[DataUnit] = []
@@ -1681,25 +1803,38 @@ class ArmyInBattleState:
 		result.army_reference = army
 		if army.hero and not army.hero.wounded: #TEMP
 			var hero_unit : DataUnit = army.hero.template.data_unit
-			result.units_to_summon.append(hero_unit)
+			result.units_to_deploy.append(hero_unit)
 
 		# unit list
 		for unit : DataUnit in army.units_data:
-			result.units_to_summon.append(unit)
+			result.units_to_deploy.append(unit)
 
 			result.mana_points += unit.mana # MANA
+
+		result.apply_passive_effects(state)
 
 		#Temp solution for world map, where proper clock system isn't implemented yet
 		if army.timer_reserve_sec == 0:
 			army.timer_reserve_sec = 3000
-
 		#TEMP
 		result.start_turn_clock_time_left_ms = army.timer_reserve_sec * 1000
 		result.turn_increment_ms = army.timer_increment_sec * 1000
-
 		result.turn_started() # TEMP - FIXME - better init for chess clock
 
 		return result
+
+	func apply_passive_effects(state : BattleGridState) -> void:
+		if not hero:
+			return
+		for effect in hero.passive_effects:
+			match effect.passive_name:
+				"ballista_summon":
+					# HACK -> there are no armies in that array, if this army is the first one being created
+					if state.armies_in_battle_state.size() != 0:
+						continue  # only attacker can use ballista
+					var ballista : DataUnit = load(CFG.BALLISTA_PATH)
+					ballista.summoned = true
+					units_to_deploy.append(ballista)
 
 
 	func turn_started() -> void:
@@ -1734,7 +1869,10 @@ class ArmyInBattleState:
 			# mana_value changed gets called after every kill anyway
 
 		units.erase(target)
+
 		dead_units.append(target.template)
+		if not can_fight():  # remove all summons once are alive units have died
+			kill_army()
 		#gdlint: ignore=private-method-call
 
 
@@ -1742,6 +1880,7 @@ class ArmyInBattleState:
 		var unit = kill_info.respawn()
 		unit.controller = IM.get_player_by_index(army_reference.controller_index)
 		unit.army_in_battle = self
+
 		dead_units.erase(unit.template)
 		units.append(unit)
 		return unit
@@ -1750,23 +1889,38 @@ class ArmyInBattleState:
 	func kill_army() -> void:
 		var army_to_award_exp : ArmyInBattleState = BM._battle_grid_state._find_proper_exp_winner(team)
 
-		dead_units.append_array(units_to_summon)
+		dead_units.append_array(units_to_deploy)
 		if army_to_award_exp:
-			for killed_deployed_unit : DataUnit in units_to_summon:
+			for killed_deployed_unit : DataUnit in units_to_deploy:
 				army_to_award_exp.killed_units.append(killed_deployed_unit.level)
 
-		units_to_summon.clear()
+		units_to_deploy.clear()
 		for unit_idx in range(units.size() - 1, -1, -1):
 			battle_grid_state.get_ref()._kill_unit(units[unit_idx], army_to_award_exp)
 
 
+	func alive_not_summoned_units_number() -> int:
+		var alive_not_summoned_units : int = 0
+		for unit in units:
+			if not unit.summoned:
+				alive_not_summoned_units += 1
+		return alive_not_summoned_units
+
+
+	func alive_not_summoned_units_number() -> int:
+		var alive_not_summoned_units : int = 0
+		for unit in units:
+			if not unit.summoned:
+				alive_not_summoned_units += 1
+		return alive_not_summoned_units
+
 
 	func can_fight() -> bool:
-		return units.size() > 0 or units_to_summon.size() > 0
+		return alive_not_summoned_units_number() > 0 or units_to_deploy.size() > 0
 
 
-	func summon_unit(unit_data : DataUnit, coord : Vector2i, rotation : int) -> Unit:
-		units_to_summon.erase(unit_data)
+	func deploy_unit(unit_data : DataUnit, coord : Vector2i, rotation : int) -> Unit:
+		units_to_deploy.erase(unit_data)
 		var player = IM.get_player_by_index(army_reference.controller_index)
 		var result = Unit.create(player, unit_data, coord, rotation, self)
 		units.append(result)
@@ -1776,11 +1930,13 @@ class ArmyInBattleState:
 
 		## Applying hero passive effects
 		for passive_effect in army_reference.hero.passive_effects:
+			if not passive_effect:  # TEMP null check until all pasives in level_up_screen are present
+				continue
 			match passive_effect.passive_name:
 				"magic_weapons":
-					var effect : BattleMagicEffect = load(CFG.tier_2_passive_1)
+					var effect : BattleMagicEffect = load(CFG.hero_magic_weapon_effect)
 					var success : bool = result.try_adding_magic_effect(effect)
-					assert(success, "couldn't add passive effect to a hero unit upon it's placement")
+					assert(success, "couldn't add passive effect to a hero unit upon it's deployment")
 					for symbol in result.symbols:
 						if symbol.attack_power != 0:
 							symbol.attack_power = effect.magic_weapon_durability
@@ -1791,16 +1947,24 @@ class ArmyInBattleState:
 
 						if symbol.symbol_name == "empty": # TODO verify and note the choice in the documentation, if thats a proper way to verify symbol is empty
 							result.symbols[side] = weak_weapon.duplicate()
+				"wind_weapons":
+					for symbol in result.symbols:
+						if symbol.attack_power != 0:
+							symbol.push_power += 1
+				"second_wind":
+					var effect : BattleMagicEffect = load(CFG.hero_second_wind_effect)
+					var success : bool = result.try_adding_magic_effect(effect)
+					assert(success, "couldn't add passive effect to a hero unit upon it's placement")
 
 		return result
 
 
-	func unsummon(coord : Vector2i):
+	func undeploy(coord : Vector2i):
 		var target = battle_grid_state.get_ref().get_unit(coord)
 		units.erase(target)
-		units_to_summon.append(target.template)
+		units_to_deploy.append(target.template)
 		#gdlint: ignore=private-method-call
 		battle_grid_state.get_ref()._remove_unit(target)
-		target.unit_killed()
+		target.unit_killed()  #TODO change this signal to a undo specific as to not mess with future animations and text bubbles
 
 #endregion Subclasses
