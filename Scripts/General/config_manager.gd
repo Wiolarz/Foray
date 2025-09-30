@@ -149,12 +149,23 @@ const hero_second_wind_effect : String = "res://Resources/Battle/Battle_Spells/H
 ## used for passive that replaces all empty symbols with weak weapons
 const weak_weapon : String = "res://Resources/Battle/Symbols/club.tres"
 
-## Hero Passives
+## Hero Battle Passives
 
 const _hero_talent_second_wind : String = "res://Resources/Battle/Hero_Passives/second_wind.tres"
 const _hero_talent_magic_weapons : String = "res://Resources/Battle/Hero_Passives/magic_weapons.tres"
 const _hero_talent_weak_weapons : String = "res://Resources/Battle/Hero_Passives/weak_weapons.tres"
 const _hero_talent_wind_weapons : String = "res://Resources/Battle/Hero_Passives/wind_weapons.tres"
+
+## Hero World Passives
+const _hero_ability_scouting : String = "res://Resources/World/Hero_Passives/scouting.tres"
+const _hero_ability_shaman : String = "res://Resources/World/Hero_Passives/shaman.tres"
+
+const _hero_ability_sage : String = "res://Resources/World/Hero_Passives/sage.tres"
+
+const _hero_ability_arch_mage : String = "res://Resources/World/Hero_Passives/arch_mage.tres"
+const _hero_ability_immortality : String = "res://Resources/World/Hero_Passives/immortality.tres"
+
+
 
 
 const BALLISTA_PATH : String = "res://Resources/Battle/Units/Neutral/ballista.tres"
@@ -187,9 +198,13 @@ var NODE_GAMESETUP_PATH : String = "/root/UI/MainMenu/MainContainer/HostLobby/Ho
 @onready var talents : Array = [_tier_1_talents, _tier_2_talents, _tier_3_talents]
 
 
-@onready var _tier_1_abilities : Array[HeroPassive] = [null, null, null]
+@onready var _tier_1_abilities : Array[HeroPassive] = [load(_hero_ability_shaman),
+													load(_hero_ability_scouting),
+													load(_hero_ability_sage)]
 
-@onready var _tier_2_abilities : Array[HeroPassive] = [null, null, null]
+@onready var _tier_2_abilities : Array[HeroPassive] = [load(_hero_ability_arch_mage),
+													load(_hero_ability_immortality),
+													null]
 
 @onready var _tier_3_abilities : Array[HeroPassive] = [null, null, null]
 
