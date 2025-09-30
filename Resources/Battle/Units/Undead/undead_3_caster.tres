@@ -1,12 +1,12 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=9 format=3 uid="uid://cth0g7ulnnwj6"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_y5bph"]
-[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_8fkci"]
+[ext_resource type="Resource" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_8fkci"]
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_t8g11"]
-[ext_resource type="Resource" uid="uid://oq31g85fljuf" path="res://Resources/Battle/Battle_Spells/vengeance.tres" id="4_j4028"]
-[ext_resource type="Resource" uid="uid://c88kbo5deq4i8" path="res://Resources/Battle/Symbols/scythe.tres" id="4_n8fo6"]
-[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_3l57d"]
-[ext_resource type="Resource" uid="uid://cngonnqsgsd6e" path="res://Resources/Battle/Symbols/axe.tres" id="6_fbqyc"]
+[ext_resource type="Resource" path="res://Resources/Battle/Battle_Spells/vengeance.tres" id="4_j4028"]
+[ext_resource type="Resource" path="res://Resources/Battle/Symbols/empty.tres" id="5_3l57d"]
+[ext_resource type="Resource" path="res://Resources/Battle/Symbols/sickle.tres" id="5_bhmli"]
+[ext_resource type="Resource" path="res://Resources/Battle/Symbols/axe.tres" id="6_fbqyc"]
 
 [sub_resource type="Resource" id="Resource_vofdp"]
 script = ExtResource("1_y5bph")
@@ -18,7 +18,7 @@ ruby = 1
 script = ExtResource("3_t8g11")
 unit_name = "Caster"
 texture_path = "res://Art/units/undead/undead_3_caster.png"
-symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_n8fo6"), ExtResource("5_3l57d"), ExtResource("6_fbqyc"), ExtResource("5_3l57d"), ExtResource("6_fbqyc"), ExtResource("5_3l57d")])
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("5_bhmli"), ExtResource("5_3l57d"), ExtResource("6_fbqyc"), ExtResource("5_3l57d"), ExtResource("6_fbqyc"), ExtResource("5_3l57d")])
 cost = SubResource("Resource_vofdp")
 required_building = ExtResource("2_8fkci")
 level = 3
