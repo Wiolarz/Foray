@@ -14,4 +14,5 @@ script = ExtResource("2_c01yf")
 name = "barracks level 1"
 cost = SubResource("Resource_0inm0")
 requirements = Array[ExtResource("2_c01yf")]([])
+discounts = Array[Resource("res://Scripts/World/Economy/discount.gd")]([])
 outpost_requirement = "wood"

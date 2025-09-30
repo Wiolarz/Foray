@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="DataHero" load_steps=2 format=3 uid="uid://cjvk5ebevdqo"]
 
-[ext_resource type="Script" path="res://Resources/Battle/data_hero.gd" id="1_5vsfn"]
+[ext_resource type="Script" path="res://Resources/Races/data_hero.gd" id="1_5vsfn"]
 
 [resource]
 script = ExtResource("1_5vsfn")

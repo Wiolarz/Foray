@@ -1907,14 +1907,6 @@ class ArmyInBattleState:
 		return alive_not_summoned_units
 
 
-	func alive_not_summoned_units_number() -> int:
-		var alive_not_summoned_units : int = 0
-		for unit in units:
-			if not unit.summoned:
-				alive_not_summoned_units += 1
-		return alive_not_summoned_units
-
-
 	func can_fight() -> bool:
 		return alive_not_summoned_units_number() > 0 or units_to_deploy.size() > 0
 

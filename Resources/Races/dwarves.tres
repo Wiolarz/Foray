@@ -9,16 +9,16 @@
 [ext_resource type="Resource" uid="uid://c58tmflxit2cf" path="res://Resources/Races/Buildings/Sawmill.tres" id="4_1jvoj"]
 [ext_resource type="Resource" uid="uid://c7wrr5lpekesk" path="res://Resources/Battle/Units/Dwarves/dwarf_3_mercenary.tres" id="4_7xl3e"]
 [ext_resource type="Resource" uid="uid://bupuvg1cr7byg" path="res://Resources/Battle/Units/Dwarves/dwarf_4_arbalister.tres" id="5_al402"]
-[ext_resource type="Resource" uid="uid://cglulnc0lgfjw" path="res://Resources/Battle/Heroes/Dwarves/dwarf_hero_tribune.tres" id="5_myavb"]
-[ext_resource type="Resource" uid="uid://by5i1rhxyug0d" path="res://Resources/Battle/Heroes/Dwarves/dwarf_hero_breacher.tres" id="6_n0j60"]
+[ext_resource type="Resource" uid="uid://cglulnc0lgfjw" path="res://Resources/Races/Heroes/Dwarves/dwarf_hero_tribune.tres" id="5_myavb"]
+[ext_resource type="Resource" uid="uid://by5i1rhxyug0d" path="res://Resources/Races/Heroes/Dwarves/dwarf_hero_breacher.tres" id="6_n0j60"]
 [ext_resource type="Resource" uid="uid://cm26lu3vyqiue" path="res://Resources/Battle/Units/Dwarves/dwarf_5_berserk.tres" id="6_vlqhp"]
-[ext_resource type="Resource" uid="uid://pprqbqhgulyx" path="res://Resources/Battle/Heroes/Dwarves/dwarf_hero_cleric.tres" id="7_5560i"]
+[ext_resource type="Resource" uid="uid://pprqbqhgulyx" path="res://Resources/Races/Heroes/Dwarves/dwarf_hero_cleric.tres" id="7_5560i"]
 [ext_resource type="Resource" uid="uid://lyxan5nj2eie" path="res://Resources/Battle/Units/Dwarves/dwarf_6_scholar.tres" id="7_amjvs"]
 
 [resource]
 script = ExtResource("1_7c68f")
 race_name = "Dwarves"
 units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_vqm6w"), ExtResource("3_q4rdx"), ExtResource("4_7xl3e"), ExtResource("5_al402"), ExtResource("6_vlqhp"), ExtResource("7_amjvs")])
-heroes = Array[Resource("res://Resources/Battle/data_hero.gd")]([ExtResource("5_myavb"), ExtResource("6_n0j60"), ExtResource("7_5560i")])
+heroes = Array[Resource("res://Resources/Races/data_hero.gd")]([ExtResource("5_myavb"), ExtResource("6_n0j60"), ExtResource("7_5560i")])
 buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_sn5ml"), ExtResource("2_dcjxu"), ExtResource("3_jcvsb"), ExtResource("4_1jvoj")])
 description = "T>P>M"
