@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_bujg7"]
 [ext_resource type="Resource" uid="uid://tb8mbcolcm4n" path="res://Resources/Battle/Units/Fiends/fiend_hero_rigid.tres" id="2_nknfk"]
-[ext_resource type="Script" path="res://Resources/Battle/data_hero.gd" id="3_m10ge"]
+[ext_resource type="Script" path="res://Resources/Races/data_hero.gd" id="3_m10ge"]
 
 [sub_resource type="Resource" id="Resource_xuw1e"]
 script = ExtResource("1_bujg7")

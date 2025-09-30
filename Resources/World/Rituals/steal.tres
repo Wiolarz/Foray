@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Ritual" load_steps=2 format=3 uid="uid://bcecu3rva83vq"]
+
+[ext_resource type="Script" path="res://Resources/World/rituals.gd" id="1_lbt11"]
+
+[resource]
+script = ExtResource("1_lbt11")
+name = "Steal"
+icon_path = "res://Art/orc_hero_rouge.png"
+mp_cost = 3

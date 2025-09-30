@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="HeroPassive" load_steps=2 format=3 uid="uid://i7jv2toxsyvm"]
+
+[ext_resource type="Script" path="res://Resources/Battle/hero_passive.gd" id="1_i0tub"]
+
+[resource]
+script = ExtResource("1_i0tub")
+passive_name = "sage"

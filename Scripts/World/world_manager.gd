@@ -17,6 +17,8 @@ var selected_city : City:
 		selected_city = city
 		world_ui.city_ui.city = city
 
+var selected_ritual : Ritual  # TODO move to world ui
+
 # TODO movew to world state chyba
 var combat_tile : Vector2i
 
@@ -206,6 +208,12 @@ func grid_input(coord : Vector2i):
 		input_try_select(coord)
 		return
 
+	if selected_ritual:
+		if is_ritual_target_valid(coord):
+			cast_ritual(coord)
+		return
+
+
 	if selected_hero.coord == coord:  # DESELECT HERO
 		_deselect_hero()
 		return
@@ -235,6 +243,7 @@ func grid_input(coord : Vector2i):
 		if not selected_hero.has_movement_points():
 			_deselect_hero()
 	_painter_node.erase()
+
 
 ## Tries to Select owned Hero
 func input_try_select(coord) -> void:  #TODO "nothing is selected try to select stuff"
@@ -300,6 +309,106 @@ func perform_world_move_info(world_move_info : WorldMoveInfo) -> void:
 
 func perform_network_move(world_move_info : WorldMoveInfo) -> void:
 	perform_world_move_info(world_move_info)
+
+
+func temp_cast_first_ritual() -> void:
+	if selected_ritual:
+		selected_ritual = null
+		return
+
+	if not selected_hero: #TODO make it an assert
+		printerr("No selected hero")
+		return
+
+	if selected_hero.entity.hero.rituals.size() == 0: #TODO make it an assert
+		printerr("selected_ritual is not present on a hero")
+		return
+
+
+	selected_ritual = selected_hero.entity.hero.rituals[0]
+
+
+func is_ritual_target_valid(target_coord : Vector2i = Vector2i.ZERO) -> bool:
+	assert(selected_hero, "No selected hero")
+	assert(selected_ritual, "no selected_ritual")
+	assert(selected_ritual in selected_hero.entity.hero.rituals, "selected_ritual is not present on a hero")
+
+	var shaman_present : bool = false
+	var hero : Hero = selected_hero.entity.hero
+	for passive in hero.passive_effects:
+		if passive.passive_name == "shaman":
+			shaman_present = true
+
+	if hero.movement_points + hero.ritual_cost_reduction <= 0 or \
+		(not shaman_present and \
+		hero.movement_points + hero.ritual_cost_reduction < selected_ritual.mp_cost): #TODO make it an assert
+		print("hero doesn't have enough movement points left")
+		return false
+
+
+	match selected_ritual.name:
+		"Town Portal":
+			## TODO add selecting city to teleport to / implement logic to select closest/last visited city
+			var target_city : City = WS.get_city_at(target_coord)
+			if not target_city:
+				print("no destination for town portal spell")
+				return false
+			return true
+		"Steal", "Fear":  # any neutral army # TODO add check if army is adjacent to caster
+			var target_neutral_army : Army = WS.get_army_at(target_coord)
+			if not target_neutral_army:
+				print("no army at destination")
+				return false
+			if target_neutral_army.faction:
+				print("army at destination is not neutral")
+				return false
+			return true
+
+	assert(false, "ritual is not supported")
+	return false
+
+
+
+func cast_ritual(target_coord : Vector2i = Vector2i.ZERO) -> void:
+	assert(selected_hero, "No selected hero")
+	assert(selected_ritual, "no selected_ritual")
+	assert(selected_ritual in selected_hero.entity.hero.rituals, "selected_ritual is not present on a hero")
+
+
+	var hero : Hero = selected_hero.entity.hero
+
+	var cost : int = selected_ritual.mp_cost
+	var reduction : int = min(hero.ritual_cost_reduction, cost)
+
+	cost -= reduction
+	hero.ritual_cost_reduction -= reduction
+
+	hero.movement_points -= cost
+
+	hero.rituals.erase(selected_ritual)
+
+	print(selected_ritual)
+	match selected_ritual.name:
+		"Town Portal":
+			## TODO implement logic to select closest/last visited city
+			var target_city : City = WS.get_city_at(target_coord)
+			assert(target_city, "no destination for town portal spell")
+
+			# TODO check if army is present
+			WS.change_army_position(selected_hero.entity, target_coord)
+			target_city.interact(selected_hero.entity)
+		"Steal":
+			print("Casted Steal")
+			pass
+		"Fear":
+			print("Casted Fear")
+			pass
+		_:
+			assert(false, "ritual casting not supported: " + selected_ritual.name)
+			return
+
+
+	selected_ritual = null
 
 #endregion Player Action
 

@@ -1,21 +1,21 @@
-[gd_resource type="Resource" script_class="DataRace" load_steps=12 format=3 uid="uid://dw5h2qrh35374"]
+[gd_resource type="Resource" script_class="DataRace" load_steps=12 format=3 uid="uid://dn8qsn3g272t7"]
 
-[ext_resource type="Script" path="res://Resources/Races/data_race.gd" id="1_2lh8d"]
+[ext_resource type="Script" path="res://Resources/Races/data_race.gd" id="1_hfmgu"]
 [ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="1_ivls3"]
 [ext_resource type="Resource" uid="uid://bdcjijsj36d16" path="res://Resources/Races/Buildings/Barracks_2.tres" id="2_3jrvc"]
 [ext_resource type="Resource" uid="uid://4to52cd5bq7w" path="res://Resources/Races/Buildings/Barracks_3.tres" id="3_3qdd6"]
 [ext_resource type="Resource" uid="uid://c58tmflxit2cf" path="res://Resources/Races/Buildings/Sawmill.tres" id="4_dggrk"]
-[ext_resource type="Resource" uid="uid://bi7fwl6i8o6a3" path="res://Resources/Battle/Heroes/Elves/elf_hero_druid.tres" id="5_6hi7f"]
-[ext_resource type="Resource" uid="uid://dvcmnrwfkynkj" path="res://Resources/Battle/Heroes/Elves/elf_hero_noble.tres" id="6_upuhb"]
-[ext_resource type="Resource" uid="uid://b2y53doccjmg8" path="res://Resources/Battle/Heroes/Elves/elf_hero_stalker.tres" id="7_5ndp3"]
+[ext_resource type="Resource" uid="uid://bi7fwl6i8o6a3" path="res://Resources/Races/Heroes/Elves/elf_hero_druid.tres" id="5_6hi7f"]
+[ext_resource type="Resource" uid="uid://dvcmnrwfkynkj" path="res://Resources/Races/Heroes/Elves/elf_hero_noble.tres" id="6_upuhb"]
+[ext_resource type="Resource" uid="uid://b2y53doccjmg8" path="res://Resources/Races/Heroes/Elves/elf_hero_stalker.tres" id="7_5ndp3"]
 [ext_resource type="Resource" uid="uid://0vft0atich8r" path="res://Resources/Battle/Units/Elves/elf_1_spearmen.tres" id="9_dabp8"]
 [ext_resource type="Resource" uid="uid://ydn4n563h71m" path="res://Resources/Battle/Units/Elves/elf_2_archer.tres" id="10_fe1kj"]
 [ext_resource type="Resource" uid="uid://clmtb3vi2x3my" path="res://Resources/Battle/Units/Elves/elf_3_swordsmen.tres" id="11_5sx00"]
 
 [resource]
-script = ExtResource("1_2lh8d")
+script = ExtResource("1_hfmgu")
 race_name = "elf"
 units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("9_dabp8"), ExtResource("10_fe1kj"), ExtResource("11_5sx00")])
-heroes = Array[Resource("res://Resources/Battle/data_hero.gd")]([ExtResource("5_6hi7f"), ExtResource("6_upuhb"), ExtResource("7_5ndp3")])
+heroes = Array[Resource("res://Resources/Races/data_hero.gd")]([ExtResource("5_6hi7f"), ExtResource("6_upuhb"), ExtResource("7_5ndp3")])
 buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_ivls3"), ExtResource("2_3jrvc"), ExtResource("3_3qdd6"), ExtResource("4_dggrk")])
 description = "Magic > Elite > Horde"

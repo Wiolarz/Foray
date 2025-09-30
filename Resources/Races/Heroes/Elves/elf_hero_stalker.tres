@@ -1,8 +1,11 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=6 format=3 uid="uid://b2y53doccjmg8"]
+[gd_resource type="Resource" script_class="DataHero" load_steps=9 format=3 uid="uid://b2y53doccjmg8"]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_8ohtj"]
 [ext_resource type="Resource" uid="uid://1yy1fjfn2n8k" path="res://Resources/Battle/Units/Elves/elf_unit_hero_stalker.tres" id="2_hf5ab"]
-[ext_resource type="Script" path="res://Resources/Battle/data_hero.gd" id="3_s5xdr"]
+[ext_resource type="Script" path="res://Resources/Races/data_hero.gd" id="3_s5xdr"]
+[ext_resource type="Resource" uid="uid://peo01if2lr" path="res://Resources/World/Hero_Passives/shaman.tres" id="4_qfo4s"]
+[ext_resource type="Resource" uid="uid://bcecu3rva83vq" path="res://Resources/World/Rituals/steal.tres" id="5_n2ly3"]
+[ext_resource type="Resource" uid="uid://caxvfydwy7d5v" path="res://Resources/World/Rituals/fear.tres" id="6_unyae"]
 
 [sub_resource type="Resource" id="Resource_pcl0g"]
 script = ExtResource("1_8ohtj")
@@ -25,4 +28,4 @@ data_unit = ExtResource("2_hf5ab")
 starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([])
 starting_level = 1
 max_army_size = 3
-max_movement_points = 3
+starting_rituals = Array[Resource("res://Resources/World/rituals.gd")]([ExtResource("5_n2ly3"), ExtResource("6_unyae")])

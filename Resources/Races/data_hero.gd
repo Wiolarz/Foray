@@ -20,6 +20,8 @@ extends Resource
 
 @export var max_movement_points : int = 3
 
+@export var starting_rituals : Array[Ritual] = []
+
 
 static func get_network_id(hero : DataHero) -> String:
 	var splitted = hero.resource_path.split("/", false)

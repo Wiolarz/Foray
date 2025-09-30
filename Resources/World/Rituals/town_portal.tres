@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Ritual" load_steps=2 format=3 uid="uid://be10mrknwfx3x"]
+
+[ext_resource type="Script" path="res://Resources/World/rituals.gd" id="1_gp254"]
+
+[resource]
+script = ExtResource("1_gp254")
+name = "Town Portal"
+icon_path = "res://Art/world_map/simple_city_blue.png"
+mp_cost = 2

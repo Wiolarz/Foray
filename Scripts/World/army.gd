@@ -43,7 +43,11 @@ func get_units_list():
 func apply_losses(losses : Array[DataUnit]):
 	if hero and hero.data_unit in losses:
 		hero.wounded = true
-		print("hero wounded")
+		for passive in hero.passive_effects:
+			if passive.passive_name == "immortality":
+				hero.wounded = false
+
+		#print("hero wounded")
 	for loss in losses:
 		#assert(loss in units_data, "loss not in army")
 		units_data.erase(loss)
@@ -70,7 +74,14 @@ func add_xp(gained_xp : int) -> void:
 
 func on_end_of_round():
 	if hero:
-		hero.movement_points = hero.max_movement_points
+		hero.movement_points += hero.movements_points_renewal
+		if hero.movement_points > hero.max_movement_points:
+			hero.movement_points = hero.max_movement_points
+		hero.rituals = hero.rituals_book.duplicate()
+
+		for passive in hero.passive_effects:
+			if passive.passive_name == "arch mage":
+				hero.ritual_cost_reduction += 1
 
 
 ## remember that is some player's army is created, it also needs to be

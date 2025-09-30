@@ -16,4 +16,5 @@ script = ExtResource("2_cbv6a")
 name = "Barracks level 3"
 cost = SubResource("Resource_5r62w")
 requirements = Array[ExtResource("2_cbv6a")]([ExtResource("2_pvbg7"), ExtResource("3_ef74p")])
+discounts = Array[Resource("res://Scripts/World/Economy/discount.gd")]([])
 outpost_requirement = "ruby"

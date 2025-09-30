@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Ritual" load_steps=2 format=3 uid="uid://caxvfydwy7d5v"]
+
+[ext_resource type="Script" path="res://Resources/World/rituals.gd" id="1_lhqsb"]
+
+[resource]
+script = ExtResource("1_lhqsb")
+name = "Fear"
+icon_path = "res://Art/orc_hero_fighter.png"
+mp_cost = 1

@@ -539,9 +539,15 @@ func end_combat(battle_results : Array[BattleGridState.ArmyInBattleState]) -> vo
 
 		if army.hero:
 			army_state.killed_units.sort()  # from lowest to highest
+
+			var hero_level_threshold_modifier : int = 0
+			for passive : HeroPassive in army.hero.passive_effects:
+				if passive.passive_name == "sage":
+					hero_level_threshold_modifier -= 1
+
 			# we aim to award hero as much as possible
 			for killed_unit : int in army_state.killed_units:
-				if army.hero.level <= killed_unit:
+				if army.hero.level + hero_level_threshold_modifier <= killed_unit:
 					army.hero.add_xp(1)
 
 
