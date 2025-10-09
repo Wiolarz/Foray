@@ -1,24 +1,24 @@
 [gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://b851iu7je1hs4"]
 
-[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_crfa3"]
-[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_81nq0"]
-[ext_resource type="Resource" uid="uid://oq31g85fljuf" path="res://Resources/Battle/Battle_Spells/vengeance.tres" id="3_lccbb"]
-[ext_resource type="Resource" uid="uid://bpp7uuufysbuh" path="res://Resources/Battle/Symbols/sickle.tres" id="4_vfct8"]
-[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_npdal"]
-[ext_resource type="Resource" uid="uid://cngonnqsgsd6e" path="res://Resources/Battle/Symbols/axe.tres" id="6_3xr04"]
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_jwfjf"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_jve6q"]
+[ext_resource type="Resource" uid="uid://oq31g85fljuf" path="res://Resources/Battle/Battle_Spells/vengeance.tres" id="3_mi5rt"]
+[ext_resource type="Resource" uid="uid://bpp7uuufysbuh" path="res://Resources/Battle/Symbols/sickle.tres" id="4_tyoux"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_uysvo"]
+[ext_resource type="Resource" uid="uid://cngonnqsgsd6e" path="res://Resources/Battle/Symbols/axe.tres" id="6_5hraq"]
 
 [sub_resource type="Resource" id="Resource_vofdp"]
-script = ExtResource("1_crfa3")
+script = ExtResource("1_jwfjf")
 wood = 4
 iron = 0
 ruby = 1
 
 [resource]
-script = ExtResource("2_81nq0")
+script = ExtResource("2_jve6q")
 unit_name = "Gardener"
 texture_path = "res://Art/units/undead/undead_3_caster.png"
-symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_vfct8"), ExtResource("5_npdal"), ExtResource("6_3xr04"), ExtResource("5_npdal"), ExtResource("6_3xr04"), ExtResource("5_npdal")])
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_tyoux"), ExtResource("5_uysvo"), ExtResource("6_5hraq"), ExtResource("5_uysvo"), ExtResource("6_5hraq"), ExtResource("5_uysvo")])
 cost = SubResource("Resource_vofdp")
-level = 3
+level = 2
 mana = 2
-spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([ExtResource("3_lccbb")])
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([ExtResource("3_mi5rt")])
