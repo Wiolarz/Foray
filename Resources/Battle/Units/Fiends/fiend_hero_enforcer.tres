@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://dib6j10rvqm50"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://k1ro1wsvvk5h"]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_5pnlm"]
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_enpo3"]
@@ -16,7 +16,7 @@ ruby = 0
 [resource]
 script = ExtResource("2_enpo3")
 unit_name = "Enforcer"
-texture_path = "res://Art/units/fiends/fiend_hero_enforer.png"
+texture_path = "res://Art/units/fiends/fiend_hero_enforcer.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_hlfjx"), ExtResource("4_0ojno"), ExtResource("3_75yx2"), ExtResource("4_r8min"), ExtResource("3_75yx2"), ExtResource("4_0ojno")])
 cost = SubResource("Resource_k8g4u")
 level = 1

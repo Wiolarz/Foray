@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="DataHero" load_steps=6 format=3 uid="uid://dne6m64cvoilw"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_52j23"]
+[ext_resource type="Resource" uid="uid://dckg8ydhgs3yj" path="res://Resources/Battle/Units/Cyclops/cyclops_hero_chieftain.tres" id="2_je0iw"]
+[ext_resource type="Script" path="res://Resources/Battle/data_hero.gd" id="3_8phwf"]
+
+[sub_resource type="Resource" id="Resource_56e6o"]
+script = ExtResource("1_52j23")
+wood = 0
+iron = 0
+ruby = 0
+
+[sub_resource type="Resource" id="Resource_irsv6"]
+script = ExtResource("1_52j23")
+wood = 0
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("3_8phwf")
+hero_name = "Chieftan"
+cost = SubResource("Resource_56e6o")
+revive_cost = SubResource("Resource_irsv6")
+data_unit = ExtResource("2_je0iw")
+starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([])
+starting_level = 1
+max_army_size = 3
+max_movement_points = 3

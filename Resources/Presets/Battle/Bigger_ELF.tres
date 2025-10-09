@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_wyayb"]
 [ext_resource type="Resource" uid="uid://1yy1fjfn2n8k" path="res://Resources/Battle/Units/Elves/elf_unit_hero_stalker.tres" id="2_s548k"]
-[ext_resource type="Resource" uid="uid://clmtb3vi2x3my" path="res://Resources/Battle/Units/Elves/elf_3_swordsmen.tres" id="3_rmvn8"]
+[ext_resource type="Resource" uid="uid://clmtb3vi2x3my" path="res://Resources/Battle/Units/Elves/elf_3_royal_guard.tres" id="3_rmvn8"]
 [ext_resource type="Resource" uid="uid://bh4qurujj27rh" path="res://Resources/Battle/Units/Classic/elf3.tres" id="4_bbcar"]
 [ext_resource type="Resource" uid="uid://bwyu6qg7dsisg" path="res://Resources/Battle/Units/Classic/orc1.tres" id="5_0rbau"]
 [ext_resource type="Resource" uid="uid://0vft0atich8r" path="res://Resources/Battle/Units/Elves/elf_1_spearmen.tres" id="5_tmdq1"]
 [ext_resource type="Resource" uid="uid://syrr32f2nn6u" path="res://Resources/Battle/Units/Classic/orc2.tres" id="6_68vsf"]
-[ext_resource type="Resource" uid="uid://bgu30lp3txcwv" path="res://Resources/Battle/Units/Orcs/orc_6_champion.tres" id="7_hkmd5"]
+[ext_resource type="Resource" uid="uid://c0ufbeh75ygcc" path="res://Resources/Battle/Units/Orcs/orc_6_champion.tres" id="7_hkmd5"]
 [ext_resource type="Resource" uid="uid://b6iypsngmypss" path="res://Resources/Battle/Battle_Maps/basic5x5.tres" id="8_o8u31"]
 [ext_resource type="Script" path="res://Resources/Presets/preset_battle.gd" id="9_0p03i"]
 

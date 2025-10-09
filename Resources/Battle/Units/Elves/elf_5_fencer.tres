@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://cyecnaijg3se1"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_upwyv"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_a10j1"]
+[ext_resource type="Resource" uid="uid://dy85xcp8g7gbq" path="res://Resources/Battle/Symbols/sword.tres" id="4_82dfu"]
+[ext_resource type="Resource" uid="uid://sr1570kq7sm8" path="res://Resources/Battle/Symbols/shield.tres" id="5_w0qj3"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="6_cpg06"]
+
+[sub_resource type="Resource" id="Resource_6r5q3"]
+script = ExtResource("1_upwyv")
+wood = 2
+iron = 2
+ruby = 2
+
+[resource]
+script = ExtResource("3_a10j1")
+unit_name = "Fencer"
+texture_path = "res://Art/units/elf/elf_5_fencer.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_82dfu"), ExtResource("5_w0qj3"), ExtResource("6_cpg06"), ExtResource("6_cpg06"), ExtResource("6_cpg06"), ExtResource("5_w0qj3")])
+cost = SubResource("Resource_6r5q3")
+level = 5
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

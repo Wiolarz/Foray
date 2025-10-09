@@ -1,7 +1,6 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://dfe0ek2xxvv6m"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://dfe0ek2xxvv6m"]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_xxvw5"]
-[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_ym8x5"]
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_dflqx"]
 [ext_resource type="Resource" uid="uid://bpp7uuufysbuh" path="res://Resources/Battle/Symbols/sickle.tres" id="4_amk25"]
 [ext_resource type="Resource" uid="uid://34m12aa1mich" path="res://Resources/Battle/Battle_Spells/martyr.tres" id="4_fhb2r"]
@@ -19,7 +18,6 @@ unit_name = "Lich"
 texture_path = "res://Art/units/undead/undead_6_lich.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_amk25"), ExtResource("4_amk25"), ExtResource("6_fsos2"), ExtResource("6_fsos2"), ExtResource("6_fsos2"), ExtResource("4_amk25")])
 cost = SubResource("Resource_vofdp")
-required_building = ExtResource("2_ym8x5")
 level = 6
 mana = 4
 spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([ExtResource("4_fhb2r")])

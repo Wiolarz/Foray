@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://0vft0atich8r"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3 uid="uid://0vft0atich8r"]
 
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="1_ulpat"]
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_ysdgm"]
-[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_wwywa"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="3_ep7sl"]
 [ext_resource type="Resource" uid="uid://bp747guikipcb" path="res://Resources/Battle/Symbols/spear.tres" id="5_r8p1y"]
 
@@ -15,10 +14,9 @@ ruby = 0
 [resource]
 script = ExtResource("1_ulpat")
 unit_name = "Spearmen"
-texture_path = "res://Art/elf_spearmen.png"
+texture_path = "res://Art/units/elf/elf_spearmen.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("5_r8p1y"), ExtResource("3_ep7sl"), ExtResource("3_ep7sl"), ExtResource("3_ep7sl"), ExtResource("3_ep7sl"), ExtResource("3_ep7sl")])
 cost = SubResource("Resource_8qfgt")
-required_building = ExtResource("2_wwywa")
 level = 1
 mana = 0
 spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])
