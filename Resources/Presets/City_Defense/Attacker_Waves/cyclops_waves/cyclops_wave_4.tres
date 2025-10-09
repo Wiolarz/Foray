@@ -1,11 +1,11 @@
 [gd_resource type="Resource" script_class="PresetArmy" load_steps=7 format=3 uid="uid://daub3sk6ls2tk"]
 
 [ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_hphuf"]
-[ext_resource type="Resource" uid="uid://c3d8o8qw4dfa4" path="res://Resources/Battle/Units/Cyclops/cyclops_1_axer.tres" id="2_fu8f8"]
-[ext_resource type="Resource" uid="uid://7v686d60r2xe" path="res://Resources/Battle/Units/Cyclops/cyclops_4_hammer.tres" id="3_4cefy"]
-[ext_resource type="Resource" uid="uid://cir43eqa3uet2" path="res://Resources/Battle/Units/Cyclops/cyclops_5_shield_halbard.tres" id="4_6jt30"]
-[ext_resource type="Resource" uid="uid://b4ajym7wahumg" path="res://Resources/Battle/Units/Cyclops/cyclops_3_javelin.tres" id="5_pj62m"]
-[ext_resource type="Resource" uid="uid://cyhjeh4nx5xbk" path="res://Resources/Battle/Units/Cyclops/cyclops_6_flail.tres" id="6_o1e6h"]
+[ext_resource type="Resource" uid="uid://c3d8o8qw4dfa4" path="res://Resources/Battle/Units/Cyclops/cyclops_1_brigand.tres" id="2_fu8f8"]
+[ext_resource type="Resource" uid="uid://7v686d60r2xe" path="res://Resources/Battle/Units/Cyclops/cyclops_hero_reaver.tres" id="3_4cefy"]
+[ext_resource type="Resource" uid="uid://cir43eqa3uet2" path="res://Resources/Battle/Units/Cyclops/cyclops_4_protector.tres" id="4_6jt30"]
+[ext_resource type="Resource" uid="uid://b4ajym7wahumg" path="res://Resources/Battle/Units/Cyclops/cyclops_3_raider.tres" id="5_pj62m"]
+[ext_resource type="Resource" uid="uid://cnme0aoam7otl" path="res://Resources/Battle/Units/Cyclops/cyclops_6_giant.tres" id="6_o1e6h"]
 
 [resource]
 script = ExtResource("1_hphuf")

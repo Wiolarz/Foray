@@ -11,7 +11,7 @@
 [ext_resource type="Resource" uid="uid://bupuvg1cr7byg" path="res://Resources/Battle/Units/Dwarves/dwarf_4_arbalister.tres" id="5_al402"]
 [ext_resource type="Resource" uid="uid://cglulnc0lgfjw" path="res://Resources/Battle/Heroes/Dwarves/dwarf_hero_tribune.tres" id="5_myavb"]
 [ext_resource type="Resource" uid="uid://by5i1rhxyug0d" path="res://Resources/Battle/Heroes/Dwarves/dwarf_hero_breacher.tres" id="6_n0j60"]
-[ext_resource type="Resource" uid="uid://cm26lu3vyqiue" path="res://Resources/Battle/Units/Dwarves/dwarf_5_berserk.tres" id="6_vlqhp"]
+[ext_resource type="Resource" uid="uid://dvwawqfx5xal8" path="res://Resources/Battle/Units/Dwarves/dwarf_5_berserk.tres" id="6_vlqhp"]
 [ext_resource type="Resource" uid="uid://pprqbqhgulyx" path="res://Resources/Battle/Heroes/Dwarves/dwarf_hero_cleric.tres" id="7_5560i"]
 [ext_resource type="Resource" uid="uid://lyxan5nj2eie" path="res://Resources/Battle/Units/Dwarves/dwarf_6_scholar.tres" id="7_amjvs"]
 

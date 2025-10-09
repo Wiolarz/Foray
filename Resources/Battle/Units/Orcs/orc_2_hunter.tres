@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3 uid="uid://3e7lgte3o0of"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_ovgy4"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_q8jwb"]
+[ext_resource type="Resource" uid="uid://can6h14rlybte" path="res://Resources/Battle/Symbols/javelin.tres" id="3_4pyfu"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="4_ugwcw"]
+
+[sub_resource type="Resource" id="Resource_bdqvu"]
+script = ExtResource("1_ovgy4")
+wood = 0
+iron = 2
+ruby = 0
+
+[resource]
+script = ExtResource("2_q8jwb")
+unit_name = "Hunter"
+texture_path = "res://Art/units/orc/orc_spear_thrower.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_4pyfu"), ExtResource("4_ugwcw"), ExtResource("4_ugwcw"), ExtResource("4_ugwcw"), ExtResource("4_ugwcw"), ExtResource("4_ugwcw")])
+cost = SubResource("Resource_bdqvu")
+level = 2
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

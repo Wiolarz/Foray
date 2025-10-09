@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://b4ajym7wahumg"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_kgv7m"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_d8avc"]
+[ext_resource type="Resource" uid="uid://can6h14rlybte" path="res://Resources/Battle/Symbols/javelin.tres" id="4_yhud8"]
+[ext_resource type="Resource" uid="uid://sr1570kq7sm8" path="res://Resources/Battle/Symbols/shield.tres" id="5_qf7hf"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="6_ndpu1"]
+
+[sub_resource type="Resource" id="Resource_8qfgt"]
+script = ExtResource("1_kgv7m")
+wood = 4
+iron = 1
+ruby = 0
+
+[resource]
+script = ExtResource("3_d8avc")
+unit_name = "Raider"
+texture_path = "res://Art/units/cyclops/cyclops_3_javelin.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_yhud8"), ExtResource("5_qf7hf"), ExtResource("6_ndpu1"), ExtResource("6_ndpu1"), ExtResource("6_ndpu1"), ExtResource("5_qf7hf")])
+cost = SubResource("Resource_8qfgt")
+level = 3
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

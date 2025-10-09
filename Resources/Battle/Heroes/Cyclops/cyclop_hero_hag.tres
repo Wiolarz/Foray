@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="DataHero" load_steps=6 format=3 uid="uid://c50s8j4uad6pg"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_v1dhc"]
+[ext_resource type="Resource" path="res://Resources/Battle/Units/Cyclops/cyclops_hero_hag.tres" id="2_lmrgn"]
+[ext_resource type="Script" path="res://Resources/Battle/data_hero.gd" id="3_8owd8"]
+
+[sub_resource type="Resource" id="Resource_56e6o"]
+script = ExtResource("1_v1dhc")
+wood = 0
+iron = 0
+ruby = 0
+
+[sub_resource type="Resource" id="Resource_irsv6"]
+script = ExtResource("1_v1dhc")
+wood = 0
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("3_8owd8")
+hero_name = "Hag"
+cost = SubResource("Resource_56e6o")
+revive_cost = SubResource("Resource_irsv6")
+data_unit = ExtResource("2_lmrgn")
+starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([])
+starting_level = 1
+max_army_size = 3
+max_movement_points = 3

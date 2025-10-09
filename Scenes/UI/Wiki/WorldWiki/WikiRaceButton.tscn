@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://j7u7m68we3um"]
 
-[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/elf_spearmen.png" id="1_uj04l"]
+[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/units/elf/elf_spearmen.png" id="1_uj04l"]
 [ext_resource type="Script" path="res://Scripts/UI/Educational/WorldWiki/wiki_race_button.gd" id="2_788ub"]
 
 [node name="RaceButton" type="TextureButton"]

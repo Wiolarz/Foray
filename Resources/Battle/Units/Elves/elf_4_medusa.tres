@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3 uid="uid://dyrqq63ykm0j8"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_t4gcv"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_byavi"]
+[ext_resource type="Resource" uid="uid://c61kr7bqpyhr0" path="res://Resources/Battle/Symbols/bow.tres" id="4_nfjli"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_8yxfe"]
+
+[sub_resource type="Resource" id="Resource_ftcqs"]
+script = ExtResource("1_t4gcv")
+wood = 1
+iron = 4
+ruby = 0
+
+[resource]
+script = ExtResource("3_byavi")
+unit_name = "Medusa"
+texture_path = "res://Art/units/elf/elf_4_medusa.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_nfjli"), ExtResource("4_nfjli"), ExtResource("5_8yxfe"), ExtResource("5_8yxfe"), ExtResource("5_8yxfe"), ExtResource("4_nfjli")])
+cost = SubResource("Resource_ftcqs")
+level = 4
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

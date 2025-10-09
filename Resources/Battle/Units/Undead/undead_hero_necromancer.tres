@@ -1,7 +1,6 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://bncgkxs56tdgt"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://bncgkxs56tdgt"]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_fmo4q"]
-[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_upiaf"]
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_inesy"]
 [ext_resource type="Resource" uid="uid://cngonnqsgsd6e" path="res://Resources/Battle/Symbols/axe.tres" id="4_4ie0n"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_8b4jw"]
@@ -19,7 +18,6 @@ unit_name = "Necromancer"
 texture_path = "res://Art/units/undead/undead_hero_necromancer.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_4ie0n"), ExtResource("5_e8kl2"), ExtResource("5_8b4jw"), ExtResource("5_8b4jw"), ExtResource("5_8b4jw"), ExtResource("5_e8kl2")])
 cost = SubResource("Resource_vofdp")
-required_building = ExtResource("2_upiaf")
 level = 1
 mana = 0
 spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])
