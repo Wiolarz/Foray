@@ -87,9 +87,7 @@ void BattleManagerFast::play_move(Move move) {
 				"Target spawn {},{} does not belong to current army", move.pos.x, move.pos.y
 		);
 
-		_move_unit(uid, move.pos);
-		unit.rotation = _tiles.get_tile(move.pos).get_spawn_rotation();
-		unit.status = UnitStatus::ALIVE;
+		_deploy_unit(uid, move.pos);
 
 		int skip_count = 0;
 		_current_army = (_current_army + 1) % _armies.size();
@@ -497,6 +495,16 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 	}
 	spell.state = BattleSpell::State::NONE;
 	spell.unit = NO_UNIT;
+}
+
+void BattleManagerFast::_deploy_unit(UnitID uid, Position target) {
+	auto unit_opt = _get_unit(uid);
+	BM_ASSERT(unit_opt.has_value(), "Unit id {}/{} was not found while deploying", uid.army, uid.unit);
+	auto [unit, army] = unit_opt.value();
+
+	_move_unit(uid, target);
+	unit.rotation = _tiles.get_tile(target).get_spawn_rotation();
+	unit.status = UnitStatus::ALIVE;
 }
 
 void BattleManagerFast::_summon_unit(Unit& unit, Army& army, Position target) {
