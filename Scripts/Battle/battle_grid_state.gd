@@ -43,9 +43,6 @@ const MANA_WELL_POWER : int = 5
 var spear_holding_killer_teams : Array[int] = []
 
 
-var stalemate_failsafe_on : bool = false
-var stalemate_failsafe_start : int = 0
-
 #region init
 
 func _init(width_ : int, height_ : int):
@@ -87,11 +84,11 @@ static func create(map : DataBattleMap, new_armies : Array[Army]) -> BattleGridS
 func move_info_deploy_unit(move_info : MoveInfo) -> Unit:
 	assert(move_info.move_type == MoveInfo.TYPE_DEPLOY)
 	currently_processed_move_info = move_info
-	var unit_data := move_info.deployed_unit
+	var unit_idx : int = move_info.deployed_unit
 	var coord := move_info.target_tile_coord
 	var initial_rotation := _get_deploy_rotation(coord)
 	var army_state := armies_in_battle_state[current_army_index]
-	var unit := army_state.deploy_unit(unit_data, coord, initial_rotation)
+	var unit := army_state.deploy_unit(unit_idx, coord, initial_rotation)
 	move_info.army_idx = current_army_index
 	move_info.original_rotation = initial_rotation
 
@@ -142,16 +139,6 @@ func move_info_execute(move_info : MoveInfo) -> void:
 			move_info.register_whole_move_complete() # TEMP check what it was supposed to do
 
 	turn_counter += 1
-
-	if stalemate_failsafe_on and stalemate_failsafe_start + 6 < turn_counter:
-		for army in armies_in_battle_state:
-			for _unit in army.units:
-				if _unit.template.unit_name != "orc_2": continue
-
-				var vengeance_effect : BattleMagicEffect = \
-					load("res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/vengeance_effect.tres")
-
-				vengeance_effect.apply_effect(_unit, "post death spell effect")
 
 	_check_battle_end()
 	if battle_is_ongoing():
@@ -802,9 +789,9 @@ func _perform_dash(unit : Unit, target_tile_coord : Vector2i, power : int = 3) -
 
 
 func _summon_a_unit(caster : Unit, summoned_unit : DataUnit, target_tile_coord : Vector2i) -> void:
-	summoned_unit.summoned = true
 	var direction : int = GenericHexGrid.direction_to_adjacent(caster.coord, target_tile_coord)
-	var unit : Unit = caster.army_in_battle.deploy_unit(summoned_unit, target_tile_coord, direction)
+	var unit : Unit = caster.army_in_battle.summon_unit(summoned_unit, target_tile_coord, direction)
+
 
 	# Apply summon sickness
 	var success : bool = unit.try_adding_magic_effect(load(CFG.SUMMONING_SICKNESS_PATH))
@@ -882,7 +869,7 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 		spear_holding_killer_teams = []
 
 	if killer_army:
-		killer_army.killed_units.append(target.template.level)
+		killer_army.killed_units.append(target.level)
 
 		#TODO move this elsewhere so that durability gets lowered by 1 each killing turn regardless of number of killed units
 		for effect in currently_active_unit.effects:
@@ -915,17 +902,6 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 		spell.apply_effect(currently_active_unit, "post death spell effect")
 
 	mana_values_changed() # TEMP occurs every time after death
-
-	var units_on_board : Dictionary = {}
-
-	for army in armies_in_battle_state:
-		for unit in army.units:
-			units_on_board[unit.template.unit_name] = unit
-
-	if units_on_board.size() == 2 and units_on_board.has("elf_3") \
-	and units_on_board.has("orc_2"):
-		stalemate_failsafe_on = true
-		stalemate_failsafe_start = turn_counter
 
 
 ## Rare event when all players repeated their moves -> it pushes cyclone timer to activate next turn
@@ -1203,7 +1179,7 @@ func _end_of_turn_magic() -> void:
 	for army in armies_in_battle_state:
 		for unit : Unit in army.units:
 			for effect_idx in range(unit.effects.size() -1, -1, -1):
-				var magic_effect : BattleMagicEffect = unit.effects[effect_idx]
+				var magic_effect : MagicEffect = unit.effects[effect_idx]
 
 				if not magic_effect.passive_effect:  # Duration
 					magic_effect.duration_counter -= 1
@@ -1323,7 +1299,7 @@ func _get_deployment_tiles(player : Player) -> Array[Vector2i]:
 	return result
 
 
-func _get_not_deployed_units(player : Player) -> Array[DataUnit]:
+func _get_not_deployed_units(player : Player) -> Array[Unit]:
 	var index = player.index if player else -1
 	for a in armies_in_battle_state:
 		if a.army_reference.controller_index == index:
@@ -1388,9 +1364,9 @@ func _get_all_deploy_moves() -> Array[MoveInfo]:
 	var me = get_current_player()
 	var spawn_tiles = _get_deployment_tiles(me)
 	var units = _get_not_deployed_units(me)
-	for unit in units:
+	for unit_idx in range(units.size()):
 		for spawn_tile in spawn_tiles:
-			legal_moves.append(MoveInfo.make_deploy(unit, spawn_tile))
+			legal_moves.append(MoveInfo.make_deploy(unit_idx, spawn_tile))
 
 	return legal_moves
 
@@ -1771,11 +1747,11 @@ class ArmyInBattleState:
 	## basic idx reference to which units are allies
 	var team : int = -1
 
-	var units_to_deploy : Array[DataUnit] = []
+	var units_to_deploy : Array[Unit] = []
 	## alive already deployed units
 	var units : Array[Unit] = []
 	## owned units that died during combat
-	var dead_units : Array[DataUnit] = []
+	var dead_units : Array[Unit] = []
 
 	#STUB - the only relevant information about killed units is their level
 	var killed_units : Array[int]
@@ -1798,22 +1774,54 @@ class ArmyInBattleState:
 	## time to add when turn ends
 	var turn_increment_ms = CFG.CHESS_CLOCK_BATTLE_TURN_INCREMENT_MS
 
+	static func _apply_hero_passives(hero_unit : Unit, hero : Hero) -> void:
+		for passive_effect in hero.passive_effects:
+			if not passive_effect:  # TEMP null check until all pasives in level_up_screen are present
+				continue
+			match passive_effect.passive_name:
+				"magic_weapons":
+					var effect : DataMagicEffect = load(CFG.hero_magic_weapon_effect)
+					var success : bool = hero_unit.try_adding_magic_effect(effect)
+					assert(success, "couldn't add passive effect to a hero unit at the start of the battle")
+					for symbol in hero_unit.symbols:
+						if symbol.attack_power != 0:
+							symbol.attack_power = effect.magic_weapon_durability
+				"weak_weapons":
+					var weak_weapon : DataSymbol = load(CFG.weak_weapon)
+					for side in range(6):
+						var symbol = hero_unit.symbols[side]
+
+						if symbol.symbol_name == "empty": # TODO verify and note the choice in the documentation, if thats a proper way to verify symbol is empty
+							hero_unit.symbols[side] = weak_weapon.duplicate()
+				"wind_weapons":
+					for symbol in hero_unit.symbols:
+						if symbol.attack_power != 0:
+							symbol.push_power += 1
+				"second_wind":
+					var effect : DataMagicEffect = load(CFG.hero_second_wind_effect)
+					var success : bool = hero_unit.try_adding_magic_effect(effect)
+					assert(success, "couldn't add passive effect to a hero unit at the start of the battle")
+
 
 	static func create_from(army : Army, state : BattleGridState) -> ArmyInBattleState:
 		var result = ArmyInBattleState.new()
 		result.battle_grid_state = weakref(state)
 		result.army_reference = army
-		if army.hero and not army.hero.wounded: #TEMP
-			var hero_unit : DataUnit = army.hero.template.data_unit
-			result.units_to_deploy.append(hero_unit)
+		if army.hero and not army.hero.wounded:
+			var unit := Unit.create(army.controller, army.hero.template.data_unit,
+				Vector2i.ZERO, GenericHexGrid.GridDirections.LEFT, result)
+			unit.level = army.hero.level
+			result.units_to_deploy.append(unit)
+			_apply_hero_passives(unit, army.hero)
 
 		# unit list
 		for unit : DataUnit in army.units_data:
-			result.units_to_deploy.append(unit)
+			result.units_to_deploy.append(Unit.create(army.controller, unit,
+				Vector2i.ZERO, GenericHexGrid.GridDirections.LEFT, result))
 
 			result.mana_points += unit.mana # MANA
 
-		result.apply_passive_effects(state)
+		result.apply_passive_effects(result, state)
 
 		#Temp solution for world map, where proper clock system isn't implemented yet
 		if army.timer_reserve_sec == 0:
@@ -1825,7 +1833,7 @@ class ArmyInBattleState:
 
 		return result
 
-	func apply_passive_effects(state : BattleGridState) -> void:
+	func apply_passive_effects(army_in_battle : ArmyInBattleState, state : BattleGridState) -> void:
 		if not hero:
 			return
 		for effect in hero.passive_effects:
@@ -1835,8 +1843,10 @@ class ArmyInBattleState:
 					if state.armies_in_battle_state.size() != 0:
 						continue  # only attacker can use ballista
 					var ballista : DataUnit = load(CFG.BALLISTA_PATH)
-					ballista.summoned = true
-					units_to_deploy.append(ballista)
+					var unit := Unit.create(army_in_battle.army_reference.controller,
+					ballista, Vector2i.ZERO, GenericHexGrid.GridDirections.LEFT, army_in_battle)
+					unit.summoned = true
+					units_to_deploy.append(unit)
 
 
 	func turn_started() -> void:
@@ -1866,13 +1876,13 @@ class ArmyInBattleState:
 	func kill_unit(target : Unit) -> void:
 		print("killing ", target.coord, " ",target.template.unit_name)
 		assert(target in units)
-		if target.template.mana > 0:
-			mana_points -= target.template.mana
-			# mana_value changed gets called after every kill anyway
+
+		# mana_values_changed is called in main _kill_unit after this reduction
+		mana_points -= target.mana
 
 		units.erase(target)
 
-		dead_units.append(target.template)
+		dead_units.append(target)
 		if not can_fight():  # remove all summons once are alive units have died
 			kill_army()
 		#gdlint: ignore=private-method-call
@@ -1882,8 +1892,7 @@ class ArmyInBattleState:
 		var unit = kill_info.respawn()
 		unit.controller = IM.get_player_by_index(army_reference.controller_index)
 		unit.army_in_battle = self
-
-		dead_units.erase(unit.template)
+		dead_units.erase(unit)
 		units.append(unit)
 		return unit
 
@@ -1907,42 +1916,24 @@ class ArmyInBattleState:
 		return alive_not_summoned_units_number() > 0 or units_to_deploy.size() > 0
 
 
-	func deploy_unit(unit_data : DataUnit, coord : Vector2i, rotation : int) -> Unit:
-		units_to_deploy.erase(unit_data)
+	func summon_unit(unit_data : DataUnit, coord : Vector2i, rotation : int) -> Unit:
 		var player = IM.get_player_by_index(army_reference.controller_index)
 		var result = Unit.create(player, unit_data, coord, rotation, self)
+		result.summoned = true
+
 		units.append(result)
 
-		if not army_reference.hero or army_reference.hero.template.data_unit != unit_data:
-			return result  # it's not a hero
+		return result
 
-		## Applying hero passive effects
-		for passive_effect in army_reference.hero.passive_effects:
-			if not passive_effect:  # TEMP null check until all pasives in level_up_screen are present
-				continue
-			match passive_effect.passive_name:
-				"magic_weapons":
-					var effect : BattleMagicEffect = load(CFG.hero_magic_weapon_effect)
-					var success : bool = result.try_adding_magic_effect(effect)
-					assert(success, "couldn't add passive effect to a hero unit upon it's deployment")
-					for symbol in result.symbols:
-						if symbol.attack_power != 0:
-							symbol.attack_power = effect.magic_weapon_durability
-				"weak_weapons":
-					var weak_weapon : DataSymbol = load(CFG.weak_weapon)
-					for side in range(6):
-						var symbol = result.symbols[side]
 
-						if symbol.symbol_name == "empty": # TODO verify and note the choice in the documentation, if thats a proper way to verify symbol is empty
-							result.symbols[side] = weak_weapon.duplicate()
-				"wind_weapons":
-					for symbol in result.symbols:
-						if symbol.attack_power != 0:
-							symbol.push_power += 1
-				"second_wind":
-					var effect : BattleMagicEffect = load(CFG.hero_second_wind_effect)
-					var success : bool = result.try_adding_magic_effect(effect)
-					assert(success, "couldn't add passive effect to a hero unit upon it's placement")
+	func deploy_unit(unit_idx : int, coord : Vector2i, rotation : int) -> Unit:
+		var player = IM.get_player_by_index(army_reference.controller_index)
+
+		var result = units_to_deploy[unit_idx]
+		result.coord = coord
+		result.unit_rotation = rotation
+		units_to_deploy.erase(result)
+		units.append(result)
 
 		return result
 
@@ -1950,7 +1941,7 @@ class ArmyInBattleState:
 	func undeploy(coord : Vector2i):
 		var target = battle_grid_state.get_ref().get_unit(coord)
 		units.erase(target)
-		units_to_deploy.append(target.template)
+		units_to_deploy.append(target)
 		#gdlint: ignore=private-method-call
 		battle_grid_state.get_ref()._remove_unit(target)
 		target.unit_killed()  #TODO change this signal to a undo specific as to not mess with future animations and text bubbles
