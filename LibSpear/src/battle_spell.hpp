@@ -4,9 +4,8 @@
 #include <format>
 #include "godot_cpp/variant/string.hpp"
 
-#include "battle_structs.hpp"
+#include "unit.hpp"
 
-const unsigned MAX_SPELLS = 100;
 
 struct BattleSpell {
 	/// Spell's state - currently only represents type, but in the future might represent more complex spells as state machines

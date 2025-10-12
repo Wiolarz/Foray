@@ -70,6 +70,9 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 			new.set_unit_score(army_idx, unit_idx, unit.template.level)
 			new.set_unit_mana(army_idx, unit_idx, unit.template.mana)
 
+			if unit_idx == 0 and army.hero:
+				new.set_unit_hero(army_idx, unit_idx)
+
 			for i in range(6):
 				new.set_unit_symbol(army_idx, unit_idx, i, unit.template.symbols[i])
 
@@ -96,9 +99,9 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 			new.set_unit_solo_martyr(army_idx, martyrs[0], martyr_duration)
 
 		# Deployment processing
-		for summon_idx in range(army.units_to_deploy.size()):
-			var unit = army.units_to_deploy[summon_idx]
-			var unit_idx = summon_idx + army.units.size()
+		for deploy_idx in range(army.units_to_deploy.size()):
+			var unit = army.units_to_deploy[deploy_idx]
+			var unit_idx = deploy_idx + army.units.size()
 
 			new.insert_unit(army_idx, unit_idx, Vector2i.ZERO, 0, true)
 			for i in range(6):
@@ -106,6 +109,13 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 
 			new.summon_mapping_cpp2gd[[army_idx, unit_idx]] = unit
 			new.summon_mapping_gd2cpp[unit] = [army_idx, unit_idx]
+
+		# Passives
+		var passive_id = -1
+		var passives = army.hero.passive_effects if army.hero else []
+		for passive : HeroPassive in passives:
+			passive_id += 1
+			new.insert_passive(army_idx, passive_id, passive.passive_name)
 
 	new.finish_initialization()
 
@@ -115,6 +125,11 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 		new.force_battle_sacrifice()
 
 	return new
+
+
+func insert_unit_from(army_idx: int, unit_idx: int, template: DataUnit, unit: Unit = null):
+	# TODO move insert unit logic here
+	pass
 
 
 func set_unit_symbol(army_idx: int, unit_idx: int, symbol_idx: int, symbol: DataSymbol):
@@ -282,6 +297,21 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 			])
 			is_ok = false
 
+		var passives_size : int = army.hero.passive_effects.size() if army.hero else 0
+		if get_army_passive_count(army_id) != passives_size:
+			push_error("BMFast mismatch - passive count for army %s - fast: %s, slow: %s" % [
+				army_id, get_army_passive_count(army_id), passives_size
+			])
+			is_ok = false
+
+		if army.hero:
+			for passive : HeroPassive in army.hero.passive_effects:
+				if not is_passive_in_army(army_id, passive.passive_name):
+					push_error("BMFast mismatch - passive %s in army %s not present in fast" % [
+						passive.passive_name, army_id
+					])
+					is_ok = false
+
 		#endregion Per-army state
 
 		#region Units
@@ -310,6 +340,13 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 			if unit.unit_rotation != get_unit_rotation(army_id, unit_id):
 				push_error("BMFast mismsatch - unit: id ", unit_str, " slow has rotation ", unit.unit_rotation, \
 						   ",  ", " vs fast's rotation ", get_unit_rotation(army_id, unit_id))
+				is_ok = false
+
+			var should_be_hero = unit_id == 0 and army.hero
+			if is_unit_a_hero(army_id, unit_id) != should_be_hero:
+				push_error("BMFast mismsatch - unit: id ", unit_str, "hero status, slow %s vs fase %s", [
+					unit_str, should_be_hero, is_unit_a_hero(army_id, unit_id)
+				])
 				is_ok = false
 
 			# Dictionary[String, int] - numbers of spells

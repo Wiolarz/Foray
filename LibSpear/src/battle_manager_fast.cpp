@@ -1289,6 +1289,15 @@ void BattleManagerFastCpp::set_unit_solo_martyr(int army, int martyr_idx, int du
 	bm._armies[army].units[martyr_idx].try_apply_martyr(NO_UNIT, duration);
 }
 
+void BattleManagerFastCpp::set_unit_hero(int army, int idx) {
+	CHECK_UNIT(idx,);
+	CHECK_ARMY(army,);
+	
+	BM_ASSERT(bm._armies[army].hero_id_opt == -1, "Hero already exists for army {}", army);
+	bm._armies[army].units[idx].flags |= Unit::FLAG_HERO;
+	bm._armies[army].hero_id_opt = idx;
+}
+
 void BattleManagerFastCpp::set_current_participant(int army) {
 	CHECK_ARMY(army,);
 	bm._current_army = army;
@@ -1348,6 +1357,19 @@ int BattleManagerFastCpp::get_unit_spell_count(int army, int idx) {
 	return i;
 }
 
+bool BattleManagerFastCpp::is_passive_in_army(int army, godot::String name) {
+	CHECK_ARMY(army, false);
+
+	BattlePassive compared{name};
+	
+	for(const BattlePassive& passive : bm._armies[army].passives) {
+		if(passive.type == compared.type) {
+			return true;
+		}
+	}
+	return false;
+}
+
 inline int BattleManagerFastCpp::get_unit_effect_count(int army, int idx) {
 	CHECK_ARMY(army, 0);
 	CHECK_UNIT(idx, 0);
@@ -1362,6 +1384,20 @@ inline int BattleManagerFastCpp::get_unit_effect_count(int army, int idx) {
 	return i;
 }
 
+int BattleManagerFastCpp::get_army_passive_count(int army) {
+	CHECK_ARMY(army, 0);
+
+	int i = 0;
+	for(const BattlePassive& passive : bm._armies[army].passives) {
+		if(passive.type != BattlePassive::Type::NONE 
+		   && passive.type != BattlePassive::Type::SENTINEL
+		) {
+			i++;
+		}
+	}
+	return i;
+}
+
 
 void BattleManagerFastCpp::insert_spell(int army, int unit, int spell_id, godot::String str) {
 	CHECK_UNIT(unit,);
@@ -1369,6 +1405,13 @@ void BattleManagerFastCpp::insert_spell(int army, int unit, int spell_id, godot:
 	BM_ASSERT(unsigned(spell_id) < MAX_SPELLS, "Invalid spell id when inserting spell");
 
 	bm._spells[spell_id] = BattleSpell(str, UnitID(army, unit));
+}
+
+void BattleManagerFastCpp::insert_passive(int army, int army_passive_id, godot::String str) {
+	CHECK_ARMY(army,);
+	BM_ASSERT(unsigned(army_passive_id) < MAX_PASSIVES, "Invalid passive id when inserting passive");
+
+	bm._armies[army].passives[army_passive_id] = BattlePassive(str);
 }
 
 void BattleManagerFastCpp::set_cyclone_constants(godot::PackedInt32Array cyclone_values, int mana_well_power) {
@@ -1399,10 +1442,12 @@ void BattleManagerFastCpp::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_unit_martyr", "army", "unit", "martyr_id", "duration"), &BattleManagerFastCpp::set_unit_martyr);
 	ClassDB::bind_method(D_METHOD("set_unit_solo_martyr", "army", "martyr_id", "duration"), &BattleManagerFastCpp::set_unit_solo_martyr);
 	ClassDB::bind_method(D_METHOD("set_army_cyclone_timer", "army", "timer"), &BattleManagerFastCpp::set_army_cyclone_timer);
+	ClassDB::bind_method(D_METHOD("set_unit_hero", "army", "idx"), &BattleManagerFastCpp::set_unit_hero);
 	ClassDB::bind_method(D_METHOD("set_tile_grid", "tilegrid"), &BattleManagerFastCpp::set_tile_grid);
 	ClassDB::bind_method(D_METHOD("set_current_participant", "army"), &BattleManagerFastCpp::set_current_participant);
 	ClassDB::bind_method(D_METHOD("set_cyclone_constants", "cyclone_values", "mana_well_power"), &BattleManagerFastCpp::set_cyclone_constants);
-	ClassDB::bind_method(D_METHOD("insert_spell", "army", "index", "spell"), &BattleManagerFastCpp::insert_spell);
+	ClassDB::bind_method(D_METHOD("insert_spell", "army", "unit", "spell_id", "str"), &BattleManagerFastCpp::insert_spell);
+	ClassDB::bind_method(D_METHOD("insert_passive", "army", "army_passive_id", "str"), &BattleManagerFastCpp::insert_passive);
 	ClassDB::bind_method(D_METHOD("force_battle_ongoing"), &BattleManagerFastCpp::force_battle_ongoing);
 	ClassDB::bind_method(D_METHOD("force_battle_sacrifice"), &BattleManagerFastCpp::force_battle_sacrifice);
 	ClassDB::bind_method(D_METHOD("finish_initialization"), &BattleManagerFastCpp::finish_initialization);
@@ -1413,6 +1458,7 @@ void BattleManagerFastCpp::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_unit_rotation", "army", "unit"), &BattleManagerFastCpp::get_unit_rotation);
 	ClassDB::bind_method(D_METHOD("is_unit_alive", "army", "unit"), &BattleManagerFastCpp::is_unit_alive);
 	ClassDB::bind_method(D_METHOD("is_unit_being_deployed", "army", "unit"), &BattleManagerFastCpp::is_unit_being_deployed);
+	ClassDB::bind_method(D_METHOD("is_unit_a_hero", "army", "unit"), &BattleManagerFastCpp::is_unit_a_hero);
 	ClassDB::bind_method(D_METHOD("get_army_cyclone_timer", "army"), &BattleManagerFastCpp::get_army_cyclone_timer);
 	ClassDB::bind_method(D_METHOD("get_army_mana_points", "army"), &BattleManagerFastCpp::get_army_mana_points);
 	ClassDB::bind_method(D_METHOD("get_cyclone_target"), &BattleManagerFastCpp::get_cyclone_target);
@@ -1430,6 +1476,8 @@ void BattleManagerFastCpp::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("count_spell", "name"), &BattleManagerFastCpp::count_spell);
 	ClassDB::bind_method(D_METHOD("get_unit_effect_count", "army", "unit"), &BattleManagerFastCpp::get_unit_effect_count);
 	ClassDB::bind_method(D_METHOD("get_unit_spell_count", "army", "unit"), &BattleManagerFastCpp::get_unit_spell_count);
+	ClassDB::bind_method(D_METHOD("is_passive_in_army", "army", "name"), &BattleManagerFastCpp::is_passive_in_army);
+	ClassDB::bind_method(D_METHOD("get_army_passive_count", "army"), &BattleManagerFastCpp::get_army_passive_count);
 	ClassDB::bind_method(D_METHOD("get_max_units_in_army"), &BattleManagerFastCpp::get_max_units_in_army);
 
 	ClassDB::bind_method(D_METHOD("set_debug_internals", "name"), &BattleManagerFastCpp::set_debug_internals);
