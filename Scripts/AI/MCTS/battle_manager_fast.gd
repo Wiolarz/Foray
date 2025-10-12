@@ -43,13 +43,13 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 	var max_team = 0
 
 	for army_idx in range(bgstate.armies_in_battle_state.size()):
-		var army = bgstate.armies_in_battle_state[army_idx]
+		var army := bgstate.armies_in_battle_state[army_idx]
 
-		var player_idx = army.army_reference.controller_index
-		var player = IM.get_player_by_index(player_idx)
+		var player_idx : int = army.army_reference.controller_index
+		var player : Player = IM.get_player_by_index(player_idx)
 		# TODO temp hack for world battles
-		var team = player.team if player else max_team + 10000000
-		var team_id = team if team != 0 else (army_idx + 1000000)
+		var team : int = player.team if player else max_team + 10000000
+		var team_id := team if team != 0 else (army_idx + 1000000)
 		if team_id not in new.team_mapping:
 			new.team_mapping[team_id] = max_team
 			max_team += 1
@@ -57,58 +57,25 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 		new.set_army_team(army_idx, new.team_mapping[team_id])
 		new.set_army_cyclone_timer(army_idx, army.cyclone_timer)
 
-		var martyrs = []
-		var martyr_duration = -50
+		var martyrs = ArmyMartyrs.new()
 
 		# Alive unit processing
 		for unit_idx in range(army.units.size()):
-			var unit: Unit = army.units[unit_idx]
-			if unit.dead:
-				continue
-
-			new.insert_unit(army_idx, unit_idx, unit.coord, unit.unit_rotation, false)
-			new.set_unit_score(army_idx, unit_idx, unit.template.level)
-			new.set_unit_mana(army_idx, unit_idx, unit.template.mana)
-
-			if unit_idx == 0 and army.hero:
-				new.set_unit_hero(army_idx, unit_idx)
-
-			for i in range(6):
-				new.set_unit_symbol(army_idx, unit_idx, i, unit.template.symbols[i])
-
-			for spell in unit.spells:
-				new.insert_spell(army_idx, unit_idx, new.spell_mapping.size(), spell.name)
-				new.spell_mapping.push_back(spell)
-				new.spell_army_id_mapping.push_back(army_idx)
-				new.spell_unit_id_mapping.push_back(unit_idx)
-
-			for eff in unit.effects:
-				match eff.name:
-					"Martyr":
-						martyrs.push_back(unit_idx)
-						martyr_duration = eff.duration_counter
-					_:
-						var duration_counter = -1 if eff.passive_effect else eff.duration_counter
-						new.set_unit_effect(army_idx, unit_idx, eff.name, duration_counter)
+			var unit := army.units[unit_idx]
+			new.insert_unit_from(army_idx, army, martyrs, unit_idx, unit.template, unit)
 
 		# TODO in future there might potentially be more martyrs simultaneously
-		assert(martyrs.size() in [0,1,2], "Unsupported martyr number")
-		if martyrs.size() == 2:
-			new.set_unit_martyr(army_idx, martyrs[0], martyrs[1], martyr_duration)
-		elif martyrs.size() == 1:
-			new.set_unit_solo_martyr(army_idx, martyrs[0], martyr_duration)
+		assert(martyrs.martyrs.size() in [0,1,2], "Unsupported martyr number")
+		if martyrs.martyrs.size() == 2:
+			new.set_unit_martyr(army_idx, martyrs.martyrs[0], martyrs.martyrs[1], martyrs.martyr_duration)
+		elif martyrs.martyrs.size() == 1:
+			new.set_unit_solo_martyr(army_idx, martyrs.martyrs[0], martyrs.martyr_duration)
 
 		# Deployment processing
 		for deploy_idx in range(army.units_to_deploy.size()):
-			var unit = army.units_to_deploy[deploy_idx]
-			var unit_idx = deploy_idx + army.units.size()
-
-			new.insert_unit(army_idx, unit_idx, Vector2i.ZERO, 0, true)
-			for i in range(6):
-				new.set_unit_symbol(army_idx, unit_idx, i, unit.symbols[i])
-
-			new.summon_mapping_cpp2gd[[army_idx, unit_idx]] = unit
-			new.summon_mapping_gd2cpp[unit] = [army_idx, unit_idx]
+			var unit_idx := deploy_idx + army.units.size()
+			var template := army.units_to_deploy[deploy_idx]
+			new.insert_unit_from(army_idx, army, martyrs, unit_idx, template, null)
 
 		# Passives
 		var passive_id = -1
@@ -127,9 +94,53 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 	return new
 
 
-func insert_unit_from(army_idx: int, unit_idx: int, template: DataUnit, unit: Unit = null):
-	# TODO move insert unit logic here
-	pass
+func insert_unit_from(
+		army_idx: int,
+		army: BattleGridState.ArmyInBattleState,
+		martyrs_out: ArmyMartyrs,
+		unit_idx: int,
+		template: DataUnit,
+		unit: Unit = null
+		) -> void:
+
+	if unit and unit.dead:
+		return
+
+	var coord = unit.coord if unit else Vector2i.ZERO
+	var rotation = unit.unit_rotation if unit else 0
+	insert_unit(army_idx, unit_idx, coord, rotation, unit == null)
+	set_unit_score(army_idx, unit_idx, template.level)
+	set_unit_mana(army_idx, unit_idx, template.mana)
+
+	# Only for deploys
+	if not unit:
+		summon_mapping_cpp2gd[[army_idx, unit_idx]] = template
+		summon_mapping_gd2cpp[template] = [army_idx, unit_idx]
+
+	if unit_idx == 0 and army.army_reference.hero:
+		set_unit_hero(army_idx, unit_idx)
+
+	for i in range(6):
+		set_unit_symbol(army_idx, unit_idx, i, template.symbols[i])
+
+	# Spells - unit defaults for deploys
+	var spells = unit.spells if unit else template.spells
+	for spell in spells:
+		insert_spell(army_idx, unit_idx, spell_mapping.size(), spell.name)
+		spell_mapping.push_back(spell)
+		spell_army_id_mapping.push_back(army_idx)
+		spell_unit_id_mapping.push_back(unit_idx)
+
+	# Effects - not-yet-deployed ones have none yet
+	var effects = unit.effects if unit else []
+	for eff in effects:
+		match eff.name:
+			"Martyr":
+				martyrs_out.martyrs.push_back(unit_idx)
+				martyrs_out.martyr_duration = eff.duration_counter
+			_:
+				var duration_counter = -1 if eff.passive_effect else eff.duration_counter
+				set_unit_effect(army_idx, unit_idx, eff.name, duration_counter)
 
 
 func set_unit_symbol(army_idx: int, unit_idx: int, symbol_idx: int, symbol: DataSymbol):
@@ -424,3 +435,7 @@ func compare_move_list(bgs: BattleGridState) -> bool:
 	return is_ok
 
 #endregion
+
+class ArmyMartyrs:
+	var martyrs : Array[int]
+	var martyr_duration : int
