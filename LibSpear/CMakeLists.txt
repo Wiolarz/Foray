@@ -59,11 +59,13 @@ include_directories("${GODOT_GDEXTENSION_DIR}")
 include_directories("src")
 
 add_library(libspear SHARED
+  src/army.cpp
   src/battle_manager_fast.cpp
   src/battle_mcts.cpp
   src/battle_structs.cpp
   src/register_types.cpp
   src/tile_grid_fast.cpp
+  src/unit.cpp
 )
 
 find_package(OpenMP)
