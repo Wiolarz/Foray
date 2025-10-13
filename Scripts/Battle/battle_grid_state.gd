@@ -1151,7 +1151,7 @@ func _end_of_move_magic(army_that_just_moved_idx : int) -> void:
 			return
 		for unit : Unit in army.units:
 			for effect_idx in range(unit.effects.size() -1, -1, -1):
-				var magic_effect : BattleMagicEffect = unit.effects[effect_idx]
+				var magic_effect : MagicEffect = unit.effects[effect_idx]
 				match magic_effect.name:
 					"Blood Ritual":
 						if army.units.size() == 1:

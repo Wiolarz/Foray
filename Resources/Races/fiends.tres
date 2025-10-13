@@ -10,7 +10,7 @@
 [ext_resource type="Resource" uid="uid://dgnjky4w720c1" path="res://Resources/Battle/Heroes/Fiends/fiend_hero_rigid.tres" id="7_ejoag"]
 [ext_resource type="Resource" uid="uid://dhptbxwrrbtlu" path="res://Resources/Battle/Units/Fiends/fiend_1_servant.tres" id="9_fx7fc"]
 [ext_resource type="Resource" uid="uid://dik61pe44pl11" path="res://Resources/Battle/Units/Fiends/fiend_2_cultist.tres" id="10_51vy3"]
-[ext_resource type="Resource" path="res://Resources/Battle/Units/Fiends/fiend_3_impaler.tres" id="11_xltke"]
+[ext_resource type="Resource" uid="uid://bl5d73derv1y3" path="res://Resources/Battle/Units/Fiends/fiend_3_impaler.tres" id="11_xltke"]
 [ext_resource type="Resource" uid="uid://dw8ubgqhc0opp" path="res://Resources/Battle/Units/Fiends/fiend_4_bruiser.tres" id="12_mfcmw"]
 [ext_resource type="Resource" uid="uid://cj2klucehwp7" path="res://Resources/Battle/Units/Fiends/fiend_5_sacrificer.tres" id="13_frp4v"]
 [ext_resource type="Resource" uid="uid://pea38874ip8m" path="res://Resources/Battle/Units/Fiends/fiend_6_pit_lord.tres" id="14_xqvb8"]

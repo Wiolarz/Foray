@@ -90,7 +90,7 @@ func apply_graphics(unit : Unit, color : DataPlayerColor):
 
 
 func data_apply_graphics(unit_data : DataUnit, color : DataPlayerColor):
-	var unit_texture = RES.load(template.texture_path) as Texture2D
+	var unit_texture = RES.load(unit_data.texture_path) as Texture2D
 
 	_set_texture(unit_texture)
 	_apply_color_texture(color)
