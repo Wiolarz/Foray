@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="BattleMagicEffect" load_steps=2 format=3 uid="uid://dx6lffk7q0vf8"]
+[gd_resource type="Resource" script_class="DataMagicEffect" load_steps=2 format=3 uid="uid://dx6lffk7q0vf8"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/battle_magic_effect.gd" id="1_6lcj8"]
+[ext_resource type="Script" path="res://Scripts/Battle/data_magic_effect.gd" id="1_6lcj8"]
 
 [resource]
 script = ExtResource("1_6lcj8")

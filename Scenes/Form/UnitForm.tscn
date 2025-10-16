@@ -3,7 +3,7 @@
 [ext_resource type="Shader" path="res://Art/tile_overall_shader.gdshader" id="1_5p8y7"]
 [ext_resource type="Script" path="res://Scripts/Battle/unit_form.gd" id="1_ep020"]
 [ext_resource type="Texture2D" uid="uid://ptkmhxptot0q" path="res://Art/player_colors/blue_color.png" id="2_0q625"]
-[ext_resource type="Texture2D" uid="uid://cukwcwy4fikm1" path="res://Art/elf_hero_noble.png" id="3_3flaq"]
+[ext_resource type="Texture2D" uid="uid://cukwcwy4fikm1" path="res://Art/units/elf/elf_hero_noble.png" id="3_3flaq"]
 [ext_resource type="Texture2D" uid="uid://by6lxadhw2amf" path="res://Art/items/hex_border_light.png" id="4_0xhp4"]
 [ext_resource type="PackedScene" uid="uid://bc4yv21yc35fw" path="res://Scenes/Form/SymbolForm.tscn" id="5_2gor3"]
 [ext_resource type="Texture2D" uid="uid://bxt8qblt76cyj" path="res://Art/magic/mana_icon.png" id="7_cnn68"]

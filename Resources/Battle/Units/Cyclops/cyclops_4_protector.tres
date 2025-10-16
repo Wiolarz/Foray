@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://cir43eqa3uet2"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_mpv72"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_7drto"]
+[ext_resource type="Resource" uid="uid://sr1570kq7sm8" path="res://Resources/Battle/Symbols/shield.tres" id="4_aua2m"]
+[ext_resource type="Resource" uid="uid://bp747guikipcb" path="res://Resources/Battle/Symbols/spear.tres" id="5_cw1k7"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="6_f7q2k"]
+
+[sub_resource type="Resource" id="Resource_8qfgt"]
+script = ExtResource("1_mpv72")
+wood = 4
+iron = 1
+ruby = 0
+
+[resource]
+script = ExtResource("3_7drto")
+unit_name = "Protector"
+texture_path = "res://Art/units/cyclops/cyclops_5_shield_halbard.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_aua2m"), ExtResource("5_cw1k7"), ExtResource("6_f7q2k"), ExtResource("6_f7q2k"), ExtResource("6_f7q2k"), ExtResource("5_cw1k7")])
+cost = SubResource("Resource_8qfgt")
+level = 4
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

@@ -18,5 +18,5 @@ texture_path = "res://Art/units/fiends/fiend_hero_prophet.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_d2e5w"), ExtResource("4_8l4nc"), ExtResource("3_d2e5w"), ExtResource("4_8l4nc"), ExtResource("3_d2e5w"), ExtResource("4_8l4nc")])
 cost = SubResource("Resource_k8g4u")
 level = 1
-mana = 0
+mana = 1
 spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

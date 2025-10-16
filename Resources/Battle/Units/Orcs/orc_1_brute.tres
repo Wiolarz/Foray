@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://bjcrbdv3aq2jk"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://bjcrbdv3aq2jk"]
 
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="1_4uymu"]
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_v4mob"]
-[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_yhbdv"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="3_uf26o"]
 [ext_resource type="Resource" uid="uid://cmgmw6atlub6f" path="res://Resources/Battle/Symbols/push.tres" id="5_c4fvw"]
 [ext_resource type="Resource" uid="uid://cngonnqsgsd6e" path="res://Resources/Battle/Symbols/axe.tres" id="5_fihog"]
@@ -19,7 +18,6 @@ unit_name = "Brute"
 texture_path = "res://Art/units/orc/orc_axe_fighter.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("5_fihog"), ExtResource("5_c4fvw"), ExtResource("3_uf26o"), ExtResource("3_uf26o"), ExtResource("3_uf26o"), ExtResource("5_c4fvw")])
 cost = SubResource("Resource_vofdp")
-required_building = ExtResource("2_yhbdv")
 level = 1
 mana = 0
 spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

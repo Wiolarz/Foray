@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cupju7ycvfwo6"]
 
-[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/elf_spearmen.png" id="1_qi7k2"]
+[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/units/elf/elf_spearmen.png" id="1_qi7k2"]
 [ext_resource type="Script" path="res://Scripts/UI/Educational/BattleWiki/wiki_unit_button.gd" id="2_lluqc"]
 
 [node name="BattleUnitButton" type="TextureButton"]

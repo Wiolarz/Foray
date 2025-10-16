@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="PresetArmy" load_steps=4 format=3 uid="uid://5bubf28vuq7h"]
 
 [ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_vs20p"]
-[ext_resource type="Resource" uid="uid://c3d8o8qw4dfa4" path="res://Resources/Battle/Units/Cyclops/cyclops_1_axer.tres" id="2_82umy"]
-[ext_resource type="Resource" uid="uid://b4ajym7wahumg" path="res://Resources/Battle/Units/Cyclops/cyclops_3_javelin.tres" id="3_jbuda"]
+[ext_resource type="Resource" uid="uid://c3d8o8qw4dfa4" path="res://Resources/Battle/Units/Cyclops/cyclops_1_brigand.tres" id="2_82umy"]
+[ext_resource type="Resource" uid="uid://b4ajym7wahumg" path="res://Resources/Battle/Units/Cyclops/cyclops_3_raider.tres" id="3_jbuda"]
 
 [resource]
 script = ExtResource("1_vs20p")

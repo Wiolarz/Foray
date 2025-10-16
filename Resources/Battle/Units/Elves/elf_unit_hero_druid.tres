@@ -14,10 +14,10 @@ ruby = 1
 
 [resource]
 script = ExtResource("1_755x7")
-unit_name = "druid_unit"
-texture_path = "res://Art/elf_hero_druid.png"
+unit_name = "Druid"
+texture_path = "res://Art/units/elf/elf_hero_druid.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("6_j1u76"), ExtResource("6_j1u76"), ExtResource("3_tkndh"), ExtResource("3_tkndh"), ExtResource("3_tkndh"), ExtResource("6_j1u76")])
 cost = SubResource("Resource_o8yk3")
-level = 3
-mana = 5
+level = 1
+mana = 1
 spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([ExtResource("3_yoa3y")])
