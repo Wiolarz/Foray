@@ -7,7 +7,7 @@ extends CanvasLayer
 @onready var trade_screen : Control = $TradeScreen
 @onready var army_panel : BoxContainer = $Army_Panel
 @onready var level_screen : Control = $LevelUpWorldScreen
-
+@onready var ritual_book : VBoxContainer = $RitualBook
 
 var _hideable_context_menu : Control :
 	set(new_menu):
@@ -21,6 +21,9 @@ var _hideable_context_menu : Control :
 		else:
 			$Hide.hide()
 
+
+var selected_ritual : Ritual
+var selected_ritual_button : TextureButton
 
 
 func _ready():
@@ -38,6 +41,8 @@ func _ready():
 	$Players.show()
 	$"End Turn".show()
 	$Menu.show()
+
+	Helpers.remove_all_children(ritual_book) # clear mockup
 
 
 func _process(_delta):
@@ -149,6 +154,57 @@ func refresh_army_panel() -> void:
 		army_panel.load_army(army_panel.loaded_army)
 
 #endregion Army Panel
+
+
+#region Ritual Book
+
+func load_ritual_book(hero : Hero, preview : bool = false) -> void:
+	selected_ritual = null #TODO check if neccesary
+	selected_ritual_button = null
+	Helpers.remove_all_children(ritual_book)
+
+	#TODO implement this:
+	# Get background color for spell book
+	"""var unit_controller : Player = armies_reference[army_index].army_reference.controller
+	var bg_color : DataPlayerColor = CFG.NEUTRAL_COLOR
+	if unit_controller:
+		bg_color = unit_controller.get_player_color()"""
+
+
+	for ritual in hero.rituals:
+		var button := TextureButton.new()
+
+		button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT
+		button.custom_minimum_size = Vector2(400, 400)
+		button.ignore_texture_size = true
+
+		button.texture_normal = CFG.DEPLOY_BUTTON_TEXTURE
+		button.texture_normal = load(ritual.icon_path)
+
+		button.tooltip_text = ritual.description
+
+		button.ignore_texture_size = true
+		button.stretch_mode = TextureButton.STRETCH_SCALE
+		button.custom_minimum_size = Vector2(200, 200)
+
+		ritual_book.add_child(button)
+		var lambda = func on_click():
+			if selected_ritual_button:  # Deselects previously selected ritual
+				selected_ritual_button.modulate = Color.WHITE
+
+			if selected_ritual_button == button: # Selecting the same ritual twice deselects it
+				selected_ritual = null
+				selected_ritual_button = null
+			else:
+				selected_ritual = ritual
+				selected_ritual_button = button
+				selected_ritual_button.modulate = Color.RED
+		if not preview:
+			button.pressed.connect(lambda)
+		else:
+			button.disabled = true
+
+#endregion Ritual Book
 
 
 #region Buttons
