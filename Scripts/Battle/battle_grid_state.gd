@@ -1149,7 +1149,8 @@ func _end_of_move_magic(army_that_just_moved_idx : int) -> void:
 	for army in armies_in_battle_state:
 		if not battle_is_ongoing(): #TODO verify if thats a proper fix for spell combination, which results in a draw
 			return
-		for unit : Unit in army.units:
+		for unit_idx : int in range(army.units.size() -1, -1, -1):
+			var unit : Unit = army.units[unit_idx]
 			for effect_idx in range(unit.effects.size() -1, -1, -1):
 				var magic_effect : MagicEffect = unit.effects[effect_idx]
 				match magic_effect.name:
