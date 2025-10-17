@@ -45,7 +45,7 @@ static func generate_current_battle_event(battle_state : BattleGridState, additi
 
 	for army : BattleGridState.ArmyInBattleState in battle_state.armies_in_battle_state:
 		for dead_unit in army.dead_units:
-			result.dead_units.append(dead_unit.unit_name)
+			result.dead_units.append(dead_unit.template.unit_name)
 
 	# ADDDITONAL INFO
 	if additional_info.length() == 0:
