@@ -1,9 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://bpkvpkoi22q8"]
+[gd_scene load_steps=10 format=3 uid="uid://bpkvpkoi22q8"]
 
 [ext_resource type="Script" path="res://Scripts/UI/world_ui.gd" id="1_50wj5"]
 [ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="2_yv1kk"]
-[ext_resource type="Texture2D" uid="uid://cyl65pr2i8wia" path="res://Art/units/elf/elf_hero_druid.png" id="3_jbob5"]
-[ext_resource type="Texture2D" uid="uid://cukwcwy4fikm1" path="res://Art/units/elf/elf_hero_noble.png" id="4_6gjua"]
 [ext_resource type="PackedScene" uid="uid://dm3oqhffhprfy" path="res://Scenes/UI/World/CityUI.tscn" id="4_r7awa"]
 [ext_resource type="PackedScene" uid="uid://c2tjldwjynnry" path="res://Scenes/UI/GameChat.tscn" id="5_kbxi4"]
 [ext_resource type="PackedScene" uid="uid://da3yl34ys750t" path="res://Scenes/UI/World/TradeScreen.tscn" id="6_qkgtt"]
@@ -75,14 +73,12 @@ offset_bottom = 125.0
 [node name="TextureButton" type="TextureButton" parent="HeroesList"]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
-texture_normal = ExtResource("3_jbob5")
 ignore_texture_size = true
 stretch_mode = 5
 
 [node name="TextureButton2" type="TextureButton" parent="HeroesList"]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
-texture_normal = ExtResource("4_6gjua")
 ignore_texture_size = true
 stretch_mode = 5
 

@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="DataHero" load_steps=6 format=3 uid="uid://cglulnc0lgfjw"]
 
-[ext_resource type="Script" path="res://Resources/Battle/data_hero.gd" id="1_q5lvc"]
+[ext_resource type="Script" path="res://Resources/Races/data_hero.gd" id="1_q5lvc"]
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_v83s4"]
 [ext_resource type="Resource" uid="uid://b5bfulbxq4h0u" path="res://Resources/Battle/Units/Dwarves/dwarf_hero_tribune.tres" id="2_y7ta5"]
 

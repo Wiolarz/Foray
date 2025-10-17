@@ -385,7 +385,7 @@ func cast_ritual(target_coord : Vector2i = Vector2i.ZERO) -> void:
 			assert(target_city, "no destination for town portal spell")
 
 			# TODO check if army is present
-			WS.change_army_position(selected_hero.entity, target_coord)
+			WS.teleport_to_your_city(selected_hero.entity.coord, target_coord)
 			target_city.interact(selected_hero.entity)
 		"Steal":
 			print("Casted Steal")
@@ -427,14 +427,6 @@ func request_build(city : City, building_data : DataBuilding) -> void:
 		perform_world_move_info(world_move_info)
 	else:
 		NET.client.queue_request_world_move(world_move_info)
-
-
-func do_local_travel(source : Vector2i, target : Vector2i) -> void:
-	var success : bool = WS.army_travel(source, target)
-
-	if not success:
-		NET.desync()
-		return
 
 #endregion City Management
 

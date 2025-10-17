@@ -684,6 +684,16 @@ func swap_armies(first_army : Army, second_army : Army) -> void:
 		city.move_to_reserve()
 		change_army_position(first_army, target)
 
+func teleport_to_your_city(source : Vector2i, target : Vector2i) -> void:
+	var army : Army = get_army_at(source)
+
+	print("teleport ", army," to ", target)
+
+	var city_coord : Vector2i = target  # during trade city is always treated as second army
+	var city : City = WS.get_city_at(city_coord)
+	city.move_to_reserve()
+	change_army_position(army, target)
+
 
 #endregion Army Movement
 

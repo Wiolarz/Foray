@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://csb3gmy116d4p"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://c1o2vlrj5a8mp"]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_644cc"]
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_6dfe0"]

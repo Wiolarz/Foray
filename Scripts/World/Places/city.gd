@@ -149,15 +149,20 @@ func move_out_of_reserve() -> void:
 	WM.callback_army_created(garrison_reserve)
 
 
+## TEMP FIX THIS CODE
 func get_unit_cost(unit : DataUnit) -> Goods:
+	if not unit.required_building:
+		return unit.cost
 	var required_building : DataBuilding = get_building(unit.required_building)
-	if not required_building:
-		return null
+	if not unit.required_building:
+		return unit.cost
 	var discount : Goods = required_building.apply_discounts(unit.cost)
 	return discount
 
 
 func on_purchase(building : DataBuilding) -> void:
+	if not building: # TEMP TODO FIX IT
+		return
 	if building.is_outpost_building():
 		for already_built in faction.outpost_buildings:
 			if already_built.name == building.name:
