@@ -11,8 +11,7 @@ var player_factions = {
 }
 
 const attacker_waves_folder_path := "res://Resources/Presets/City_Defense/Attacker_Waves/"
-@onready var attacker_folders = FileSystemHelpers.list_folders_in_folder(attacker_waves_folder_path)
-
+@onready var attacker_waves_presets = FileSystemHelpers.list_files_in_folder(attacker_waves_folder_path)
 
 # UI:
 @onready var ai_difficulty_selection : OptionButton = \
@@ -28,7 +27,7 @@ $MarginContainer/VBoxContainer/VBoxNewRun/VBoxNewRunRules/HBoxArmiesSettings/Def
 
 
 # selected settings:
-var new_run_attacker_waves_folder_path : String
+var new_run_attacker_waves_path : String
 var new_run_army_path : String
 var new_run_selected_race : DataRace
 
@@ -54,7 +53,7 @@ var goods_awards : Array[Goods] = \
 
 var selected_bot_path : String
 var player_race : DataRace
-var attacker_waves : Array[PresetArmy] = []
+var attacker_waves : PresetWaves
 
 
 # UI:
@@ -99,8 +98,8 @@ func _ready():
 	_refresh_highscore_display()
 
 	attacker_selection.clear()
-	for attacker_folder_path in attacker_folders:
-		attacker_selection.add_item(attacker_folder_path)
+	for attacker_waves_preset in attacker_waves_presets:
+		attacker_selection.add_item(attacker_waves_preset)
 	attacker_selection.item_selected.connect(attacker_changed)
 
 	defender_selection.clear()
@@ -116,7 +115,7 @@ func _ready():
 
 
 func attacker_changed(attacker_index) -> void:
-	new_run_attacker_waves_folder_path = attacker_waves_folder_path + attacker_folders[attacker_index]
+	new_run_attacker_waves_path = attacker_waves_folder_path + attacker_waves_presets[attacker_index]
 
 
 func defender_changed(defender_index) -> void:
@@ -136,12 +135,7 @@ func _start_new_run() -> void:
 	is_run_ongoing = true
 	current_wave = -1
 
-	attacker_waves = []
-	for wave_path in FileSystemHelpers.list_files_in_folder(new_run_attacker_waves_folder_path):
-		var full_wave_path : String = new_run_attacker_waves_folder_path + "/" + wave_path
-
-		var attacker_army : PresetArmy = load(full_wave_path)
-		attacker_waves.append(attacker_army)
+	attacker_waves = load(new_run_attacker_waves_path)
 
 	selected_bot_path = CFG.BATTLE_BOTS_PATH + ai_difficulty_selection.get_item_text(ai_difficulty_selection.get_selected())
 
@@ -160,7 +154,7 @@ func _start_new_run() -> void:
 
 
 	next_wave_selection.clear()
-	for wave_idx : int in range(attacker_waves.size()):
+	for wave_idx : int in range(attacker_waves.waves.size()):
 		next_wave_selection.add_item(str(wave_idx + 1))
 	_displayed_next_wave_changed(0)
 
@@ -177,14 +171,14 @@ func _displayed_next_wave_changed(wave_idx : int) -> void:
 	# first value is starting goods
 	next_wave_label.text = "Next Wave: " + goods_awards[award_idx + 1].to_string_short()
 
-	next_wave_roster.simplified_display_load_army(attacker_waves[wave_idx])
+	next_wave_roster.simplified_display_load_army(attacker_waves.waves[wave_idx])
 
 
 func refresh_run_info():
 	var text := "Current Run - Wave: " + str(current_wave + 2) + \
 		" Goods: " + player_goods.to_string_short()
 	current_run_information.text = text
-	if current_wave + 1 == attacker_waves.size():
+	if current_wave + 1 == attacker_waves.waves.size():
 		current_run_information.text += "\nVICTORY"
 
 
@@ -215,7 +209,7 @@ func _buy_unit(unit : DataUnit) -> void:
 
 func _launch_battle():
 	current_wave += 1
-	var enemy_wave : PresetArmy = attacker_waves[current_wave]
+	var enemy_wave : PresetArmy = attacker_waves.waves[current_wave]
 	var battle := ScriptedBattle.new()
 	battle.armies = [
 		current_roster,
@@ -249,7 +243,7 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 	_refresh_roster_display()
 
 	refresh_run_info()
-	if current_wave + 1 == attacker_waves.size():  # Victory
+	if current_wave + 1 == attacker_waves.waves.size():  # Victory
 		is_run_ongoing = false
 		continue_button.disabled = true
 	else:
@@ -297,7 +291,7 @@ func update_highscores() -> void:
 	#TEMP TODO always counts as mirror, until new enemy selection system
 	var difficulty : String =\
 		ai_difficulty_selection.get_item_text(ai_difficulty_selection.get_selected())
-	CFG.update_highscore(player_race, player_race, difficulty, current_wave + 1)
+	CFG.update_highscore(player_race, attacker_waves.race, difficulty, current_wave + 1)
 
 #endregion Highscores
 

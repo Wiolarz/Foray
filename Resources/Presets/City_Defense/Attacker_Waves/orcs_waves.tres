@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="PresetWaves" load_steps=14 format=3 uid="uid://chqfobpswqfpv"]
+
+[ext_resource type="Script" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="1_legut"]
+[ext_resource type="Resource" uid="uid://c8eqaxhujkmsy" path="res://Resources/Races/orc.tres" id="1_ry0hd"]
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="3_c1hej"]
+[ext_resource type="Resource" uid="uid://bwyu6qg7dsisg" path="res://Resources/Battle/Units/Classic/orc1.tres" id="4_2k6nj"]
+[ext_resource type="Resource" uid="uid://bx2ya2olx578k" path="res://Resources/Battle/Units/Orcs/orc_unit_hero_executioner.tres" id="5_53tyn"]
+[ext_resource type="Resource" uid="uid://w4ycloqp51wx" path="res://Resources/Battle/Units/Orcs/orc_4_shaman.tres" id="6_whbdp"]
+[ext_resource type="Resource" uid="uid://q64fwagvl8ul" path="res://Resources/Battle/Units/Orcs/orc_5_halbard.tres" id="7_qh8ir"]
+[ext_resource type="Resource" uid="uid://c0ufbeh75ygcc" path="res://Resources/Battle/Units/Orcs/orc_6_champion.tres" id="8_xclc8"]
+[ext_resource type="Resource" uid="uid://3e7lgte3o0of" path="res://Resources/Battle/Units/Orcs/orc_2_hunter.tres" id="9_qgpml"]
+
+[sub_resource type="Resource" id="Resource_28nwb"]
+script = ExtResource("3_c1hej")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_2k6nj"), ExtResource("5_53tyn")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_ytu4v"]
+script = ExtResource("3_c1hej")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_2k6nj"), ExtResource("6_whbdp"), ExtResource("7_qh8ir")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_c1ft3"]
+script = ExtResource("3_c1hej")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_2k6nj"), ExtResource("6_whbdp"), ExtResource("8_xclc8"), ExtResource("5_53tyn")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_wokt6"]
+script = ExtResource("3_c1hej")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_2k6nj"), ExtResource("9_qgpml"), ExtResource("7_qh8ir"), ExtResource("5_53tyn"), ExtResource("8_xclc8"), ExtResource("6_whbdp")])
+team = 0
+
+[resource]
+script = ExtResource("1_legut")
+race = ExtResource("1_ry0hd")
+waves = Array[ExtResource("3_c1hej")]([SubResource("Resource_28nwb"), SubResource("Resource_ytu4v"), SubResource("Resource_c1ft3"), SubResource("Resource_wokt6")])
