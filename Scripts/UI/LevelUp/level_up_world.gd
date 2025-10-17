@@ -3,6 +3,8 @@ extends LevelUpScreen
 
 # override
 func _assign_tier_panels() -> void:
+	description = $RichTextLabel
+	
 	tier_talent_panels = []
 	tier_talent_panels.append($TierPanels/TierTalentPanel)
 	tier_talent_panels.append($TierPanels/TierTalentPanel2)

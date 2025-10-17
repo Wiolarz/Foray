@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_uaqmr")
 passive_name = "arch mage"
+description = "Generates each turn a discount for next cast of a ritual."

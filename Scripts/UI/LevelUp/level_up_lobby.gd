@@ -5,6 +5,8 @@ extends LevelUpScreen
 
 
 func _assign_tier_panels() -> void:
+	description = $VBox/RichTextLabel
+	
 	tier_talent_panels = []
 	tier_talent_panels.append($VBox/TierPanels/TierTalentPanel)
 	tier_talent_panels.append($VBox/TierPanels/TierTalentPanel2)

@@ -7,4 +7,4 @@ script = ExtResource("1_lhqsb")
 name = "Fear"
 icon_path = "res://Art/units/orc/orc_hero_fighter.png"
 mp_cost = 1
-description = ""
+description = "STUB will make target neutral unit go away for some time"

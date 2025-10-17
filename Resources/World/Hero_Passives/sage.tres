@@ -5,3 +5,5 @@
 [resource]
 script = ExtResource("1_i0tub")
 passive_name = "sage"
+description = "Lowers the limit for required enemy level to provide experience by 1.
+(3lv hero can get exp from 2nd lvl enemies now too)"

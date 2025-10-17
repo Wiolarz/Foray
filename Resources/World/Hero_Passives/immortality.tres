@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_c6uu1")
 passive_name = "immortality"
+description = "Hero if wounded in battle, upon victory immediately regenrates."

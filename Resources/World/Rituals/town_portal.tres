@@ -7,3 +7,4 @@ script = ExtResource("1_gp254")
 name = "Town Portal"
 icon_path = "res://Art/world_map/simple_city_blue.png"
 mp_cost = 2
+description = "Lets hero teleport to the target controlled city."

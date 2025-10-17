@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_m47jw")
 passive_name = "ballista_summon"
+description = "If army is first to move (attacks) provides at the start of the battle additional ballista unit to deploy"

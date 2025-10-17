@@ -7,4 +7,4 @@ script = ExtResource("1_lbt11")
 name = "Steal"
 icon_path = "res://Art/units/orc/orc_hero_rouge.png"
 mp_cost = 3
-description = ""
+description = "STUB will take away some of the goods target neutral units posses."

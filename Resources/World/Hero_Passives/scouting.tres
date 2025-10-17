@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_jvd32")
 passive_name = "scouting"
+description = "Increases maximum movement points limit, letting hero save up some unused movement points from previous round."

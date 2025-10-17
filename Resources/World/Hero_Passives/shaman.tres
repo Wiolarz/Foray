@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_w2h4q")
 passive_name = "shaman"
+description = "If caster has some movement points left, he can go into negative through casting a ritual now."
