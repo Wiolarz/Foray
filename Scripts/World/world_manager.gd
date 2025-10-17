@@ -79,6 +79,7 @@ func world_game_is_active() -> bool:
 
 #region Main functions
 
+## currently assumes selected army has a hero
 func set_selected_hero(army : Army) -> void:
 	print("selected ", army)
 	if selected_hero:
@@ -92,6 +93,7 @@ func set_selected_hero(army : Army) -> void:
 	world_ui.city_ui._refresh_army_display()
 
 	world_ui.load_army_to_panel(army)
+	world_ui.load_ritual_book(army.hero)
 
 	if CFG.WORLD_GOD_MODE:
 		WM.hero_speed_cheat()
@@ -206,6 +208,12 @@ func grid_input(coord : Vector2i):
 		input_try_select(coord)
 		return
 
+	if world_ui.selected_ritual:
+		if is_ritual_target_valid(coord):
+			cast_ritual(coord)
+		return
+
+
 	if selected_hero.coord == coord:  # DESELECT HERO
 		_deselect_hero()
 		return
@@ -227,6 +235,8 @@ func grid_input(coord : Vector2i):
 		if selected_hero.has_movement_points():
 			# TODO add passing through allied heroes
 			try_interact(selected_hero, selected_hero.travel_path[tile_idx])
+
+			world_ui.load_ritual_book(selected_hero.entity.hero) # Rituals UI refresh
 		else:
 			break
 
@@ -235,6 +245,7 @@ func grid_input(coord : Vector2i):
 		if not selected_hero.has_movement_points():
 			_deselect_hero()
 	_painter_node.erase()
+
 
 ## Tries to Select owned Hero
 func input_try_select(coord) -> void:  #TODO "nothing is selected try to select stuff"
@@ -301,6 +312,102 @@ func perform_world_move_info(world_move_info : WorldMoveInfo) -> void:
 func perform_network_move(world_move_info : WorldMoveInfo) -> void:
 	perform_world_move_info(world_move_info)
 
+
+static func is_ritual_purchasable(ritual : Ritual, caster : Hero) -> bool:
+	var shaman_present : bool = false
+	for passive in caster.passive_effects:
+		if passive.passive_name == "shaman":
+			shaman_present = true
+	# player cannot cast rituals at negative movement points
+	if caster.movement_points < 0:
+		# hero has negative movement points left
+		return false
+
+	if not shaman_present and \
+	caster.movement_points + caster.ritual_cost_reduction < ritual.mp_cost:
+		# hero doesn't have enough movement points left
+		return false
+
+	return true
+
+
+func is_ritual_target_valid(target_coord : Vector2i = Vector2i.ZERO) -> bool:
+	assert(selected_hero, "No selected hero")
+	assert(world_ui.selected_ritual, "no selected_ritual")
+	assert(world_ui.selected_ritual in selected_hero.entity.hero.rituals, "selected_ritual is not present on a hero")
+
+	var hero : Hero = selected_hero.entity.hero
+
+	if not WM.is_ritual_purchasable(world_ui.selected_ritual, hero):
+		assert(false, "ritual shouldn't be selectable")
+		return false
+
+	match world_ui.selected_ritual.name:
+		"Town Portal":
+			var target_city : City = WS.get_city_at(target_coord)
+			if not target_city:
+				print("no destination for town portal spell")
+				return false
+			if WS.get_army_at(target_coord).hero:
+				print("hero is present in the city")
+				return false
+			return true
+		"Steal", "Fear":  # any neutral army # TODO add check if army is adjacent to caster
+			var target_neutral_army : Army = WS.get_army_at(target_coord)
+			if not target_neutral_army:
+				print("no army at destination")
+				return false
+			if target_neutral_army.faction:
+				print("army at destination is not neutral")
+				return false
+			return true
+
+	assert(false, "ritual is not supported")
+	return false
+
+
+
+func cast_ritual(target_coord : Vector2i = Vector2i.ZERO) -> void:
+	assert(selected_hero, "No selected hero")
+	assert(world_ui.selected_ritual, "no selected_ritual")
+	assert(world_ui.selected_ritual in selected_hero.entity.hero.rituals, "selected_ritual is not present on a hero")
+
+
+	var hero : Hero = selected_hero.entity.hero
+
+	var cost : int = world_ui.selected_ritual.mp_cost
+	var reduction : int = min(hero.ritual_cost_reduction, cost)
+
+	cost -= reduction
+	hero.ritual_cost_reduction -= reduction
+
+	hero.movement_points -= cost
+
+	hero.rituals.erase(world_ui.selected_ritual)
+
+	print(world_ui.selected_ritual)
+	match world_ui.selected_ritual.name:
+		"Town Portal":
+			var target_city : City = WS.get_city_at(target_coord)
+			assert(target_city, "no destination for town portal spell")
+
+			# TODO check if army is present
+			WS.teleport_to_your_city(selected_hero.entity.coord, target_coord)
+			target_city.interact(selected_hero.entity)
+		"Steal":
+			print("Casted Steal")
+			pass
+		"Fear":
+			print("Casted Fear")
+			pass
+		_:
+			assert(false, "ritual casting not supported: " + world_ui.selected_ritual.name)
+			return
+
+
+	world_ui.selected_ritual = null
+	world_ui.load_ritual_book(selected_hero.entity.hero)
+
 #endregion Player Action
 
 
@@ -327,14 +434,6 @@ func request_build(city : City, building_data : DataBuilding) -> void:
 		perform_world_move_info(world_move_info)
 	else:
 		NET.client.queue_request_world_move(world_move_info)
-
-
-func do_local_travel(source : Vector2i, target : Vector2i) -> void:
-	var success : bool = WS.army_travel(source, target)
-
-	if not success:
-		NET.desync()
-		return
 
 #endregion City Management
 

@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_mmsuf")
 passive_name = "weak_weapons"
+description = "Provides a weak weapon on every side which is empty."

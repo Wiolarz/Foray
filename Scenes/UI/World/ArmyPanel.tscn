@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://ciyo87ovmkwqh"]
 
 [ext_resource type="Script" path="res://Scripts/UI/World/army_panel.gd" id="1_07qff"]
-[ext_resource type="Texture2D" uid="uid://cyl65pr2i8wia" path="res://Art/units/elf/elf_hero_druid.png" id="2_hi4e5"]
+[ext_resource type="Texture2D" uid="uid://cukwcwy4fikm1" path="res://Art/units/elf/elf_hero_noble.png" id="2_fjiwl"]
 [ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/units/elf/elf_spearmen.png" id="3_v8ayt"]
 [ext_resource type="Texture2D" uid="uid://d0l8icvbxebbs" path="res://Art/units/elf/elf_archer.png" id="4_8yaoa"]
 [ext_resource type="Texture2D" uid="uid://by6lxadhw2amf" path="res://Art/items/hex_border_light.png" id="5_esqgq"]
@@ -20,7 +20,7 @@ horizontal_alignment = 1
 [node name="HeroIcon" type="TextureButton" parent="."]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture_normal = ExtResource("2_hi4e5")
+texture_normal = ExtResource("2_fjiwl")
 ignore_texture_size = true
 stretch_mode = 5
 

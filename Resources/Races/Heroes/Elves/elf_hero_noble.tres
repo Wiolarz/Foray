@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_8faem"]
 [ext_resource type="Resource" uid="uid://b44kr1rcexp3v" path="res://Resources/Battle/Units/Elves/elf_unit_hero_noble.tres" id="2_fmenc"]
-[ext_resource type="Script" path="res://Resources/Battle/data_hero.gd" id="3_vrhid"]
+[ext_resource type="Script" path="res://Resources/Races/data_hero.gd" id="3_vrhid"]
 [ext_resource type="Resource" uid="uid://bcxhm3aauivnm" path="res://Resources/Battle/Hero_Passives/magic_weapons.tres" id="4_eij1s"]
 
 [sub_resource type="Resource" id="Resource_pcl0g"]
@@ -26,4 +26,4 @@ data_unit = ExtResource("2_fmenc")
 starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([ExtResource("4_eij1s")])
 starting_level = 1
 max_army_size = 3
-max_movement_points = 3
+starting_rituals = Array[Resource("res://Resources/World/rituals.gd")]([])

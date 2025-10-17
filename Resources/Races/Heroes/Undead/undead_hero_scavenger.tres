@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="DataHero" load_steps=6 format=3 uid="uid://me6nyqtuubw2"]
 
-[ext_resource type="Script" path="res://Resources/Battle/data_hero.gd" id="1_hh5y0"]
+[ext_resource type="Script" path="res://Resources/Races/data_hero.gd" id="1_hh5y0"]
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_kvtbc"]
 [ext_resource type="Resource" uid="uid://c2nauydgma0r" path="res://Resources/Battle/Units/Undead/undead_hero_scavenger.tres" id="2_7pxsh"]
 

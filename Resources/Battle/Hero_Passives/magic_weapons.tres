@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_n67tm")
 passive_name = "magic_weapons"
+description = "Sets all weapons damage to power 4 (can pierce a strong shield) but every round hero kills an enemy unit, their weapons gets weaker."

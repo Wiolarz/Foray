@@ -539,9 +539,15 @@ func end_combat(battle_results : Array[BattleGridState.ArmyInBattleState]) -> vo
 
 		if army.hero:
 			army_state.killed_units.sort()  # from lowest to highest
+
+			var hero_level_threshold_modifier : int = 0
+			for passive : HeroPassive in army.hero.passive_effects:
+				if passive.passive_name == "sage":
+					hero_level_threshold_modifier -= 1
+
 			# we aim to award hero as much as possible
 			for killed_unit : int in army_state.killed_units:
-				if army.hero.level <= killed_unit:
+				if army.hero.level + hero_level_threshold_modifier <= killed_unit:
 					army.hero.add_xp(1)
 
 
@@ -677,6 +683,16 @@ func swap_armies(first_army : Army, second_army : Army) -> void:
 		var city : City = WS.get_city_at(city_coord)
 		city.move_to_reserve()
 		change_army_position(first_army, target)
+
+func teleport_to_your_city(source : Vector2i, target : Vector2i) -> void:
+	var army : Army = get_army_at(source)
+
+	print("teleport ", army," to ", target)
+
+	var city_coord : Vector2i = target  # during trade city is always treated as second army
+	var city : City = WS.get_city_at(city_coord)
+	city.move_to_reserve()
+	change_army_position(army, target)
 
 
 #endregion Army Movement
