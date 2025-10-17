@@ -465,8 +465,8 @@ func reset_highscores() -> void:
 			continue
 		for player_race in RACES_LIST:
 			for enemy_race in RACES_LIST:
-				var key = str(player_race.race_name) + \
-					"|" + str(bot_index) + "|" + str(enemy_race.race_name)
+				var key = player_race.race_name + \
+					"|" + str(bot_index) + "|" + enemy_race.race_name
 
 				player_options.highscores[key] = 0
 	save_player_options()
@@ -474,12 +474,29 @@ func reset_highscores() -> void:
 
 func update_highscore(
 		player_race : DataRace, enemy_race : DataRace, difficulty : String, wave : int) -> void:
-	var key : String = str(player_race.race_name) + \
-		"|" + str(get_bot_idx(difficulty))  + "|" + str(enemy_race.race_name)
+	var key : String = player_race.race_name + \
+		"|" + str(get_bot_idx(difficulty))  + "|" + enemy_race.race_name
 	assert(key in player_options.highscores.keys())
 	if player_options.highscores[key] < wave:
 		player_options.highscores[key] = wave
 	save_player_options()
+
+
+## returns race and wave_number
+func get_highscore(race : DataRace, difficulty : String) -> Array:
+	var ai_key : String = str(get_bot_idx(difficulty))
+
+	var best_result_race : DataRace
+	var best_wave_score : int = -1
+	for enemy_race in RACES_LIST:
+		var key = race.race_name + \
+			"|" + ai_key + "|" + enemy_race.race_name
+		var score : int = player_options.highscores[key]
+		if best_wave_score < score:
+			best_wave_score = score
+			best_result_race = enemy_race
+
+	return [best_result_race, best_wave_score]
 
 
 #endregion

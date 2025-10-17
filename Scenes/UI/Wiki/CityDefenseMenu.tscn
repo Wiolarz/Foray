@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://b8xrjsl8gmups"]
+[gd_scene load_steps=9 format=3 uid="uid://b8xrjsl8gmups"]
 
 [ext_resource type="Script" path="res://Scripts/UI/Educational/city_defense.gd" id="1_7lrr4"]
 [ext_resource type="PackedScene" uid="uid://ciyo87ovmkwqh" path="res://Scenes/UI/World/ArmyPanel.tscn" id="2_016xn"]
+[ext_resource type="Texture2D" uid="uid://bh08w1pqf7vni" path="res://Art/units/orc/orc_axe_fighter.png" id="3_c35nt"]
+[ext_resource type="Texture2D" uid="uid://bxgdkkbakmho4" path="res://Art/units/elf/elf_6_archmage.png" id="4_b2sjx"]
+[ext_resource type="Texture2D" uid="uid://dnqqgpup7s7wl" path="res://Art/units/cyclops/cyclop_hero_hag.png" id="5_8xkia"]
+[ext_resource type="Texture2D" uid="uid://cjx6kf8hrjqev" path="res://Art/units/undead/undead_1_skeleton_grunt.png" id="6_u03ye"]
+[ext_resource type="Texture2D" uid="uid://b1qeesdhysab4" path="res://Art/units/dwarves/dwarf_hero_tribune.png" id="7_s68tf"]
+[ext_resource type="Texture2D" uid="uid://ct03ggdqc37ra" path="res://Art/units/fiends/fiend_3_impaler.png" id="8_aonbn"]
 
 [node name="CityDefense" type="Panel"]
 anchors_preset = 15
@@ -33,12 +39,22 @@ horizontal_alignment = 1
 [node name="VBoxNewRun" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Description" type="Label" parent="MarginContainer/VBoxContainer/VBoxNewRun"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxNewRun"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="Description" type="Label" parent="MarginContainer/VBoxContainer/VBoxNewRun/HBoxContainer"]
 custom_minimum_size = Vector2(1000, 0)
 layout_mode = 2
 text = "Single Player series of defense battles where your army persists between them,
 but you can purchase additional units."
 horizontal_alignment = 1
+
+[node name="ResetHighscoresButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxNewRun/HBoxContainer"]
+layout_mode = 2
+text = "Reset
+HighScores"
 
 [node name="VBoxNewRunRules" type="VBoxContainer" parent="MarginContainer/VBoxContainer/VBoxNewRun"]
 layout_mode = 2
@@ -154,6 +170,128 @@ alignment = 1
 layout_mode = 2
 disabled = true
 text = "Continue"
+
+[node name="VBoxHighScores" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxRaces" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxHighScores"]
+layout_mode = 2
+theme_override_constants/separation = 150
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+layout_mode = 2
+text = "Races:"
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("3_c35nt")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("4_b2sjx")
+expand_mode = 1
+
+[node name="TextureRect3" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("5_8xkia")
+expand_mode = 1
+
+[node name="TextureRect4" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("6_u03ye")
+expand_mode = 1
+
+[node name="TextureRect5" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("7_s68tf")
+expand_mode = 1
+
+[node name="TextureRect6" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("8_aonbn")
+expand_mode = 1
+
+[node name="HBoxScores" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxHighScores"]
+layout_mode = 2
+theme_override_constants/separation = 150
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores"]
+layout_mode = 2
+text = "Scores:"
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("3_c35nt")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores/TextureRect"]
+layout_mode = 2
+offset_right = 1.0
+offset_bottom = 48.0
+text = "5"
+
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("4_b2sjx")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores/TextureRect2"]
+offset_right = 1.0
+offset_bottom = 48.0
+text = "5"
+
+[node name="TextureRect3" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("5_8xkia")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores/TextureRect3"]
+offset_right = 1.0
+offset_bottom = 48.0
+text = "5"
+
+[node name="TextureRect4" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("6_u03ye")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores/TextureRect4"]
+offset_right = 1.0
+offset_bottom = 48.0
+text = "5"
+
+[node name="TextureRect5" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("7_s68tf")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores/TextureRect5"]
+offset_right = 1.0
+offset_bottom = 48.0
+text = "5"
+
+[node name="TextureRect6" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("8_aonbn")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores/TextureRect6"]
+offset_right = 1.0
+offset_bottom = 48.0
+text = "5"
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/StartNewRunButton" to="." method="_on_start_new_run_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/VBoxCurrentRun/ContinueButton" to="." method="_on_continue_button_pressed"]

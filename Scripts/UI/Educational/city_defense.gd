@@ -85,14 +85,18 @@ var player_goods : Goods
 #region New Run Setup
 
 func _ready():
-	if not CFG.HIGHSCORES:
-		CFG.reset_highscores()
-	print(CFG.HIGHSCORES)
 	var bot_paths = FileSystemHelpers.list_files_in_folder(CFG.BATTLE_BOTS_PATH, true, true)
 	ai_difficulty_selection.clear()
 	for bot_name in bot_paths:
 		ai_difficulty_selection.add_item(bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
+	ai_difficulty_selection.item_selected.connect(difficulty_changed)
 
+	if not CFG.HIGHSCORES:
+		CFG.reset_highscores()
+	var reset_highscore_button = \
+		$MarginContainer/VBoxContainer/VBoxNewRun/HBoxContainer/ResetHighscoresButton
+	reset_highscore_button.pressed.connect(reset_highscores)
+	_refresh_highscore_display()
 
 	attacker_selection.clear()
 	for attacker_folder_path in attacker_folders:
@@ -120,9 +124,14 @@ func defender_changed(defender_index) -> void:
 	new_run_army_path = player_factions.values()[defender_index]
 
 
+func difficulty_changed(_difficulty_index) -> void:
+	_refresh_highscore_display()
+
+
 func _start_new_run() -> void:
 	new_run_container.visible = false
 	current_run_container.visible = true
+	highscores_container.visible = false
 
 	is_run_ongoing = true
 	current_wave = -1
@@ -249,12 +258,48 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 #endregion Run UI
 
 
+#region Highscores
+
+@onready var highscores_container : VBoxContainer = $MarginContainer/VBoxContainer/VBoxHighScores
+
+@onready var highscores_races_top_bar : HBoxContainer = \
+ $MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces
+
+@onready var highscores_races_score_bar : HBoxContainer = \
+ $MarginContainer/VBoxContainer/VBoxHighScores/HBoxScores
+
+
+func reset_highscores() -> void:
+	CFG.reset_highscores()
+	_refresh_highscore_display()
+
+
+func _refresh_highscore_display() -> void:
+	var top_bar = highscores_races_top_bar.get_children()
+	var score_bar = highscores_races_score_bar.get_children()
+
+	var difficulty : String =\
+		ai_difficulty_selection.get_item_text(ai_difficulty_selection.get_selected())
+
+
+	var idx = 0
+	for race in CFG.RACES_LIST:
+		idx += 1
+		top_bar[idx].texture = RES.load(race.units_data[0].texture_path)
+
+		var score : Array = CFG.get_highscore(race, difficulty)
+		score_bar[idx].texture = RES.load(score[0].units_data[0].texture_path)
+		score_bar[idx].get_node("Label").text = str(score[1])
+
+
 #updated once we win the battle
 func update_highscores() -> void:
 	#TEMP TODO always counts as mirror, until new enemy selection system
 	var difficulty : String =\
 		ai_difficulty_selection.get_item_text(ai_difficulty_selection.get_selected())
 	CFG.update_highscore(player_race, player_race, difficulty, current_wave + 1)
+
+#endregion Highscores
 
 
 #region Buttons
@@ -269,5 +314,7 @@ func _on_start_new_run_button_pressed() -> void:
 	else:
 		new_run_container.visible = true
 		current_run_container.visible = false
+		highscores_container.visible = true
+		_refresh_highscore_display()
 
 #endregion Buttons
