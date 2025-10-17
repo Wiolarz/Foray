@@ -69,6 +69,13 @@ extends Resource
 #endregion UX Preferences
 
 
+#region Saves
+
+@export var highscores : Dictionary
+
+#endregion Saves
+
+
 #region DEBUG Settings
 
 ## once the game is launched it instantly start the game with default lobby values [br]

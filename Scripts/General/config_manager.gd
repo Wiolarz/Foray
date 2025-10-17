@@ -433,6 +433,58 @@ var LAST_OPENED_WORLD_WIKI_TAB : WorldWiki :
 #endregion Learn Tab
 
 
+#region Saves
+
+var HIGHSCORES : Dictionary :
+	get: return player_options.highscores
+
+func get_bot_idx(bot_path : String) -> int:
+	match bot_path:
+		"/MCTS_Insane.tscn":
+			return 4
+		"/MCTS_Hard.tscn":
+			return 3
+		"/MCTS_Medium.tscn":
+			return 2
+		"/MCTS_Easy.tscn":
+			return 1
+	return -1
+
+
+func reset_highscores() -> void:
+	player_options.highscores = {}
+
+	var bot_paths = FileSystemHelpers.list_files_in_folder(CFG.BATTLE_BOTS_PATH, true, true)
+	var ai_difficulty_selection : Array[String] = []
+	for bot_name in bot_paths:
+		ai_difficulty_selection.append(bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
+
+	for bot_difficulty in ai_difficulty_selection:
+		var bot_index : int = get_bot_idx(bot_difficulty)
+		if bot_index < 1:
+			continue
+		for player_race in RACES_LIST:
+			for enemy_race in RACES_LIST:
+				var key = str(player_race.race_name) + \
+					"|" + str(bot_index) + "|" + str(enemy_race.race_name)
+
+				player_options.highscores[key] = 0
+	save_player_options()
+
+
+func update_highscore(
+		player_race : DataRace, enemy_race : DataRace, difficulty : String, wave : int) -> void:
+	var key : String = str(player_race.race_name) + \
+		"|" + str(get_bot_idx(difficulty))  + "|" + str(enemy_race.race_name)
+	assert(key in player_options.highscores.keys())
+	if player_options.highscores[key] < wave:
+		player_options.highscores[key] = wave
+	save_player_options()
+
+
+#endregion
+
+
 enum MainMenuTabs {
 	SERVER = 0,
 	JOIN = 1,

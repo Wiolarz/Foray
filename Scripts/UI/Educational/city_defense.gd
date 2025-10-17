@@ -85,6 +85,9 @@ var player_goods : Goods
 #region New Run Setup
 
 func _ready():
+	if not CFG.HIGHSCORES:
+		CFG.reset_highscores()
+	print(CFG.HIGHSCORES)
 	var bot_paths = FileSystemHelpers.list_files_in_folder(CFG.BATTLE_BOTS_PATH, true, true)
 	ai_difficulty_selection.clear()
 	for bot_name in bot_paths:
@@ -222,6 +225,8 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 		continue_button.disabled = true
 		return
 
+	update_highscores()
+
 	for dead_unit : Unit in armies[0].dead_units:
 		current_roster.units.erase(dead_unit.template)
 
@@ -242,6 +247,14 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 		_displayed_next_wave_changed(current_wave + 1)
 
 #endregion Run UI
+
+
+#updated once we win the battle
+func update_highscores() -> void:
+	#TEMP TODO always counts as mirror, until new enemy selection system
+	var difficulty : String =\
+		ai_difficulty_selection.get_item_text(ai_difficulty_selection.get_selected())
+	CFG.update_highscore(player_race, player_race, difficulty, current_wave + 1)
 
 
 #region Buttons
