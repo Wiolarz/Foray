@@ -1149,14 +1149,23 @@ func _end_of_move_magic(army_that_just_moved_idx : int) -> void:
 	for army in armies_in_battle_state:
 		if not battle_is_ongoing(): #TODO verify if thats a proper fix for spell combination, which results in a draw
 			return
+
+		## one of the units with blood rituals may die here,
+		## resulting in previous one being the last one alive
+		var blood_ritual_targets : Array[Unit] = []
+
 		for unit_idx : int in range(army.units.size() -1, -1, -1):
 			var unit : Unit = army.units[unit_idx]
 			for effect_idx in range(unit.effects.size() -1, -1, -1):
+				if not battle_is_ongoing(): #TODO verify if thats a proper fix for spell combination, which results in a draw
+					return
+
 				var magic_effect : MagicEffect = unit.effects[effect_idx]
 				match magic_effect.name:
 					"Blood Ritual":
-						if army.units.size() == 1:
-							_kill_unit(unit)
+						# since other magic effects may activate it,
+						# but it may be checked in wrong order, it should be fixed
+						blood_ritual_targets.append(unit)
 					"Death Mark":
 						_kill_unit(unit)
 						break
@@ -1171,6 +1180,12 @@ func _end_of_move_magic(army_that_just_moved_idx : int) -> void:
 						else:
 							unit.effects.pop_at(effect_idx)
 							unit.effect_state_changed()
+
+		for unit in blood_ritual_targets:
+			if unit.dead:
+				continue
+			if army.units.size() == 1:
+				_kill_unit(unit)
 
 
 ## STUB for proper countdown system
