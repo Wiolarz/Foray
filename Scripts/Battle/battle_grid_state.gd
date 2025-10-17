@@ -1896,7 +1896,8 @@ class ArmyInBattleState:
 
 
 	func kill_army() -> void:
-		var army_to_award_exp : ArmyInBattleState = BM._battle_grid_state._find_proper_exp_winner(team)
+		var army_to_award_exp : ArmyInBattleState = \
+		BM._battle_grid_state._find_proper_exp_winner(team) # TODO fix private calls
 
 		dead_units.append_array(units_to_deploy)
 		units_to_deploy.clear()
