@@ -46,8 +46,8 @@ func apply_losses(losses : Array[DataUnit]):
 		for passive in hero.passive_effects:
 			if passive.passive_name == "immortality":
 				hero.wounded = false
-
-		#print("hero wounded")
+		#if hero.wounded:
+		#	log("hero wounded")
 	for loss in losses:
 		#assert(loss in units_data, "loss not in army")
 		units_data.erase(loss)

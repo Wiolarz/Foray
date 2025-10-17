@@ -235,6 +235,8 @@ func grid_input(coord : Vector2i):
 		if selected_hero.has_movement_points():
 			# TODO add passing through allied heroes
 			try_interact(selected_hero, selected_hero.travel_path[tile_idx])
+
+			world_ui.load_ritual_book(selected_hero.entity.hero) # Rituals UI refresh
 		else:
 			break
 
@@ -311,37 +313,43 @@ func perform_network_move(world_move_info : WorldMoveInfo) -> void:
 	perform_world_move_info(world_move_info)
 
 
+static func is_ritual_purchasable(ritual : Ritual, caster : Hero) -> bool:
+	var shaman_present : bool = false
+	for passive in caster.passive_effects:
+		if passive.passive_name == "shaman":
+			shaman_present = true
+	# player cannot cast rituals at negative movement points
+	if caster.movement_points < 0:
+		# hero has negative movement points left
+		return false
+
+	if not shaman_present and \
+	caster.movement_points + caster.ritual_cost_reduction < ritual.mp_cost:
+		# hero doesn't have enough movement points left
+		return false
+
+	return true
+
+
 func is_ritual_target_valid(target_coord : Vector2i = Vector2i.ZERO) -> bool:
 	assert(selected_hero, "No selected hero")
 	assert(world_ui.selected_ritual, "no selected_ritual")
 	assert(world_ui.selected_ritual in selected_hero.entity.hero.rituals, "selected_ritual is not present on a hero")
 
-	var shaman_present : bool = false
 	var hero : Hero = selected_hero.entity.hero
-	for passive in hero.passive_effects:
-		if passive.passive_name == "shaman":
-			shaman_present = true
 
-
-	# player cannot cast rituals at negative movement points
-	if hero.movement_points < 0:
-		# TODO add debug warning that uncastable spell was selected
-		print("hero has negative movement points left")
+	if not WM.is_ritual_purchasable(world_ui.selected_ritual, hero):
+		assert(false, "ritual shouldn't be selectable")
 		return false
-
-	if not shaman_present and \
-	hero.movement_points + hero.ritual_cost_reduction < world_ui.selected_ritual.mp_cost:
-		# TODO add debug warning that uncastable spell was selected
-		print("hero doesn't have enough movement points left")
-		return false
-
 
 	match world_ui.selected_ritual.name:
 		"Town Portal":
-			## TODO add selecting city to teleport to / implement logic to select closest/last visited city
 			var target_city : City = WS.get_city_at(target_coord)
 			if not target_city:
 				print("no destination for town portal spell")
+				return false
+			if WS.get_army_at(target_coord).hero:
+				print("hero is present in the city")
 				return false
 			return true
 		"Steal", "Fear":  # any neutral army # TODO add check if army is adjacent to caster
@@ -380,7 +388,6 @@ func cast_ritual(target_coord : Vector2i = Vector2i.ZERO) -> void:
 	print(world_ui.selected_ritual)
 	match world_ui.selected_ritual.name:
 		"Town Portal":
-			## TODO implement logic to select closest/last visited city
 			var target_city : City = WS.get_city_at(target_coord)
 			assert(target_city, "no destination for town portal spell")
 

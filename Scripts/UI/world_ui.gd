@@ -159,7 +159,7 @@ func refresh_army_panel() -> void:
 #region Ritual Book
 
 func load_ritual_book(hero : Hero, preview : bool = false) -> void:
-	selected_ritual = null #TODO check if neccesary
+	selected_ritual = null
 	selected_ritual_button = null
 	Helpers.remove_all_children(ritual_book)
 
@@ -199,9 +199,10 @@ func load_ritual_book(hero : Hero, preview : bool = false) -> void:
 				selected_ritual = ritual
 				selected_ritual_button = button
 				selected_ritual_button.modulate = Color.RED
-		if not preview:
+		if not preview and WM.is_ritual_purchasable(ritual, hero):
 			button.pressed.connect(lambda)
 		else:
+			button.modulate = Color.GRAY
 			button.disabled = true
 
 #endregion Ritual Book
