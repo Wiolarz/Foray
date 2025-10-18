@@ -483,8 +483,14 @@ func update_highscore(
 
 
 ## returns race and wave_number
-func get_highscore(race : DataRace, difficulty : String) -> Array:
+func get_highscore(race : DataRace, difficulty : String, enemy : DataRace = null) -> Array:
 	var ai_key : String = str(get_bot_idx(difficulty))
+	if enemy:
+		var key = race.race_name + \
+			"|" + ai_key + "|" + enemy.race_name
+		var score : int = player_options.highscores[key]
+		return [enemy, score]
+		
 
 	var best_result_race : DataRace
 	var best_wave_score : int = -1

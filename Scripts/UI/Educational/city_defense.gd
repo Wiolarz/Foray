@@ -97,6 +97,15 @@ func _ready():
 	reset_highscore_button.pressed.connect(reset_highscores)
 	_refresh_highscore_display()
 
+	$MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces/Button.pressed.connect(
+		_refresh_highscore_display)
+	var top_bar = highscores_races_top_bar.get_children()
+	var idx = 0
+	for race in CFG.RACES_LIST:
+		idx += 1
+		top_bar[idx].pressed.connect(_refresh_highscore_display.bind(race))
+
+
 	attacker_selection.clear()
 	for attacker_waves_preset in attacker_waves_presets:
 		attacker_selection.add_item(attacker_waves_preset)
@@ -268,7 +277,7 @@ func reset_highscores() -> void:
 	_refresh_highscore_display()
 
 
-func _refresh_highscore_display() -> void:
+func _refresh_highscore_display(race_focus : DataRace = null) -> void:
 	var top_bar = highscores_races_top_bar.get_children()
 	var score_bar = highscores_races_score_bar.get_children()
 
@@ -279,9 +288,17 @@ func _refresh_highscore_display() -> void:
 	var idx = 0
 	for race in CFG.RACES_LIST:
 		idx += 1
-		top_bar[idx].texture = RES.load(race.units_data[0].texture_path)
+		top_bar[idx].texture_normal = RES.load(race.units_data[0].texture_path)
+		if race_focus and race != race_focus:
+			top_bar[idx].modulate = Color.GRAY
+		else:
+			top_bar[idx].modulate = Color.WHITE
 
-		var score : Array = CFG.get_highscore(race, difficulty)
+		var score : Array
+		if not race_focus:
+			score = CFG.get_highscore(race, difficulty)
+		else:
+			score = CFG.get_highscore(race_focus, difficulty, race)
 		score_bar[idx].texture = RES.load(score[0].units_data[0].texture_path)
 		score_bar[idx].get_node("Label").text = str(score[1])
 

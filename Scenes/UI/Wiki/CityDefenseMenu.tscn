@@ -178,45 +178,51 @@ layout_mode = 2
 layout_mode = 2
 theme_override_constants/separation = 150
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
 layout_mode = 2
 text = "Races:"
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+[node name="TextureButton" type="TextureButton" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture = ExtResource("3_c35nt")
-expand_mode = 1
+texture_normal = ExtResource("4_b2sjx")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="TextureRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+[node name="TextureButton2" type="TextureButton" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture = ExtResource("4_b2sjx")
-expand_mode = 1
+texture_normal = ExtResource("3_c35nt")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="TextureRect3" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+[node name="TextureButton3" type="TextureButton" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture = ExtResource("5_8xkia")
-expand_mode = 1
+texture_normal = ExtResource("6_u03ye")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="TextureRect4" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+[node name="TextureButton4" type="TextureButton" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture = ExtResource("6_u03ye")
-expand_mode = 1
+texture_normal = ExtResource("7_s68tf")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="TextureRect5" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+[node name="TextureButton5" type="TextureButton" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture = ExtResource("7_s68tf")
-expand_mode = 1
+texture_normal = ExtResource("8_aonbn")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="TextureRect6" type="TextureRect" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
+[node name="TextureButton6" type="TextureButton" parent="MarginContainer/VBoxContainer/VBoxHighScores/HBoxRaces"]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-texture = ExtResource("8_aonbn")
-expand_mode = 1
+texture_normal = ExtResource("5_8xkia")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="HBoxScores" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxHighScores"]
 layout_mode = 2
