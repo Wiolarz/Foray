@@ -128,12 +128,11 @@ func _ready():
 
 	load_save()
 
-
 	## CURRENT RUN SETTINGS
 	next_wave_selection.item_selected.connect(_displayed_next_wave_changed)
 
 	$MarginContainer/VBoxContainer/VBoxCurrentRun/CurrentRosterTopBar/ResetPurchasesButton.\
-	pressed.connect(load_save)
+		pressed.connect(load_save)
 
 
 func attacker_changed(attacker_index) -> void:
@@ -149,7 +148,7 @@ func difficulty_changed(_difficulty_index) -> void:
 	_refresh_highscore_display()
 
 
-func _start_new_run(load_save : bool = false) -> void:
+func _start_new_run(is_save_being_loaded : bool = false) -> void:
 	new_run_container.visible = false
 	current_run_container.visible = true
 	highscores_container.visible = false
@@ -180,10 +179,8 @@ func _start_new_run(load_save : bool = false) -> void:
 		next_wave_selection.add_item(str(wave_idx + 1))
 	_displayed_next_wave_changed(0)
 
-	if not load_save:
+	if not is_save_being_loaded:
 		save_game()
-
-
 
 #endregion New Run Setup
 
@@ -218,12 +215,14 @@ func load_save() -> void:
 	print(player_goods.wood, player_goods.iron)
 	var enemy_race : DataRace = CFG.RACES_LIST[CFG.CITY_DEFENSE_SAVE[4]]
 	var correct_race_found : bool = false
+
 	for attacker_waves_preset_path in \
 	FileSystemHelpers.list_files_in_folder(attacker_waves_folder_path, true):
 		attacker_waves = load(attacker_waves_preset_path)
 		if attacker_waves.race == enemy_race:
 			correct_race_found = true
 			break
+
 	assert(correct_race_found, "could not find the correct attacker preset")
 	_refresh_unit_purchases()
 	_refresh_roster_display()
@@ -233,7 +232,6 @@ func load_save() -> void:
 		next_wave_selection.add_item(str(wave_idx + 1))
 	_displayed_next_wave_changed(current_wave + 1)
 	refresh_run_info()
-
 
 
 func _displayed_next_wave_changed(wave_idx : int) -> void:
