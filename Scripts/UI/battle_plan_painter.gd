@@ -45,7 +45,11 @@ static func get_color_from_index(color_idx : int) -> Color:
 #region Planning (Chess arrows)
 
 ## Draws a single pointer on a tile, those are cleared by any normal (left click) input
-func planning_input(tile_coord : Vector2i, is_it_pressed : bool) -> void:
+func planning_input( \
+		tile_coord : Vector2i, \
+		is_it_pressed : bool, \
+		position_calculator : GridNode2D \
+) -> void:
 	if is_it_pressed:
 		if not new_arrow:
 			var arrow_color_idx = 0
@@ -56,7 +60,8 @@ func planning_input(tile_coord : Vector2i, is_it_pressed : bool) -> void:
 			if Input.is_key_pressed(KEY_SHIFT):
 				arrow_color_idx += 4
 
-			new_arrow = ChessArrow.creat_chess_arrow(arrow_color_idx, tile_coord)
+			new_arrow = \
+				ChessArrow.creat_chess_arrow(arrow_color_idx, tile_coord, position_calculator)
 			arrows_to_draw.append(new_arrow)
 			#add_child(new_arrow.end_node)
 			return
@@ -75,12 +80,17 @@ func planning_input(tile_coord : Vector2i, is_it_pressed : bool) -> void:
 	new_arrow = null  # reset arrow path
 
 ## if there is an danger along the path, line turnes red
-func draw_path(path : Array[Vector2i], danger : bool = false) -> void:
+func draw_path( \
+		path : Array[Vector2i], \
+		position_calculator : GridNode2D, \
+		danger : bool = false \
+) -> void:
 	var arrow_color_idx = 0  # default white
 	if danger:
 		arrow_color_idx += 4  # RED
 
-	new_arrow = ChessArrow.creat_chess_arrow(arrow_color_idx, path[0])
+	new_arrow = \
+		ChessArrow.creat_chess_arrow(arrow_color_idx, path[0], position_calculator)
 	arrows_to_draw.append(new_arrow)
 	for idx in range(1, path.size()):
 		new_arrow.add_hex(path[idx])
@@ -99,12 +109,19 @@ class ChessArrow:
 
 	var end_node : Node2D = pointer_scene
 
+	var position_calculator : GridNode2D = null
 
-	static func creat_chess_arrow(color_idx_ : int, first_coord : Vector2) -> ChessArrow:
+
+	static func creat_chess_arrow(
+			color_idx_ : int, \
+			first_coord : Vector2, \
+			position_calculator_ : GridNode2D
+	) -> ChessArrow:
 		var new_arrow := ChessArrow.new()
 		new_arrow.color_idx = color_idx_
 		new_arrow.hex_path = [first_coord]
-		var new_pos = BM.to_position(first_coord)
+		new_arrow.position_calculator = position_calculator_
+		var new_pos = position_calculator_.to_position(first_coord)
 		new_arrow.end_node.position = new_pos
 		new_arrow.draw_path = [new_pos]
 		new_arrow.end_node.modulate = BattlePainter.get_color_from_index(color_idx_)
@@ -114,8 +131,14 @@ class ChessArrow:
 
 	func add_hex(coord : Vector2i) -> void:
 		hex_path.append(coord)
-		draw_path.append(BM.to_position(coord))
+		draw_path.append(to_position(coord))
 		_update_end_node()
+
+
+	func to_position(coord : Vector2i) -> Vector2:
+		if position_calculator:
+			return position_calculator.to_position(coord)
+		return Vector2.ZERO
 
 
 	func _update_end_node() -> void:

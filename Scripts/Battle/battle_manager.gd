@@ -107,9 +107,9 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 
 	# GRAPHICS GRID:
 	_battle_grid_state.tile_changed.connect(change_tile_sprite)
-	_load_map(battle_map)
 	_grid_tiles_node.position.x = x_offset
 	horizontal_offset = x_offset
+	_load_map(battle_map)
 	_battle_ui.load_armies(_battle_grid_state.armies_in_battle_state)
 
 	if battle_state: # recreate state if present
@@ -146,7 +146,7 @@ func _load_map(map : DataBattleMap) -> void:
 			var data = map.grid_data[x][y] as DataTile
 			var tile_form = TileForm.create_battle_tile(data, coord)
 			_tile_grid.set_hex(coord, tile_form)
-			tile_form.position = to_position(coord)
+			tile_form.position = to_local_position(coord)
 			_grid_tiles_node.add_child(tile_form)
 
 	if not IM.in_map_editor:
@@ -1062,7 +1062,7 @@ func get_current_time_left_ms() -> int:
 #region Painting
 
 func planning_input(tile_coord : Vector2i, is_it_pressed : bool) -> void:
-	_painter_node.planning_input(tile_coord, is_it_pressed)
+	_painter_node.planning_input(tile_coord, is_it_pressed, self)
 
 #endregion Painting
 
