@@ -35,15 +35,21 @@ func _ready():
 	hero_paths = FileSystemHelpers.list_files_in_folder(CFG.HEROES_PATH, true, true)
 	init_hero_list(hero_list)
 
-	load_unit_buttons()
+	unit_paths = FileSystemHelpers.list_files_in_folder(CFG.UNITS_PATH, true, true)
+	for index in buttons_units.size():
+		var button : OptionButton = buttons_units[index]
+		init_unit_button(button, index)
 
-	bot_paths = FileSystemHelpers.list_files_in_folder(CFG.BATTLE_BOTS_PATH, true, true)
+	button_battle_bot = get_node("GeneralVContainer/TopBarHContainer/OptionButtonBot")
+	battle_bots_paths = FileSystemHelpers.list_files_in_folder(CFG.BATTLE_BOTS_PATH, true, true)
 	init_bots_button()
 
 	init_race_list()
 
 	army_paths = FileSystemHelpers.list_files_in_folder(CFG.ARMY_PRESETS_PATH, true, true)
 	init_army_list()
+
+	super()
 
 
 ## used to know if changes in gui are made by user and should be passed to
@@ -90,13 +96,13 @@ func _on_button_take_leave_pressed():
 func set_visible_take_leave_button_state(state : TakeLeaveButtonState):
 	# maybe better get this from battle setup, but this is simpler
 	button_take_leave_state = state
-	button_bot.visible = false
+	button_battle_bot.visible = false
 	player_info.visible = true
 	match state:
 		TakeLeaveButtonState.FREE:
 			button_take_leave.text = "Take"
 			button_take_leave.disabled = false
-			button_bot.visible = true
+			button_battle_bot.visible = true
 			player_info.visible = false
 		TakeLeaveButtonState.TAKEN_BY_YOU:
 			button_take_leave.text = "Leave"
@@ -114,23 +120,6 @@ func set_visible_take_leave_button_state(state : TakeLeaveButtonState):
 			button_take_leave.disabled = true
 
 
-func _ready():
-	button_battle_bot = get_node("GeneralVContainer/TopBarHContainer/OptionButtonBot")
-
-	hero_paths = FileSystemHelpers.list_files_in_folder(CFG.HEROES_PATH, true, true)
-	init_hero_list(hero_list)
-
-	unit_paths = FileSystemHelpers.list_files_in_folder(CFG.UNITS_PATH, true, true)
-	for index in buttons_units.size():
-		var button : OptionButton = buttons_units[index]
-		init_unit_button(button, index)
-
-	bot_paths = FileSystemHelpers.list_files_in_folder(CFG.BATTLE_BOTS_PATH, true, true)
-	init_bots_button()
-
-	super()
-
-
 func init_unit_button(button : OptionButton, index : int):
 	button.clear()
 	button.add_item(EMPTY_UNIT_TEXT)
@@ -138,11 +127,6 @@ func init_unit_button(button : OptionButton, index : int):
 		button.add_item(unit_path.trim_prefix(CFG.UNITS_PATH))
 	button.item_selected.connect(unit_in_army_changed.bind(index))
 
-func init_bots_button():
-	button_bot.clear()
-	for bot_name in bot_paths:
-		button_bot.add_item(bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
-	button_bot.item_selected.connect(bot_changed)
 
 func init_hero_list(button : OptionButton) -> void:
 	button.clear() #XD
@@ -196,22 +180,22 @@ func _on_button_level_up_pressed():
 #region Bots
 
 func init_bots_button():
-	button_bot.clear()
-	for bot_name in bot_paths:
-		button_bot.add_item(bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
-	button_bot.item_selected.connect(bot_changed)
+	button_battle_bot.clear()
+	for bot_name in battle_bots_paths:
+		button_battle_bot.add_item(bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
+	button_battle_bot.item_selected.connect(bot_changed)
 
 
 func bot_changed(bot_index):
 	# TODO network code
-	IM.game_setup_info.set_battle_bot(setup_ui.slot_to_index(self), bot_paths[bot_index])
+	IM.game_setup_info.set_battle_bot(setup_ui.slot_to_index(self), battle_bots_paths[bot_index])
 
 
 func set_bot(new_bot_path: String):
-	var bot_path = new_bot_path if new_bot_path != "" else bot_paths[0]
-	var idx = bot_paths.find(bot_path)
+	var bot_path = new_bot_path if new_bot_path != "" else battle_bots_paths[0]
+	var idx = battle_bots_paths.find(bot_path)
 	assert(idx != -1, "Invalid bot '%s'" % bot_path)
-	button_bot.select(idx)
+	button_battle_bot.select(idx)
 	bot_changed(idx)
 
 #endregion Bots
@@ -376,15 +360,6 @@ func load_unit_buttons() -> void:
 	for index in buttons_units.size():
 		var button : OptionButton = buttons_units[index]
 		init_unit_button(button, index)
-
-
-func init_unit_button(button : OptionButton, index : int):
-	button.clear()
-	button.add_item(EMPTY_UNIT_TEXT)
-	for unit_path in unit_paths:
-		button.add_item(unit_path.trim_prefix(CFG.UNITS_PATH))
-	if not button.item_selected.is_connected(unit_in_army_changed):
-		button.item_selected.connect(unit_in_army_changed.bind(index))
 
 
 func unit_in_army_changed(selected_index, unit_index) -> void:

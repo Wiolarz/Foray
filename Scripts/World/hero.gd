@@ -45,8 +45,6 @@ var wounded : bool = false
 
 var xp : int = 0
 var level : int = 1
-var xp : int = 0
-var level : int = 1
 
 ## List of rituals player can cast each turn
 var rituals_book : Array[Ritual] = []
