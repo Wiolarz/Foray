@@ -1,10 +1,13 @@
 class_name Army
 extends RefCounted # RefCounted is default
 
-var units_data : Array[DataUnit]
+signal leader_unit_changed()
+
+var units_data : Array[DataUnit] = []
 
 var hero : Hero
 
+#TODO change either this or faction to a getter
 var controller_index : int
 
 ## after battle starts, control over this army is assigned to a player, [br]
@@ -21,6 +24,12 @@ var controller : Player:
 
 var coord : Vector2i
 
+var max_army_size : int :
+	get:
+		if hero:
+			return hero.max_army_size
+		else:
+			return CFG.CITY_MAX_ARMY_SIZE
 
 #TEMP
 var timer_reserve_sec : int
@@ -34,13 +43,19 @@ func get_units_list():
 func apply_losses(losses : Array[DataUnit]):
 	if hero and hero.data_unit in losses:
 		hero.wounded = true
-		print("hero wounded")
+		for passive in hero.passive_effects:
+			if passive.passive_name == "immortality":
+				hero.wounded = false
+		#if hero.wounded:
+		#	log("hero wounded")
 	for loss in losses:
 		#assert(loss in units_data, "loss not in army")
 		units_data.erase(loss)
 
 
 func heal_in_city():
+	if hero:
+		hero.is_in_city = true
 	if hero and hero.wounded:
 		hero.wounded = false
 		print("hero healed")
@@ -59,7 +74,14 @@ func add_xp(gained_xp : int) -> void:
 
 func on_end_of_round():
 	if hero:
-		hero.movement_points = hero.max_movement_points
+		hero.movement_points += hero.movements_points_renewal
+		if hero.movement_points > hero.max_movement_points:
+			hero.movement_points = hero.max_movement_points
+		hero.rituals = hero.rituals_book.duplicate()
+
+		for passive in hero.passive_effects:
+			if passive.passive_name == "arch mage":
+				hero.ritual_cost_reduction += 1
 
 
 ## remember that is some player's army is created, it also needs to be

@@ -7,7 +7,6 @@ signal anim_end()
 const SIDE_NAMES = ["FrontSymbol", "FrontRightSymbol", "BackRightSymbol", "BackSymbol", "BackLeftSymbol", "FrontLeftSymbol"]
 const selection_mark_scene = preload("res://Scenes/Form/SelectionMark.tscn")
 
-@onready var sprite_border := $sprite_border
 
 var entity : Unit
 
@@ -34,7 +33,7 @@ static func create(new_unit : Unit) -> UnitForm:
 	else:
 		color = new_unit.controller.get_player_color()
 
-	result.ready.connect(result.apply_graphics.bind(new_unit.template, color))
+	result.ready.connect(result.apply_graphics.bind(new_unit, color))
 
 	result.global_position = BM.get_tile_global_position(new_unit.coord)
 	result.rotation_degrees = new_unit.unit_rotation * 60
@@ -43,29 +42,68 @@ static func create(new_unit : Unit) -> UnitForm:
 	return result
 
 
-## HACK, this is for visuals only for summon UI
+## HACK, this is for visuals only for deployment UI
 ## no underlying Unit exists
-static func create_for_summon_ui(template: DataUnit, color : DataPlayerColor) -> UnitForm:
+static func create_for_deployment_ui(unit : Unit, color : DataPlayerColor) -> UnitForm:
 	var result = CFG.UNIT_FORM_SCENE.instantiate()
+	result.entity = unit
 	# defer apply_graphics to after the symbol forms are ready (they must be in order for this to work)
-	result.ready.connect(result.apply_graphics.bind(template, color))
+	result.ready.connect(result.apply_graphics.bind(unit, color))
+	result.ready.connect(result.set_effects)
 	return result
 
 
-func apply_graphics(template : DataUnit, color : DataPlayerColor):
-	var unit_texture = load(template.texture_path) as Texture2D
+static func create_for_trade_ui(unit_data : DataUnit, color : DataPlayerColor) -> UnitForm:
+	var result = CFG.UNIT_FORM_SCENE.instantiate()
+	# defer apply_graphics to after the symbol forms are ready (they must be in order for this to work)
+	result.ready.connect(result.data_apply_graphics.bind(unit_data, color))
+	return result
+
+
+func apply_graphics(unit : Unit, color : DataPlayerColor):
+	var unit_texture = RES.load(unit.template.texture_path) as Texture2D
 	_set_texture(unit_texture)
 	_apply_color_texture(color)
-	_apply_level_number(template.level)
+	_apply_level_and_mana_numbers(unit.level, unit.mana)
 
 	for side in range(0,6):
 		var symbol_texture
 		if entity:   # effects may change symbols during battle
 			symbol_texture = entity.symbols[side].texture_path
-		else:  # Placement screen
-			symbol_texture = template.symbols[side].texture_path
+		else:  # Deployment screen
+			symbol_texture = unit.symbols[side].texture_path
 
-		var data_symbol = template.symbols[side]
+		var data_symbol = unit.symbols[side]
+		var symbol = get_symbol(side)
+		var unit_rotation = entity.unit_rotation if entity else 0
+		var side_local = (unit_rotation + side) % 6
+
+		symbol.apply_sprite(side_local, symbol_texture)
+		symbol.apply_activation_anim(data_symbol)
+
+	_flip_unit_sprite()
+	$RigidUI/SpellEffect1.texture = null
+	$RigidUI/SpellEffect2.texture = null
+	$RigidUI/SpellEffectCounter1.text = ""
+	$RigidUI/SpellEffectCounter2.text = ""
+	$RigidUI/TerrainEffect.texture = null
+
+
+func data_apply_graphics(unit_data : DataUnit, color : DataPlayerColor):
+	var unit_texture = RES.load(unit_data.texture_path) as Texture2D
+
+	_set_texture(unit_texture)
+	_apply_color_texture(color)
+	_apply_level_and_mana_numbers(unit_data.level, unit_data.mana)
+
+	for side in range(0,6):
+		var symbol_texture
+		if entity:   # effects may change symbols during battle
+			symbol_texture = entity.symbols[side].texture_path
+		else:  # Deployment screen
+			symbol_texture = unit_data.symbols[side].texture_path
+
+		var data_symbol = unit_data.symbols[side]
 		var symbol = get_symbol(side)
 		var unit_rotation = entity.unit_rotation if entity else 0
 		var side_local = (unit_rotation + side) % 6
@@ -90,6 +128,7 @@ func _flip_unit_sprite():
 	else:
 		$sprite_unit.flip_h = true
 
+
 ## WARNING: called directly in UNIT EDITOR
 func _set_texture(texture : Texture2D) -> void:
 	$sprite_unit.texture = texture
@@ -98,7 +137,7 @@ func _set_texture(texture : Texture2D) -> void:
 func _apply_color_texture(color : DataPlayerColor) -> void:
 	var color_texture_name : String = color.hexagon_texture
 	var path = "%s%s.png" % [CFG.PLAYER_COLORS_PATH, color_texture_name]
-	var texture = load(path) as Texture2D
+	var texture = RES.load(path) as Texture2D
 	assert(texture, "failed to load background " + path)
 	$sprite_color.texture = texture
 
@@ -106,20 +145,27 @@ func _apply_color_texture(color : DataPlayerColor) -> void:
 		color.color)
 
 
-func _apply_level_number(level : int) -> void:
-	const roman_numbers = ["0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
-	if level > 10 or level < 0:
+func _apply_level_and_mana_numbers(level : int, mana : int) -> void:
+	const roman_numbers = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
+	if level > 10 or level < 0 and mana > 10 or mana < 0:
 		assert(false, "Design wise higher level units don't make sense")
 		level = 1
 	$RigidUI/UnitLevel.text = roman_numbers[level]
+	if mana == 0:
+		$RigidUI/ManaIcon.hide()
+	else:
+		$RigidUI/ManaIcon.show()
+	$RigidUI/UnitMana.text = roman_numbers[mana]
 
 #endregion Init
+
 
 #region Animations
 
 func anim_move():
 	var target = BM.get_tile_global_position(entity.coord)
 	ANIM.main_tween().tween_property(self, "position", target, CFG.anim_move_duration)
+	ANIM.main_tween().parallel().tween_callback(AUDIO.play.bind("move"))
 
 
 func anim_turn():
@@ -128,11 +174,13 @@ func anim_turn():
 	ANIM.main_tween().tween_property(self, "rotation", angle_rel, time).as_relative()
 	ANIM.main_tween().parallel().tween_property($sprite_unit, "rotation", -angle_rel, time).as_relative()
 	ANIM.main_tween().parallel().tween_property($RigidUI, "rotation", -angle_rel, time).as_relative()
+	ANIM.main_tween().parallel().tween_callback(AUDIO.play.bind("turn"))
 	_rotation_symbol_flip()
 	_flip_unit_sprite()
 
 
 func anim_die():
+	ANIM.main_tween().tween_callback(AUDIO.play.bind("unit_death"))
 	ANIM.main_tween().tween_property(self, "scale", Vector2.ZERO, CFG.anim_death_duration)
 	ANIM.main_tween().tween_callback(queue_free)
 
@@ -167,38 +215,47 @@ func anim_symbol(side : int, animation_type : int, target_coord: Vector2i = Vect
 
 	match animation_type:
 		CFG.SymbolAnimationType.MELEE_ATTACK, CFG.SymbolAnimationType.COUNTER_ATTACK:
-			symbol.anim_symbol_melee(animation_type)
+			ANIM.sync_tweens([symbol.make_melee_anim(animation_type)])
 
 		CFG.SymbolAnimationType.TELEPORTING_PROJECTILE:
-			symbol.anim_symbol_teleporting_projectile(target_coord, side)
+			ANIM.sync_tweens([symbol.make_projectile_anim(target_coord, side)])
 
 		CFG.SymbolAnimationType.BLOCK:
-			var block_anim_duration : float = symbol.get_block_duration()
-
 			var data_symbol : DataSymbol = \
 				other_unit.entity.symbols[opposite_side_local]
+			var attack_tween_sync: ANIM.TweenSync
 
 			if data_symbol.does_it_shoot():
-				other_symbol.anim_symbol_teleporting_projectile(
+				attack_tween_sync = other_symbol.make_projectile_anim(
 					entity.coord,
 					GenericHexGrid.opposite_direction(side)
 				)
 			else:
-				other_symbol.anim_symbol_melee(
-					CFG.SymbolAnimationType.MELEE_ATTACK,
-					block_anim_duration
+				attack_tween_sync = other_symbol.make_melee_anim(
+					CFG.SymbolAnimationType.FAILED_ATTACK
 				)
 
-			symbol.anim_symbol_block()
-
+			var defense_tween_sync = symbol.make_block_anim()
+			ANIM.sync_tweens([attack_tween_sync, defense_tween_sync])
 		_:
 			assert(false, "Unimplemented animation type")
 
 
 
-func anim_magic():
-	# TODO
-	pass
+func anim_magic(effect: MagicEffect):
+	if not effect:
+		return
+
+	var sprite := Sprite2D.new()
+	sprite.texture = RES.load(effect.icon_path)
+	sprite.visible = false
+	add_child(sprite)
+	sprite.global_rotation = 0
+	ANIM.main_tween().tween_property(sprite, "visible", true, 0.0)
+	ANIM.main_tween().tween_callback(AUDIO.play.bind("magic_effect"))
+	ANIM.main_tween().tween_property(sprite, "scale", Vector2(6.0, 6.0), 0.7)
+	ANIM.main_tween().parallel().tween_property(sprite, "modulate:a", 0.0, 0.7)
+	ANIM.main_tween().tween_callback(sprite.queue_free)
 
 #endregion Animations
 
@@ -214,27 +271,30 @@ func _rotation_symbol_flip():
 
 #region UI
 
+
+## Unit form has to be in the scene tree for this function to properly apply textures
 func set_effects() -> void:
 	# Terrain effects
 	if entity.is_on_swamp:
-		$RigidUI/TerrainEffect.texture = load(CFG.SWAMP_ICON_PATH)
+		$RigidUI/TerrainEffect.texture = RES.load(CFG.SWAMP_ICON_PATH)
 	elif entity.is_on_rock:
-		$RigidUI/TerrainEffect.texture = load(CFG.ROCK_ICON_PATH)
+		$RigidUI/TerrainEffect.texture = RES.load(CFG.ROCK_ICON_PATH)
 	elif entity.is_on_mana:
-		$RigidUI/TerrainEffect.texture = load(CFG.MANA_ICON_PATH)
+		$RigidUI/TerrainEffect.texture = RES.load(CFG.MANA_ICON_PATH)
 	else:
 		$RigidUI/TerrainEffect.texture = null
 
 	# Magical effects
 	var spell_effects_slots : Array[Sprite2D] = [$RigidUI/SpellEffect1, $RigidUI/SpellEffect2]
 	var spell_counters_slots : Array[Label] = [$RigidUI/SpellEffectCounter1, $RigidUI/SpellEffectCounter2]
-	for slot_idx in range(spell_effects_slots.size()):
-		if entity.effects.size() - 1 < slot_idx:
-			spell_effects_slots[slot_idx].texture = null
-			spell_counters_slots[slot_idx].text = ""
-			continue
 
-		var spell_texture = load(entity.effects[slot_idx].icon_path)  #TEMP spell icon path
+	$RigidUI/SpellEffect1.texture = null
+	$RigidUI/SpellEffect2.texture = null
+	$RigidUI/SpellEffectCounter1.text = ""
+	$RigidUI/SpellEffectCounter2.text = ""
+	assert(entity.effects.size() <= 2, "Unit has too many spell effects")
+	for slot_idx in range(entity.effects.size()):
+		var spell_texture = RES.load(entity.effects[slot_idx].icon_path)  #TEMP spell icon path
 		spell_effects_slots[slot_idx].texture = spell_texture
 		if not entity.effects[slot_idx].passive_effect:  # passive effect are pernament
 			spell_counters_slots[slot_idx].text = str(entity.effects[slot_idx].duration_counter)
@@ -243,6 +303,8 @@ func set_effects() -> void:
 
 func set_selected(is_selected : bool):
 	_selected = is_selected
+	if _selected:
+		AUDIO.play("ingame_click")
 	_refresh_highlight()
 
 
@@ -254,7 +316,7 @@ func set_hovered(is_hovered : bool):
 ## used after every set_hovered and set_selected to refresh level of highlight
 func _refresh_highlight() -> void:
 	var overall_shader_material := material as ShaderMaterial
-	var border_shader_material := sprite_border.material as ShaderMaterial
+	var border_shader_material := $sprite_border.material as ShaderMaterial
 	var overall_intensity = 0.25 if _hovered else 0.0
 	var border_intensity = 0.0
 	border_intensity = lerpf(border_intensity, 1.0, 0.25 if _hovered else 0.0)
@@ -282,5 +344,12 @@ func _refresh_highlight() -> void:
 		remove_child(get_node_or_null("SelectionMark"))
 		z_index = 0
 
+
+## marks visually units to distinct them by applying a color tint to their background [br]
+## currently only used to show which units will be left in the garrison once hero leaves the city
+## with insufficient max_army_size to take all units with him
+func set_marked_for_unit_list() -> void:
+	$sprite_color.modulate = Color("ffc7aa") #ffc7aa for debuging use -> #431900
+	$sprite_color.use_parent_material = false
 
 #endregion UI

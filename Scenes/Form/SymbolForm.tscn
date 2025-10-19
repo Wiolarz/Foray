@@ -44,6 +44,7 @@ hit_on_frame = 0
 teleport_at = 0
 blocking_offset = Vector2(0, 0)
 blocking_scale = Vector2(1, 1)
+block_on_frame = 0
 
 [node name="Base" type="Node2D"]
 script = ExtResource("1_qtp2l")

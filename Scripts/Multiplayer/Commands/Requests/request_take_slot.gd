@@ -24,6 +24,7 @@ static func process_command(server : Server, peer : ENetPacketPeer, \
 	if index < 0 or index >= slots.size():
 		return FAILED
 	var slot = IM.game_setup_info.slots[index]
+	# if player uses name "1" it's still treated as a string
 	if slot.occupier is int or server.settings.allow_slot_steal():
 		slot.occupier = session.username
 		server.broadcast_full_game_setup(IM.game_setup_info)

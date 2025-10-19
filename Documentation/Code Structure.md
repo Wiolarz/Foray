@@ -57,7 +57,7 @@ Player opens theirs starting city where they can:
 - recruit units
 
 After player acquires a hero, they will be able to:
-- move around the map 
+- move around the map
 - interact with a city or another hero (swap/buy units)
 - collect goods on the map
 - fight enemy controlled armies (neutral or other players)
@@ -71,10 +71,10 @@ After player acquires a hero, they will be able to:
 
 Battle has 2 phases:
 
-1. Unit placement / summoning
+1. Unit Deployment
 2. Combat
 
-During Unit placement players deploy units one by one. Units can only be deployed on "starting tiles" specific for the given player. Once a unit is placed it can't be relocated until combat starts. 
+During Unit deployment players deploy units one by one. Units can only be deployed on "starting tiles" specific for the given player. Once a unit is placed it can't be relocated until combat starts.
 
 After all units are placed, Battle proceeds into the Combat phase.
 
@@ -94,7 +94,7 @@ parameters:
 
 
 Data:
-	Every tile has 
+	Every tile has
 
 
 # Important Grid functions:

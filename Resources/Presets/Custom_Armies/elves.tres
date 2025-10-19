@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=6 format=3 uid="uid://cv6twyxg7lf6h"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_20mmm"]
+[ext_resource type="Resource" uid="uid://b44kr1rcexp3v" path="res://Resources/Battle/Units/Elves/elf_unit_hero_noble.tres" id="2_8ud8o"]
+[ext_resource type="Resource" uid="uid://cy0eh6aop7ce7" path="res://Resources/Battle/Units/Elves/elf_unit_hero_druid.tres" id="3_rlxk4"]
+[ext_resource type="Resource" uid="uid://ydn4n563h71m" path="res://Resources/Battle/Units/Elves/elf_2_archer.tres" id="4_8gr1o"]
+[ext_resource type="Resource" uid="uid://0vft0atich8r" path="res://Resources/Battle/Units/Elves/elf_1_spearmen.tres" id="5_vp0kl"]
+
+[resource]
+script = ExtResource("1_20mmm")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_8ud8o"), ExtResource("3_rlxk4"), ExtResource("4_8gr1o"), ExtResource("5_vp0kl")])
+team = 0

@@ -5,7 +5,7 @@ extends TileGridFastCpp
 static func from(bgstate: BattleGridState):
 	var new = TileGridFast.new()
 	new.set_map_size(Vector2i(bgstate.width, bgstate.height))
-	
+
 	for x in bgstate.width:
 		for y in bgstate.height:
 			var pos = Vector2i(x,y)
@@ -17,7 +17,7 @@ static func from(bgstate: BattleGridState):
 				if hex.mana_controller:
 					army_id = bgstate.armies_in_battle_state.find(hex.mana_controller)
 
-			new.set_tile(pos, 
+			new.set_tile(pos,
 				hex.can_be_moved_to,
 				not hex.can_shoot_through,
 				hex.swamp,

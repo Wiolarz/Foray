@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HeroPassive" load_steps=2 format=3 uid="uid://cfm5gnll7opbh"]
+
+[ext_resource type="Script" path="res://Resources/Battle/hero_passive.gd" id="1_m47jw"]
+
+[resource]
+script = ExtResource("1_m47jw")
+passive_name = "ballista_summon"
+description = "If army is first to move (attacks) provides at the start of the battle additional ballista unit to deploy"

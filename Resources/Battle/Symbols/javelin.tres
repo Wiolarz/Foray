@@ -1,19 +1,19 @@
 [gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://can6h14rlybte"]
 
 [ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_i53ib"]
-[ext_resource type="SpriteFrames" uid="uid://d0cc3nmwaam1c" path="res://Art/animations/bow.tres" id="2_dmy5g"]
+[ext_resource type="SpriteFrames" uid="uid://clbps7vh8fgcl" path="res://Art/animations/javelin_throw.tres" id="2_i5tgj"]
 
 [resource]
 script = ExtResource("1_i53ib")
 symbol_name = "javelin"
 texture_path = "res://Art/items/javelin.png"
-symbol_animation = ExtResource("2_dmy5g")
+symbol_animation = ExtResource("2_i5tgj")
 attack_power = 2
-defense_power = 1
+defense_power = 0
 push_power = 1
 counter_attack = false
 parry = false
 parry_break = false
-reach = 4
+reach = 3
 activate_turn = false
 activate_move = true

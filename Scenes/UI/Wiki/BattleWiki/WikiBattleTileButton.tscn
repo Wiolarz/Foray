@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6xtjog47hpwu"]
+
+[ext_resource type="Texture2D" uid="uid://cuyjne8lpdskl" path="res://Art/battle_map/rock.png" id="1_7llu2"]
+[ext_resource type="Script" path="res://Scripts/UI/Educational/WorldWiki/wiki_world_tile_button.gd" id="2_4ouah"]
+
+[node name="BattleTerrainButton" type="TextureButton"]
+custom_minimum_size = Vector2(175, 200)
+offset_right = 175.0
+offset_bottom = 200.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("1_7llu2")
+ignore_texture_size = true
+stretch_mode = 4
+script = ExtResource("2_4ouah")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -86.0
+offset_right = 86.0
+offset_bottom = 48.0
+grow_horizontal = 2
+text = "Rock"
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

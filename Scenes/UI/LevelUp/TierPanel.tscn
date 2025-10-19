@@ -1,12 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://bukisun1sjf4t"]
+[gd_scene load_steps=3 format=3 uid="uid://bukisun1sjf4t"]
 
-[ext_resource type="Script" path="res://Scripts/UI/LevelUp/tier_panel.gd" id="1_xb5c6"]
+[ext_resource type="Script" path="res://Scripts/UI/LevelUp/tier_talent_panel.gd" id="1_q4xxc"]
+[ext_resource type="PackedScene" uid="uid://d030cg7m2orr1" path="res://Scenes/UI/LevelUp/PassiveButton.tscn" id="2_4vdkt"]
 
 [node name="TierPanel" type="PanelContainer"]
 offset_right = 482.0
 offset_bottom = 268.0
 size_flags_stretch_ratio = 0.0
-script = ExtResource("1_xb5c6")
+script = ExtResource("1_q4xxc")
 
 [node name="MainContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -18,23 +19,20 @@ text = "Tier 1"
 
 [node name="TierUpgrades" type="HBoxContainer" parent="MainContainer"]
 layout_mode = 2
-theme_override_constants/separation = 150
+theme_override_constants/separation = 10
 alignment = 1
 
-[node name="PowerPassiveButton" type="Button" parent="MainContainer/TierUpgrades"]
+[node name="PowerPassiveButton" parent="MainContainer/TierUpgrades" instance=ExtResource("2_4vdkt")]
 layout_mode = 2
-toggle_mode = true
-text = "Power Passive"
+size_flags_horizontal = 3
 
-[node name="TacticPassiveButton" type="Button" parent="MainContainer/TierUpgrades"]
+[node name="TacticPassiveButton" parent="MainContainer/TierUpgrades" instance=ExtResource("2_4vdkt")]
 layout_mode = 2
-toggle_mode = true
-text = "Tactic Passive"
+size_flags_horizontal = 3
 
-[node name="MagicPassiveButton" type="Button" parent="MainContainer/TierUpgrades"]
+[node name="MagicPassiveButton" parent="MainContainer/TierUpgrades" instance=ExtResource("2_4vdkt")]
 layout_mode = 2
-toggle_mode = true
-text = "Magic Passive"
+size_flags_horizontal = 3
 
 [node name="Skill label" type="Label" parent="MainContainer"]
 layout_mode = 2
@@ -42,20 +40,17 @@ text = "List of skills:"
 
 [node name="TierSkills" type="HBoxContainer" parent="MainContainer"]
 layout_mode = 2
-theme_override_constants/separation = 150
+theme_override_constants/separation = 10
 alignment = 1
 
-[node name="PowerSkillButton" type="Button" parent="MainContainer/TierSkills"]
+[node name="PowerSkillButton" parent="MainContainer/TierSkills" instance=ExtResource("2_4vdkt")]
 layout_mode = 2
-toggle_mode = true
-text = "Power"
+size_flags_horizontal = 3
 
-[node name="TacticSkillButton" type="Button" parent="MainContainer/TierSkills"]
+[node name="TacticSkillButton" parent="MainContainer/TierSkills" instance=ExtResource("2_4vdkt")]
 layout_mode = 2
-toggle_mode = true
-text = "Magic"
+size_flags_horizontal = 3
 
-[node name="MagicSkillButton" type="Button" parent="MainContainer/TierSkills"]
+[node name="MagicSkillButton" parent="MainContainer/TierSkills" instance=ExtResource("2_4vdkt")]
 layout_mode = 2
-toggle_mode = true
-text = "Tactic"
+size_flags_horizontal = 3

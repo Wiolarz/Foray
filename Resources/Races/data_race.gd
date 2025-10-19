@@ -12,6 +12,8 @@ extends Resource
 
 @export var buildings : Array[DataBuilding]
 
+@export_multiline var description : String
+
 func get_network_id() -> String:
 	return resource_path
 

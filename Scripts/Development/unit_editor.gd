@@ -28,7 +28,7 @@ func _init_resource_type() -> void:
 
 ## override
 func apply_texture_to_preview() -> void:
-	resource_preview_form.apply_graphics(dirty_changes, CFG.NEUTRAL_COLOR)
+	resource_preview_form.data_apply_graphics(dirty_changes, CFG.NEUTRAL_COLOR)
 	for dir in range(6):
 		_set_symbol_picker(dir, dirty_changes.symbols[dir])
 

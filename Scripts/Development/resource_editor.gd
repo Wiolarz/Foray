@@ -124,7 +124,6 @@ func save_resource() -> void:
 	# WARNING clears uids
 	# see https://github.com/godotengine/godot/issues/83259
 	# use uid_fixer script to fix
-	pass
 
 
 ## Parses name for new resource and validates it. Returns empty string on error.
@@ -178,6 +177,7 @@ func _on_delete_pressed():
 	DirAccess.remove_absolute(edited_resource.resource_path)
 	_load_resources()  # unload new resource from the Resource Browser tree
 	_select_first_item()
+	UI.resources_list_changed.emit()
 
 
 ## Creates a new resource which is a duplicate of the selected resource but with a new name
@@ -198,6 +198,7 @@ func _on_add_pressed():
 	ResourceSaver.save(dirty_changes, save_path)
 	_load_resources()  # loads new resource into the Resource Browser tree
 	load_resource(save_path)  # auto selects newly created resource
+	UI.resources_list_changed.emit()
 
 
 ## applies changes in `resource_preview_form` to `edited_resource` resource

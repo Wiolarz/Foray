@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3 uid="uid://dbb7k5toodqct"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_sghv4"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_qw3r2"]
+[ext_resource type="Resource" uid="uid://bp747guikipcb" path="res://Resources/Battle/Symbols/spear.tres" id="4_5bwbn"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="6_hsadq"]
+
+[sub_resource type="Resource" id="Resource_6r5q3"]
+script = ExtResource("1_sghv4")
+wood = 2
+iron = 2
+ruby = 2
+
+[resource]
+script = ExtResource("3_qw3r2")
+unit_name = "Pikeneer"
+texture_path = "res://Art/units/orc/orc_3_Pikeneer.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_5bwbn"), ExtResource("6_hsadq"), ExtResource("6_hsadq"), ExtResource("6_hsadq"), ExtResource("6_hsadq"), ExtResource("6_hsadq")])
+cost = SubResource("Resource_6r5q3")
+level = 3
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

@@ -3,10 +3,10 @@ extends Summary
 
 
 const BATTLE_SUMMARY_SCENE_PATH := "res://Scenes/UI/Battle/BattleSummary.tscn"
-const BATTLE_SUMMARY_PLAYER_SCENE_PATH = "res://Scenes/UI/Battle/BattleSummaryPlayerStats.tscn"
+const BATTLE_SUMMARY_PLAYER_SCENE_PATH := "res://Scenes/UI/Battle/BattleSummaryPlayerStats.tscn"
 
 
-static func create(parent:Node, info: DataBattleSummary, \
+static func create(parent : Node, info : DataBattleSummary, \
 			continue_callback : Callable) -> BattleSummary:
 	var result = load(BATTLE_SUMMARY_SCENE_PATH).instantiate()
 	parent.add_child(result)

@@ -51,7 +51,11 @@ func get_port():
 
 
 func get_username_server():
-	return server_name_line.text
+	var server_name : String = server_name_line.text
+	if server_name.is_empty():
+		server_name = CFG.DEFAULT_PLAYER_NAME
+	server_name_line.text = server_name
+	return server_name
 
 
 func _on_button_listen_pressed():

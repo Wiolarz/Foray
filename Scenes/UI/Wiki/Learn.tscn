@@ -1,11 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://hxaial4lcwu7"]
+[gd_scene load_steps=13 format=3 uid="uid://hxaial4lcwu7"]
 
 [ext_resource type="Script" path="res://Scripts/UI/Educational/learn_tab.gd" id="1_6475f"]
-[ext_resource type="PackedScene" uid="uid://baltedrhixfl7" path="res://Scenes/UI/Wiki/TutorialsMenu.tscn" id="2_rdoye"]
-[ext_resource type="PackedScene" uid="uid://b5f677a5bdad" path="res://Scenes/UI/Wiki/PuzzlesMenu.tscn" id="2_xisac"]
-[ext_resource type="PackedScene" uid="uid://bvh2qsh5v3et" path="res://Scenes/UI/Wiki/WikiSymbols.tscn" id="3_7py82"]
-[ext_resource type="PackedScene" uid="uid://q0k58xy6fkre" path="res://Scenes/UI/Wiki/CampaignBattlesMenu.tscn" id="3_x5eob"]
-[ext_resource type="PackedScene" uid="uid://p42st2s5b6o3" path="res://Scenes/UI/Wiki/WikiMagic.tscn" id="6_c6jlk"]
+[ext_resource type="PackedScene" uid="uid://dffua4js758nx" path="res://Scenes/UI/Wiki/Practice/WikiIntroduction.tscn" id="2_230xd"]
+[ext_resource type="PackedScene" uid="uid://baltedrhixfl7" path="res://Scenes/UI/Wiki/Practice/TutorialsMenu.tscn" id="2_rdoye"]
+[ext_resource type="PackedScene" uid="uid://b5f677a5bdad" path="res://Scenes/UI/Wiki/Practice/PuzzlesMenu.tscn" id="2_xisac"]
+[ext_resource type="PackedScene" uid="uid://bvh2qsh5v3et" path="res://Scenes/UI/Wiki/BattleWiki/WikiSymbols.tscn" id="3_7py82"]
+[ext_resource type="PackedScene" uid="uid://q0k58xy6fkre" path="res://Scenes/UI/Wiki/Practice/CampaignBattlesMenu.tscn" id="3_x5eob"]
+[ext_resource type="PackedScene" uid="uid://p42st2s5b6o3" path="res://Scenes/UI/Wiki/BattleWiki/WikiMagic.tscn" id="6_c6jlk"]
+[ext_resource type="PackedScene" uid="uid://cmi3w4brn1nc7" path="res://Scenes/UI/Wiki/WorldWiki/WikiWorldTerrain.tscn" id="7_7mprj"]
+[ext_resource type="PackedScene" uid="uid://nnt62jra4vmv" path="res://Scenes/UI/Wiki/BattleWiki/WikiBattleTerrain.tscn" id="7_y8iyh"]
+[ext_resource type="PackedScene" uid="uid://cmmq8s1lme2oe" path="res://Scenes/UI/Wiki/BattleWiki/WikiMagicCyclone.tscn" id="8_s6pqf"]
+[ext_resource type="PackedScene" uid="uid://chbkr4ic76rs" path="res://Scenes/UI/Wiki/WorldWiki/WikiEconomy.tscn" id="9_7jjs7"]
+[ext_resource type="PackedScene" uid="uid://d4jfwmwytwjsc" path="res://Scenes/UI/Wiki/WorldWiki/WikiRaces.tscn" id="12_xnxw7"]
 
 [node name="Learn" type="Panel"]
 anchors_preset = 15
@@ -45,24 +51,38 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 
-[node name="TabBar" type="TabBar" parent="MainContainer/TopMenu"]
+[node name="TabBarModeSelection" type="TabBar" parent="MainContainer/TopMenu"]
 layout_mode = 2
 size_flags_horizontal = 3
-tab_count = 8
+tab_count = 3
+scrolling_enabled = false
+tab_0/title = "Practice"
+tab_1/title = "Battle Wiki"
+tab_2/title = "World Wiki"
+
+[node name="TabBarPractice" type="TabBar" parent="MainContainer/TopMenu"]
+layout_mode = 2
+size_flags_horizontal = 3
+tab_count = 2
 current_tab = 1
-tab_0/title = " Practice:  "
-tab_0/disabled = true
+tab_0/title = "Basic Information"
 tab_1/title = "Tutorials"
-tab_2/title = "Puzzles"
-tab_3/title = "Campaign"
-tab_4/title = "          Wiki: "
-tab_4/disabled = true
-tab_5/title = "Weapons"
-tab_6/title = "Magic"
-tab_7/title = "Economy"
-tab_7/disabled = true
+
+[node name="TabBarBattleWiki" type="TabBar" parent="MainContainer/TopMenu"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TabBarWorldWiki" type="TabBar" parent="MainContainer/TopMenu"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PracticeSection" type="Node2D" parent="MainContainer"]
+
+[node name="WikiIntroduction" parent="MainContainer" instance=ExtResource("2_230xd")]
+layout_mode = 2
 
 [node name="Tutorials" parent="MainContainer" instance=ExtResource("2_rdoye")]
+visible = false
 layout_mode = 2
 
 [node name="Puzzles" parent="MainContainer" instance=ExtResource("2_xisac")]
@@ -73,6 +93,8 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 
+[node name="BattleWikiSection" type="Node2D" parent="MainContainer"]
+
 [node name="WikiSymbols" parent="MainContainer" instance=ExtResource("3_7py82")]
 visible = false
 layout_mode = 2
@@ -81,4 +103,29 @@ layout_mode = 2
 visible = false
 layout_mode = 2
 
-[connection signal="tab_changed" from="MainContainer/TopMenu/TabBar" to="." method="_on_tabs_tab_changed"]
+[node name="WikiBattleTerrain" parent="MainContainer" instance=ExtResource("7_y8iyh")]
+visible = false
+layout_mode = 2
+
+[node name="WikiMagicCyclone" parent="MainContainer" instance=ExtResource("8_s6pqf")]
+visible = false
+layout_mode = 2
+
+[node name="WorldWikiSection" type="Node2D" parent="MainContainer"]
+
+[node name="WikiWorldTerrain" parent="MainContainer" instance=ExtResource("7_7mprj")]
+visible = false
+layout_mode = 2
+
+[node name="WikiEconomy" parent="MainContainer" instance=ExtResource("9_7jjs7")]
+visible = false
+layout_mode = 2
+
+[node name="WikiRaces" parent="MainContainer" instance=ExtResource("12_xnxw7")]
+visible = false
+layout_mode = 2
+
+[connection signal="tab_changed" from="MainContainer/TopMenu/TabBarModeSelection" to="." method="_on_tab_bar_mode_selection_tab_changed"]
+[connection signal="tab_changed" from="MainContainer/TopMenu/TabBarPractice" to="." method="_on_tab_bar_practice_tab_changed"]
+[connection signal="tab_changed" from="MainContainer/TopMenu/TabBarBattleWiki" to="." method="_on_tab_bar_battle_wiki_tab_changed"]
+[connection signal="tab_changed" from="MainContainer/TopMenu/TabBarWorldWiki" to="." method="_on_tab_bar_world_wiki_tab_changed"]

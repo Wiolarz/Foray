@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://dffua4js758nx"]
+
+[node name="WikiIntroduction" type="Panel"]
+clip_contents = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Basic Informations"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TileInformationContainer" type="ScrollContainer" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "Foray is a turn based strategy game with no random elements and with perfect information just like in chess.
+There are currently 3 ways to play:
+1 Practice Section - that's where you are currently there are:
+
+Tutorials - best way to learn the rules
+Puzzles - unique experiences to test your strategic prowess.
+(not yet finished)Campaign Battles - Easy access to already encountered special battles, here you can repeat them with the same army or modify it.  You can try playing as the enemy too.
+
+2 Custom Battle - mode with various settings allowing player to immediately experience combat.
+
+3 Full Game - bigger scale conflicts on a large map requiring waging dozens of battles in order to conquer all enemies. Similar to the classic \"Heroes of Might and Magic\" series.
+
+
+
+If during the game you have any question just quickly open the menu and browse through the in-game wiki."
+fit_content = true

@@ -20,13 +20,13 @@ BattleMCTSNode::BattleMCTSNode(BattleManagerFast bm, BattleMCTSManager& manager,
 }
 
 float BattleMCTSNode::uct() const {
-	const auto coeff = sqrt(2);
+	const float coeff = sqrt(2);
 
 	if(abs(_visits) < 1e-5f) {
 		// not explored, a large number to force exploring it
 		return 10000.0f;
 	}
-	auto parent_visits = _parent ? _parent->_visits : _visits;
+	float parent_visits = _parent ? _parent->_visits : _visits;
 	return (_reward/_visits) + coeff * sqrt(log2(parent_visits) / _visits);
 }
 
@@ -40,7 +40,7 @@ std::optional<std::pair<Move, BattleMCTSNode&>> BattleMCTSNode::select() {
 	Move best_move{};
 
 	for(auto& [move, node] : _children) {
-		auto uct = node->uct();
+		float uct = node->uct();
 		if(uct >= uct_max) {
 			uct_max = uct;
 			// Safe as long as it doesn't outlive parent
@@ -65,12 +65,12 @@ BattleMCTSNode& BattleMCTSNode::expand() {
 
 	if(_children.count(move) == 0) {
 		_children.emplace(move, std::make_shared<BattleMCTSNode>(_bm, _manager, this, move));
-		auto& child = *_children.at(move);
+		BattleMCTSNode& child = *_children.at(move);
 		child._bm.play_move(move);
 		child._mcts_iterations = _mcts_iterations;
 
 		if(heur_chosen) {
-			auto prior_reward = _mcts_iterations * float(_manager.heuristic_prior_reward_per_iteration);
+			float prior_reward = _mcts_iterations * float(_manager.heuristic_prior_reward_per_iteration);
 			child._visits += prior_reward;
 			child._reward += prior_reward;
 		}
@@ -84,7 +84,7 @@ BattleResult _simulate_thread(BattleManagerFast bmnew, BattleMCTSManager& mcts, 
 	Move move;
 	int i = 0;
 
-	auto save_replay = false;
+	bool save_replay = false;
 	std::vector<Move> replay;
 
 	float heuristic_probability, max_sim_iterations;
@@ -129,8 +129,7 @@ BattleResult BattleMCTSNode::simulate(int max_sim_iterations, int simulations) {
 		results[i] = _simulate_thread(_bm, this->_manager, *this);
 	}
 
-	for(auto& fut : results) {
-		auto result = fut;
+	for(BattleResult& result : results) {
 		for(unsigned i = 0; i < ret.total_scores.size(); i++) {
 			ret.total_scores[i] += result.total_scores[i];
 			ret.max_scores[i] += result.max_scores[i];
@@ -146,9 +145,9 @@ void BattleMCTSNode::backpropagate(BattleResult& result, int new_visits) {
 	if(_parent == nullptr) { // Root node does not need backpropagation
 		return;
 	}
-	auto current_team = _bm.get_army_team(_bm.get_previous_participant());
-	auto ally_score = 0.0f, enemy_score = 0.0f;
-	auto max_ally_score = 0.0f, max_enemy_score = 0.0f;
+	int current_team = _bm.get_army_team(_bm.get_previous_participant());
+	float ally_score = 0.0f, enemy_score = 0.0f;
+	float max_ally_score = 0.0f, max_enemy_score = 0.0f;
 
 	for(unsigned i = 0; i < result.total_scores.size(); i++) {
 		if(_bm.get_army_team(i) == current_team) {
@@ -161,10 +160,12 @@ void BattleMCTSNode::backpropagate(BattleResult& result, int new_visits) {
 		}
 	}
 
-	auto reward_add = (ally_score + max_enemy_score - enemy_score) / (max_ally_score+max_enemy_score); 
+	float reward_add = (ally_score + max_enemy_score - enemy_score) / (max_ally_score+max_enemy_score); 
 	// just in case
 	if(reward_add < 0.0f || reward_add > 1.0f || std::isnan(reward_add) || std::isinf(reward_add)) {
-		WARN_PRINT(std::format("invalid reward {} (ally:{}/{}, enemy:{}/{})", reward_add, ally_score, max_ally_score, enemy_score, max_enemy_score).c_str());
+		if(_manager.debug_bmfast_internals) {
+			WARN_PRINT(std::format("invalid reward {} (ally:{}/{}, enemy:{}/{})", reward_add, ally_score, max_ally_score, enemy_score, max_enemy_score).c_str());
+		}
 		_reward += 0.5f * new_visits;
 	}
 	else {
@@ -189,7 +190,7 @@ void BattleMCTSManager::iterate(int iterations) {
 
 void BattleMCTSNode::iterate(int iterations) {
 
-	auto visits = _manager.max_playouts_per_visit;
+	int visits = _manager.max_playouts_per_visit;
 	auto begin = std::chrono::high_resolution_clock::now();
 
 	// Make sure the first level is explored to ensure every move will have at least one visit (select prioritizes nodes with 0 moves)
@@ -209,7 +210,7 @@ void BattleMCTSNode::iterate(int iterations) {
 			parent_node_ptr = &node_opt.value().second;
 		}
 
-		auto& node = parent_node_ptr->expand();
+		BattleMCTSNode& node = parent_node_ptr->expand();
 		BattleResult result = node.simulate(_manager.max_sim_iterations, visits);
 
 		node.backpropagate(result, visits);
@@ -245,7 +246,7 @@ Move BattleMCTSManager::get_optimal_move(float reward_per_visit_dither) {
 	Move chosen{};
 
 	for(auto& [move, node] : _root->_children) {
-		auto new_ratio = (node->_reward / node->_visits) + dither_dist(rand_engine);
+		double new_ratio = (node->_reward / node->_visits) + dither_dist(rand_engine);
 		if(node->_visits < 1.0) {
 			new_ratio = 0.0;
 		}
@@ -276,11 +277,11 @@ void BattleMCTSManager::print_move_list() {
 	ERR_FAIL_COND_MSG(!_root.has_value(), "Root node not set in BattleMCTSManager");
 
 	for(auto& [move, node] : _root->_children) {
-		auto& hm = _root->_bm.get_heuristically_good_moves();
-		bool heur_move = std::find(hm.begin(), hm.end(), move) != hm.end();
+		auto& hmoves = _root->_bm.get_heuristically_good_moves();
+		bool is_heur_move = std::find(hmoves.begin(), hmoves.end(), move) != hmoves.end();
 
 		printf("Child %c %d->%d,%d UCT=%f, R/V=%f (reward: %f, visits: %f)\n", 
-				heur_move ? 'H':' ', move.unit, move.pos.x, move.pos.y, 
+				is_heur_move ? 'H':' ', move.unit, move.pos.x, move.pos.y, 
 				node->uct(), node->_reward / node->_visits, node->_reward, node->_visits
 		);
 	}
@@ -289,7 +290,7 @@ void BattleMCTSManager::print_move_list() {
 
 void BattleMCTSManager::add_error_playout(const BattleMCTSNode& node_arg, std::vector<Move> extra_moves) {
 	godot::Array replay;
-	auto node = &node_arg;
+	const BattleMCTSNode* node = &node_arg;
 
 	if(!should_save_replays()) {
 		return;
@@ -302,7 +303,7 @@ void BattleMCTSManager::add_error_playout(const BattleMCTSNode& node_arg, std::v
 
 	replay.reverse();
 	
-	for(auto i : extra_moves) {
+	for(Move i : extra_moves) {
 		replay.push_back(i.as_libspear_tuple());
 	}
 
@@ -315,7 +316,7 @@ godot::Array BattleMCTSManager::get_error_replays() {
 
 void BattleMCTSManager::set_root(BattleManagerFastCpp* bmwrapper) {
 	ERR_FAIL_COND_MSG(bmwrapper == nullptr, "Provided BattleManagerFastCpp is null");
-	auto bm = bmwrapper->get_bm_copy();
+	BattleManagerFast bm = bmwrapper->get_bm_copy();
 
 	_root.emplace(bm, *this, nullptr, Move());
 	_army_id = bm.get_current_participant();

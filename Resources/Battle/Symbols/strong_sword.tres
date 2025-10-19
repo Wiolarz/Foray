@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://b7xp80rauu18d"]
+
+[ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_2vfw4"]
+[ext_resource type="SpriteFrames" uid="uid://cm0qgci26d65b" path="res://Art/animations/sword.tres" id="2_t4dgr"]
+
+[resource]
+script = ExtResource("1_2vfw4")
+symbol_name = "Strong Sword"
+texture_path = "res://Art/items/red_sword.png"
+symbol_animation = ExtResource("2_t4dgr")
+attack_power = 3
+defense_power = 1
+push_power = 0
+counter_attack = false
+swift_attack = false
+parry = true
+parry_break = false
+reach = 0
+activate_turn = true
+activate_move = true

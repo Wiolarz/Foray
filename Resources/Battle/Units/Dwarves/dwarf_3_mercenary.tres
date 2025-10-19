@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://c7wrr5lpekesk"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_hiaw1"]
+[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_n31hk"]
+[ext_resource type="Resource" uid="uid://dcxon0wq646p5" path="res://Resources/Battle/Symbols/mace.tres" id="3_06gy7"]
+[ext_resource type="Resource" uid="uid://sr1570kq7sm8" path="res://Resources/Battle/Symbols/shield.tres" id="3_iq46l"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_h1n06"]
+
+[sub_resource type="Resource" id="Resource_k8g4u"]
+script = ExtResource("1_hiaw1")
+wood = 1
+iron = 0
+ruby = 0
+
+[resource]
+script = ExtResource("2_n31hk")
+unit_name = "Mecenary"
+texture_path = "res://Art/units/dwarves/dwarf_3_mercenary.png"
+symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_06gy7"), ExtResource("3_iq46l"), ExtResource("5_h1n06"), ExtResource("5_h1n06"), ExtResource("5_h1n06"), ExtResource("3_iq46l")])
+cost = SubResource("Resource_k8g4u")
+level = 3
+mana = 0
+spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

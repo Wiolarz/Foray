@@ -10,7 +10,7 @@
 script = ExtResource("1_031we")
 wood = 0
 iron = 0
-ruby = 3
+ruby = 0
 
 [resource]
 script = ExtResource("2_6aj0w")

@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="PresetBattle" load_steps=13 format=3 uid="uid://bihxlbtghjdhc"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_gj360"]
+[ext_resource type="Resource" uid="uid://cv2ncwgk45l1e" path="res://Resources/Battle/Units/Classic/elf2.tres" id="3_5ugkr"]
+[ext_resource type="Resource" uid="uid://cy0eh6aop7ce7" path="res://Resources/Battle/Units/Elves/elf_unit_hero_druid.tres" id="4_w4uo5"]
+[ext_resource type="Resource" uid="uid://bgu30lp3txcwv" path="res://Resources/Battle/Units/Orcs/orc_6_champion.tres" id="5_05xsw"]
+[ext_resource type="Resource" uid="uid://b44kr1rcexp3v" path="res://Resources/Battle/Units/Elves/elf_unit_hero_noble.tres" id="5_84f01"]
+[ext_resource type="Resource" uid="uid://w4ycloqp51wx" path="res://Resources/Battle/Units/Orcs/orc_4_shaman.tres" id="5_y32fe"]
+[ext_resource type="Resource" uid="uid://bx2ya2olx578k" path="res://Resources/Battle/Units/Orcs/orc_unit_hero_executioner.tres" id="7_mtqfq"]
+[ext_resource type="Resource" uid="uid://bxb7842q7rrib" path="res://Resources/Battle/Units/Classic/orc3.tres" id="7_v0qh1"]
+[ext_resource type="Resource" uid="uid://bonqd5t8sh4hu" path="res://Resources/Battle/Battle_Maps/medium_simple.tres" id="10_w1ls8"]
+[ext_resource type="Script" path="res://Resources/Presets/preset_battle.gd" id="11_nf0lw"]
+
+[sub_resource type="Resource" id="Resource_8gfw6"]
+resource_name = "Elf 3"
+script = ExtResource("1_gj360")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("3_5ugkr"), ExtResource("4_w4uo5"), ExtResource("5_84f01")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_7irj2"]
+resource_name = "Orc 4"
+script = ExtResource("1_gj360")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("5_y32fe"), ExtResource("7_mtqfq"), ExtResource("7_v0qh1"), ExtResource("5_05xsw")])
+team = 0
+
+[resource]
+script = ExtResource("11_nf0lw")
+armies = Array[ExtResource("1_gj360")]([SubResource("Resource_8gfw6"), SubResource("Resource_7irj2")])
+battle_map = ExtResource("10_w1ls8")

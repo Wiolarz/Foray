@@ -10,14 +10,19 @@ config_version=5
 
 [application]
 
-config/name="Polyspear"
-config/version="0.2.0"
+config/name="Foray"
+config/version="0.8.1"
 run/main_scene="res://Scenes/MainScene.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
-config/icon="res://Art/world_map/outpost_wood.png"
+config/icon="res://Art/magic/spell_icons/blood_curse.png"
+
+[audio]
+
+buses/default_bus_layout="res://Audio/default_bus_layout.tres"
 
 [autoload]
 
+AUDIO="*res://Scenes/AudioManager.tscn"
 CFG="*res://Scripts/General/config_manager.gd"
 BG="*res://Scripts/UI/background.gd"
 WS="*res://Scripts/World/world_state.gd"
@@ -27,6 +32,8 @@ IM="*res://Scripts/General/input_manager.gd"
 NET="*res://Scripts/Multiplayer/NET_manager.gd"
 UI="*res://Scripts/UI/ui_manager.gd"
 ANIM="*res://Scripts/General/animation_manager.gd"
+DISCORD="*res://Scripts/General/discord_manager.gd"
+RES="*res://Scripts/General/resource_manager.gd"
 
 [debug]
 
@@ -48,7 +55,7 @@ export/convert_text_resources_to_binary=false
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+enabled=PackedStringArray("res://addons/discord-rpc-gd/plugin.cfg", "res://addons/gut/plugin.cfg")
 
 [file_customization]
 
@@ -66,6 +73,28 @@ folder_colors={
 [gui]
 
 theme/custom="res://Art/UI/default_theme.tres"
+
+[importer_defaults]
+
+texture={
+"compress/channel_pack": 0,
+"compress/hdr_compression": 1,
+"compress/high_quality": false,
+"compress/lossy_quality": 0.7,
+"compress/mode": 0,
+"compress/normal_map": 0,
+"detect_3d/compress_to": 1,
+"mipmaps/generate": true,
+"mipmaps/limit": -1,
+"process/fix_alpha_border": true,
+"process/hdr_as_srgb": false,
+"process/hdr_clamp_exposure": false,
+"process/normal_map_invert_y": false,
+"process/premult_alpha": false,
+"process/size_limit": 0,
+"roughness/mode": 0,
+"roughness/src_normal": ""
+}
 
 [input]
 

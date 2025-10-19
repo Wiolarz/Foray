@@ -1,13 +1,10 @@
+class_name VolumeSlider
 extends Control
 
-# STUB
-# Volume sliders do not work yet
-
-@export var callback : Callable
 @export var title : String
 
-@onready var _actual_slider : Slider = $Slider
-@onready var _mute_button : Button = $ButtonMute
+@onready var actual_slider : Slider = $Slider
+@onready var mute_button : Button = $ButtonMute
 @onready var _title_label : Label = $Label
 
 func _ready() -> void:

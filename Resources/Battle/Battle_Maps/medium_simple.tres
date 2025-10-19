@@ -1,0 +1,351 @@
+[gd_resource type="Resource" script_class="DataBattleMap" load_steps=59 format=3 uid="uid://bonqd5t8sh4hu"]
+
+[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_dpqm2"]
+[ext_resource type="Script" path="res://Resources/Battle/data_battle_map.gd" id="2_3htwy"]
+
+[sub_resource type="Resource" id="Resource_ljpvr"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_45uaf"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_fsn7e"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_5cu2i"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_vrurm"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_6gie3"]
+script = ExtResource("1_dpqm2")
+type = "1_player_spawn"
+texture_path = "res://Art/battle_map/blue_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_jah5d"]
+script = ExtResource("1_dpqm2")
+type = "1_player_spawn"
+texture_path = "res://Art/battle_map/blue_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_vwxad"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_5twy6"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_5fbip"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_qmqau"]
+script = ExtResource("1_dpqm2")
+type = "1_player_spawn"
+texture_path = "res://Art/battle_map/blue_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_2ajlj"]
+script = ExtResource("1_dpqm2")
+type = "1_player_spawn"
+texture_path = "res://Art/battle_map/blue_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_4rkwg"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_7xarj"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_j0rqa"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_a3kku"]
+script = ExtResource("1_dpqm2")
+type = "1_player_spawn"
+texture_path = "res://Art/battle_map/blue_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_5h6jt"]
+script = ExtResource("1_dpqm2")
+type = "1_player_spawn"
+texture_path = "res://Art/battle_map/blue_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_1uwna"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_dos4l"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_4n4px"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_j8565"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_xlxwr"]
+script = ExtResource("1_dpqm2")
+type = "1_player_spawn"
+texture_path = "res://Art/battle_map/blue_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_gnsgs"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_3rwhu"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_ptd08"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_gec7k"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_7afam"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_y2mab"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_wb5ng"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_nhxwn"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_o7j00"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_28si1"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_g5w5m"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_en50a"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_n83lr"]
+script = ExtResource("1_dpqm2")
+type = "2_player_spawn"
+texture_path = "res://Art/battle_map/red_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_ap2bd"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_nl043"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_2bc4d"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_jp1yp"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_bkxof"]
+script = ExtResource("1_dpqm2")
+type = "2_player_spawn"
+texture_path = "res://Art/battle_map/red_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_rygkl"]
+script = ExtResource("1_dpqm2")
+type = "2_player_spawn"
+texture_path = "res://Art/battle_map/red_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_43iyi"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_2l80d"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_elsev"]
+script = ExtResource("1_dpqm2")
+type = "EMPTY"
+texture_path = "res://Art/battle_map/grass_tile.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_p1xr4"]
+script = ExtResource("1_dpqm2")
+type = "2_player_spawn"
+texture_path = "res://Art/battle_map/red_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_3llcd"]
+script = ExtResource("1_dpqm2")
+type = "2_player_spawn"
+texture_path = "res://Art/battle_map/red_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_sanp6"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_2yckx"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_rat35"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_k47ne"]
+script = ExtResource("1_dpqm2")
+type = "2_player_spawn"
+texture_path = "res://Art/battle_map/red_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_q66e1"]
+script = ExtResource("1_dpqm2")
+type = "2_player_spawn"
+texture_path = "res://Art/battle_map/red_player_spawn.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_hma3s"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_ybkh0"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_oxsk3"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_chyr8"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[sub_resource type="Resource" id="Resource_1y315"]
+script = ExtResource("1_dpqm2")
+type = "SENTINEL"
+texture_path = "res://Art/world_map/sentinel.png"
+flip_horizontal = false
+
+[resource]
+script = ExtResource("2_3htwy")
+player_slots = {
+1: 7,
+2: 7
+}
+max_player_number = 2
+grid_width = 8
+grid_height = 7
+grid_data = [[SubResource("Resource_ljpvr"), SubResource("Resource_45uaf"), SubResource("Resource_fsn7e"), SubResource("Resource_5cu2i"), SubResource("Resource_vrurm"), SubResource("Resource_6gie3"), SubResource("Resource_jah5d")], [SubResource("Resource_vwxad"), SubResource("Resource_5twy6"), SubResource("Resource_5fbip"), SubResource("Resource_qmqau"), SubResource("Resource_2ajlj"), SubResource("Resource_4rkwg"), SubResource("Resource_7xarj")], [SubResource("Resource_j0rqa"), SubResource("Resource_a3kku"), SubResource("Resource_5h6jt"), SubResource("Resource_1uwna"), SubResource("Resource_dos4l"), SubResource("Resource_4n4px"), SubResource("Resource_j8565")], [SubResource("Resource_xlxwr"), SubResource("Resource_gnsgs"), SubResource("Resource_3rwhu"), SubResource("Resource_ptd08"), SubResource("Resource_gec7k"), SubResource("Resource_7afam"), SubResource("Resource_y2mab")], [SubResource("Resource_wb5ng"), SubResource("Resource_nhxwn"), SubResource("Resource_o7j00"), SubResource("Resource_28si1"), SubResource("Resource_g5w5m"), SubResource("Resource_en50a"), SubResource("Resource_n83lr")], [SubResource("Resource_ap2bd"), SubResource("Resource_nl043"), SubResource("Resource_2bc4d"), SubResource("Resource_jp1yp"), SubResource("Resource_bkxof"), SubResource("Resource_rygkl"), SubResource("Resource_43iyi")], [SubResource("Resource_2l80d"), SubResource("Resource_elsev"), SubResource("Resource_p1xr4"), SubResource("Resource_3llcd"), SubResource("Resource_sanp6"), SubResource("Resource_2yckx"), SubResource("Resource_rat35")], [SubResource("Resource_k47ne"), SubResource("Resource_q66e1"), SubResource("Resource_hma3s"), SubResource("Resource_ybkh0"), SubResource("Resource_oxsk3"), SubResource("Resource_chyr8"), SubResource("Resource_1y315")]]

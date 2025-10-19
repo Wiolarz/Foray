@@ -38,15 +38,15 @@ public:
 	}
 
 	void update_armies(ArmyList& armies) {
-		for(auto& i: _grid) {
+		for(UnitID& i: _grid) {
 			i = NO_UNIT;
 		}
 
 		for(unsigned army_id = 0; army_id < armies.size(); army_id++) {
-			auto& army = armies[army_id];
+			Army& army = armies[army_id];
 
 			for(unsigned unit_id = 0; unit_id < army.units.size(); unit_id++) {
-				auto& unit = army.units[unit_id];
+				Unit& unit = army.units[unit_id];
 
 				if(unit.status == UnitStatus::ALIVE) {
 					(*this)[unit.pos] = UnitID(army_id, unit_id);

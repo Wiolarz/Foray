@@ -3,10 +3,10 @@ extends Summary
 
 
 const WORLD_SUMMARY_SCENE_PATH := "res://Scenes/UI/World/WorldSummary.tscn"
-const WORLD_SUMMARY_PLAYER_SCENE_PATH = "res://Scenes/UI/World/WorldSummaryPlayerStats.tscn"
+const WORLD_SUMMARY_PLAYER_SCENE_PATH := "res://Scenes/UI/World/WorldSummaryPlayerStats.tscn"
 
 
-static func create(parent:Node, info: DataWorldSummary, \
+static func create(parent : Node, info : DataWorldSummary, \
 			continue_callback : Callable) -> WorldSummary:
 	var result = load(WORLD_SUMMARY_SCENE_PATH).instantiate()
 	parent.add_child(result)

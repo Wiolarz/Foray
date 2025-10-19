@@ -72,6 +72,11 @@ func _on_learn_tab_pressed():
 	$MainContainer/Learn.show()
 
 
+func _on_defense_tab_pressed():
+	_clear_tabs()
+	$MainContainer/CityDefense.show()
+
+
 func _clear_tabs():
 	for child in $MainContainer.get_children():
 		child.hide()
@@ -101,9 +106,10 @@ func _on_tabs_tab_changed(tab_index : int):
 		CFG.MainMenuTabs.CREDITS: _on_credits_button_pressed() # 3
 		CFG.MainMenuTabs.REPLAYS: _on_replays_tab_pressed() # 4
 		CFG.MainMenuTabs.LEARN: _on_learn_tab_pressed() # 5
+		CFG.MainMenuTabs.DEFENSE: _on_defense_tab_pressed() # 6
 		_: push_error("_on_tabs_tab_changed index not supported: "+str(tab_index))
 
-	CFG.player_options.last_open_menu_tab = tab_index
+	CFG.player_options.last_open_menu_tab = tab_index as CFG.MainMenuTabs
 	CFG.save_player_options()
 
 #endregion Buttons

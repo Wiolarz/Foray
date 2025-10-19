@@ -8,7 +8,7 @@ extends Node2D
 	get:
 		return anim.sprite_frames
 	set(_new):
-		assert("'frames' must be modified via anim.sprite_frames")
+		assert(false, "'frames' must be modified via anim.sprite_frames")
 
 
 #region Initialization
@@ -20,7 +20,7 @@ func apply_sprite(side_local : int, texture_path : String) -> void:
 		sprite.texture = null
 		sprite.hide()
 		return
-	sprite.texture = load(texture_path)
+	sprite.texture = RES.load(texture_path)
 
 	flip_sprite(side_local)
 
@@ -58,52 +58,54 @@ func _fade_symbol_out(anim_tween : Tween):
 	anim_tween.tween_property(sprite, "modulate:a", 0, CFG.anim_symbol_fade_in_out_time)
 
 
-func anim_symbol_melee(type : CFG.SymbolAnimationType, time_to_block : float = 0.0):
-	var anim_tween = ANIM.subtween()
+func make_melee_anim(type : CFG.SymbolAnimationType) -> ANIM.TweenSync:
+	var anim_tween = ANIM.create_my_tween()
 	anim_tween.set_trans(Tween.TRANS_LINEAR)
 
 	var animation_name : String
 	match type:
 		CFG.SymbolAnimationType.MELEE_ATTACK:
 			animation_name = "default"
+			anim.position = frames.offset
+		CFG.SymbolAnimationType.FAILED_ATTACK:
+			animation_name = "default"
+			anim.position = frames.failed_offset
 		CFG.SymbolAnimationType.COUNTER_ATTACK:
 			animation_name = "counter"
+			anim.position = frames.offset
 
-	var time_to_hit = frames.get_time_to_hit(animation_name) + CFG.anim_symbol_fade_in_out_time
+	var time_to_hit = frames.get_time_to_hit(animation_name)
 
 	assert(frames.has_animation(animation_name),
 		"Missing %s animation from %s" % [animation_name, frames.resource_path] )
 
 	_fade_symbol_out(anim_tween)
-	if time_to_block < 0.01: # killing attack
+	if type != CFG.SymbolAnimationType.FAILED_ATTACK: # killing attack
 		# Play
 		anim_tween.tween_callback(anim.play.bind(animation_name))
 		# Wait for anim end
 		anim_tween.tween_interval(frames.get_animation_duration(animation_name))
-	else: # blocked attack - stop animation after block time
-		# TODO - what about when time to block is less than time to hit?
-		# maybe implement a similar thing in _anim_symbol_block
-
-		# wait so that weapon hit and block are synchronized
-		anim_tween.tween_interval(max(0, time_to_block - time_to_hit))
+	else: # blocked attack
 		anim_tween.tween_callback(anim.play.bind(animation_name))
 		anim_tween.tween_interval(max(0, time_to_hit))
 		anim_tween.tween_callback(anim.pause)
-		anim_tween.tween_property(anim, "modulate:a", 0, CFG.anim_symbol_fade_in_out_time)
+		anim_tween.tween_callback(AUDIO.play.bind("parry"))
+		anim_tween.tween_interval(CFG.anim_symbol_fade_in_out_time * 2)
+		anim_tween.tween_property(anim, "modulate:a", 0, CFG.anim_symbol_fade_in_out_time * 2)
 		# Reset to known state
 		anim_tween.tween_callback(anim.stop)
 		anim_tween.tween_property(anim, "modulate:a", 1, 0)
 
 	_fade_symbol_in(anim_tween)
+	return ANIM.TweenSync.new(
+		anim_tween,
+		time_to_hit + CFG.anim_symbol_fade_in_out_time,
+		frames.get_animation_duration(animation_name)
+	)
 
-	# Delay gameplay - only for killing attacks
-	# blocked attacks are delayed by _anim_symbol_block
-	if time_to_block < 0.01:
-		ANIM.main_tween().tween_interval(time_to_hit)
 
-
-func anim_symbol_teleporting_projectile(target_coord : Vector2i, side : int):
-	var anim_tween = ANIM.subtween()
+func make_projectile_anim(target_coord : Vector2i, side : int) -> ANIM.TweenSync:
+	var anim_tween = ANIM.create_my_tween()
 	anim_tween.set_trans(Tween.TRANS_LINEAR)
 
 	# Create a temporary animated sprite for projectile
@@ -141,11 +143,12 @@ func anim_symbol_teleporting_projectile(target_coord : Vector2i, side : int):
 	# Fade in
 	_fade_symbol_in(anim_tween)
 	# Delay gameplay
-	ANIM.main_tween().tween_interval(time_to_teleport + projectile_time_to_hit + CFG.anim_symbol_fade_in_out_time)
+	var delay = time_to_teleport + projectile_time_to_hit + CFG.anim_symbol_fade_in_out_time
+	return ANIM.TweenSync.new(anim_tween, time_to_teleport + projectile_time_to_hit, delay)
 
 
-func anim_symbol_block():
-	var anim_tween = ANIM.subtween()
+func make_block_anim() -> ANIM.TweenSync:
+	var anim_tween = ANIM.create_my_tween()
 	anim_tween.set_trans(Tween.TRANS_LINEAR)
 
 	# Set the animated sprite to blocking
@@ -164,7 +167,8 @@ func anim_symbol_block():
 	anim_tween.tween_property(anim, "position", frames.offset, 0)
 	anim_tween.tween_property(anim, "scale", frames.scale, 0)
 	# Delay gameplay
-	ANIM.main_tween().tween_interval(block_anim_duration + CFG.anim_symbol_fade_in_out_time)
+	var total_time = block_anim_duration + CFG.anim_symbol_fade_in_out_time
+	return ANIM.TweenSync.new(anim_tween, frames.get_time_to_block("block"), total_time)
 
 
 func get_block_duration():

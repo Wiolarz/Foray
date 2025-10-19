@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://m7kfrja5xmn4"]
+
+[ext_resource type="Script" path="res://Scripts/UI/LevelUp/tier_skill_panel.gd" id="1_qxpb3"]
+[ext_resource type="PackedScene" uid="uid://d030cg7m2orr1" path="res://Scenes/UI/LevelUp/PassiveButton.tscn" id="2_8s3ra"]
+
+[node name="TierSkillPanel" type="PanelContainer"]
+offset_right = 731.0
+offset_bottom = 137.0
+size_flags_stretch_ratio = 0.0
+script = ExtResource("1_qxpb3")
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 23
+
+[node name="Skill label" type="Label" parent="MainContainer"]
+layout_mode = 2
+text = "List of skills:"
+
+[node name="TierSkills" type="HBoxContainer" parent="MainContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="PowerSkillButton" parent="MainContainer/TierSkills" instance=ExtResource("2_8s3ra")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TacticSkillButton" parent="MainContainer/TierSkills" instance=ExtResource("2_8s3ra")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MagicSkillButton" parent="MainContainer/TierSkills" instance=ExtResource("2_8s3ra")]
+layout_mode = 2
+size_flags_horizontal = 3

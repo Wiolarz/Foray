@@ -1,0 +1,109 @@
+[gd_scene load_steps=4 format=3 uid="uid://cmi3w4brn1nc7"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Educational/WorldWiki/wiki_world_terrain.gd" id="1_fqcm8"]
+[ext_resource type="PackedScene" uid="uid://bmu8u1j2leqdl" path="res://Scenes/UI/Wiki/WorldWiki/WikiWorldTileButton.tscn" id="2_bn6y4"]
+[ext_resource type="Texture2D" uid="uid://cfgnyay571bur" path="res://Art/world_map/mountains.png" id="3_kfdyi"]
+
+[node name="WikiWorldTerrain" type="Panel"]
+clip_contents = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_fqcm8")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Terrain"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox"]
+layout_mode = 2
+
+[node name="Column1" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WorldTerrainButton" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column1" instance=ExtResource("2_bn6y4")]
+layout_mode = 2
+
+[node name="WorldTerrainButton2" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column1" instance=ExtResource("2_bn6y4")]
+layout_mode = 2
+
+[node name="Column2" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WorldTerrainButton3" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column2" instance=ExtResource("2_bn6y4")]
+layout_mode = 2
+
+[node name="WorldTerrainButton4" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column2" instance=ExtResource("2_bn6y4")]
+layout_mode = 2
+
+[node name="Column3" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WorldTerrainButton5" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column3" instance=ExtResource("2_bn6y4")]
+layout_mode = 2
+
+[node name="WorldTerrainButton6" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column3" instance=ExtResource("2_bn6y4")]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="TileInformationContainer" type="ScrollContainer" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TileName" type="Label" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "Mountains"
+horizontal_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+layout_mode = 2
+text = "Unpassable Terrain"
+fit_content = true
+
+[node name="TextureRect" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/TileInformationContainer/VBox"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_kfdyi")
+expand_mode = 1

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=8 format=3 uid="uid://ecs1sl0eix18"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_l34og"]
+[ext_resource type="Resource" uid="uid://dhptbxwrrbtlu" path="res://Resources/Battle/Units/Fiends/fiend_1_servant.tres" id="2_t6oqi"]
+[ext_resource type="Resource" uid="uid://dik61pe44pl11" path="res://Resources/Battle/Units/Fiends/fiend_2_cultist.tres" id="3_3g1p8"]
+[ext_resource type="Resource" uid="uid://bl5d73derv1y3" path="res://Resources/Battle/Units/Fiends/fiend_3_impaler.tres" id="4_emprq"]
+[ext_resource type="Resource" uid="uid://dw8ubgqhc0opp" path="res://Resources/Battle/Units/Fiends/fiend_4_bruiser.tres" id="5_7xwp4"]
+[ext_resource type="Resource" uid="uid://cj2klucehwp7" path="res://Resources/Battle/Units/Fiends/fiend_5_sacrificer.tres" id="6_hpj2i"]
+[ext_resource type="Resource" uid="uid://dib6j10rvqm50" path="res://Resources/Battle/Units/Fiends/fiend_hero_enforcer.tres" id="7_rlnjt"]
+
+[resource]
+script = ExtResource("1_l34og")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_t6oqi"), ExtResource("3_3g1p8"), ExtResource("4_emprq"), ExtResource("5_7xwp4"), ExtResource("6_hpj2i"), ExtResource("7_rlnjt")])
+team = 0

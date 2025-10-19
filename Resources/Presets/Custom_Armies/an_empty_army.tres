@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=2 format=3 uid="uid://cylve5l0orr7h"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_nv8jt"]
+
+[resource]
+script = ExtResource("1_nv8jt")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([])
+team = 0

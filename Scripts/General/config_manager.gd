@@ -58,18 +58,19 @@ enum SymbolAnimationType
 	MELEE_ATTACK,
 	BLOCK,
 	TELEPORTING_PROJECTILE,
-	COUNTER_ATTACK
+	COUNTER_ATTACK,
+	FAILED_ATTACK
 }
 
 #endregion Animations
 
 
-#region Paths
+#region File Paths
 
 ## Folder Paths
 const BATTLE_MAPS_PATH = "res://Resources/Battle/Battle_Maps/"
 const UNITS_PATH = "res://Resources/Battle/Units/"
-const HEROES_PATH = "res://Resources/Battle/Heroes/"
+const HEROES_PATH = "res://Resources/Races/Heroes/"
 const SPELLS_PATH = "res://Resources/Battle/Battle_Spells/"
 const BUILDINGS_PATH = "res://Resources/Races/Buildings/"
 const BATTLE_PRESETS_PATH = "res://Resources/Presets/Battle/"
@@ -80,6 +81,7 @@ const WORLD_MAP_TILES_PATH = "res://Resources/World/World_tiles/"
 const SYMBOLS_PATH = "res://Resources/Battle/Symbols/"
 const BATTLE_BOTS_PATH = "res://Resources/Battle/Bots"
 const WORLD_BOTS_PATH = "res://Resources/World/Bots"
+const ARMY_PRESETS_PATH = "res://Resources/Presets/Custom_Armies/"
 
 const EMPTY_SYMBOL_PATH = "res://Resources/Battle/Symbols/empty.tres"
 @onready var EMPTY_SYMBOL : DataSymbol = load(EMPTY_SYMBOL_PATH)
@@ -104,15 +106,25 @@ const CAMPAIGN_BATTLES_ELVES_PATH = "res://Resources/Campaign/Elves/"
 
 var RACE_ELVES : DataRace = load("res://Resources/Races/elf.tres")
 var RACE_ORCS : DataRace = load("res://Resources/Races/orc.tres")
+var RACE_UNDEAD : DataRace = load("res://Resources/Races/undead.tres")
+var RACE_CYCLOPS : DataRace = load("res://Resources/Races/cyclops.tres")
+var RACE_DWARVES : DataRace = load("res://Resources/Races/dwarves.tres")
+var RACE_FIENDS : DataRace = load("res://Resources/Races/fiends.tres")
 var RACES_LIST : Array[DataRace] = [
 	RACE_ELVES,
 	RACE_ORCS,
+	RACE_UNDEAD,
+	RACE_CYCLOPS,
+	RACE_DWARVES,
+	RACE_FIENDS,
 ]
 
 
 const UNIT_FORM_SCENE = preload("res://Scenes/Form/UnitForm.tscn")
 var HEX_TILE_FORM_SCENE := load("res://Scenes/Form/TileForm.tscn") as PackedScene
-const SUMMON_BUTTON_TEXTURE:Texture2D = preload("res://Art/battle_map/grass.png")
+
+const DEPLOY_BUTTON_TEXTURE : Texture2D = preload("res://Art/battle_map/grass.png")
+const EMPTY_SLOT_TEXTURE : Texture2D = preload("res://Art/items/hex_border_light.png")
 
 const DEFAULT_ARMY_FORM = preload("res://Scenes/Form/ArmyForm.tscn")
 
@@ -121,13 +133,13 @@ const PLAN_POINTER_SCENE = preload("res://Scenes/UI/Battle/BattlePlanPointer.tsc
 const PLAN_ARROW_END_SCENE = preload("res://Scenes/UI/Battle/BattlePlanArrowEnd.tscn")
 
 # Neutral Units armies
-const HUNT_WOOD_PATH : String = "res://Resources/Presets/Army/hunt_wood/"
-const HUNT_IRON_PATH : String = "res://Resources/Presets/Army/hunt_iron/"
-const HUNT_RUBY_PATH : String = "res://Resources/Presets/Army/hunt_ruby/"
+const HUNT_WOOD_PATH : String = "res://Resources/Presets/World_Armies/hunt_wood/"
+const HUNT_IRON_PATH : String = "res://Resources/Presets/World_Armies/hunt_iron/"
+const HUNT_RUBY_PATH : String = "res://Resources/Presets/World_Armies/hunt_ruby/"
 
-const OUTPOST_WOOD_PATH : String = "res://Resources/Presets/Army/outpost_defenders/outpost_wood_defender.tres"
-const OUTPOST_IRON_PATH : String = "res://Resources/Presets/Army/outpost_defenders/outpost_iron_defender.tres"
-const OUTPOST_RUBY_PATH : String = "res://Resources/Presets/Army/outpost_defenders/outpost_ruby_defender.tres"
+const OUTPOST_WOOD_PATH : String = "res://Resources/Presets/World_Armies/outpost_defenders/outpost_wood_defender.tres"
+const OUTPOST_IRON_PATH : String = "res://Resources/Presets/World_Armies/outpost_defenders/outpost_iron_defender.tres"
+const OUTPOST_RUBY_PATH : String = "res://Resources/Presets/World_Armies/outpost_defenders/outpost_ruby_defender.tres"
 
 #const HUNT_PATHS : Array[String] = [HUNT_WOOD_PATH, HUNT_IRON_PATH, HUNT_RUBY_PATH]
 
@@ -135,12 +147,76 @@ const OUTPOST_RUBY_PATH : String = "res://Resources/Presets/Army/outpost_defende
 ## Heroes Passive Effects
 
 ## magic weapon - all weapons have an attack power of 4, but each kills lowers that value by 1 to a min. of 1
-const tier_2_passive_1 : String = "res://Resources/Battle/Battle_Spells/Heroes_Passive_Effects/magic_weapon.tres"
+const hero_magic_weapon_effect : String = "res://Resources/Battle/Battle_Spells/Heroes_Passive_Effects/magic_weapon_effect.tres"
+const hero_second_wind_effect : String = "res://Resources/Battle/Battle_Spells/Heroes_Passive_Effects/second_wind_effect.tres"
+
 
 ## used for passive that replaces all empty symbols with weak weapons
 const weak_weapon : String = "res://Resources/Battle/Symbols/club.tres"
 
-#endregion Paths
+## Hero Battle Passives
+
+const _hero_talent_second_wind : String = "res://Resources/Battle/Hero_Passives/second_wind.tres"
+const _hero_talent_magic_weapons : String = "res://Resources/Battle/Hero_Passives/magic_weapons.tres"
+const _hero_talent_weak_weapons : String = "res://Resources/Battle/Hero_Passives/weak_weapons.tres"
+const _hero_talent_wind_weapons : String = "res://Resources/Battle/Hero_Passives/wind_weapons.tres"
+
+## Hero World Passives
+const _hero_ability_scouting : String = "res://Resources/World/Hero_Passives/scouting.tres"
+const _hero_ability_shaman : String = "res://Resources/World/Hero_Passives/shaman.tres"
+
+const _hero_ability_sage : String = "res://Resources/World/Hero_Passives/sage.tres"
+
+const _hero_ability_arch_mage : String = "res://Resources/World/Hero_Passives/arch_mage.tres"
+const _hero_ability_immortality : String = "res://Resources/World/Hero_Passives/immortality.tres"
+
+
+
+
+const BALLISTA_PATH : String = "res://Resources/Battle/Units/Neutral/ballista.tres"
+
+# Spell Effects
+const SUMMONING_SICKNESS_PATH : String = "res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/summoning_sickness.tres"
+const BURNING_PATH : String = "res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/burning.tres"
+
+#endregion File Paths
+
+
+#region Scene Tree Paths
+
+var NODE_GAMESETUP_PATH : String = "/root/UI/MainMenu/MainContainer/HostLobby/HostMenu/PanelContainer/GameSetup"
+
+#endregion Scene Tree Paths
+
+
+
+#region Heroes Level Up
+##STUB
+@onready var _tier_1_talents : Array[HeroPassive] = [load(_hero_talent_second_wind),
+													load(_hero_talent_magic_weapons),
+													load(_hero_talent_weak_weapons)]
+
+@onready var _tier_2_talents : Array[HeroPassive] = [load(_hero_talent_wind_weapons), null, null]
+
+@onready var _tier_3_talents : Array[HeroPassive] = [null, null, null]
+
+@onready var talents : Array = [_tier_1_talents, _tier_2_talents, _tier_3_talents]
+
+
+@onready var _tier_1_abilities : Array[HeroPassive] = [load(_hero_ability_shaman),
+													load(_hero_ability_scouting),
+													load(_hero_ability_sage)]
+
+@onready var _tier_2_abilities : Array[HeroPassive] = [load(_hero_ability_arch_mage),
+													load(_hero_ability_immortality),
+													null]
+
+@onready var _tier_3_abilities : Array[HeroPassive] = [null, null, null]
+
+@onready var abilities : Array = [_tier_1_abilities, _tier_2_abilities, _tier_3_abilities]
+
+
+#endregion Heroes Level Up
 
 
 #region Colors
@@ -153,6 +229,15 @@ var TEAM_COLORS : Array[DataPlayerColor] = [
 	DataPlayerColor.create("green", Color(0.0, 0.9, 0.0)),
 	DataPlayerColor.create("yellow", Color(0.9, 0.8, 0.0)),
 ]
+var TEAM_COLOR_TEXTURES : Array[Texture2D] = [
+	preload("res://Art/player_colors/blue_color.png"),
+	preload("res://Art/player_colors/orange_color.png"),
+	preload("res://Art/player_colors/red_color.png"),
+	preload("res://Art/player_colors/purple_color.png"),
+	preload("res://Art/player_colors/green_color.png"),
+	preload("res://Art/player_colors/yellow_color.png"),
+]
+var NEUTRAL_COLOR_TEXTURE : Texture2D = preload("res://Art/player_colors/gray_color.png")
 
 var NEUTRAL_COLOR := \
 	DataPlayerColor.create_with_texture("neutral", Color(0.5, 0.5, 0.5), \
@@ -192,15 +277,27 @@ const POLYAPI_BASE_URL = "https://polyserver.onrender.com/"
 # for tests:
 # const POLYAPI_BASE_URL = "http://localhost:3001/"
 
+const DEFAULT_PLAYER_NAME = "player"
+
 #endregion Multiplayer
 
 
 #region Battle Map properties
 
-#TEMP variables until better mana equation is implemented
-const BIG_CYCLONE_COUNTER_VALUE = 30
-const SMALL_CYCLONE_COUNTER_VALUE = 15
-const CYCLONE_MANA_THRESHOLD = 3
+# Number above which cyclone value doesn't change
+const CYCLONE_COUNTER_VALUES_MAX_MANA_DIFFERENCE = 11
+
+func get_cyclone_value(mana_difference: int, _mana_wells: int):
+	if mana_difference < 2:
+		return 30
+	if mana_difference < 4:
+		return 20
+	if mana_difference < 8:
+		return 15
+	if mana_difference < 11:
+		return 10
+	return 5
+
 
 #endregion Battle Map properties
 
@@ -209,8 +306,12 @@ const CYCLONE_MANA_THRESHOLD = 3
 
 const HERO_LEVEL_CAP = 7
 
+## TODO allign it to the race weakest hero
+const CITY_MAX_ARMY_SIZE = 2
+
 func get_start_goods() -> Goods:
-	return Goods.new(10,5,3)
+	#return Goods.new(10,5,3)
+	return Goods.new(30,15,10)
 
 const WORLD_MOVABLE_TILES = [
 	"EMPTY",
@@ -237,13 +338,20 @@ const CHESS_CLOCK_BATTLE_TURN_INCREMENT_MS = 2 * 1000
 
 #region Debugging & tests
 
+enum BMFastIntegrityCheckMode {
+	ASSERT = 1,
+	NOTIFY_ON_CHAT = 2,
+	PUSH_ERROR_ONLY = 3,
+	DISABLE = 0
+}
+
 # Also documented in Documentation/libspear.md
 ## Checks each time a move is done whether results of a move replicated in BattleManagerFast match results in a regular BM
 var debug_check_bmfast_integrity : bool :
-	get: return player_options.bmfast_integrity_checks
+	get: return player_options.bmfast_integrity_check_mode != BMFastIntegrityCheckMode.DISABLE
 ## Enables additional BattleManagerFast internal integrity checks, which may slightly reduce performance
 var debug_check_bmfast_internals : bool :
-	get: return player_options.bmfast_integrity_checks
+	get: return player_options.bmfast_integrity_check_mode != BMFastIntegrityCheckMode.DISABLE
 ## When greater than zero, saves replays from playouts where errors were detected
 var debug_mcts_max_saved_fail_replays := 16
 ## When true, immediately save replays from BattleManagerFast mismatches with an appropriate name with a suffix "BMFast Mismatch"
@@ -266,16 +374,80 @@ var AUTO_START_GAME : bool :
 	get: return player_options.autostart_map
 
 
+#region Learn Tab
+
+## Lists below are ordered based on their appearance,
+## changing the order will mess up saved last page,
+## but it's a small issue as it only occurs between game updates
+## while the feature is made with a single game session in mind
+
 enum LearnTabs {
-	TUTORIAL = 1,
-	PUZZLE = 2,
-	CAMPAIGN = 3,
-	SYMBOLS_WIKI = 5,
-	MAGIC_WIKI = 6,
+	PRACTICE, # Works as a general tab for now too
+	BATTLE_WIKI,
+	WORLD_WIKI,
 }
+const LEARN_TABS_NAMES = {
+	LearnTabs.PRACTICE: "Practice",
+	LearnTabs.BATTLE_WIKI: "Battle WIKI",
+	LearnTabs.WORLD_WIKI: "World WIKI",
+}
+
+enum PracticeTabs {
+	BASIC,
+	TUTORIAL,
+	PUZZLE,
+	CAMPAIGN,
+}
+
+const PRACTICE_TABS_NAMES = {
+	PracticeTabs.BASIC: "Basic Information",
+	PracticeTabs.TUTORIAL: "Tutorial",
+	PracticeTabs.PUZZLE: "Puzzles",
+	PracticeTabs.CAMPAIGN: "Campaign",
+}
+
+
+enum BattleWiki {
+	SYMBOLS_WIKI,
+	MAGIC_WIKI,
+	TERRAIN,
+	MAGIC_CYCLONE,
+} # TODO add heroes battle passives
+
+const BATTLE_WIKI_TABS_NAMES = {
+	BattleWiki.SYMBOLS_WIKI: "Symbols",
+	BattleWiki.MAGIC_WIKI: "Magic",
+	BattleWiki.TERRAIN: "Terrain",
+	BattleWiki.MAGIC_CYCLONE: "Magic Cyclone",
+}
+
+enum WorldWiki {
+	FACTIONS,
+	ECONOMY,
+	TERRAIN,
+} # TODO add rituals + heroes world passives
+
+const WORLD_WIKI_TABS_NAMES = {
+	WorldWiki.FACTIONS: "Factions",
+	WorldWiki.ECONOMY: "Economy",
+	WorldWiki.TERRAIN: "Terrain",
+}
+
 
 var LAST_OPENED_LEARN_TAB : LearnTabs :
 	get: return player_options.last_open_learn_tab
+
+var LAST_OPENED_PRACTICE_TAB : PracticeTabs :
+	get: return player_options.last_open_practice_tab
+
+var LAST_OPENED_BATTLE_WIKI_TAB : BattleWiki :
+	get: return player_options.last_open_battle_wiki_tab
+
+var LAST_OPENED_WORLD_WIKI_TAB : WorldWiki :
+	get: return player_options.last_open_world_wiki_tab
+
+#endregion Learn Tab
+
 
 enum MainMenuTabs {
 	SERVER = 0,
@@ -284,6 +456,7 @@ enum MainMenuTabs {
 	CREDITS = 3,
 	REPLAYS = 4,
 	LEARN = 5,
+	DEFENSE = 6,
 }
 
 var LAST_OPENED_TAB : MainMenuTabs :

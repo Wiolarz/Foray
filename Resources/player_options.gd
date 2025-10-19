@@ -45,9 +45,13 @@ extends Resource
 ## Default first option when opening the game
 @export var last_open_menu_tab := CFG.MainMenuTabs.LEARN
 
-## Default first learn tab option when opening the game
-@export var last_open_learn_tab := CFG.LearnTabs.TUTORIAL
-
+## Default first learn tab option when opening the game [br]
+## specifc last opened page within a section are saved in variables: [br]
+## last_open_practice_tab, last_open_battle_wiki_tab, last_open_world_wiki_tab
+@export var last_open_learn_tab := CFG.LearnTabs.PRACTICE
+@export var last_open_practice_tab := CFG.PracticeTabs.BASIC
+@export var last_open_battle_wiki_tab := CFG.BattleWiki.SYMBOLS_WIKI
+@export var last_open_world_wiki_tab := CFG.WorldWiki.FACTIONS
 
 ## Default first option after opening the game should be last selected one
 ## [br]
@@ -72,10 +76,13 @@ extends Resource
 @export var autostart_map : bool = false
 
 
-## if true, compares BattleGridState and LibSpear's BattleManagerFast
+## Controls behavior when detecting mismatches in integrity check [br]
+## Integrity check compares BattleGridState and LibSpear's BattleManagerFast
 ## for mismatches before and after each battle move, activating an assert on mismatch
-@export var bmfast_integrity_checks : bool = false
+@export var bmfast_integrity_check_mode := CFG.BMFastIntegrityCheckMode.PUSH_ERROR_ONLY
 
+## Automatically start new battle as soon as the old one ends for LibSpear fuzzing purposes
+@export var enable_fuzzing_mode := false
 
 # Automatically wins battles for the local player
 @export var auto_win : bool = false
@@ -87,6 +94,22 @@ extends Resource
 @export var world_god_mode : bool = false
 
 #endregion DEBUG Settings
+
+
+#region Audio
+
+## Slider value, ranging from 0 to 100
+@export var volume_master : float = 100.0
+@export var volume_music : float = 100.0
+@export var volume_game : float = 100.0
+@export var volume_ui : float = 100.0
+
+@export var volume_master_muted : bool = false
+@export var volume_music_muted : bool = false
+@export var volume_game_muted : bool = false
+@export var volume_ui_muted : bool = false
+
+#endregion Audio
 
 
 #region Multiplayer
@@ -103,5 +126,11 @@ extends Resource
 
 ## if true, peer ip addresses are hidden
 @export var streamer_mode : bool = false
+
+@export var discord_rpc : bool = true:
+	set(new):
+		discord_rpc = new
+		if DISCORD:
+			DISCORD.refresh()
 
 #endregion Multiplayer

@@ -1,0 +1,112 @@
+[gd_scene load_steps=4 format=3 uid="uid://p42st2s5b6o3"]
+
+[ext_resource type="Script" path="res://Scripts/UI/Educational/BattleWiki/wiki_magic.gd" id="1_0tkxl"]
+[ext_resource type="PackedScene" uid="uid://w7gt7at72a2o" path="res://Scenes/UI/Wiki/BattleWiki/wiki_spell_button.tscn" id="2_e84kj"]
+[ext_resource type="Texture2D" uid="uid://1hbpqpqeo60k" path="res://Art/magic/spell_icons/blood_curse.png" id="3_bsqid"]
+
+[node name="WikiMagic" type="Panel"]
+clip_contents = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_0tkxl")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 100
+text = "Magic"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll"]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox"]
+layout_mode = 2
+
+[node name="Column1" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SpellButton" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column1" instance=ExtResource("2_e84kj")]
+layout_mode = 2
+
+[node name="SpellButton2" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column1" instance=ExtResource("2_e84kj")]
+layout_mode = 2
+
+[node name="Column2" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SpellButton3" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column2" instance=ExtResource("2_e84kj")]
+layout_mode = 2
+
+[node name="SpellButton4" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column2" instance=ExtResource("2_e84kj")]
+layout_mode = 2
+
+[node name="Column3" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SpellButton5" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column3" instance=ExtResource("2_e84kj")]
+layout_mode = 2
+
+[node name="SpellButton6" parent="Margin/VBoxContainer/HBoxContainer/Scroll/VBox/HBoxContainer/Column3" instance=ExtResource("2_e84kj")]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="SpellInformationContainer" type="ScrollContainer" parent="Margin/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/VBoxContainer/HBoxContainer/SpellInformationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SpellName" type="Label" parent="Margin/VBoxContainer/HBoxContainer/SpellInformationContainer/VBox"]
+layout_mode = 2
+text = "Blood Ritual"
+horizontal_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Margin/VBoxContainer/HBoxContainer/SpellInformationContainer/VBox"]
+layout_mode = 2
+text = "Chosen enemy unit will die after it becomes the last unit left alive on the enemy side
+
+
+Spell cannot be casted if enemy has less than 3 units left."
+fit_content = true
+
+[node name="TextureRect" type="TextureRect" parent="Margin/VBoxContainer/HBoxContainer/SpellInformationContainer/VBox"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_bsqid")
+expand_mode = 1
