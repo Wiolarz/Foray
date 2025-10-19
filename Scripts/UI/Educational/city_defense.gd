@@ -84,12 +84,18 @@ var player_goods : Goods
 #region New Run Setup
 
 func _ready():
+	new_run_container.visible = true
+	current_run_container.visible = false
+	highscores_container.visible = true
+
+	## BOTS
 	var bot_paths = FileSystemHelpers.list_files_in_folder(CFG.BATTLE_BOTS_PATH, true, true)
 	ai_difficulty_selection.clear()
 	for bot_name in bot_paths:
 		ai_difficulty_selection.add_item(bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
 	ai_difficulty_selection.item_selected.connect(difficulty_changed)
 
+	## HIGHSCORES
 	if not CFG.HIGHSCORES:
 		CFG.reset_highscores()
 	var reset_highscore_button = \
@@ -105,7 +111,7 @@ func _ready():
 		idx += 1
 		top_bar[idx].pressed.connect(_refresh_highscore_display.bind(race))
 
-
+	## NEW RUN SETTINGS
 	attacker_selection.clear()
 	for attacker_waves_preset in attacker_waves_presets:
 		attacker_selection.add_item(attacker_waves_preset)
@@ -116,11 +122,18 @@ func _ready():
 		defender_selection.add_item(defender.race_name)
 	defender_selection.item_selected.connect(defender_changed)
 
-	attacker_selection.select(1) # visually changes OptionButton to match the settings
-	attacker_changed(1) # 1 currently points to orcs, which work with AI properly
+	attacker_selection.select(0) # visually changes OptionButton to match the settings
+	attacker_changed(0) # 0 currently points to cyclops
 	defender_changed(0)
 
+	load_save()
+
+
+	## CURRENT RUN SETTINGS
 	next_wave_selection.item_selected.connect(_displayed_next_wave_changed)
+
+	$MarginContainer/VBoxContainer/VBoxCurrentRun/CurrentRosterTopBar/ResetPurchasesButton.\
+	pressed.connect(load_save)
 
 
 func attacker_changed(attacker_index) -> void:
@@ -136,7 +149,7 @@ func difficulty_changed(_difficulty_index) -> void:
 	_refresh_highscore_display()
 
 
-func _start_new_run() -> void:
+func _start_new_run(load_save : bool = false) -> void:
 	new_run_container.visible = false
 	current_run_container.visible = true
 	highscores_container.visible = false
@@ -167,10 +180,61 @@ func _start_new_run() -> void:
 		next_wave_selection.add_item(str(wave_idx + 1))
 	_displayed_next_wave_changed(0)
 
+	if not load_save:
+		save_game()
+
+
+
 #endregion New Run Setup
 
 
 #region Run UI
+
+## Saved: race, army, goods, enemy
+func save_game() -> void:
+	CFG.player_options.city_defense_save = [
+		CFG.RACES_LIST.find(player_race),
+		current_roster.duplicate(),
+		player_goods.duplicate(),
+		current_wave,
+		CFG.RACES_LIST.find(attacker_waves.race),
+	]
+	print("saved_game", CFG.player_options.city_defense_save.size())
+	CFG.save_player_options()
+
+
+## used once starting the game and during purchases reset
+func load_save() -> void:
+	print("load_save1")
+	if CFG.CITY_DEFENSE_SAVE.size() == 0:
+		return
+	print("load_save2")
+	_start_new_run(true)
+	print("load_save3")
+	player_race = CFG.RACES_LIST[CFG.CITY_DEFENSE_SAVE[0]]
+	current_roster = CFG.CITY_DEFENSE_SAVE[1].duplicate()
+	player_goods = CFG.CITY_DEFENSE_SAVE[2].duplicate()
+	current_wave = CFG.CITY_DEFENSE_SAVE[3]
+	print(player_goods.wood, player_goods.iron)
+	var enemy_race : DataRace = CFG.RACES_LIST[CFG.CITY_DEFENSE_SAVE[4]]
+	var correct_race_found : bool = false
+	for attacker_waves_preset_path in \
+	FileSystemHelpers.list_files_in_folder(attacker_waves_folder_path, true):
+		attacker_waves = load(attacker_waves_preset_path)
+		if attacker_waves.race == enemy_race:
+			correct_race_found = true
+			break
+	assert(correct_race_found, "could not find the correct attacker preset")
+	_refresh_unit_purchases()
+	_refresh_roster_display()
+
+	next_wave_selection.clear()
+	for wave_idx : int in range(attacker_waves.waves.size()):
+		next_wave_selection.add_item(str(wave_idx + 1))
+	_displayed_next_wave_changed(current_wave + 1)
+	refresh_run_info()
+
+
 
 func _displayed_next_wave_changed(wave_idx : int) -> void:
 	next_wave_selection.select(wave_idx)
@@ -235,6 +299,8 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 		IM.is_city_defense_active = false
 		is_run_ongoing = false
 		continue_button.disabled = true
+		CFG.player_options.city_defense_save.clear()
+		CFG.save_player_options()
 		return
 
 	update_highscores()
@@ -248,6 +314,7 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 	else:
 		player_goods.add(goods_awards[current_wave + 1])
 
+	save_game()
 	_refresh_unit_purchases()
 	_refresh_roster_display()
 
@@ -255,6 +322,8 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 	if current_wave + 1 == attacker_waves.waves.size():  # Victory
 		is_run_ongoing = false
 		continue_button.disabled = true
+		CFG.player_options.city_defense_save.clear()
+		CFG.save_player_options()
 	else:
 		_displayed_next_wave_changed(current_wave + 1)
 

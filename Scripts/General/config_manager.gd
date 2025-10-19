@@ -435,6 +435,10 @@ var LAST_OPENED_WORLD_WIKI_TAB : WorldWiki :
 
 #region Saves
 
+## Saved: race, army, goods, enemy_wave, enemy_race
+var CITY_DEFENSE_SAVE : Array :
+	get: return player_options.city_defense_save
+
 var HIGHSCORES : Dictionary :
 	get: return player_options.highscores
 
@@ -490,7 +494,7 @@ func get_highscore(race : DataRace, difficulty : String, enemy : DataRace = null
 			"|" + ai_key + "|" + enemy.race_name
 		var score : int = player_options.highscores[key]
 		return [enemy, score]
-		
+
 
 	var best_result_race : DataRace
 	var best_wave_score : int = -1

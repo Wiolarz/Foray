@@ -37,6 +37,7 @@ text = "City Defense"
 horizontal_alignment = 1
 
 [node name="VBoxNewRun" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxNewRun"]
@@ -119,7 +120,6 @@ layout_mode = 2
 text = "Start new Run"
 
 [node name="VBoxCurrentRun" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-visible = false
 layout_mode = 2
 
 [node name="CurrentRunLabel" type="Label" parent="MarginContainer/VBoxContainer/VBoxCurrentRun"]
@@ -133,11 +133,19 @@ layout_mode = 2
 theme_override_constants/separation = 50
 alignment = 1
 
-[node name="CurrentRoster" type="Label" parent="MarginContainer/VBoxContainer/VBoxCurrentRun"]
+[node name="CurrentRosterTopBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxCurrentRun"]
+layout_mode = 2
+alignment = 1
+
+[node name="CurrentRoster" type="Label" parent="MarginContainer/VBoxContainer/VBoxCurrentRun/CurrentRosterTopBar"]
 custom_minimum_size = Vector2(1000, 0)
 layout_mode = 2
 text = "Unit Roster:"
 horizontal_alignment = 1
+
+[node name="ResetPurchasesButton" type="Button" parent="MarginContainer/VBoxContainer/VBoxCurrentRun/CurrentRosterTopBar"]
+layout_mode = 2
+text = "Reset Purchases"
 
 [node name="HBoxArmy" parent="MarginContainer/VBoxContainer/VBoxCurrentRun" instance=ExtResource("2_016xn")]
 layout_mode = 2
@@ -172,6 +180,7 @@ disabled = true
 text = "Continue"
 
 [node name="VBoxHighScores" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="HBoxRaces" type="HBoxContainer" parent="MarginContainer/VBoxContainer/VBoxHighScores"]

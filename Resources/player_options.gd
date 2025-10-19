@@ -73,6 +73,9 @@ extends Resource
 
 @export var highscores : Dictionary
 
+## Saved: race, army, goods, enemy_wave, enemy_race
+@export var city_defense_save : Array
+
 #endregion Saves
 
 
