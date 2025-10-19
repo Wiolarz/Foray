@@ -152,6 +152,7 @@ func _load_map(map : DataBattleMap) -> void:
 	if not IM.in_map_editor:
 		_border_node = MapBorder.from_map(map)
 		add_child(_border_node)
+		move_child(_border_node, 0)
 
 
 ## space needed for battle tiles in global position
