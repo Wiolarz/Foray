@@ -196,23 +196,18 @@ func save_game() -> void:
 		current_wave,
 		CFG.RACES_LIST.find(attacker_waves.race),
 	]
-	print("saved_game", CFG.player_options.city_defense_save.size())
 	CFG.save_player_options()
 
 
 ## used once starting the game and during purchases reset
 func load_save() -> void:
-	print("load_save1")
 	if CFG.CITY_DEFENSE_SAVE.size() == 0:
 		return
-	print("load_save2")
 	_start_new_run(true)
-	print("load_save3")
 	player_race = CFG.RACES_LIST[CFG.CITY_DEFENSE_SAVE[0]]
 	current_roster = CFG.CITY_DEFENSE_SAVE[1].duplicate()
 	player_goods = CFG.CITY_DEFENSE_SAVE[2].duplicate()
 	current_wave = CFG.CITY_DEFENSE_SAVE[3]
-	print(player_goods.wood, player_goods.iron)
 	var enemy_race : DataRace = CFG.RACES_LIST[CFG.CITY_DEFENSE_SAVE[4]]
 	var correct_race_found : bool = false
 
@@ -288,6 +283,8 @@ func _launch_battle():
 	]
 	battle.battle_map = map
 
+	continue_button.disabled = true
+
 	IM.start_scripted_battle(battle, selected_bot_path, 0)
 
 
@@ -323,6 +320,7 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 		CFG.player_options.city_defense_save.clear()
 		CFG.save_player_options()
 	else:
+		continue_button.disabled = false
 		_displayed_next_wave_changed(current_wave + 1)
 
 #endregion Run UI
