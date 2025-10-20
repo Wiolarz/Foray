@@ -136,9 +136,10 @@ class ChessArrow:
 
 
 	func to_position(coord : Vector2i) -> Vector2:
-		if position_calculator:
-			return position_calculator.to_position(coord)
-		return Vector2.ZERO
+		assert(position_calculator)
+		if not position_calculator:
+			return Vector2.ZERO
+		return position_calculator.to_position(coord)
 
 
 	func _update_end_node() -> void:
