@@ -253,8 +253,11 @@ func grid_input(coord : Vector2i):
 		return
 
 	if world_ui.selected_ritual:
-		if is_ritual_target_valid(coord):
-			cast_ritual(coord)
+		if is_ritual_target_valid(coord, selected_hero.entity.hero, world_ui.selected_ritual):
+			cast_ritual(coord, selected_hero, world_ui.selected_ritual)
+			#refresh UI
+			world_ui.selected_ritual = null
+			world_ui.load_ritual_book(selected_hero.entity.hero)
 		return
 
 
@@ -390,18 +393,14 @@ static func is_ritual_purchasable(ritual : Ritual, caster : Hero) -> bool:
 	return true
 
 
-func is_ritual_target_valid(target_coord : Vector2i = Vector2i.ZERO) -> bool:
-	assert(selected_hero, "No selected hero")
-	assert(world_ui.selected_ritual, "no selected_ritual")
-	assert(world_ui.selected_ritual in selected_hero.entity.hero.rituals, "selected_ritual is not present on a hero")
+func is_ritual_target_valid(target_coord : Vector2i, hero : Hero, ritual : Ritual) -> bool:
+	assert(ritual in selected_hero.entity.hero.rituals, "selected_ritual is not present on a hero")
 
-	var hero : Hero = selected_hero.entity.hero
-
-	if not WM.is_ritual_purchasable(world_ui.selected_ritual, hero):
+	if not WM.is_ritual_purchasable(ritual, hero):
 		assert(false, "ritual shouldn't be selectable")
 		return false
 
-	match world_ui.selected_ritual.name:
+	match ritual.name:
 		"Town Portal":
 			var target_city : City = WS.get_city_at(target_coord)
 			if not target_city:
@@ -426,15 +425,12 @@ func is_ritual_target_valid(target_coord : Vector2i = Vector2i.ZERO) -> bool:
 
 
 
-func cast_ritual(target_coord : Vector2i = Vector2i.ZERO) -> void:
-	assert(selected_hero, "No selected hero")
-	assert(world_ui.selected_ritual, "no selected_ritual")
-	assert(world_ui.selected_ritual in selected_hero.entity.hero.rituals, "selected_ritual is not present on a hero")
+func cast_ritual(target_coord : Vector2i, hero_army : ArmyForm, ritual : Ritual) -> void:
+	var hero : Hero = hero_army.entity.hero
+	assert(ritual in hero.rituals, "selected_ritual is not present on a hero")
 
 
-	var hero : Hero = selected_hero.entity.hero
-
-	var cost : int = world_ui.selected_ritual.mp_cost
+	var cost : int = ritual.mp_cost
 	var reduction : int = min(hero.ritual_cost_reduction, cost)
 
 	cost -= reduction
@@ -442,17 +438,17 @@ func cast_ritual(target_coord : Vector2i = Vector2i.ZERO) -> void:
 
 	hero.movement_points -= cost
 
-	hero.rituals.erase(world_ui.selected_ritual)
+	hero.rituals.erase(ritual)
 
-	print(world_ui.selected_ritual)
-	match world_ui.selected_ritual.name:
+	print(ritual)
+	match ritual.name:
 		"Town Portal":
 			var target_city : City = WS.get_city_at(target_coord)
 			assert(target_city, "no destination for town portal spell")
 
 			# TODO check if army is present
-			WS.teleport_to_your_city(selected_hero.entity.coord, target_coord)
-			target_city.interact(selected_hero.entity)
+			WS.teleport_to_your_city(hero_army.entity.coord, target_coord)
+			target_city.interact(hero_army.entity)
 		"Steal":
 			print("Casted Steal")
 			pass
@@ -460,12 +456,8 @@ func cast_ritual(target_coord : Vector2i = Vector2i.ZERO) -> void:
 			print("Casted Fear")
 			pass
 		_:
-			assert(false, "ritual casting not supported: " + world_ui.selected_ritual.name)
+			assert(false, "ritual casting not supported: " + ritual.name)
 			return
-
-
-	world_ui.selected_ritual = null
-	world_ui.load_ritual_book(selected_hero.entity.hero)
 
 #endregion Player Action
 

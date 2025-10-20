@@ -15,19 +15,23 @@ func choose_move() -> WorldMoveInfo:
 	combat_destinations.shuffle()
 
 	var faction = WS.player_states[WS.current_player_index]
+
+	## MOVING HEROES AROUND THE MAP
 	for army in faction.hero_armies:
+
+		## Search for potential targets
 		if army.hero.hero_name not in hero_targets.keys():
 			for destination : Vector2i in combat_destinations:
 				var target_army : Army = WS.get_army_at(destination)
 				var combat_difficulty : int = WS.assess_combat_difficulty(army, target_army)
-				
+
 				if combat_difficulty >= 2:
 					hero_targets[army.hero.hero_name] = target_army
 					break
 
 
 		if army.hero.hero_name not in hero_targets.keys():
-			break # didn't found any suitable target
+			continue # didn't found any suitable target
 
 		if army.hero.movement_points == 0:
 			continue
@@ -39,7 +43,6 @@ func choose_move() -> WorldMoveInfo:
 		army.hero.travel_path.pop_front()
 		if army.hero.travel_path.size() == 1:
 			hero_targets.erase(army.hero.hero_name)
-			
 
 		return move
 
