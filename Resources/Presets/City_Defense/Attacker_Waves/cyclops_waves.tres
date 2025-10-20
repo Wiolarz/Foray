@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="PresetWaves" load_steps=13 format=3 uid="uid://b8jmiqqxj6hvc"]
+
+[ext_resource type="Resource" uid="uid://cxfflypli72u5" path="res://Resources/Races/cyclops.tres" id="1_p5dqj"]
+[ext_resource type="Script" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="2_cqf15"]
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="3_m0guk"]
+[ext_resource type="Resource" uid="uid://c3d8o8qw4dfa4" path="res://Resources/Battle/Units/Cyclops/cyclops_1_brigand.tres" id="4_1c6r6"]
+[ext_resource type="Resource" uid="uid://b4ajym7wahumg" path="res://Resources/Battle/Units/Cyclops/cyclops_3_raider.tres" id="5_b8fap"]
+[ext_resource type="Resource" uid="uid://7v686d60r2xe" path="res://Resources/Battle/Units/Cyclops/cyclops_hero_reaver.tres" id="6_btdn6"]
+[ext_resource type="Resource" uid="uid://cnme0aoam7otl" path="res://Resources/Battle/Units/Cyclops/cyclops_6_giant.tres" id="7_ge5xi"]
+[ext_resource type="Resource" uid="uid://cir43eqa3uet2" path="res://Resources/Battle/Units/Cyclops/cyclops_4_protector.tres" id="8_3favh"]
+
+[sub_resource type="Resource" id="Resource_mweqf"]
+script = ExtResource("3_m0guk")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_1c6r6"), ExtResource("5_b8fap")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_ubtcp"]
+script = ExtResource("3_m0guk")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_1c6r6"), ExtResource("6_btdn6"), ExtResource("7_ge5xi")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_hdo7w"]
+script = ExtResource("3_m0guk")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_1c6r6"), ExtResource("6_btdn6"), ExtResource("8_3favh"), ExtResource("5_b8fap")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_srnqd"]
+script = ExtResource("3_m0guk")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_1c6r6"), ExtResource("6_btdn6"), ExtResource("8_3favh"), ExtResource("5_b8fap"), ExtResource("7_ge5xi"), ExtResource("4_1c6r6")])
+team = 0
+
+[resource]
+script = ExtResource("2_cqf15")
+race = ExtResource("1_p5dqj")
+waves = Array[ExtResource("3_m0guk")]([SubResource("Resource_mweqf"), SubResource("Resource_ubtcp"), SubResource("Resource_hdo7w"), SubResource("Resource_srnqd")])

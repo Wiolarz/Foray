@@ -69,6 +69,16 @@ extends Resource
 #endregion UX Preferences
 
 
+#region Saves
+
+@export var highscores : Dictionary
+
+## Saved: race, army, goods, enemy_wave, enemy_race
+@export var city_defense_save : Array
+
+#endregion Saves
+
+
 #region DEBUG Settings
 
 ## once the game is launched it instantly start the game with default lobby values [br]
