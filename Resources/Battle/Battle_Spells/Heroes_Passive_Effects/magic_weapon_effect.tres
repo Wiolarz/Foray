@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_44sd0")
 name = "Magic Weapon"
-icon_path = "res://Art/orc_hero_fighter.png"
+icon_path = "res://Art/units/orc/orc_hero_fighter.png"
 spell_effects = Array[ExtResource("1_44sd0")]([])
 passive_effect = true
+duration_counter = 6
+magic_weapon_durability = 4
