@@ -505,6 +505,8 @@ func update_highscore(
 ## returns race and wave_number
 func get_highscore(race : DataRace, difficulty : String, enemy : DataRace = null) -> Array:
 	var ai_key : String = str(get_bot_idx(difficulty))
+	if ai_key == "-1":
+		return [RACES_LIST[0], -1]
 	if enemy:
 		var key = race.race_name + \
 			"|" + ai_key + "|" + enemy.race_name
