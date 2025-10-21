@@ -332,7 +332,7 @@ func check_army_travel(source : Vector2i, target : Vector2i) -> String:
 func check_ritual_cast(target_coord : Vector2i, hero : Hero, ritual : Ritual) -> String:
 	if not is_ritual_purchasable(ritual, hero):
 		return "ritual cannot be purchased"
-	if not is_ritual_target_valid(target, hero, ritual):
+	if not is_ritual_target_valid(target_coord, hero, ritual):
 		return "ritual target is not valid"
 	return ""
 
@@ -449,7 +449,8 @@ func do_move(world_move_info : WorldMoveInfo) -> bool:
 			var army : Army = get_army_at(world_move_info.move_source)
 			var target : Vector2i = world_move_info.target_tile_coord
 			var ritual : Ritual = world_move_info.data
-			return cast_ritual(target, army, ritual)
+			cast_ritual(target, army, ritual)
+			return true # TEMP TODO fix it
 		_:
 			assert(false, "unsupported WorldMoveInfo Type")
 			return false
@@ -705,6 +706,8 @@ func swap_armies(first_army : Army, second_army : Army) -> void:
 		city.move_to_reserve()
 		change_army_position(first_army, target)
 
+
+## TODO fix teleportation to enemy cities
 func teleport_to_your_city(source : Vector2i, target : Vector2i) -> void:
 	var army : Army = get_army_at(source)
 
@@ -1107,6 +1110,17 @@ func assess_combat_difficulty(hero_army : Army, target_army : Army) -> int:
 		return 2
 	else:
 		return 1
+
+
+##TODO consider modyifing output to return move info instead
+func get_all_ritual_targets(hero : Hero, ritual : Ritual) -> Array[Vector2i]:
+	var result : Array[Vector2i] = []
+	for x in range(grid.hexes.size()):
+		for y in range(grid.hexes[x].size()):
+			if is_ritual_target_valid(Vector2i(x, y), hero, ritual):
+				result.append(Vector2i(x, y))
+
+	return result
 
 
 #endregion AI tools - Exploration

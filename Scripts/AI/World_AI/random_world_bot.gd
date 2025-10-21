@@ -18,6 +18,7 @@ func choose_move() -> WorldMoveInfo:
 
 	## MOVING HEROES AROUND THE MAP
 	for army in faction.hero_armies:
+		continue
 
 		## Search for potential targets
 		if army.hero.hero_name not in hero_targets.keys():
@@ -45,6 +46,22 @@ func choose_move() -> WorldMoveInfo:
 			hero_targets.erase(army.hero.hero_name)
 
 		return move
+
+	for army : Army in faction.hero_armies:
+		for ritual : Ritual in army.hero.rituals:
+			match ritual.name:
+				"Town Portal":
+					pass
+				_:
+					continue # ritual is currently unsupported by AI
+			if not WS.is_ritual_purchasable(ritual, army.hero):
+				continue
+			var possible_targets : Array[Vector2i] = WS.get_all_ritual_targets(army.hero, ritual)
+			if possible_targets.size() == 0:
+				continue
+			possible_targets.shuffle()
+			return WorldMoveInfo.make_ritual(army.coord, possible_targets[0], ritual)
+
 
 
 	return WorldMoveInfo.make_end_turn()
