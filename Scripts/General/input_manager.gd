@@ -261,6 +261,7 @@ func start_scripted_battle(scripted_battle : ScriptedBattle, battle_bot_path : S
 
 		armies.append(create_army_from_preset(army_preset, player_idx))
 
+	DISCORD.change_state("Defending City") # TEMP Placement
 	BM.start_battle(armies, scripted_battle.battle_map, 0, null, null, scripted_battle)
 	UI.set_camera(E.CameraPosition.BATTLE)
 

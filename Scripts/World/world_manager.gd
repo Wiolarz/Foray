@@ -235,7 +235,7 @@ func _draw_path(hero : ArmyForm = null):
 				is_it_dangerous = true
 				break
 
-	_painter_node.draw_path(hero.travel_path, is_it_dangerous)
+	_painter_node.draw_path(hero.travel_path, self, is_it_dangerous)
 
 
 ## Called when player interacts (presses) on the map tile
@@ -621,7 +621,7 @@ func recreate_army_forms() -> void:
 			var hex : WorldHex = WS.grid.get_hex(coord)
 			if not hex.army:
 				continue
-			var new_position = to_position(coord)
+			var new_position = to_local_position(coord)
 			var army_form : ArmyForm = ArmyForm.create_form_of_army(hex, \
 				new_position)
 			armies.add_child(army_form)
