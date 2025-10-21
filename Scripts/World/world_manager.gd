@@ -252,9 +252,9 @@ func grid_input(coord : Vector2i):
 		input_try_select(coord)
 		return
 
-	if world_ui.selected_ritual:
-		if is_ritual_target_valid(coord, selected_hero.entity.hero, world_ui.selected_ritual):
-			cast_ritual(coord, selected_hero, world_ui.selected_ritual)
+	if world_ui.selected_ritual:  ## TODO refactor it to work within MoveInfo architecture
+		if WS.is_ritual_target_valid(coord, selected_hero.entity.hero, world_ui.selected_ritual):
+			WS.cast_ritual(coord, selected_hero.entity, world_ui.selected_ritual)
 			#refresh UI
 			world_ui.selected_ritual = null
 			world_ui.load_ritual_book(selected_hero.entity.hero)
@@ -373,91 +373,6 @@ func perform_world_move_info(world_move_info : WorldMoveInfo) -> void:
 
 func perform_network_move(world_move_info : WorldMoveInfo) -> void:
 	perform_world_move_info(world_move_info)
-
-
-static func is_ritual_purchasable(ritual : Ritual, caster : Hero) -> bool:
-	var shaman_present : bool = false
-	for passive in caster.passive_effects:
-		if passive.passive_name == "shaman":
-			shaman_present = true
-	# player cannot cast rituals at negative movement points
-	if caster.movement_points < 0:
-		# hero has negative movement points left
-		return false
-
-	if not shaman_present and \
-	caster.movement_points + caster.ritual_cost_reduction < ritual.mp_cost:
-		# hero doesn't have enough movement points left
-		return false
-
-	return true
-
-
-func is_ritual_target_valid(target_coord : Vector2i, hero : Hero, ritual : Ritual) -> bool:
-	assert(ritual in selected_hero.entity.hero.rituals, "selected_ritual is not present on a hero")
-
-	if not WM.is_ritual_purchasable(ritual, hero):
-		assert(false, "ritual shouldn't be selectable")
-		return false
-
-	match ritual.name:
-		"Town Portal":
-			var target_city : City = WS.get_city_at(target_coord)
-			if not target_city:
-				print("no destination for town portal spell")
-				return false
-			if WS.get_army_at(target_coord).hero:
-				print("hero is present in the city")
-				return false
-			return true
-		"Steal", "Fear":  # any neutral army # TODO add check if army is adjacent to caster
-			var target_neutral_army : Army = WS.get_army_at(target_coord)
-			if not target_neutral_army:
-				print("no army at destination")
-				return false
-			if target_neutral_army.faction:
-				print("army at destination is not neutral")
-				return false
-			return true
-
-	assert(false, "ritual is not supported")
-	return false
-
-
-
-func cast_ritual(target_coord : Vector2i, hero_army : ArmyForm, ritual : Ritual) -> void:
-	var hero : Hero = hero_army.entity.hero
-	assert(ritual in hero.rituals, "selected_ritual is not present on a hero")
-
-
-	var cost : int = ritual.mp_cost
-	var reduction : int = min(hero.ritual_cost_reduction, cost)
-
-	cost -= reduction
-	hero.ritual_cost_reduction -= reduction
-
-	hero.movement_points -= cost
-
-	hero.rituals.erase(ritual)
-
-	print(ritual)
-	match ritual.name:
-		"Town Portal":
-			var target_city : City = WS.get_city_at(target_coord)
-			assert(target_city, "no destination for town portal spell")
-
-			# TODO check if army is present
-			WS.teleport_to_your_city(hero_army.entity.coord, target_coord)
-			target_city.interact(hero_army.entity)
-		"Steal":
-			print("Casted Steal")
-			pass
-		"Fear":
-			print("Casted Fear")
-			pass
-		_:
-			assert(false, "ritual casting not supported: " + ritual.name)
-			return
 
 #endregion Player Action
 
