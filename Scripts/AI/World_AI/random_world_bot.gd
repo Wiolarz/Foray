@@ -18,8 +18,7 @@ func choose_move() -> WorldMoveInfo:
 
 	## MOVING HEROES AROUND THE MAP
 	for army in faction.hero_armies:
-		continue
-
+		#continue # Disable moving for tests
 		## Search for potential targets
 		if army.hero.hero_name not in hero_targets.keys():
 			for destination : Vector2i in combat_destinations:
