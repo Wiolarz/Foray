@@ -8,7 +8,7 @@
 #include "constants.hpp"
 
 
-using EffectMask = uint8_t;
+using EffectMask = uint16_t;
 
 struct Effect {
     // A mask of just a single effect
@@ -40,7 +40,7 @@ struct Unit {
 	uint8_t rotation{};
 	uint8_t score = 1;
 	uint8_t mana = 0;
-	uint8_t flags = 0;
+	uint16_t flags = 0;
 	std::array<Symbol, 6> sides{};
 	std::array<Effect, MAX_EFFECTS_PER_UNIT> effects{};
 
@@ -58,6 +58,7 @@ public:
 	static const EffectMask FLAG_EFFECT_ANCHOR = 0x20;
 	static const EffectMask FLAG_EFFECT_SUMMONING_SICKNESS = 0x40;
 	static const EffectMask FLAG_HERO = 0x80;
+	static const EffectMask FLAG_EFFECT_BURNING = 0x100;
 	/// Add new effect types/flags before this line
 
     Symbol symbol_when_rotated(int side) const;

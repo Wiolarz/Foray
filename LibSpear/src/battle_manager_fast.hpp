@@ -41,7 +41,7 @@ class BattleManagerFast {
 	ArmyList _armies{};
 	std::array<BattleSpell, MAX_SPELLS> _spells{};
 	TileGridFast _tiles{};
-	
+
 	std::array<int8_t, 16> _cyclone_counter_values{-1};
 	int8_t _mana_well_power = -1;
 
@@ -70,7 +70,7 @@ class BattleManagerFast {
 	void _append_moves_all_tiles(UnitID uid, int8_t spell_id, IncludeImpassable include_impassable);
 
 	void _append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max);
-	void _append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max);
+	void _append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max, bool unit_is_present = false);
 	void _append_moves_neighbors(UnitID uid, int8_t spell_id, Position center, IncludeImpassable include_impassable);
 
 	void _refresh_legal_moves();
@@ -239,7 +239,7 @@ public:
 	bool is_passive_in_army(int army, godot::String name);
 
 	Vector2i get_unit_position(int army, int unit) const {
-		Position p = bm._armies[army].units[unit].pos; 
+		Position p = bm._armies[army].units[unit].pos;
 		return Vector2i(p.x, p.y);
 	}
 

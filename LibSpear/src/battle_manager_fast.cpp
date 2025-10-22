@@ -124,8 +124,8 @@ void BattleManagerFast::play_move(Move move) {
 			unit.rotation = rot_new;
 			_process_unit(uid, MovePhase::TURN);
 
-			bool can_move = unit.status == UnitStatus::ALIVE 
-				&& unit.pos == old_pos 
+			bool can_move = unit.status == UnitStatus::ALIVE
+				&& unit.pos == old_pos
 				&& !unit.is_effect_active(Unit::FLAG_EFFECT_ANCHOR);
 
 			if(can_move) {
@@ -235,7 +235,7 @@ void BattleManagerFast::_process_unit(UnitID unit_id, MovePhase phase) {
 
 		Symbol unit_symbol = unit.symbol_when_rotated(side);
 		Symbol neighbor_symbol = neighbor.symbol_when_rotated(flip(side));
-	
+
 		if(neighbor_symbol.dies_to(unit_symbol, phase) && unit_symbol.get_bow_force(MovePhase::DASH) == 0) {
 			_kill_unit(neighbor_id, unit_id);
 			continue;
@@ -243,7 +243,7 @@ void BattleManagerFast::_process_unit(UnitID unit_id, MovePhase phase) {
 
 		Position direction = neighbor.pos - unit.pos;
 		int push_force = unit_symbol.get_push_force();
- 
+
 		if(neighbor.status != UnitStatus::DEAD && push_force > 0 &&
 			(!neighbor_symbol.parries() || unit_symbol.breaks_parry())) {
 			_process_push(neighbor_id, unit_id, direction, push_force);
@@ -464,7 +464,7 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 				BM_ASSERT(unit1.has_value(), "Unknown unit id for summon dryad spell");
 				BM_ASSERT(!unit2.has_value(), "Unit already found @{},{} while spawning dryad", target.x, target.y);
 				auto [caster, army] = unit1.value();
-				
+
 				Unit new_unit{};
 				new_unit.rotation = get_rotation(caster.pos, target);
 				new_unit.status = UnitStatus::ALIVE;
@@ -474,8 +474,34 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 				Symbol attack{1,  1,  0,   0,    0};
 				new_unit.sides[0] = new_unit.sides[1] = new_unit.sides[5] = attack;
 				new_unit.try_apply_effect(Unit::FLAG_EFFECT_SUMMONING_SICKNESS);
-				
+
 				_summon_unit(new_unit, army, target);
+			}
+			break;
+		case BattleSpell::State::FIRE_WALL:
+			{// TEMP Implementation
+				_tiles.get_tile(target);
+				for(const auto dir: DIRECTIONS) {
+					Position pos = target + dir;
+					if(_tiles.get_tile(pos).is_passable() &&
+					!_tiles.get_tile(pos).is_wall() &&
+					!_tiles.get_tile(pos).is_mana_well() &&
+					!_tiles.get_tile(pos).is_hill() &&
+					!_tiles.get_tile(pos).is_pit()) {
+						_tiles.get_tile(pos) = Tile(true, false, false, false, false, false, -1, 0);
+
+						UnitID neighbor_id = _unit_cache.get(pos);
+						auto unit = _get_unit(neighbor_id);
+						BM_ASSERT(unit.has_value(), "Unknown unit id for burning effect");
+						unit.value().unit.try_apply_effect(Unit::FLAG_EFFECT_BURNING, Unit::EFFECT_INFINITE);
+					}
+				}
+			}
+			break;
+		case BattleSpell::State::SACRIFICE:
+			{
+				_kill_unit(uid2, NO_UNIT);
+				_spells[spell_id] = BattleSpell(godot::String("Fire Wall"), uid); // TEMP
 			}
 			break;
 		/// Add new spell behaviors right before this line
@@ -489,7 +515,7 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 			return;
 		#endif //DEBUG
 		//  When compiling for release - rely on compiler for compile time warnings
-		// sadly we can't have both default case for runtime checking for 
+		// sadly we can't have both default case for runtime checking for
 		// (unlikely) corrupted states and compile time warning
 		// This is probably the best compromise
 	}
@@ -588,7 +614,7 @@ int BattleManagerFast::get_winner_team() {
 			armies_in_teams_alive[_armies[i].team] += 1;
 		}
 	}
-	
+
 	for(unsigned i = 0; i < MAX_ARMIES; i++) {
 		if(armies_in_teams_alive[i] == 0) {
 			teams_alive--;
@@ -811,7 +837,8 @@ void BattleManagerFast::_spells_append_moves() {
 				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 3);
 				break;
 			case BattleSpell::State::FIREBALL:
-				_append_moves_all_tiles(spell.unit, i, INCLUDE_IMPASSABLE);
+				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 2, true);
+				//_append_moves_all_tiles(spell.unit, i, INCLUDE_IMPASSABLE);
 				break;
 			case BattleSpell::State::VENGEANCE:
 				_append_moves_unit(spell.unit, i, TeamRelation::ME, INCLUDE_SELF);
@@ -830,6 +857,12 @@ void BattleManagerFast::_spells_append_moves() {
 				break;
 			case BattleSpell::State::SUMMON_DRYAD:
 				_append_moves_neighbors(spell.unit, i, unit.pos, NO_INCLUDE_IMPASSABLE);
+				break;
+			case BattleSpell::State::FIRE_WALL:
+				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 3);
+				break;
+			case BattleSpell::State::SACRIFICE:
+				_append_moves_unit(spell.unit, i, TeamRelation::ME, NO_INCLUDE_SELF);
 				break;
 			case BattleSpell::State::NONE:
 			case BattleSpell::State::SENTINEL:
@@ -953,8 +986,8 @@ std::pair<Move, bool> BattleManagerFast::get_random_move(float heuristic_probabi
 	static thread_local std::uniform_real_distribution heur_dist(0.0f, 1.0f);
 
 	bool heur_chosen = heur_dist(rand_engine) < heuristic_probability;
-	const std::vector<Move>& moves_arr = heur_chosen 
-		? get_heuristically_good_moves() 
+	const std::vector<Move>& moves_arr = heur_chosen
+		? get_heuristically_good_moves()
 		: get_legal_moves();
 
 	BM_ASSERT_V(moves_arr.size() != 0, std::make_pair(Move{}, false), "BMFast - get_random_move has 0 moves to choose");
@@ -1040,6 +1073,22 @@ void BattleManagerFast::_append_moves_all_tiles(
 	}
 }
 
+/*void BattleManagerFast::_append_moves_in_axial_distance(
+		UnitID uid,
+		int8_t spell_id,
+		int distance) {
+
+	Vector2i dims = _tiles.get_dims();
+	for(int y = 0; y < dims.y; y++) {
+		for(int x = 0; x < dims.x; x++) {
+			auto pos = Position(x,y);
+			if(_tiles.get_tile(pos).is_passable() && _unit_cache.get(pos) == NO_UNIT)) {
+				_moves.emplace_back(uid.unit, pos, spell_id);
+			}
+		}
+	}
+}*/
+
 void BattleManagerFast::_append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max) {
 	int range_min_real = (range_min >= 1) ? range_min : 1;
 	if(range_min == 0 && _tiles.get_tile(center).is_passable()) {
@@ -1051,15 +1100,16 @@ void BattleManagerFast::_append_moves_lines(UnitID uid, int8_t spell_id, Positio
 	}
 }
 
-void BattleManagerFast::_append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max) {
+void BattleManagerFast::_append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max, bool unit_is_present) {
 	for(int r = range_min; r <= range_max; r++) {
 		Position pos = center + DIRECTIONS[dir] * r;
-
-		if(_tiles.get_tile(pos).is_passable() && _unit_cache.get(pos) == NO_UNIT) {
+		// target tile has to be passable AND depending on unit_is_present, target tile either has to contain a unit or not
+		if(_tiles.get_tile(pos).is_passable() && (!unit_is_present == (_unit_cache.get(pos) == NO_UNIT))) {
 			_moves.emplace_back(uid.unit, pos, spell_id);
 		}
 	}
 }
+
 
 void BattleManagerFast::_append_moves_neighbors(UnitID uid, int8_t spell_id, Position center, IncludeImpassable include_impassable) {
 	for(const auto dir: DIRECTIONS) {
@@ -1162,8 +1212,8 @@ void BattleManagerFast::_kill_unit(UnitID id, UnitID killer_id) {
 		_update_mana();
 	}
 
-	bool vengeance_activated = unit.is_effect_active(Unit::FLAG_EFFECT_VENGEANCE) 
-		&& killer_id != NO_UNIT 
+	bool vengeance_activated = unit.is_effect_active(Unit::FLAG_EFFECT_VENGEANCE)
+		&& killer_id != NO_UNIT
 		&& get_current_participant() != army.id // Do not avenge when caused by the vengeance bearer
 		&& get_winner_team() == -1; // Do not cause a draw
 
@@ -1300,7 +1350,7 @@ void BattleManagerFastCpp::set_unit_solo_martyr(int army, int martyr_idx, int du
 void BattleManagerFastCpp::set_unit_hero(int army, int idx) {
 	CHECK_UNIT(idx,);
 	CHECK_ARMY(army,);
-	
+
 	BM_ASSERT(bm._armies[army].hero_id_opt == -1, "Hero already exists for army {}", army);
 	bm._armies[army].units[idx].flags |= Unit::FLAG_HERO;
 	bm._armies[army].hero_id_opt = idx;
@@ -1355,7 +1405,7 @@ int BattleManagerFastCpp::get_unit_spell_count(int army, int idx) {
 
 	int i = 0;
 	for(BattleSpell& spell : bm._spells) {
-		if(spell.state != BattleSpell::State::NONE 
+		if(spell.state != BattleSpell::State::NONE
 		   && spell.state != BattleSpell::State::SENTINEL
 		   && spell.unit == UnitID(army, idx)
 		) {
@@ -1369,7 +1419,7 @@ bool BattleManagerFastCpp::is_passive_in_army(int army, godot::String name) {
 	CHECK_ARMY(army, false);
 
 	BattlePassive compared{name};
-	
+
 	for(const BattlePassive& passive : bm._armies[army].passives) {
 		if(passive.type == compared.type) {
 			return true;
@@ -1397,7 +1447,7 @@ int BattleManagerFastCpp::get_army_passive_count(int army) {
 
 	int i = 0;
 	for(const BattlePassive& passive : bm._armies[army].passives) {
-		if(passive.type != BattlePassive::Type::NONE 
+		if(passive.type != BattlePassive::Type::NONE
 		   && passive.type != BattlePassive::Type::SENTINEL
 		) {
 			i++;
@@ -1423,8 +1473,8 @@ void BattleManagerFastCpp::insert_passive(int army, int army_passive_id, godot::
 }
 
 void BattleManagerFastCpp::set_cyclone_constants(godot::PackedInt32Array cyclone_values, int mana_well_power) {
-	BM_ASSERT(size_t(cyclone_values.size()) < bm._cyclone_counter_values.size(), 
-			"Cyclone value array to big for LibSpear ({} vs max: {})", 
+	BM_ASSERT(size_t(cyclone_values.size()) < bm._cyclone_counter_values.size(),
+			"Cyclone value array to big for LibSpear ({} vs max: {})",
 			cyclone_values.size(), bm._cyclone_counter_values.size()
 	);
 

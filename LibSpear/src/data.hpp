@@ -162,16 +162,17 @@ public:
 };
 
 class Tile {
-	static const uint8_t PASSABLE = 0x1;
-	static const uint8_t WALL = 0x2;
-	static const uint8_t SWAMP = 0x4;
-	static const uint8_t FORBIDDEN = 0x8;
-	static const uint8_t MANA_WELL = 0x10;
-	static const uint8_t PIT = 0x20;
-	static const uint8_t HILL = 0x40;
-	static const uint8_t SPAWN = 0x80;
+	static const uint16_t PASSABLE = 0x1;
+	static const uint16_t WALL = 0x2;
+	static const uint16_t SWAMP = 0x4;
+	static const uint16_t FORBIDDEN = 0x8;
+	static const uint16_t MANA_WELL = 0x10;
+	static const uint16_t PIT = 0x20;
+	static const uint16_t HILL = 0x40;
+	static const uint16_t SPAWN = 0x80;
+	static const uint16_t FIRE = 0x100;
 
-	uint8_t _flags = FORBIDDEN | WALL;
+	uint16_t _flags = FORBIDDEN | WALL;
 	int8_t _army = -1; // Spawning army for spawning tiles, controlling army for mana wells
 	uint8_t _spawning_direction{};
 

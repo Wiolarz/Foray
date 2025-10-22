@@ -22,6 +22,8 @@ struct BattleSpell {
 		WIND_DASH,
 		ANCHOR,
 		SUMMON_DRYAD,
+		FIRE_WALL,
+		SACRIFICE,
 	} state = State::SENTINEL;
 	UnitID unit = NO_UNIT; // An owner for uncast spells
 
@@ -50,6 +52,12 @@ struct BattleSpell {
 		}
 		else if(string == godot::String("Summon Dryad")) {
 			state = State::SUMMON_DRYAD;
+		}
+		else if(string == godot::String("Fire Wall")) {
+			state = State::FIRE_WALL;
+		}
+		else if(string == godot::String("Sacrifice")) {
+			state = State::SACRIFICE;
 		}
 		/// Add new spell-string mappings right before this line
 		else {
