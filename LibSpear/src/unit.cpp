@@ -92,6 +92,9 @@ EffectMask Unit::effect_string_to_flag(godot::String str) {
     else if(str == godot::String("Summoning Sickness")) {
         return FLAG_EFFECT_SUMMONING_SICKNESS;
     }
+    else if(str == godot::String("Burning")) {
+        return FLAG_EFFECT_BURNING;
+    }
     /// Add new effect-string mappings before this line
     else {
         ERR_FAIL_V_MSG(0, std::format("Unknown effect: '{}'", str.ascii().get_data()).c_str());

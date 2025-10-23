@@ -492,8 +492,10 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 
 						UnitID neighbor_id = _unit_cache.get(pos);
 						auto unit = _get_unit(neighbor_id);
-						BM_ASSERT(unit.has_value(), "Unknown unit id for burning effect");
-						unit.value().unit.try_apply_effect(Unit::FLAG_EFFECT_BURNING, Unit::EFFECT_INFINITE);
+						//BM_ASSERT(unit.has_value(), "Unknown unit id for burning effect");
+						if(unit.has_value()) {
+							unit.value().unit.try_apply_effect(Unit::FLAG_EFFECT_BURNING, Unit::EFFECT_INFINITE);
+						}
 					}
 				}
 			}
