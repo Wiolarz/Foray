@@ -67,7 +67,7 @@ public:
     bool try_apply_effect(EffectMask mask, uint8_t duration = DEFAULT_EFFECT_DURATION);
     bool try_apply_martyr(UnitID id, uint8_t duration = DEFAULT_EFFECT_DURATION);
     void remove_martyr();
-    void remove_effect(EffectMask mask);
+    void remove_effects(EffectMask mask);
 
     UnitID get_martyr_id() const;
     bool is_effect_active(EffectMask effect_mask) const;

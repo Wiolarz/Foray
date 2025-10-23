@@ -24,6 +24,7 @@ static func from(bgstate: BattleGridState):
 				hex.is_mana_tile(),
 				hex.pit,
 				hex.hill,
+				hex.fire,
 				army_id,
 				hex.spawn_direction
 			)

@@ -39,7 +39,7 @@ void TileGridFastCpp::set_map_size(Vector2i dimensions) {
 }
 
 void TileGridFastCpp::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("set_tile", "passable", "wall", "swamp", "mana_well", "pit", "army", "direction"), &TileGridFastCpp::set_tile);
+	ClassDB::bind_method(D_METHOD("set_tile", "passable", "wall", "swamp", "mana_well", "pit", "fire", "army", "direction"), &TileGridFastCpp::set_tile);
 	ClassDB::bind_method(D_METHOD("set_map_size", "dimensions"), &TileGridFastCpp::set_map_size);
 }
 

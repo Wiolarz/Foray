@@ -488,13 +488,12 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 					!_tiles.get_tile(pos).is_mana_well() &&
 					!_tiles.get_tile(pos).is_hill() &&
 					!_tiles.get_tile(pos).is_pit()) {
-						_tiles.get_tile(pos) = Tile(true, false, false, false, false, false, -1, 0);
+						_tiles.set_tile(pos, Tile(true, false, false, false, false, false, true, -1, 0));
 
 						UnitID neighbor_id = _unit_cache.get(pos);
-						auto unit = _get_unit(neighbor_id);
-						//BM_ASSERT(unit.has_value(), "Unknown unit id for burning effect");
+						std::optional<UnitRef> unit = _get_unit(neighbor_id);
 						if(unit.has_value()) {
-							unit.value().unit.try_apply_effect(Unit::FLAG_EFFECT_BURNING, Unit::EFFECT_INFINITE);
+							unit->unit.try_apply_effect(Unit::FLAG_EFFECT_BURNING, Unit::EFFECT_INFINITE);
 						}
 					}
 				}
@@ -503,7 +502,18 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 		case BattleSpell::State::SACRIFICE:
 			{
 				_kill_unit(uid2, NO_UNIT);
-				_spells[spell_id] = BattleSpell(godot::String("Fire Wall"), uid); // TEMP
+				bool fire_wall_present = false;
+				for(BattleSpell spell : _spells) {
+					if(spell.state == BattleSpell::State::FIRE_WALL && spell.unit == uid) {
+						fire_wall_present = true;
+						break;
+					}
+				}
+
+				if (!fire_wall_present) {
+					_spells[spell_id] = BattleSpell(godot::String("Fire Wall"), uid); // TEMP
+					return; // TEMP
+				}
 			}
 			break;
 		/// Add new spell behaviors right before this line
@@ -596,6 +606,16 @@ void BattleManagerFast::_update_move_end() {
 			if(unit.is_effect_active(Unit::FLAG_EFFECT_DEATH_MARK)) {
 				_kill_unit(uid, NO_UNIT);
 				continue;
+			}
+
+			if(unit.is_effect_active(Unit::FLAG_EFFECT_BURNING)
+			&& army_id == static_cast<unsigned int>(_previous_army)) {
+				if(_tiles.get_tile(unit.pos).is_fire()) {
+					_kill_unit(uid, NO_UNIT);
+					continue;
+				} else {
+					unit.remove_effects(Unit::FLAG_EFFECT_BURNING);
+				}
 			}
 		}
 	}
@@ -1149,6 +1169,10 @@ void BattleManagerFast::_move_unit(UnitID id, Position pos) {
 		unit.flags &= ~Unit::FLAG_ON_SWAMP;
 	}
 
+	if(tile.is_fire()) {
+		unit.try_apply_effect(Unit::FLAG_EFFECT_BURNING, Unit::EFFECT_INFINITE);
+	}
+
 	if(tile.is_mana_well()) {
 		int old_army_id = tile.get_controlling_army();
 		if(old_army_id == army.id) {
@@ -1223,7 +1247,7 @@ void BattleManagerFast::_kill_unit(UnitID id, UnitID killer_id) {
 		auto killer_opt = _get_unit(killer_id);
 		BM_ASSERT(killer_opt.has_value(), "Unknown killer {}.{}", killer_id.unit, killer_id.army);
 
-		unit.remove_effect(Unit::FLAG_EFFECT_VENGEANCE);
+		unit.remove_effects(Unit::FLAG_EFFECT_VENGEANCE);
 		killer_opt.value().unit.try_apply_effect(Unit::FLAG_EFFECT_DEATH_MARK);
 	}
 

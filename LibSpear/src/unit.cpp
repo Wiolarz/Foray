@@ -35,10 +35,10 @@ bool Unit::try_apply_martyr(UnitID id, uint8_t duration) {
 
 void Unit::remove_martyr() {
     _martyr_id = NO_UNIT;
-    remove_effect(FLAG_EFFECT_MARTYR);
+    remove_effects(FLAG_EFFECT_MARTYR);
 }
 
-void Unit::remove_effect(EffectMask mask) {
+void Unit::remove_effects(EffectMask mask) {
     flags &= ~mask;
     for(auto& eff : effects) {
         eff.mask &= ~mask;
@@ -67,11 +67,12 @@ void Unit::on_turn_end() {
             if(eff.mask & FLAG_EFFECT_MARTYR) {
                 _martyr_id = NO_UNIT;
             }
-            flags &= ~eff.mask;
-            eff.mask = 0;
+            remove_effects(eff.mask);
         }
     }
 }
+
+
 
 EffectMask Unit::effect_string_to_flag(godot::String str) {
     if(str == godot::String("Vengeance")) {

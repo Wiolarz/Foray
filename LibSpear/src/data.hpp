@@ -69,6 +69,11 @@ struct Position {
 		return delta.x == -delta.y || delta.x == 0 || delta.y == 0;
 	}
 
+	int axial_distance(const Position& other) const {
+		return (abs(x - other.x)
+			+ abs(x + y - other.x - other.y)
+			+ abs(y - other.y)) / 2;
+	}
 };
 
 class Symbol {
@@ -178,7 +183,7 @@ class Tile {
 
 public:
 	Tile() = default;
-	Tile(bool passable, bool wall, bool swamp, bool mana_well, bool pit, bool hill, int army, unsigned direction) :
+	Tile(bool passable, bool wall, bool swamp, bool mana_well, bool pit, bool hill, bool fire, int army, unsigned direction) :
 		_flags(
 			(passable ? PASSABLE : 0)
 		  | (wall ? WALL : 0)
@@ -186,6 +191,7 @@ public:
 		  | (mana_well ? MANA_WELL : 0)
 		  | (pit ? PIT : 0)
 		  | (hill ? HILL : 0)
+		  | (fire ? FIRE : 0)
 		  | ((!mana_well && army >= 0) ? SPAWN : 0)
 		),
 		_army(army),
@@ -214,6 +220,10 @@ public:
 
 	bool is_pit() {
 		return (_flags & PIT) != 0;
+	}
+
+	bool is_fire() {
+		return (_flags & FIRE) != 0;
 	}
 
 	bool is_spawn() {
