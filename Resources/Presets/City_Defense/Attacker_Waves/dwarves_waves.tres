@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="PresetWaves" load_steps=18 format=3 uid="uid://wdw2n75glkqw"]
+
+[ext_resource type="Resource" uid="uid://cbe6krcal4i36" path="res://Resources/Races/dwarves.tres" id="1_00l67"]
+[ext_resource type="Script" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="1_pxmcr"]
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="3_3cct1"]
+[ext_resource type="Resource" uid="uid://d4fo0u32ev6px" path="res://Resources/Battle/Units/Dwarves/dwarf_1_conscript.tres" id="4_1m84n"]
+[ext_resource type="Resource" uid="uid://ckctq24fgxtb6" path="res://Resources/Battle/Units/Dwarves/dwarf_2_guard.tres" id="5_ki0id"]
+[ext_resource type="Resource" uid="uid://c7wrr5lpekesk" path="res://Resources/Battle/Units/Dwarves/dwarf_3_mercenary.tres" id="6_f03hh"]
+[ext_resource type="Resource" uid="uid://bupuvg1cr7byg" path="res://Resources/Battle/Units/Dwarves/dwarf_4_arbalister.tres" id="7_ixsph"]
+[ext_resource type="Resource" uid="uid://dvwawqfx5xal8" path="res://Resources/Battle/Units/Dwarves/dwarf_5_berserk.tres" id="8_3djoq"]
+[ext_resource type="Resource" uid="uid://b5bfulbxq4h0u" path="res://Resources/Battle/Units/Dwarves/dwarf_hero_tribune.tres" id="9_4f6n5"]
+[ext_resource type="Resource" uid="uid://cqbnuhod7wdaw" path="res://Resources/Battle/Units/Dwarves/dwarf_hero_cleric.tres" id="10_sgqs5"]
+[ext_resource type="Resource" uid="uid://b6exiq5t4mtn5" path="res://Resources/Battle/Units/Dwarves/dwarf_hero_breacher.tres" id="11_j24fj"]
+
+[sub_resource type="Resource" id="Resource_bmuss"]
+script = ExtResource("3_3cct1")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_1m84n"), ExtResource("5_ki0id")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_ui7mj"]
+resource_name = "3 arbalister"
+script = ExtResource("3_3cct1")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("5_ki0id"), ExtResource("6_f03hh"), ExtResource("7_ixsph")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_0qon4"]
+resource_name = "4 berserk"
+script = ExtResource("3_3cct1")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("5_ki0id"), ExtResource("6_f03hh"), ExtResource("7_ixsph"), ExtResource("8_3djoq")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_hqbdv"]
+script = ExtResource("3_3cct1")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("5_ki0id"), ExtResource("6_f03hh"), ExtResource("7_ixsph"), ExtResource("8_3djoq"), ExtResource("9_4f6n5")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_s37k0"]
+script = ExtResource("3_3cct1")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("5_ki0id"), ExtResource("6_f03hh"), ExtResource("7_ixsph"), ExtResource("8_3djoq"), ExtResource("10_sgqs5"), ExtResource("9_4f6n5")])
+team = 0
+
+[sub_resource type="Resource" id="Resource_wpeoe"]
+script = ExtResource("3_3cct1")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("5_ki0id"), ExtResource("6_f03hh"), ExtResource("7_ixsph"), ExtResource("8_3djoq"), ExtResource("10_sgqs5"), ExtResource("9_4f6n5"), ExtResource("11_j24fj")])
+team = 0
+
+[resource]
+script = ExtResource("1_pxmcr")
+race = ExtResource("1_00l67")
+waves = Array[ExtResource("3_3cct1")]([SubResource("Resource_bmuss"), SubResource("Resource_ui7mj"), SubResource("Resource_0qon4"), SubResource("Resource_hqbdv"), SubResource("Resource_s37k0"), SubResource("Resource_wpeoe")])
