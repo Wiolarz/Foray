@@ -8,7 +8,7 @@ var _integrity_check_move: MoveInfo
 
 ## Maps BMFast's unit IDs (in format [army, unit]) and int
 var summon_mapping_cpp2gd: Dictionary = {}
-## Maps BMFast's unit IDs (in format [army, unit]) and DataUnit
+## Maps BMFast's unit IDs (in format [army, unit]) and Unit
 var summon_mapping_gd2cpp: Dictionary = {}
 ## Maps BMFast's spell IDs to BattleSpells
 var spell_mapping: Array[BattleSpell] = []

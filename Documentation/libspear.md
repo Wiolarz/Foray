@@ -137,6 +137,6 @@ Parameters are described in [../Scripts/AI/MCTS/battle_mcts_manager.gd]
 4. Add a new case in a switch statement in `BattleManagerFast::_spells_append_moves()` describing where the spell can be cast - you can (and even should) use `_append_moves_...` methods for convenience.
 ## ...implement a new effect?
 
-1. Add a new flag constant in `Unit` class in `battle_structs.hpp` file,
+1. Add a new flag constant in `Unit` class in `unit.hpp` file,
 2. Add an extra `if` branch checking for spell's string ID in `BattleSpell(godot::String string, UnitID _unit)`,
 3. Implement effect logic, probably triggering on actions e.g. in `_move_unit`, `_kill_unit`, `_update_move_end`, `_update_turn_end` methods - here there's no centralized effect processing. Start by checking for effect's presence with `unit.is_effect_active(effect_flag)`, then implement your logic. If the effect is "consumed", you can remove it with `unit.remove_effect(effect_flag)`. 
