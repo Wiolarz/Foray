@@ -8,6 +8,8 @@ var player_factions = {
 	CFG.RACE_CYCLOPS: "res://Resources/Presets/City_Defense/cyclops_start_force.tres",
 	CFG.RACE_ORCS: "res://Resources/Presets/City_Defense/orcs_start_force.tres",
 	CFG.RACE_ELVES: "res://Resources/Presets/City_Defense/elves_start_force.tres",
+	CFG.RACE_DWARVES: "res://Resources/Presets/City_Defense/dwarves_start_force.tres",
+	CFG.RACE_FIENDS: "res://Resources/Presets/City_Defense/fiends_start_force.tres",
 }
 
 const attacker_waves_folder_path := "res://Resources/Presets/City_Defense/Attacker_Waves/"

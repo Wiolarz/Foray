@@ -8,8 +8,8 @@
 
 [sub_resource type="Resource" id="Resource_k8g4u"]
 script = ExtResource("1_kip2i")
-wood = 1
-iron = 0
+wood = 5
+iron = 3
 ruby = 0
 
 [resource]

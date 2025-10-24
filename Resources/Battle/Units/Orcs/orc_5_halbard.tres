@@ -7,9 +7,9 @@
 
 [sub_resource type="Resource" id="Resource_e5piu"]
 script = ExtResource("1_7guoa")
-wood = 1
-iron = 1
-ruby = 1
+wood = 7
+iron = 0
+ruby = 2
 
 [resource]
 script = ExtResource("1_dtild")
