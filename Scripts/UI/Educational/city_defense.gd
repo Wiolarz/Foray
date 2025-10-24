@@ -40,7 +40,7 @@ var new_run_selected_race : DataRace
 
 # balance:
 
-@onready var map : DataBattleMap = load("res://Resources/Battle/Battle_Maps/large_city.tres")
+@onready var map : DataBattleMap = load("res://Resources/Battle/Battle_Maps/mid_city.tres")
 
 ## In case there are more waves than awards, last one is repeated
 var goods_awards : Array[Goods] = \
@@ -49,7 +49,11 @@ var goods_awards : Array[Goods] = \
 	Goods.new(3, 2, 1), # after 1st
 	Goods.new(5, 4, 2), # after 2nd
 	Goods.new(7, 6, 3), # after 3rd
-] # 4th wave is currently last
+	Goods.new(9, 7, 4), # 4
+	Goods.new(9, 8, 5), # 5
+] # 6th wave is currently last
+
+const MAX_ARMY_SIZE : int = 6
 
 # Settings
 
@@ -259,11 +263,19 @@ func _refresh_unit_purchases() -> void:
 
 		unit_buy_button.pressed.connect(_buy_unit.bind(unit))
 		units_purchases.add_child(unit_buy_button)
-		unit_buy_button.disabled = not player_goods.has_enough(unit.cost)
+
+		var should_button_be_disabled := false
+		if not player_goods.has_enough(unit.cost):
+			should_button_be_disabled = true
+
+		if current_roster.units.size() >= MAX_ARMY_SIZE:
+			should_button_be_disabled = true
+
+		unit_buy_button.disabled = should_button_be_disabled
 
 
 func _refresh_roster_display() -> void:
-	army_display.simplified_display_load_army(current_roster)
+	army_display.simplified_display_load_army(current_roster, true)
 
 
 func _buy_unit(unit : DataUnit) -> void:
