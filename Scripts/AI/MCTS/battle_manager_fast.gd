@@ -6,7 +6,7 @@ extends BattleManagerFastCpp
 
 var _integrity_check_move: MoveInfo
 
-## Maps BMFast's unit IDs (in format [army, unit]) and DataUnit
+## Maps BMFast's unit IDs (in format [army, unit]) and int
 var summon_mapping_cpp2gd: Dictionary = {}
 ## Maps BMFast's unit IDs (in format [army, unit]) and DataUnit
 var summon_mapping_gd2cpp: Dictionary = {}
@@ -62,7 +62,7 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 		# Alive unit processing
 		for unit_idx in range(army.units.size()):
 			var unit := army.units[unit_idx]
-			new.insert_unit_from(army_idx, army, martyrs, unit_idx, unit.template, unit)
+			new.insert_unit_from(army_idx, army, martyrs, unit_idx, unit, false)
 
 		# TODO in future there might potentially be more martyrs simultaneously
 		assert(martyrs.martyrs.size() in [0,1,2], "Unsupported martyr number")
@@ -74,8 +74,8 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 		# Deployment processing
 		for deploy_idx in range(army.units_to_deploy.size()):
 			var unit_idx := deploy_idx + army.units.size()
-			var template := army.units_to_deploy[deploy_idx]
-			new.insert_unit_from(army_idx, army, martyrs, unit_idx, template, null)
+			var unit := army.units_to_deploy[deploy_idx]
+			new.insert_unit_from(army_idx, army, martyrs, unit_idx, unit, true)
 
 		# Passives
 		var passive_id = -1
@@ -99,8 +99,8 @@ func insert_unit_from(
 		army: BattleGridState.ArmyInBattleState,
 		martyrs_out: ArmyMartyrs,
 		unit_idx: int,
-		template: DataUnit,
-		unit: Unit = null
+		unit: Unit,
+		deploy: bool
 		) -> void:
 
 	if unit and unit.dead:
@@ -109,30 +109,27 @@ func insert_unit_from(
 	var coord = unit.coord if unit else Vector2i.ZERO
 	var rotation = unit.unit_rotation if unit else 0
 	insert_unit(army_idx, unit_idx, coord, rotation, unit == null)
-	set_unit_score(army_idx, unit_idx, template.level)
-	set_unit_mana(army_idx, unit_idx, template.mana)
+	set_unit_score(army_idx, unit_idx, unit.template.level)
+	set_unit_mana(army_idx, unit_idx, unit.template.mana)
 
-	# Only for deploys
-	if not unit:
-		summon_mapping_cpp2gd[[army_idx, unit_idx]] = template
-		summon_mapping_gd2cpp[template] = [army_idx, unit_idx]
+	if deploy:
+		summon_mapping_cpp2gd[[army_idx, unit_idx]] = unit.template
+		summon_mapping_gd2cpp[unit.template] = [army_idx, unit_idx]
 
 	if unit_idx == 0 and army.army_reference.hero:
 		set_unit_hero(army_idx, unit_idx)
 
 	for i in range(6):
-		set_unit_symbol(army_idx, unit_idx, i, template.symbols[i])
+		set_unit_symbol(army_idx, unit_idx, i, unit.template.symbols[i])
 
-	# Spells - unit defaults for deploys
-	var spells = unit.spells if unit else template.spells
+	var spells = unit.spells
 	for spell in spells:
 		insert_spell(army_idx, unit_idx, spell_mapping.size(), spell.name)
 		spell_mapping.push_back(spell)
 		spell_army_id_mapping.push_back(army_idx)
 		spell_unit_id_mapping.push_back(unit_idx)
 
-	# Effects - not-yet-deployed ones have none yet
-	var effects = unit.effects if unit else []
+	var effects = unit.effects
 	for eff in effects:
 		match eff.name:
 			"Martyr":

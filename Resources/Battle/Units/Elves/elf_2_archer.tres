@@ -1,9 +1,8 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://ydn4n563h71m"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3 uid="uid://ydn4n563h71m"]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_2o86q"]
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="1_i62fj"]
 [ext_resource type="Resource" uid="uid://c61kr7bqpyhr0" path="res://Resources/Battle/Symbols/bow.tres" id="2_pmg1r"]
-[ext_resource type="Resource" uid="uid://bdcjijsj36d16" path="res://Resources/Races/Buildings/Barracks_2.tres" id="2_sv0f3"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="3_4frcx"]
 
 [sub_resource type="Resource" id="Resource_ftcqs"]
@@ -15,10 +14,9 @@ ruby = 0
 [resource]
 script = ExtResource("1_i62fj")
 unit_name = "Archer"
-texture_path = "res://Art/elf_archer.png"
+texture_path = "res://Art/units/elf/elf_archer.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("2_pmg1r"), ExtResource("3_4frcx"), ExtResource("3_4frcx"), ExtResource("3_4frcx"), ExtResource("3_4frcx"), ExtResource("3_4frcx")])
 cost = SubResource("Resource_ftcqs")
-required_building = ExtResource("2_sv0f3")
 level = 2
 mana = 0
 spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

@@ -4,7 +4,7 @@ extends RefCounted # default
 signal unit_died()
 signal unit_turned()
 signal unit_moved()
-signal unit_magic_effect(effect : BattleMagicEffect)
+signal unit_magic_effect(effect : MagicEffect)
 
 const MAX_EFFECTS_PER_UNIT = 2
 
@@ -18,7 +18,11 @@ signal unit_captured_mana(target_tile : Vector2i)  # change visuals of the tile 
 
 
 ## TODO remove this
-var controller : Player
+var controller : Player :
+	get:
+		if army_in_battle:
+			return IM.get_player_by_index(army_in_battle.army_reference.controller_index)
+		return null
 ## reference to army to which the unit belongs
 var army_in_battle : BattleGridState.ArmyInBattleState
 
@@ -38,12 +42,16 @@ var dead : bool
 ## is unit created using magic
 var summoned : bool = false
 
+## determines if exp can be awarded to the enemy hero
+var level : int
 
 ## list of spells unit can cast (all of those are one-time use only)
 var spells : Array[BattleSpell] = []
 
 ## magic effects, size_limit == 2
-var effects : Array[BattleMagicEffect] = []
+var effects : Array[MagicEffect] = []
+
+var mana : int = 0
 
 var is_on_swamp : bool = false
 
@@ -58,15 +66,17 @@ static func create(new_controller : Player, \
 		new_rotation : GenericHexGrid.GridDirections, \
 		new_army_in_battle_state : BattleGridState.ArmyInBattleState) -> Unit:
 	var result = Unit.new()
+	result.template = new_template
+	result.level = new_template.level
+	result.mana = new_template.mana
+	result.symbols = new_template.duplicate_symbols() # TODO consider separate symbol class
+	result.spells = new_template.spells.duplicate() # spells reset every battle
+
 	result.controller = new_controller
 	result.army_in_battle = new_army_in_battle_state
-	result.template = new_template
-	result.symbols = new_template.duplicate_symbols()
 
 	result.coord = new_coord
 	result.unit_rotation = new_rotation
-	result.spells = new_template.spells.duplicate() # spells reset every battle
-	result.summoned = new_template.summoned
 	return result
 
 #region Emit Animation Signals
@@ -131,9 +141,11 @@ func get_front_symbol() -> DataSymbol:
 
 ## attempts to add magical effect to a unit (there is limit of 2) [br]
 ## returns bool if it was succesful
-func try_adding_magic_effect(effect : BattleMagicEffect) -> bool:
+func try_adding_magic_effect(data_effect : DataMagicEffect) -> bool:
 	if effects.size() >= MAX_EFFECTS_PER_UNIT:
 		return false
+
+	var effect := MagicEffect.create_effect(data_effect)
 	effects.append(effect)
 	unit_magic_effect.emit(effect)
 	return true

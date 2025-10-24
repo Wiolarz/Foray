@@ -1,7 +1,6 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://d0cockm8rdoxt"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://d0cockm8rdoxt"]
 
 [ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_ry680"]
-[ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="2_kwrgb"]
 [ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_3lntu"]
 [ext_resource type="Resource" uid="uid://dy85xcp8g7gbq" path="res://Resources/Battle/Symbols/sword.tres" id="4_pksk3"]
 [ext_resource type="Resource" uid="uid://cngonnqsgsd6e" path="res://Resources/Battle/Symbols/axe.tres" id="5_2mgcj"]
@@ -19,7 +18,6 @@ unit_name = "Death Knight"
 texture_path = "res://Art/units/undead/undead_5_death_knight.png"
 symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("5_2mgcj"), ExtResource("4_pksk3"), ExtResource("6_xufcr"), ExtResource("6_xufcr"), ExtResource("6_xufcr"), ExtResource("4_pksk3")])
 cost = SubResource("Resource_vofdp")
-required_building = ExtResource("2_kwrgb")
 level = 5
 mana = 0
 spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

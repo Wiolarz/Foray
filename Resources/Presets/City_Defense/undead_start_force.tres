@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_wfqf5"]
 [ext_resource type="Resource" uid="uid://3x0qi3t8cq" path="res://Resources/Battle/Units/Undead/undead_1_skelly.tres" id="2_7xrqu"]
 [ext_resource type="Resource" uid="uid://d0cockm8rdoxt" path="res://Resources/Battle/Units/Undead/undead_5_death_knight.tres" id="3_g3nct"]
-[ext_resource type="Resource" uid="uid://clxq0oak6mwep" path="res://Resources/Battle/Units/Undead/undead_4_archer.tres" id="4_lf1ya"]
+[ext_resource type="Resource" uid="uid://clxq0oak6mwep" path="res://Resources/Battle/Units/Undead/undead_3_watcher.tres" id="4_lf1ya"]
 
 [resource]
 script = ExtResource("1_wfqf5")

@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://Scripts/UI/battle_ui.gd" id="1_0rgae"]
 [ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="2_hku4e"]
-[ext_resource type="Texture2D" uid="uid://cukwcwy4fikm1" path="res://Art/elf_hero_noble.png" id="3_arbmx"]
+[ext_resource type="Texture2D" uid="uid://cukwcwy4fikm1" path="res://Art/units/elf/elf_hero_noble.png" id="3_arbmx"]
 [ext_resource type="PackedScene" uid="uid://c2tjldwjynnry" path="res://Scenes/UI/GameChat.tscn" id="5_10swj"]
-[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/elf_spearmen.png" id="5_51fsi"]
+[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/units/elf/elf_spearmen.png" id="5_51fsi"]
 [ext_resource type="Texture2D" uid="uid://1hbpqpqeo60k" path="res://Art/magic/spell_icons/blood_curse.png" id="5_mgkn6"]
 [ext_resource type="Texture2D" uid="uid://d1muvxfwq45g1" path="res://Art/magic/spell_icons/fireball.png" id="6_7sot2"]
 

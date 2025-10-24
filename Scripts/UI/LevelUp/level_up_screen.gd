@@ -11,11 +11,13 @@ var tier_panels : Array[PanelContainer] = []
 ## 0-2 Might, Tactic, Magic
 var chosen_talents : Array[int] = [-1, -1, -1]
 
-## 3 sub arrays Each coresponds each tier [br]
+## 3 sub arrays Each corresponds each tier [br]
 ## Tier can have at most two numbers [br]
 ## If number appears this ability has been chosen [br]
 ## 0-2 Might, Tactic, Magic
 var chosen_abilities : Array = [[], [], []]
+
+@onready var description : RichTextLabel
 
 ## Currently there is no difference between level up for various races so level up screen can be generated once
 func _ready() -> void:
@@ -57,6 +59,14 @@ func _selected_talent(tier : int, button_idx : int) -> void:
 	#log(tier, button_idx)
 	chosen_talents[tier] = button_idx
 
+	#TEMP description
+	if button_idx == -1:
+		description.text = "_"
+		return
+	var new_talent : HeroPassive = CFG.talents[tier][button_idx]
+	if new_talent:
+		description.text = new_talent.description
+
 
 func _selected_ability(tier : int, button_idx : int, selected : bool) -> void:
 	#log(tier, button_idx)
@@ -65,3 +75,11 @@ func _selected_ability(tier : int, button_idx : int, selected : bool) -> void:
 		assert(chosen_abilities[tier].size() <= 2)
 	else:
 		chosen_abilities[tier].erase(button_idx)
+
+	#TEMP description
+	if button_idx == -1:
+		description.text = "_"
+		return
+	var new_ability : HeroPassive = CFG.abilities[tier][button_idx]
+	if new_ability:
+		description.text = new_ability.description

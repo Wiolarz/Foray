@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_aicqq")
 passive_name = "wind_weapons"
+description = "Provides push power to hero weapons."

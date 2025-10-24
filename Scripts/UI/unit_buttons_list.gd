@@ -47,7 +47,7 @@ func load_unit_buttons(army : Army, units_to_display : Array[DataUnit],
 		added_icon_idx += 1
 		# Generating unit buttons
 
-		var unit_display := UnitForm.create_for_deployment_ui(unit, bg_color)
+		var unit_display := UnitForm.create_for_trade_ui(unit, bg_color)
 
 		if army.hero and army.hero.is_in_city and added_icon_idx >= (army.max_army_size - CFG.CITY_MAX_ARMY_SIZE):
 			unit_display.set_marked_for_unit_list()  # mark units that breach max army size

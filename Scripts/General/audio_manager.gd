@@ -82,4 +82,4 @@ func _node_added(node : Node):
 	if node is Button:
 		node.pressed.connect(play.bind("click"))
 	if node is TabBar:
-		node.tab_changed.connect(func(_idx): play("click"))
+		node.tab_clicked.connect(func(_idx): play("click"))

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HeroPassive" load_steps=2 format=3 uid="uid://dx2g33og15uov"]
+
+[ext_resource type="Script" path="res://Resources/Battle/hero_passive.gd" id="1_jvd32"]
+
+[resource]
+script = ExtResource("1_jvd32")
+passive_name = "scouting"
+description = "Increases maximum movement points limit, letting hero save up some unused movement points from previous round."

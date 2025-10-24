@@ -5,3 +5,4 @@
 [resource]
 script = ExtResource("1_rnqlx")
 passive_name = "second_wind"
+description = "Once hero were to be damaged he is instead pushed back 3 tiles (this can lead to his death, if he were to be pushed into a pit)"

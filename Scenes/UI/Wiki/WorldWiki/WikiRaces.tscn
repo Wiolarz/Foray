@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Scripts/UI/Educational/WorldWiki/wiki_races.gd" id="1_xg12o"]
 [ext_resource type="PackedScene" uid="uid://j7u7m68we3um" path="res://Scenes/UI/Wiki/WorldWiki/WikiRaceButton.tscn" id="2_3a22u"]
-[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/elf_spearmen.png" id="3_et0l7"]
+[ext_resource type="Texture2D" uid="uid://ba68ce0dm6at6" path="res://Art/units/elf/elf_spearmen.png" id="3_et0l7"]
 [ext_resource type="PackedScene" uid="uid://cupju7ycvfwo6" path="res://Scenes/UI/Wiki/BattleWiki/WikiUnitButton.tscn" id="4_n1nhb"]
 
 [node name="WikiRaces" type="Panel"]

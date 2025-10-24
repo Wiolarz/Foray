@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="DataHero" load_steps=6 format=3 uid="uid://wxlo2qqrsl4f"]
+
+[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_bkn30"]
+[ext_resource type="Script" path="res://Resources/Races/data_hero.gd" id="1_murgn"]
+[ext_resource type="Resource" uid="uid://bx2ya2olx578k" path="res://Resources/Battle/Units/Orcs/orc_unit_hero_executioner.tres" id="2_n0e26"]
+
+[sub_resource type="Resource" id="Resource_jcp01"]
+script = ExtResource("1_bkn30")
+wood = 1
+iron = 1
+ruby = 3
+
+[sub_resource type="Resource" id="Resource_xu44k"]
+script = ExtResource("1_bkn30")
+wood = 1
+iron = 1
+ruby = 1
+
+[resource]
+script = ExtResource("1_murgn")
+hero_name = "executioner"
+cost = SubResource("Resource_jcp01")
+revive_cost = SubResource("Resource_xu44k")
+data_unit = ExtResource("2_n0e26")
+starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([])
+starting_level = 1
+max_army_size = 3
+max_movement_points = 3
+starting_rituals = Array[Resource("res://Resources/World/rituals.gd")]([])

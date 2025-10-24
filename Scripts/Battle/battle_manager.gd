@@ -107,9 +107,9 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 
 	# GRAPHICS GRID:
 	_battle_grid_state.tile_changed.connect(change_tile_sprite)
-	_load_map(battle_map)
 	_grid_tiles_node.position.x = x_offset
 	horizontal_offset = x_offset
+	_load_map(battle_map)
 	_battle_ui.load_armies(_battle_grid_state.armies_in_battle_state)
 
 	if battle_state: # recreate state if present
@@ -146,12 +146,13 @@ func _load_map(map : DataBattleMap) -> void:
 			var data = map.grid_data[x][y] as DataTile
 			var tile_form = TileForm.create_battle_tile(data, coord)
 			_tile_grid.set_hex(coord, tile_form)
-			tile_form.position = to_position(coord)
+			tile_form.position = to_local_position(coord)
 			_grid_tiles_node.add_child(tile_form)
 
 	if not IM.in_map_editor:
 		_border_node = MapBorder.from_map(map)
 		add_child(_border_node)
+		move_child(_border_node, 0)
 
 
 ## space needed for battle tiles in global position
@@ -462,7 +463,7 @@ func _on_unit_deployment(unit : Unit) -> void:
 					tile.get_node("Sprite2D").texture = load("res://Art/battle_map/grass_tile.png")
 
 	# TODO imo should be refactored
-	unit.unit_magic_effect.connect(func(_effect: BattleMagicEffect): _on_unit_magic_effect(unit))  # spell icons UI
+	unit.unit_magic_effect.connect(func(_effect: MagicEffect): _on_unit_magic_effect(unit))  # spell icons UI
 
 	unit.unit_died.connect(form.anim_die)
 	unit.unit_died.connect(_on_unit_death)  # TEXT BUBBLES
@@ -498,7 +499,13 @@ func _grid_input_deployment(coord : Vector2i) -> MoveInfo:
 		return null
 
 	print(NET.get_role_name(), " input - deploying unit")
-	return MoveInfo.make_deploy(_battle_ui._selected_unit_pointer, coord)
+	var army : BattleGridState.ArmyInBattleState = \
+	 _battle_grid_state.armies_in_battle_state[_battle_grid_state.current_army_index]
+
+	## TODO refactor deploy phase
+	var unit_idx : int = army.units_to_deploy.find(_battle_ui._selected_unit_pointer)
+
+	return MoveInfo.make_deploy(unit_idx, coord)
 
 
 #endregion Deployment Phase
@@ -886,8 +893,8 @@ func _create_summary() -> DataBattleSummary:
 		if army_in_battle.dead_units.size() == 0:
 			player_stats.losses = "< none >"
 		else:
-			for dead in army_in_battle.dead_units:
-				var unit_description = "%s\n" % dead.unit_name
+			for dead : Unit in army_in_battle.dead_units:
+				var unit_description = "%s\n" % dead.template.unit_name
 				player_stats.losses += unit_description
 				temp_points += dead.level
 
@@ -1056,7 +1063,7 @@ func get_current_time_left_ms() -> int:
 #region Painting
 
 func planning_input(tile_coord : Vector2i, is_it_pressed : bool) -> void:
-	_painter_node.planning_input(tile_coord, is_it_pressed)
+	_painter_node.planning_input(tile_coord, is_it_pressed, self)
 
 #endregion Painting
 

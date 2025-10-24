@@ -70,7 +70,7 @@ enum SymbolAnimationType
 ## Folder Paths
 const BATTLE_MAPS_PATH = "res://Resources/Battle/Battle_Maps/"
 const UNITS_PATH = "res://Resources/Battle/Units/"
-const HEROES_PATH = "res://Resources/Battle/Heroes/"
+const HEROES_PATH = "res://Resources/Races/Heroes/"
 const SPELLS_PATH = "res://Resources/Battle/Battle_Spells/"
 const BUILDINGS_PATH = "res://Resources/Races/Buildings/"
 const BATTLE_PRESETS_PATH = "res://Resources/Presets/Battle/"
@@ -107,11 +107,15 @@ var RACE_ELVES : DataRace = load("res://Resources/Races/elf.tres")
 var RACE_ORCS : DataRace = load("res://Resources/Races/orc.tres")
 var RACE_UNDEAD : DataRace = load("res://Resources/Races/undead.tres")
 var RACE_CYCLOPS : DataRace = load("res://Resources/Races/cyclops.tres")
+var RACE_DWARVES : DataRace = load("res://Resources/Races/dwarves.tres")
+var RACE_FIENDS : DataRace = load("res://Resources/Races/fiends.tres")
 var RACES_LIST : Array[DataRace] = [
 	RACE_ELVES,
 	RACE_ORCS,
 	RACE_UNDEAD,
 	RACE_CYCLOPS,
+	RACE_DWARVES,
+	RACE_FIENDS,
 ]
 
 
@@ -149,12 +153,23 @@ const hero_second_wind_effect : String = "res://Resources/Battle/Battle_Spells/H
 ## used for passive that replaces all empty symbols with weak weapons
 const weak_weapon : String = "res://Resources/Battle/Symbols/club.tres"
 
-## Hero Passives
+## Hero Battle Passives
 
 const _hero_talent_second_wind : String = "res://Resources/Battle/Hero_Passives/second_wind.tres"
 const _hero_talent_magic_weapons : String = "res://Resources/Battle/Hero_Passives/magic_weapons.tres"
 const _hero_talent_weak_weapons : String = "res://Resources/Battle/Hero_Passives/weak_weapons.tres"
 const _hero_talent_wind_weapons : String = "res://Resources/Battle/Hero_Passives/wind_weapons.tres"
+
+## Hero World Passives
+const _hero_ability_scouting : String = "res://Resources/World/Hero_Passives/scouting.tres"
+const _hero_ability_shaman : String = "res://Resources/World/Hero_Passives/shaman.tres"
+
+const _hero_ability_sage : String = "res://Resources/World/Hero_Passives/sage.tres"
+
+const _hero_ability_arch_mage : String = "res://Resources/World/Hero_Passives/arch_mage.tres"
+const _hero_ability_immortality : String = "res://Resources/World/Hero_Passives/immortality.tres"
+
+
 
 
 const BALLISTA_PATH : String = "res://Resources/Battle/Units/Neutral/ballista.tres"
@@ -187,9 +202,13 @@ var NODE_GAMESETUP_PATH : String = "/root/UI/MainMenu/MainContainer/HostLobby/Ho
 @onready var talents : Array = [_tier_1_talents, _tier_2_talents, _tier_3_talents]
 
 
-@onready var _tier_1_abilities : Array[HeroPassive] = [null, null, null]
+@onready var _tier_1_abilities : Array[HeroPassive] = [load(_hero_ability_shaman),
+													load(_hero_ability_scouting),
+													load(_hero_ability_sage)]
 
-@onready var _tier_2_abilities : Array[HeroPassive] = [null, null, null]
+@onready var _tier_2_abilities : Array[HeroPassive] = [load(_hero_ability_arch_mage),
+													load(_hero_ability_immortality),
+													null]
 
 @onready var _tier_3_abilities : Array[HeroPassive] = [null, null, null]
 
@@ -427,6 +446,85 @@ var LAST_OPENED_WORLD_WIKI_TAB : WorldWiki :
 	get: return player_options.last_open_world_wiki_tab
 
 #endregion Learn Tab
+
+
+#region Saves
+
+## Saved: race, army, goods, enemy_wave, enemy_race
+var CITY_DEFENSE_SAVE : Array :
+	get: return player_options.city_defense_save
+
+var HIGHSCORES : Dictionary :
+	get: return player_options.highscores
+
+func get_bot_idx(bot_path : String) -> int:
+	match bot_path:
+		"/MCTS_Insane.tscn":
+			return 4
+		"/MCTS_Hard.tscn":
+			return 3
+		"/MCTS_Medium.tscn":
+			return 2
+		"/MCTS_Easy.tscn":
+			return 1
+	return -1
+
+
+func reset_highscores() -> void:
+	player_options.highscores = {}
+
+	var bot_paths = FileSystemHelpers.list_files_in_folder(CFG.BATTLE_BOTS_PATH, true, true)
+	var ai_difficulty_selection : Array[String] = []
+	for bot_name in bot_paths:
+		ai_difficulty_selection.append(bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
+
+	for bot_difficulty in ai_difficulty_selection:
+		var bot_index : int = get_bot_idx(bot_difficulty)
+		if bot_index < 1:
+			continue
+		for player_race in RACES_LIST:
+			for enemy_race in RACES_LIST:
+				var key = player_race.race_name + \
+					"|" + str(bot_index) + "|" + enemy_race.race_name
+
+				player_options.highscores[key] = 0
+	save_player_options()
+
+
+func update_highscore(
+		player_race : DataRace, enemy_race : DataRace, difficulty : String, wave : int) -> void:
+	var key : String = player_race.race_name + \
+		"|" + str(get_bot_idx(difficulty))  + "|" + enemy_race.race_name
+	assert(key in player_options.highscores.keys())
+	if player_options.highscores[key] < wave:
+		player_options.highscores[key] = wave
+	save_player_options()
+
+
+## returns race and wave_number
+func get_highscore(race : DataRace, difficulty : String, enemy : DataRace = null) -> Array:
+	var ai_key : String = str(get_bot_idx(difficulty))
+	if enemy:
+		var key = race.race_name + \
+			"|" + ai_key + "|" + enemy.race_name
+		var score : int = player_options.highscores[key]
+		return [enemy, score]
+
+
+	var best_result_race : DataRace
+	var best_wave_score : int = -1
+	for enemy_race in RACES_LIST:
+		var key = race.race_name + \
+			"|" + ai_key + "|" + enemy_race.race_name
+		var score : int = player_options.highscores[key]
+		if best_wave_score < score:
+			best_wave_score = score
+			best_result_race = enemy_race
+
+	return [best_result_race, best_wave_score]
+
+
+#endregion
 
 
 enum MainMenuTabs {
