@@ -57,6 +57,7 @@ func paint(coord : Vector2i, data_tile : DataTile) -> void:
 
 
 func get_current_map(trim : bool) -> DataWorldMap:
+	var tiles_present : Array[DataTile] = []
 	var top_left = Vector2i(0, 0)
 	var bot_right = Vector2i(grid.width, grid.height)
 	if trim:
@@ -72,12 +73,23 @@ func get_current_map(trim : bool) -> DataWorldMap:
 	for x in range(top_left.x, bot_right.x + 1):
 		var column = []
 		for y in range(top_left.y, bot_right.y + 1):
-			var tile = grid.get_hex(Vector2i(x, y))
-			if tile:
-				tile = tile.duplicate()
+			var tile_data : DataTile = grid.get_hex(Vector2i(x, y))
+			if tile_data:
+				tile_data = tile_data.duplicate()
 			else:
-				tile = WorldEditGrid.create_empty_tile()
-			column.append(tile)
+				tile_data = WorldEditGrid.create_empty_tile()
+
+			var is_it_the_same_tile : bool = false
+			for saved_tile in tiles_present:
+				if tile_data.is_this_the_same_tile(saved_tile):
+					tile_data = saved_tile
+					is_it_the_same_tile = true
+					break
+
+			if not is_it_the_same_tile:
+				tiles_present.append(tile_data)
+
+			column.append(tile_data)
 		grid_data.append(column)
 	WorldEditGrid._make_nulls_sentinels(grid_data)
 	map.max_player_number = _find_max_player_number()

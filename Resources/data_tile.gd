@@ -22,3 +22,13 @@ static func create_data_tile(hex_tile : TileForm) -> DataTile:
 	new_data_tile.type = hex_tile.type
 
 	return new_data_tile
+
+
+func is_this_the_same_tile(another_tile : DataTile) -> bool:
+	if type != another_tile.type:
+		return false
+	elif texture_path != another_tile.texture_path:
+		return false
+	elif flip_horizontal != another_tile.flip_horizontal:
+		return false
+	return true

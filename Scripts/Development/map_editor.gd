@@ -200,6 +200,7 @@ func _on_load_map_pressed():
 func get_battle_map(trim : bool = true) -> DataBattleMap:
 	var result = DataBattleMap.new()
 	result.grid_data = []
+	var tiles_present : Array[DataTile] = []
 
 	var manager_grid_data = BM.editor_get_hexes_copy_as_array()
 	if trim:
@@ -207,7 +208,18 @@ func get_battle_map(trim : bool = true) -> DataBattleMap:
 	for tile_column in manager_grid_data:
 		var current_column = []
 		for tile : TileForm in tile_column:
-			current_column.append( DataTile.create_data_tile(tile))
+			var tile_data := DataTile.create_data_tile(tile)
+			var is_it_the_same_tile : bool = false
+			for saved_tile in tiles_present:
+				if tile_data.is_this_the_same_tile(saved_tile):
+					tile_data = saved_tile
+					is_it_the_same_tile = true
+					break
+
+			if not is_it_the_same_tile:
+				tiles_present.append(tile_data)
+
+			current_column.append(tile_data)
 		result.grid_data.append(current_column)
 
 	result.grid_width = manager_grid_data.size()
