@@ -2,13 +2,15 @@ class_name BattleManagerFast
 extends BattleManagerFastCpp
 
 ## A helper class wrapping C++ battle manager
-## and adding useful integration/testing functions
+## and adding useful integration/testing functions [br]
+## Note - mappings between C++ and Godot are only valid
+## for one turn - DO NOT REUSE in more than one turn
 
 var _integrity_check_move: MoveInfo
 
-## Maps BMFast's unit IDs (in format [army, unit]) and int
+## Maps BMFast's unit IDs (in format [army, unit]) -> Godot IDs [army, deploy]
 var summon_mapping_cpp2gd: Dictionary = {}
-## Maps BMFast's unit IDs (in format [army, unit]) and Unit
+## Maps Godot IDs [army, deploy] -> BMFast's unit IDs (in format [army, unit])
 var summon_mapping_gd2cpp: Dictionary = {}
 ## Maps BMFast's spell IDs to BattleSpells
 var spell_mapping: Array[BattleSpell] = []
@@ -62,7 +64,7 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 		# Alive unit processing
 		for unit_idx in range(army.units.size()):
 			var unit := army.units[unit_idx]
-			new.insert_unit_from(army_idx, army, martyrs, unit_idx, unit, false)
+			new.insert_unit_from(army_idx, army, martyrs, unit_idx, unit)
 
 		# TODO in future there might potentially be more martyrs simultaneously
 		assert(martyrs.martyrs.size() in [0,1,2], "Unsupported martyr number")
@@ -75,7 +77,7 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 		for deploy_idx in range(army.units_to_deploy.size()):
 			var unit_idx := deploy_idx + army.units.size()
 			var unit := army.units_to_deploy[deploy_idx]
-			new.insert_unit_from(army_idx, army, martyrs, unit_idx, unit, true)
+			new.insert_unit_from(army_idx, army, martyrs, unit_idx, unit, deploy_idx)
 
 		# Passives
 		var passive_id = -1
@@ -100,21 +102,24 @@ func insert_unit_from(
 		martyrs_out: ArmyMartyrs,
 		unit_idx: int,
 		unit: Unit,
-		deploy: bool
+		unit_to_deploy_idx: int = -1
 		) -> void:
+
+	var deploy := unit_to_deploy_idx != -1
 
 	if unit and unit.dead:
 		return
 
 	var coord = unit.coord if unit else Vector2i.ZERO
 	var rotation = unit.unit_rotation if unit else 0
-	insert_unit(army_idx, unit_idx, coord, rotation, unit == null)
+	insert_unit(army_idx, unit_idx, coord, rotation, deploy)
 	set_unit_score(army_idx, unit_idx, unit.template.level)
 	set_unit_mana(army_idx, unit_idx, unit.template.mana)
 
 	if deploy:
-		summon_mapping_cpp2gd[[army_idx, unit_idx]] = unit.template
-		summon_mapping_gd2cpp[unit.template] = [army_idx, unit_idx]
+		var idx := [army_idx, unit_to_deploy_idx]#UnitToDeployIdx.new(army_idx, unit_to_deploy_idx)
+		summon_mapping_cpp2gd[[army_idx, unit_idx]] = idx
+		summon_mapping_gd2cpp[idx] = [army_idx, unit_idx]
 
 	if unit_idx == 0 and army.army_reference.hero:
 		set_unit_hero(army_idx, unit_idx)
@@ -161,7 +166,7 @@ func libspear_tuple_to_move_info(tuple: Array) -> MoveInfo:
 	if is_in_sacrifice_phase():
 		return MoveInfo.make_sacrifice(unit_position)
 	elif is_in_deployment_phase():
-		return MoveInfo.make_deploy(summon_mapping_cpp2gd[uid], position)
+		return MoveInfo.make_deploy(summon_mapping_cpp2gd[uid][1], position)
 	elif tuple.size() == 3: # Magic
 		return MoveInfo.make_magic(unit_position, position, spell_mapping[tuple[2]])
 	else:
@@ -174,7 +179,7 @@ func move_info_to_libspear_tuple(move: MoveInfo) -> Array:
 
 	match move.move_type:
 		MoveInfo.TYPE_DEPLOY:
-			unit = summon_mapping_gd2cpp[move.deployed_unit][1]
+			unit = summon_mapping_gd2cpp[[move.army_idx, move.deployed_unit]][1]
 		MoveInfo.TYPE_MOVE:
 			unit = get_unit_id_on_position(move.move_source)[1]
 		MoveInfo.TYPE_SACRIFICE:
