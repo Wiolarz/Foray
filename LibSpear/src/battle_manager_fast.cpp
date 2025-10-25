@@ -870,10 +870,10 @@ void BattleManagerFast::_spells_append_moves() {
 
 		switch(spell.state) {
 			case BattleSpell::State::TELEPORT:
-				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 3);
+				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 3, TargetType::EMPTY_TILE);
 				break;
 			case BattleSpell::State::FIREBALL:
-				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 2, true);
+				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 2, TargetType::UNIT);
 				//_append_moves_all_tiles(spell.unit, i, INCLUDE_IMPASSABLE);
 				break;
 			case BattleSpell::State::VENGEANCE:
@@ -886,10 +886,10 @@ void BattleManagerFast::_spells_append_moves() {
 				_append_curse_moves_unit(spell.unit, i, TeamRelation::ENEMY, INCLUDE_SELF, 2);
 				break;
 			case BattleSpell::State::WIND_DASH:
-				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 1);
+				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 1, TargetType::EMPTY_TILE);
 				break;
 			case BattleSpell::State::ANCHOR:
-				_append_moves_unit(spell.unit, i, TeamRelation::ANY, INCLUDE_SELF);
+				_append_moves_lines(spell.unit, i, _get_unit(spell.unit).value().unit.pos, 0, 3, TargetType::UNIT);
 				break;
 			case BattleSpell::State::SUMMON_DRYAD:
 				_append_moves_neighbors(spell.unit, i, unit.pos, NO_INCLUDE_IMPASSABLE);
@@ -1159,22 +1159,47 @@ void BattleManagerFast::_append_moves_in_axial_distance(
 	}
 }
 
-void BattleManagerFast::_append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max) {
+void BattleManagerFast::_append_moves_lines(UnitID uid, int8_t spell_id, Position center,
+int range_min, int range_max, TargetType target_type, TargetUnitType target_unit_type) {
 	int range_min_real = (range_min >= 1) ? range_min : 1;
 	if(range_min == 0 && _tiles.get_tile(center).is_passable()) {
 		_moves.emplace_back(uid.unit, center, spell_id);
 	}
 
 	for(int dir = 0; dir < 6; dir++) {
-		_append_moves_line(uid, spell_id, center, dir, range_min_real, range_max);
+		_append_moves_line(uid, spell_id, center, dir, range_min_real, range_max, target_type, target_unit_type);
 	}
 }
 
-void BattleManagerFast::_append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max, bool unit_is_present) {
+void BattleManagerFast::_append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir,
+int range_min, int range_max, TargetType target_type, TargetUnitType target_unit_type) {
 	for(int r = range_min; r <= range_max; r++) {
 		Position pos = center + DIRECTIONS[dir] * r;
 		// target tile has to be passable AND depending on unit_is_present, target tile either has to contain a unit or not
-		if(_tiles.get_tile(pos).is_passable() && (!unit_is_present == (_unit_cache.get(pos) == NO_UNIT))) {
+		UnitID target = _unit_cache.get(pos);
+		if(target_type == TargetType::UNIT) {
+			if (target == NO_UNIT) {
+				continue;
+			}
+			if(target_unit_type == TargetUnitType::ALLY
+			&& skip_army(_get_unit(uid).value().army, _get_unit(target).value().army, //TEMP
+			TeamRelation::ALLY)) {
+				continue;
+			}
+			if(target_unit_type == TargetUnitType::ENEMY
+			&& skip_army(_get_unit(uid).value().army, _get_unit(target).value().army, //TEMP
+			TeamRelation::ENEMY)) {
+				continue;
+			}
+
+			_moves.emplace_back(uid.unit, pos, spell_id);
+			continue;
+		}
+
+		if(_tiles.get_tile(pos).is_passable()) {
+			if(target_type == TargetType::EMPTY_TILE && _unit_cache.get(pos) != NO_UNIT) {
+				continue;
+			}
 			_moves.emplace_back(uid.unit, pos, spell_id);
 		}
 	}

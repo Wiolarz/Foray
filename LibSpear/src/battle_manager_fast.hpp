@@ -57,6 +57,7 @@ class BattleManagerFast {
 	//TODO reafactor spell targeting to match variables in battle_spell.gd
 	enum class TargetType : uint8_t {ANY, UNIT, EMPTY_TILE};
 	enum class TargetUnitType : uint8_t {ANY, ALLY, ENEMY}; // refactor to fit with TeamRelation variable
+	//enum class DirectionCast : uint8_t {ANY, FRONT, STRAIGHT};
 
 
 	void _process_unit(UnitID uid, MovePhase phase);
@@ -74,8 +75,8 @@ class BattleManagerFast {
 	void _append_curse_moves_unit(UnitID uid, int8_t spell_id, TeamRelation relation, IncludeSelf include_self, int8_t min_units);
 	void _append_moves_all_tiles(UnitID uid, int8_t spell_id, IncludeImpassable include_impassable);
 	void _append_moves_in_axial_distance(UnitID uid, int8_t spell_id, int distance, TargetType target_type = TargetType::ANY, TargetUnitType target_unit_type = TargetUnitType::ANY);
-	void _append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max);
-	void _append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max, bool unit_is_present = false);
+	void _append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max, TargetType target_type = TargetType::ANY, TargetUnitType target_unit_type = TargetUnitType::ANY);
+	void _append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max, TargetType target_type = TargetType::ANY, TargetUnitType target_unit_type = TargetUnitType::ANY);
 	void _append_moves_neighbors(UnitID uid, int8_t spell_id, Position center, IncludeImpassable include_impassable);
 
 	void _refresh_legal_moves();
