@@ -54,6 +54,10 @@ class BattleManagerFast {
 	bool _heuristic_moves_dirty = true;
 	bool _debug_internals = false;
 
+	//TODO reafactor spell targeting to match variables in battle_spell.gd
+	enum class TargetType : uint8_t {ANY, UNIT, EMPTY_TILE};
+	enum class TargetUnitType : uint8_t {ANY, ALLY, ENEMY}; // refactor to fit with TeamRelation variable
+
 
 	void _process_unit(UnitID uid, MovePhase phase);
 	void _process_bow(UnitID uid, MovePhase phase);
@@ -64,11 +68,12 @@ class BattleManagerFast {
 	void _check_blood_curse(int8_t army_id);
 
 	void _spells_append_moves();
+	int get_unit_spell_count(UnitID unit);
 
 	void _append_moves_unit(UnitID uid, int8_t spell_id, TeamRelation relation, IncludeSelf include_self);
 	void _append_curse_moves_unit(UnitID uid, int8_t spell_id, TeamRelation relation, IncludeSelf include_self, int8_t min_units);
 	void _append_moves_all_tiles(UnitID uid, int8_t spell_id, IncludeImpassable include_impassable);
-
+	void _append_moves_in_axial_distance(UnitID uid, int8_t spell_id, int distance, TargetType target_type = TargetType::ANY, TargetUnitType target_unit_type = TargetUnitType::ANY);
 	void _append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max);
 	void _append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max, bool unit_is_present = false);
 	void _append_moves_neighbors(UnitID uid, int8_t spell_id, Position center, IncludeImpassable include_impassable);

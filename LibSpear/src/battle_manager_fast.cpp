@@ -535,6 +535,20 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 	spell.unit = NO_UNIT;
 }
 
+int BattleManagerFast::get_unit_spell_count(UnitID unit) {
+	int i = 0;
+	for(BattleSpell& spell : _spells) {
+		if(spell.state != BattleSpell::State::NONE
+		   && spell.state != BattleSpell::State::SENTINEL
+		   && spell.unit == unit
+		) {
+				i++;
+		}
+	}
+	return i;
+}
+
+
 void BattleManagerFast::_deploy_unit(UnitID uid, Position target) {
 	auto unit_opt = _get_unit(uid);
 	BM_ASSERT(unit_opt.has_value(), "Unit id {}/{} was not found while deploying", uid.army, uid.unit);
@@ -881,7 +895,8 @@ void BattleManagerFast::_spells_append_moves() {
 				_append_moves_neighbors(spell.unit, i, unit.pos, NO_INCLUDE_IMPASSABLE);
 				break;
 			case BattleSpell::State::FIRE_WALL:
-				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 3);
+				_append_moves_in_axial_distance(spell.unit, i, 2, TargetType::EMPTY_TILE);
+				//_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 3);
 				break;
 			case BattleSpell::State::SACRIFICE:
 				_append_moves_unit(spell.unit, i, TeamRelation::ME, NO_INCLUDE_SELF);
@@ -1095,21 +1110,54 @@ void BattleManagerFast::_append_moves_all_tiles(
 	}
 }
 
-/*void BattleManagerFast::_append_moves_in_axial_distance(
+void BattleManagerFast::_append_moves_in_axial_distance(
 		UnitID uid,
 		int8_t spell_id,
-		int distance) {
+		int distance,
+		TargetType target_type,
+		TargetUnitType target_unit_type) {
 
+	Position caster_pos = _get_unit(uid).value().unit.pos;
 	Vector2i dims = _tiles.get_dims();
 	for(int y = 0; y < dims.y; y++) {
 		for(int x = 0; x < dims.x; x++) {
 			auto pos = Position(x,y);
-			if(_tiles.get_tile(pos).is_passable() && _unit_cache.get(pos) == NO_UNIT)) {
+			if (caster_pos.axial_distance(pos) > distance) {
+				continue;
+			}
+
+
+			UnitID target = _unit_cache.get(pos);
+
+			if(target_type == TargetType::UNIT) {
+
+				if(target == NO_UNIT) {
+						continue;
+				}
+				if(target_unit_type == TargetUnitType::ALLY
+				&& skip_army(_get_unit(uid).value().army, _get_unit(target).value().army, //TEMP
+				TeamRelation::ALLY)) {
+					continue;
+				}
+				if(target_unit_type == TargetUnitType::ENEMY
+				&& skip_army(_get_unit(uid).value().army, _get_unit(target).value().army, //TEMP
+				TeamRelation::ENEMY)) {
+					continue;
+				}
+				_moves.emplace_back(uid.unit, pos, spell_id);
+				continue;
+			}
+
+			if(_tiles.get_tile(pos).is_passable()) {
+				if(target_type == TargetType::EMPTY_TILE && _unit_cache.get(pos) != NO_UNIT) {
+						continue;
+				}
+
 				_moves.emplace_back(uid.unit, pos, spell_id);
 			}
 		}
 	}
-}*/
+}
 
 void BattleManagerFast::_append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max) {
 	int range_min_real = (range_min >= 1) ? range_min : 1;
