@@ -7,8 +7,8 @@
 
 [sub_resource type="Resource" id="Resource_ftcqs"]
 script = ExtResource("1_t4gcv")
-wood = 1
-iron = 4
+wood = 0
+iron = 3
 ruby = 0
 
 [resource]

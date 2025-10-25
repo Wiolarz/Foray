@@ -8,9 +8,9 @@
 
 [sub_resource type="Resource" id="Resource_k8g4u"]
 script = ExtResource("1_u87w8")
-wood = 1
+wood = 3
 iron = 0
-ruby = 0
+ruby = 1
 
 [resource]
 script = ExtResource("2_l4u6f")

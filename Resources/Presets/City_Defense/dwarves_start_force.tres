@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=5 format=3 uid="uid://3dxr8yq4ba0f"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_8v6g0"]
+[ext_resource type="Resource" uid="uid://ckctq24fgxtb6" path="res://Resources/Battle/Units/Dwarves/dwarf_2_guard.tres" id="2_1j2h0"]
+[ext_resource type="Resource" uid="uid://c7wrr5lpekesk" path="res://Resources/Battle/Units/Dwarves/dwarf_3_mercenary.tres" id="3_fagid"]
+[ext_resource type="Resource" uid="uid://bupuvg1cr7byg" path="res://Resources/Battle/Units/Dwarves/dwarf_4_arbalister.tres" id="4_e2ba5"]
+
+[resource]
+script = ExtResource("1_8v6g0")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_1j2h0"), ExtResource("3_fagid"), ExtResource("4_e2ba5")])
+team = 0

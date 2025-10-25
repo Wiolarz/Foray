@@ -306,7 +306,7 @@ func get_cyclone_value(mana_difference: int, _mana_wells: int):
 const HERO_LEVEL_CAP = 7
 
 ## TODO allign it to the race weakest hero
-const CITY_MAX_ARMY_SIZE = 2
+const CITY_MAX_ARMY_SIZE = 6 # temp change from to 2 to 6 for city defense game mode
 
 func get_start_goods() -> Goods:
 	#return Goods.new(10,5,3)

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=5 format=3 uid="uid://dvo8lj2brvufw"]
+
+[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_sgp3s"]
+[ext_resource type="Resource" uid="uid://dhptbxwrrbtlu" path="res://Resources/Battle/Units/Fiends/fiend_1_servant.tres" id="2_yuvc2"]
+[ext_resource type="Resource" uid="uid://dik61pe44pl11" path="res://Resources/Battle/Units/Fiends/fiend_2_cultist.tres" id="3_kt85x"]
+[ext_resource type="Resource" uid="uid://dw8ubgqhc0opp" path="res://Resources/Battle/Units/Fiends/fiend_4_bruiser.tres" id="4_cymr5"]
+
+[resource]
+script = ExtResource("1_sgp3s")
+units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_yuvc2"), ExtResource("3_kt85x"), ExtResource("4_cymr5")])
+team = 0
