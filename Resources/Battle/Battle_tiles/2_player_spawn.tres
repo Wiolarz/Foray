@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1_0w5vb")
-type = "2_player_spawn"
-texture_path = "res://Art/battle_map/red_player_spawn.png"
+type = "2_0_player_spawn"
+texture_path = "res://Art/battle_map/deploy_blue.png"
 flip_horizontal = false

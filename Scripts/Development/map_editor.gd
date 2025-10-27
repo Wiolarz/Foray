@@ -21,6 +21,8 @@ var current_button: TextureButton
 @onready var new_world_button = $Bottom/HBox/NewWorldMap
 @onready var new_battle_button = $Bottom/HBox/NewBattleMap
 
+@onready var context_button : OptionButton = $RMenuContainer/ContextOptionButton
+
 var world_grid : WorldEditGrid
 
 #region Setup
@@ -30,6 +32,7 @@ func open_draw_menu():
 	visible = true
 	_mark_button()
 	_load_tile_buttons()
+	_switch_context_button()
 	if CFG.MAP_EDITOR_BATTLE:
 		_on_new_battle_map_pressed() # TEMP move to seperete function
 	else:
@@ -65,6 +68,8 @@ func _create_button(map_tile : String) -> TextureButton:
 ## Replaces target map tile with currently selected "brush" (map tile type)
 func grid_input(coord : Vector2i) -> void:
 	if CFG.MAP_EDITOR_BATTLE:
+		if current_brush.is_it_deploy_tile():
+			current_brush.type[DataTile.get_spawn_direction_index()] = str(context_button.selected)
 		BM.paint(coord, current_brush)
 	else:
 		world_grid.paint(coord, current_brush)
@@ -74,10 +79,28 @@ func grid_input(coord : Vector2i) -> void:
 func _switch_grid_type() -> void:
 	CFG.player_options.map_editor_default_battle = \
 	 not CFG.player_options.map_editor_default_battle
+
 	CFG.save_player_options()
 	_mark_button()
 	# TODO move to function
 	_load_tile_buttons()
+
+	_switch_context_button()
+
+
+func _switch_context_button() -> void:
+	context_button.clear()
+	if CFG.MAP_EDITOR_BATTLE:
+		var i := -1
+		for direction in GenericHexGrid.GridDirections.keys():
+			i += 1
+			var option_text : String = direction
+			context_button.add_item(option_text)
+	else:
+		context_button.add_item("Any Race")
+		for race in CFG.RACES_LIST:
+			var option_text : String = race.race_name
+			context_button.add_item(option_text)
 
 
 func _load_tile_buttons():
@@ -91,7 +114,6 @@ func _load_tile_buttons():
 		tile_buttons_box.add_child(b)
 	# pick first tile as a default tile
 	new_buttons[0].pressed.emit()
-
 
 
 func _mark_button():

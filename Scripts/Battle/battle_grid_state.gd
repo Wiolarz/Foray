@@ -1712,7 +1712,7 @@ class BattleHex:
 
 		var result = BattleHex.new()
 
-		if data.type.substr(1) == "_player_spawn":
+		if data.is_it_deploy_tile():
 			result.spawn_point_army_idx = data.type[0].to_int() - 1
 			result.spawn_direction = get_spawn_direction(result.spawn_point_army_idx)
 			return result

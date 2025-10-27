@@ -6,10 +6,23 @@ extends Resource
 ## Place)
 @export var type : String
 
-@export var texture_path : String
+@export_file var texture_path : String
 
 ## TODO - yet to be implemented
 @export var flip_horizontal : bool = false
+
+
+func is_it_deploy_tile() -> bool:
+	return type.ends_with("_player_spawn")
+
+
+func get_spawn_direction() -> int:
+	assert(type.ends_with("_player_spawn"), "checked spawn direction for not spawn tile")
+	return int(type[get_spawn_direction_index()])
+
+
+static func get_spawn_direction_index() -> int:
+	return 2 # MAGIC NUMBERS
 
 
 static func create_data_tile(hex_tile : TileForm) -> DataTile:

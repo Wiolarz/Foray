@@ -101,6 +101,9 @@ func controller_changed():
 func paint(brush : DataTile) -> void:
 	type = brush.type
 	$Sprite2D.texture = RES.load(brush.texture_path)
+	if brush.is_it_deploy_tile():
+		$Sprite2D.rotation_degrees = int(type[DataTile.get_spawn_direction_index()]) * 60
+
 
 
 func set_hovered(is_hovered : bool):
