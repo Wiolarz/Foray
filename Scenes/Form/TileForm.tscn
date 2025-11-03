@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://ceurpxmgmn5c1"]
 
-[ext_resource type="Shader" path="res://Art/tile_overall_shader.gdshader" id="1_egcue"]
-[ext_resource type="Script" path="res://Scripts/General/tile_form.gd" id="1_uelmv"]
+[ext_resource type="Shader" uid="uid://dvvhpegfb4n64" path="res://Art/tile_overall_shader.gdshader" id="1_egcue"]
+[ext_resource type="Script" uid="uid://c2irlhl8snyny" path="res://Scripts/General/tile_form.gd" id="1_uelmv"]
 [ext_resource type="Texture2D" uid="uid://dffoe1yqgsgjm" path="res://Art/world_map/sentinel.png" id="2_utlft"]
 [ext_resource type="Texture2D" uid="uid://clhjrsljrp7f7" path="res://Art/player_colors/red_color.png" id="3_d5jcp"]
 
@@ -63,5 +63,15 @@ use_parent_material = true
 position = Vector2(0, -239)
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("3_d5jcp")
+
+[node name="HighlightBorder" type="Line2D" parent="."]
+unique_name_in_owner = true
+z_index = 3
+position = Vector2(63.999992, 48.999996)
+scale = Vector2(1.1556443, 1.0797806)
+points = PackedVector2Array(-770.1331, -492.6927, -56.24567, -946.4886, 693.9851, -484.35767, 693.9851, 404.71185, -40.669945, 852.02496, -770.1331, 410.26855, -770.1331, -492.6927)
+closed = true
+width = 30.0
+default_color = Color(1, 1, 1, 0)
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]
