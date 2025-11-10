@@ -1091,12 +1091,15 @@ func _on_unit_death() -> void:
 
 #endregion Scripted Battles
 
+
 #region Move Highlight
 
-# internal state of Move Highlight
-var _highligh_moves: Array[MoveInfo]
 
-func turn_move_visualisation(move_info: MoveInfo) -> void:
+# internal state of Move Highlight
+var _highligh_moves : Array[MoveInfo]
+
+
+func turn_move_visualisation(move_info : MoveInfo) -> void:
 	# make sure tile_grid was not cleared
 	if not _tile_grid:
 		return
@@ -1104,11 +1107,13 @@ func turn_move_visualisation(move_info: MoveInfo) -> void:
 	_clear_highlighted_moves()
 	_highlight_move(move_info)
 
+
 func _clear_highlighted_moves() -> void:
 	for highlight_move in _highligh_moves:
 		_clear_move_hightlight(highlight_move)
 
-func _highlight_move(move_info: MoveInfo) -> void:
+
+func _highlight_move(move_info : MoveInfo) -> void:
 	var color = Color.TRANSPARENT
 	var source: TileForm = null
 	var destination: TileForm = null
@@ -1144,7 +1149,8 @@ func _highlight_move(move_info: MoveInfo) -> void:
 			
 	_highligh_moves.append(move_info)
 
-func _clear_move_hightlight(move_info: MoveInfo) -> void:	
+
+func _clear_move_hightlight(move_info : MoveInfo) -> void:	
 	var source: TileForm = null
 	var destination: TileForm = null
 	# sepcific logic per type
@@ -1171,5 +1177,6 @@ func _clear_move_hightlight(move_info: MoveInfo) -> void:
 			tile.hide_highlight_border()
 			tile = (_tile_grid.get_hex(action.to_coord) as TileForm)
 			tile.hide_highlight_border()
+
 
 #endregion Move Highlight
