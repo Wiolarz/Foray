@@ -4,7 +4,7 @@ extends Resource
 var me : Player
 
 
-func set_player(controlled_player: Player):
+func set_player(controlled_player : Player):
 	me = controlled_player
 
 

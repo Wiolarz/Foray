@@ -2,6 +2,7 @@ class_name AIWorldBotRandom
 extends AIWorldInterface
 
 
+## pairs of heroes and their map coord targets
 var hero_targets : Dictionary = {} # hero name and object armyform as target
 
 
@@ -38,6 +39,9 @@ func choose_move() -> WorldMoveInfo:
 
 		WM.ai_generate_path(army, hero_targets[army.hero.hero_name].coord)
 
+		var neighbor_army : Army = WS.get_army_at(army.hero.travel_path[1])
+		if neighbor_army and neighbor_army.controller and neighbor_army.controller.team == me.team:
+			continue
 
 		var move := WorldMoveInfo.make_world_travel(army.coord, army.hero.travel_path[1])
 		army.hero.travel_path.pop_front()

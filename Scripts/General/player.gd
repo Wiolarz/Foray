@@ -50,7 +50,7 @@ static func create(new_slot : Slot) -> Player:
 		if new_slot.world_bot_path != "":
 			assert(FileAccess.file_exists(new_slot.world_bot_path),
 			   "File for bot '%s' does not exist" % [new_slot.world_bot_path])
-			result.world_bot_engine = load(new_slot.world_bot_path)
+			result.world_bot_engine = load(new_slot.world_bot_path).duplicate()
 			result.world_bot_engine.set_player(result)
 
 
