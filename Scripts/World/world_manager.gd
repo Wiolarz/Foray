@@ -134,7 +134,46 @@ func end_turn():
 	try_do_move(world_move_info)
 
 
-func callback_turn_changed():
+var is_bot_thinking : bool = false
+
+func _process(_delta) -> void:
+	if is_bot_thinking and not latest_ai_cancel_token:
+		bot_performs_move()
+
+
+func bot_performs_move() -> void:
+	print("AI starts thinking")
+	var current_faction : Faction = WS.get_current_player()
+	var player : Player = current_faction.controller
+
+	var my_cancel_token = CancellationToken.new()
+	#assert(latest_ai_cancel_token == null)
+	latest_ai_cancel_token = my_cancel_token
+
+	var bot = player.world_bot_engine
+
+	var thinking_begin_s = Time.get_ticks_msec() / 1000.0
+	var move : WorldMoveInfo = null
+	move = await bot.choose_move()
+	assert(move)
+	#while move.move_type != WorldMoveInfo.TYPE_END_TURN:
+	await _ai_thinking_delay(thinking_begin_s) # moving too fast feels weird
+	if not world_game_is_active(): # Player quit to main menu before finishing
+		return
+	if my_cancel_token.is_canceled():
+		return
+	#assert(WS.check_move_allowed(move) == "", "AI tried to perform an invalid move")
+	try_do_move(move)
+	if BM.battle_is_active():
+		await on_battle_ended
+	#while BM.battle_is_active():
+	bot.cleanup_after_move()
+	#await get_tree().create_timer(1).timeout # TEMP
+	latest_ai_cancel_token = null # TODO ask, where this should be
+
+
+
+func callback_turn_changed() -> void:
 	world_ui.on_end_turn()
 	_deselect_hero()
 	var current_faction : Faction = WS.get_current_player()
@@ -153,39 +192,10 @@ func callback_turn_changed():
 	print("your move %s - %s" % [player.get_player_name(), player.get_player_color().name])
 
 	if player.world_bot_engine and not NET.client: # AI is simulated on server only
-		print("AI starts thinking")
+		is_bot_thinking = true
+	else:
+		is_bot_thinking = false
 
-		var my_cancel_token = CancellationToken.new()
-		#assert(latest_ai_cancel_token == null)
-		latest_ai_cancel_token = my_cancel_token
-
-		var bot = player.world_bot_engine
-
-		var thinking_begin_s = Time.get_ticks_msec() / 1000.0
-		var move : WorldMoveInfo = null
-		move = await bot.choose_move()
-		assert(move)
-		while move.move_type != WorldMoveInfo.TYPE_END_TURN:
-			await _ai_thinking_delay(thinking_begin_s) # moving too fast feels weird
-			if not world_game_is_active(): # Player quit to main menu before finishing
-				return
-			if my_cancel_token.is_canceled():
-				return
-			#assert(WS.check_move_allowed(move) == "", "AI tried to perform an invalid move")
-			try_do_move(move)
-			if BM.battle_is_active():
-				await on_battle_ended
-			#while BM.battle_is_active():
-
-			bot.cleanup_after_move()
-			move = await bot.choose_move()
-		assert(move)
-		await get_tree().create_timer(1).timeout # TEMP
-		try_do_move(move) # always ends with TYPE_END_TURN
-
-
-
-		latest_ai_cancel_token = null # TODO ask, where this should be
 
 
 ## this function may be temporary, the sure thing is it needs to be made better
@@ -569,6 +579,14 @@ func start_new_world(world_map : DataWorldMap) -> void:
 	world_ui.set_viewed_city(selected_city)
 	world_ui.refresh_heroes()
 	AUDIO.play_music("world")
+
+	var current_faction : Faction = WS.get_current_player()
+	var player : Player = current_faction.controller
+	if player.world_bot_engine and not NET.client: # AI is simulated on server only
+		is_bot_thinking = true
+	else:
+		is_bot_thinking = false
+	latest_ai_cancel_token = null
 
 
 #STUB

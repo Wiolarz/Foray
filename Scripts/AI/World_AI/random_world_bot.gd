@@ -18,11 +18,15 @@ func choose_move() -> WorldMoveInfo:
 	var faction = WS.player_states[WS.current_player_index]
 
 	## MOVING HEROES AROUND THE MAP
-	for army in faction.hero_armies:
+	for army : Army in faction.hero_armies:
 		#continue # Disable moving for tests
 		## Search for potential targets
 		if army.hero.hero_name not in hero_targets.keys():
 			for destination : Vector2i in combat_destinations:
+				if WS.pathfinding.get_id_path(
+						WS.coord_to_index[army.coord], WS.coord_to_index[destination]).size() == 0:
+					continue  # there is no viable path to the target
+
 				var target_army : Army = WS.get_army_at(destination)
 				var combat_difficulty : int = WS.assess_combat_difficulty(army, target_army)
 
