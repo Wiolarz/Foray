@@ -185,8 +185,8 @@ func _generate_battle_players_slots(local_tile_grid : Array) -> Dictionary:
 	var player_slots : Dictionary = {}
 	for tile_column : Array in local_tile_grid:
 		for tile : TileForm in tile_column:
-			if tile.type.substr(1) == "_player_spawn":
-				var player_idx : int = tile.type[0].to_int()
+			if DataTile.is_type_deploy_tile(tile.type):
+				var player_idx : int = DataTile.get_type_player_ownership(tile.type)
 				if player_idx in player_slots.keys():
 					player_slots[player_idx] += 1
 				else:

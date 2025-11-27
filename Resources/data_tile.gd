@@ -13,7 +13,22 @@ extends Resource
 
 
 func is_it_deploy_tile() -> bool:
-	return type.ends_with("_player_spawn")
+	return DataTile.is_type_deploy_tile(type)
+
+
+static func is_type_deploy_tile(tile_type : String) -> bool:
+	return tile_type.ends_with("_player_spawn")
+
+
+## if no ownership returns -1
+func get_player_ownership() -> int:
+	return DataTile.get_type_player_ownership(type)
+
+
+static func get_type_player_ownership(tile_type : String) -> int:
+	if not tile_type[0].is_valid_int():
+		return -1
+	return tile_type[0].to_int()
 
 
 func get_spawn_direction() -> int:

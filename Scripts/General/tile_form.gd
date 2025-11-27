@@ -62,6 +62,8 @@ static func create_battle_tile(data: DataTile, new_coord : Vector2i) -> TileForm
 	result._set_coord(new_coord)
 	result._set_texture(RES.load(data.texture_path))
 	result.name = "Tile_" + str(new_coord) + "_" + data.type
+	if data.is_it_deploy_tile():
+		result.get_node("Sprite2D").rotation_degrees = data.get_spawn_direction() * 60
 	return result
 
 
@@ -102,8 +104,7 @@ func paint(brush : DataTile) -> void:
 	type = brush.type
 	$Sprite2D.texture = RES.load(brush.texture_path)
 	if brush.is_it_deploy_tile():
-		$Sprite2D.rotation_degrees = int(type[DataTile.get_spawn_direction_index()]) * 60
-
+		$Sprite2D.rotation_degrees = brush.get_spawn_direction() * 60
 
 
 func set_hovered(is_hovered : bool):

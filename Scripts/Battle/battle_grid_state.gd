@@ -1691,14 +1691,6 @@ class BattleHex:
 	static var sentinel: BattleHex = BattleHex.create_sentinel()
 
 
-	static func get_spawn_direction(army_id:int) -> int:
-		match army_id:
-			0: return GenericHexGrid.GridDirections.RIGHT
-			2: return GenericHexGrid.GridDirections.TOP_RIGHT
-			3: return GenericHexGrid.GridDirections.BOTTOM_LEFT
-			_: return GenericHexGrid.GridDirections.LEFT
-
-
 	static func create_sentinel():
 		var result = BattleHex.new()
 		result.can_be_moved_to = false
@@ -1713,8 +1705,8 @@ class BattleHex:
 		var result = BattleHex.new()
 
 		if data.is_it_deploy_tile():
-			result.spawn_point_army_idx = data.type[0].to_int() - 1
-			result.spawn_direction = get_spawn_direction(result.spawn_point_army_idx)
+			result.spawn_point_army_idx = data.get_player_ownership()
+			result.spawn_direction = data.get_spawn_direction()
 			return result
 
 
