@@ -22,7 +22,7 @@ static func is_type_deploy_tile(tile_type : String) -> bool:
 
 ## if no ownership returns -1
 func get_player_ownership() -> int:
-	return DataTile.get_type_player_ownership(type)
+	return DataTile.get_type_player_ownership(type) - 1
 
 
 static func get_type_player_ownership(tile_type : String) -> int:

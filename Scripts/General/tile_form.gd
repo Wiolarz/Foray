@@ -60,10 +60,17 @@ static func create_battle_tile(data: DataTile, new_coord : Vector2i) -> TileForm
 	result.grid_type = GameSetupInfo.GameMode.BATTLE
 	result.type = data.type
 	result._set_coord(new_coord)
-	result._set_texture(RES.load(data.texture_path))
+
 	result.name = "Tile_" + str(new_coord) + "_" + data.type
+	var sprite : Sprite2D = result.get_node("Sprite2D")
 	if data.is_it_deploy_tile():
-		result.get_node("Sprite2D").rotation_degrees = data.get_spawn_direction() * 60
+		sprite.rotation_degrees = data.get_spawn_direction() * 60
+		if IM.in_map_editor:
+			sprite.texture = CFG.DEPLOY_TILES_TEXTURES[data.get_player_ownership()]
+		else:
+			sprite.texture = CFG.DEPLOY_TILES_TEXTURES[IM.players[data.get_player_ownership()].color_idx]
+	else:
+		sprite.texture = RES.load(data.texture_path)
 	return result
 
 

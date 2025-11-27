@@ -236,6 +236,16 @@ var TEAM_COLOR_TEXTURES : Array[Texture2D] = [
 	preload("res://Art/player_colors/green_color.png"),
 	preload("res://Art/player_colors/yellow_color.png"),
 ]
+var DEPLOY_TILES_TEXTURES : Array[Texture2D] = [
+	preload("res://Art/battle_map/deploy_blue.png"),
+	preload("res://Art/battle_map/deploy_yellow.png"),
+	preload("res://Art/battle_map/deploy_red.png"),
+	preload("res://Art/battle_map/deploy_purple.png"),
+	preload("res://Art/battle_map/deploy_green.png"),
+	preload("res://Art/battle_map/deploy_pink.png"),
+]
+
+
 var NEUTRAL_COLOR_TEXTURE : Texture2D = preload("res://Art/player_colors/gray_color.png")
 
 var NEUTRAL_COLOR := \
