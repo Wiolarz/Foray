@@ -90,7 +90,7 @@ func get_units_list() -> Array[DataUnit]:
 
 ## for replays
 func set_units(new_units : Array[DataUnit]) -> void:
-	units_list = new_units
+	units_list = new_units.duplicate()
 
 
 func set_units_length(value : int) -> void:
