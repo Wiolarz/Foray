@@ -8,8 +8,8 @@
 
 [sub_resource type="Resource" id="Resource_k8g4u"]
 script = ExtResource("1_wmltj")
-wood = 1
-iron = 0
+wood = 0
+iron = 4
 ruby = 0
 
 [resource]

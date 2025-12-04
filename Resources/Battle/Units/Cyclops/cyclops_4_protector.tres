@@ -8,8 +8,8 @@
 
 [sub_resource type="Resource" id="Resource_8qfgt"]
 script = ExtResource("1_mpv72")
-wood = 4
-iron = 1
+wood = 5
+iron = 4
 ruby = 0
 
 [resource]
