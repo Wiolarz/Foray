@@ -306,7 +306,7 @@ func get_cyclone_value(mana_difference: int, _mana_wells: int):
 const HERO_LEVEL_CAP = 7
 
 ## TODO allign it to the race weakest hero
-const CITY_MAX_ARMY_SIZE = 6 # temp change from to 2 to 6 for city defense game mode
+const CITY_MAX_ARMY_SIZE = 3 # temp change from to 2 to 6 for city defense game mode
 
 func get_start_goods() -> Goods:
 	#return Goods.new(10,5,3)
@@ -493,8 +493,12 @@ func reset_highscores() -> void:
 
 func update_highscore(
 		player_race : DataRace, enemy_race : DataRace, difficulty : String, wave : int) -> void:
+
+	var difficulty_value : int = get_bot_idx(difficulty)
+	if difficulty_value == -1:
+		return
 	var key : String = player_race.race_name + \
-		"|" + str(get_bot_idx(difficulty))  + "|" + enemy_race.race_name
+		"|" + str(difficulty_value)  + "|" + enemy_race.race_name
 	assert(key in player_options.highscores.keys())
 	if player_options.highscores[key] < wave:
 		player_options.highscores[key] = wave
@@ -503,7 +507,11 @@ func update_highscore(
 
 ## returns race and wave_number
 func get_highscore(race : DataRace, difficulty : String, enemy : DataRace = null) -> Array:
-	var ai_key : String = str(get_bot_idx(difficulty))
+	var ai_key_value : int = get_bot_idx(difficulty)
+	if ai_key_value == -1:
+		return [RACES_LIST[0], 0]
+	var ai_key : String = str(ai_key_value)
+
 	if enemy:
 		var key = race.race_name + \
 			"|" + ai_key + "|" + enemy.race_name

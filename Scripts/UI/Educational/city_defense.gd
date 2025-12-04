@@ -77,7 +77,7 @@ var attacker_waves : PresetWaves
 
 
 # Current run data:
-var current_roster : PresetArmy
+var current_roster : Army
 
 var is_run_ongoing : bool = false
 var current_wave : int = -1
@@ -167,7 +167,11 @@ func _start_new_run(is_save_being_loaded : bool = false) -> void:
 	selected_bot_path = CFG.BATTLE_BOTS_PATH + ai_difficulty_selection.get_item_text(ai_difficulty_selection.get_selected())
 
 	player_race = new_run_selected_race
-	current_roster = load(new_run_army_path)
+	current_roster = Army.new()
+	var army_preset : PresetArmy = load(new_run_army_path)
+	current_roster.units_data = army_preset.units
+	current_roster.hero = Hero.construct_hero(player_race.heroes[0], 0)
+
 
 	continue_button.disabled = false
 	IM.is_city_defense_active = true
@@ -195,9 +199,12 @@ func _start_new_run(is_save_being_loaded : bool = false) -> void:
 
 ## Saved: race, army, goods, enemy
 func save_game() -> void:
+
+	var preset_army := PresetArmy.generate_from_army(current_roster)
+
 	CFG.player_options.city_defense_save = [
 		CFG.RACES_LIST.find(player_race),
-		current_roster.duplicate(),
+		preset_army,
 		player_goods.duplicate(),
 		current_wave,
 		CFG.RACES_LIST.find(attacker_waves.race),
@@ -211,7 +218,13 @@ func load_save() -> void:
 		return
 	_start_new_run(true)
 	player_race = CFG.RACES_LIST[CFG.CITY_DEFENSE_SAVE[0]]
-	current_roster = CFG.CITY_DEFENSE_SAVE[1].duplicate()
+
+	var preset_army : PresetArmy = CFG.CITY_DEFENSE_SAVE[1]
+	current_roster = Army.new()
+	current_roster.units_data = preset_army.units.duplicate()
+	var hero := Hero.construct_hero(preset_army.hero, 0)
+	current_roster.hero = hero
+
 	player_goods = CFG.CITY_DEFENSE_SAVE[2].duplicate()
 	current_wave = CFG.CITY_DEFENSE_SAVE[3]
 	var enemy_race : DataRace = CFG.RACES_LIST[CFG.CITY_DEFENSE_SAVE[4]]
@@ -268,20 +281,20 @@ func _refresh_unit_purchases() -> void:
 		if not player_goods.has_enough(unit.cost):
 			should_button_be_disabled = true
 
-		if current_roster.units.size() >= MAX_ARMY_SIZE:
+		if current_roster.units_data.size() >= MAX_ARMY_SIZE:
 			should_button_be_disabled = true
 
 		unit_buy_button.disabled = should_button_be_disabled
 
 
 func _refresh_roster_display() -> void:
-	army_display.simplified_display_load_army(current_roster, true)
+	army_display.load_army(current_roster)
 
 
 func _buy_unit(unit : DataUnit) -> void:
 	assert(player_goods.has_enough(unit.cost))
 	player_goods.subtract(unit.cost)
-	current_roster.units.append(unit)
+	current_roster.units_data.append(unit)
 	_refresh_roster_display()
 	_refresh_unit_purchases()
 	refresh_run_info()
@@ -292,7 +305,7 @@ func _launch_battle():
 	var enemy_wave : PresetArmy = attacker_waves.waves[current_wave]
 	var battle := ScriptedBattle.new()
 	battle.armies = [
-		current_roster,
+		PresetArmy.generate_from_army(current_roster),
 		enemy_wave
 	]
 	battle.battle_map = map
@@ -315,7 +328,7 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 	update_highscores()
 
 	for dead_unit : Unit in armies[0].dead_units:
-		current_roster.units.erase(dead_unit.template)
+		current_roster.units_data.erase(dead_unit.template)
 
 	# goods awards 0 is starting amount, so we always add + 1
 	if current_wave + 1 >= goods_awards.size():
