@@ -3,6 +3,7 @@ extends GridNode2D
 
 signal world_move_done
 
+signal on_battle_ended
 
 @onready var world_ui : WorldUI = preload("res://Scenes/UI/World/WorldUi.tscn").instantiate()
 
@@ -29,6 +30,10 @@ var _is_world_game_active : bool = false
 
 
 var _painter_node : BattlePainter
+
+
+var latest_ai_cancel_token : CancellationToken
+
 
 #region Start World
 
@@ -129,7 +134,46 @@ func end_turn():
 	try_do_move(world_move_info)
 
 
-func callback_turn_changed():
+var is_bot_thinking : bool = false
+
+func _process(_delta) -> void:
+	if is_bot_thinking and not latest_ai_cancel_token:
+		bot_performs_move()
+
+
+func bot_performs_move() -> void:
+	print("AI starts thinking")
+	var current_faction : Faction = WS.get_current_player()
+	var player : Player = current_faction.controller
+
+	var my_cancel_token = CancellationToken.new()
+	#assert(latest_ai_cancel_token == null)
+	latest_ai_cancel_token = my_cancel_token
+
+	var bot = player.world_bot_engine
+
+	var thinking_begin_s = Time.get_ticks_msec() / 1000.0
+	var move : WorldMoveInfo = null
+	move = await bot.choose_move()
+	assert(move)
+	#while move.move_type != WorldMoveInfo.TYPE_END_TURN:
+	await _ai_thinking_delay(thinking_begin_s) # moving too fast feels weird
+	if not world_game_is_active(): # Player quit to main menu before finishing
+		return
+	if my_cancel_token.is_canceled():
+		return
+	#assert(WS.check_move_allowed(move) == "", "AI tried to perform an invalid move")
+	try_do_move(move)
+	if BM.battle_is_active():
+		await on_battle_ended
+	#while BM.battle_is_active():
+	bot.cleanup_after_move()
+	#await get_tree().create_timer(1).timeout # TEMP
+	latest_ai_cancel_token = null # TODO ask, where this should be
+
+
+
+func callback_turn_changed() -> void:
 	world_ui.on_end_turn()
 	_deselect_hero()
 	var current_faction : Faction = WS.get_current_player()
@@ -142,6 +186,16 @@ func callback_turn_changed():
 	if current_player_capital:  # player may have lost his last city
 		world_ui.set_viewed_city(current_player_capital)
 	world_ui.refresh_player_buttons()
+
+	var player : Player = current_faction.controller
+
+	print("your move %s - %s" % [player.get_player_name(), player.get_player_color().name])
+
+	if player.world_bot_engine and not NET.client: # AI is simulated on server only
+		is_bot_thinking = true
+	else:
+		is_bot_thinking = false
+
 
 
 ## this function may be temporary, the sure thing is it needs to be made better
@@ -183,7 +237,7 @@ func _generate_path(destination_coord : Vector2i, hero : ArmyForm = null) -> voi
 func _draw_path(hero : ArmyForm = null):
 	if not hero:  # Could be used to draw AI desired paths during debuging
 		hero = selected_hero
-	if not hero or hero.travel_path.size() == 0:
+	if not hero or not hero.travel_path or hero.travel_path.size() == 0:
 		return
 	var is_it_dangerous : bool = false
 	for hex_coord in hero.travel_path:
@@ -208,9 +262,12 @@ func grid_input(coord : Vector2i):
 		input_try_select(coord)
 		return
 
-	if world_ui.selected_ritual:
-		if is_ritual_target_valid(coord):
-			cast_ritual(coord)
+	if world_ui.selected_ritual:  ## TODO refactor it to work within MoveInfo architecture
+		if WS.is_ritual_target_valid(coord, selected_hero.entity.hero, world_ui.selected_ritual):
+			WS.cast_ritual(coord, selected_hero.entity, world_ui.selected_ritual)
+			#refresh UI
+			world_ui.selected_ritual = null
+			world_ui.load_ritual_book(selected_hero.entity.hero)
 		return
 
 
@@ -222,7 +279,7 @@ func grid_input(coord : Vector2i):
 		return
 
 
-	if selected_hero.travel_path.size() == 0 or selected_hero.travel_path[-1] != coord:  # Generate Path
+	if not selected_hero.travel_path or selected_hero.travel_path.size() == 0 or selected_hero.travel_path[-1] != coord:  # Generate Path
 		_generate_path(coord)
 		_painter_node.erase()
 		_draw_path()
@@ -289,6 +346,21 @@ func try_do_move(world_move_info : WorldMoveInfo) -> void:
 		NET.client.queue_request_world_move(world_move_info)
 
 
+## attempts to move selected hero along his travel path until:
+## reaching destination/combat/running out of movement points
+func try_to_travel() -> void:
+	## TEMP Code from grid_input will be moved here once trade system is merged.
+	for tile_idx in range(1, selected_hero.travel_path.size()):  # ignores the tile hero starts at
+		if selected_hero.has_movement_points():
+			# TODO add passing through allied heroes
+			try_interact(selected_hero, selected_hero.travel_path[tile_idx])
+		else:
+			break
+	if selected_hero:  # game might have ended
+		selected_hero.travel_path = [] as Array[Vector2i]  # TODO make changes to travel path dynamic
+		_deselect_hero()
+
+
 ## opens context menu selected hero army and second owned army present target tile
 func trade_armies(second_army : Army):
 	print("trading armies")
@@ -311,102 +383,6 @@ func perform_world_move_info(world_move_info : WorldMoveInfo) -> void:
 
 func perform_network_move(world_move_info : WorldMoveInfo) -> void:
 	perform_world_move_info(world_move_info)
-
-
-static func is_ritual_purchasable(ritual : Ritual, caster : Hero) -> bool:
-	var shaman_present : bool = false
-	for passive in caster.passive_effects:
-		if passive.passive_name == "shaman":
-			shaman_present = true
-	# player cannot cast rituals at negative movement points
-	if caster.movement_points < 0:
-		# hero has negative movement points left
-		return false
-
-	if not shaman_present and \
-	caster.movement_points + caster.ritual_cost_reduction < ritual.mp_cost:
-		# hero doesn't have enough movement points left
-		return false
-
-	return true
-
-
-func is_ritual_target_valid(target_coord : Vector2i = Vector2i.ZERO) -> bool:
-	assert(selected_hero, "No selected hero")
-	assert(world_ui.selected_ritual, "no selected_ritual")
-	assert(world_ui.selected_ritual in selected_hero.entity.hero.rituals, "selected_ritual is not present on a hero")
-
-	var hero : Hero = selected_hero.entity.hero
-
-	if not WM.is_ritual_purchasable(world_ui.selected_ritual, hero):
-		assert(false, "ritual shouldn't be selectable")
-		return false
-
-	match world_ui.selected_ritual.name:
-		"Town Portal":
-			var target_city : City = WS.get_city_at(target_coord)
-			if not target_city:
-				print("no destination for town portal spell")
-				return false
-			if WS.get_army_at(target_coord).hero:
-				print("hero is present in the city")
-				return false
-			return true
-		"Steal", "Fear":  # any neutral army # TODO add check if army is adjacent to caster
-			var target_neutral_army : Army = WS.get_army_at(target_coord)
-			if not target_neutral_army:
-				print("no army at destination")
-				return false
-			if target_neutral_army.faction:
-				print("army at destination is not neutral")
-				return false
-			return true
-
-	assert(false, "ritual is not supported")
-	return false
-
-
-
-func cast_ritual(target_coord : Vector2i = Vector2i.ZERO) -> void:
-	assert(selected_hero, "No selected hero")
-	assert(world_ui.selected_ritual, "no selected_ritual")
-	assert(world_ui.selected_ritual in selected_hero.entity.hero.rituals, "selected_ritual is not present on a hero")
-
-
-	var hero : Hero = selected_hero.entity.hero
-
-	var cost : int = world_ui.selected_ritual.mp_cost
-	var reduction : int = min(hero.ritual_cost_reduction, cost)
-
-	cost -= reduction
-	hero.ritual_cost_reduction -= reduction
-
-	hero.movement_points -= cost
-
-	hero.rituals.erase(world_ui.selected_ritual)
-
-	print(world_ui.selected_ritual)
-	match world_ui.selected_ritual.name:
-		"Town Portal":
-			var target_city : City = WS.get_city_at(target_coord)
-			assert(target_city, "no destination for town portal spell")
-
-			# TODO check if army is present
-			WS.teleport_to_your_city(selected_hero.entity.coord, target_coord)
-			target_city.interact(selected_hero.entity)
-		"Steal":
-			print("Casted Steal")
-			pass
-		"Fear":
-			print("Casted Fear")
-			pass
-		_:
-			assert(false, "ritual casting not supported: " + world_ui.selected_ritual.name)
-			return
-
-
-	world_ui.selected_ritual = null
-	world_ui.load_ritual_book(selected_hero.entity.hero)
 
 #endregion Player Action
 
@@ -501,6 +477,8 @@ func end_of_battle(battle_results : Array[BattleGridState.ArmyInBattleState]):
 
 	UI.go_to_custom_ui(world_ui)
 	AUDIO.play_music("world")
+
+	on_battle_ended.emit()
 
 
 #endregion Battles
@@ -601,6 +579,14 @@ func start_new_world(world_map : DataWorldMap) -> void:
 	world_ui.set_viewed_city(selected_city)
 	world_ui.refresh_heroes()
 	AUDIO.play_music("world")
+
+	var current_faction : Faction = WS.get_current_player()
+	var player : Player = current_faction.controller
+	if player.world_bot_engine and not NET.client: # AI is simulated on server only
+		is_bot_thinking = true
+	else:
+		is_bot_thinking = false
+	latest_ai_cancel_token = null
 
 
 #STUB
@@ -774,3 +760,22 @@ func city_upgrade_cheat() -> void:
 
 
 #endregion Cheats
+
+#region AI
+
+func _ai_thinking_delay(thinking_begin_s) -> void:
+	var max_seconds = CFG.bot_speed_frames / 60.0
+	var seconds = max(1, max_seconds - (Time.get_ticks_msec()/1000.0 - thinking_begin_s))
+	await get_tree().create_timer(seconds).timeout # doesnt work properly
+
+
+	while IM.is_game_paused() or CFG.bot_speed_frames == CFG.BotSpeed.FREEZE:
+		await get_tree().create_timer(0.1).timeout
+
+
+func ai_generate_path(army : Army, destination : Vector2i):
+	set_selected_hero(army)
+	_generate_path(destination)
+
+
+#endregion AI

@@ -18,18 +18,33 @@ var client_side_map_label : Label
 	$V/MapSelect
 
 
+var uninitialized : bool = true
+var settings_are_being_refreshed : bool = false
+
+
+## It is used to know if changes in gui are made by user and should be passed to
+## backend (change setup info and send over network) OR made by refreshing
+## gui to state in backend
+func should_react_to_changes() -> bool:
+	return not settings_are_being_refreshed and not uninitialized
+
+
 func _ready():
 	rebuild()
 	# fill_maps_list()
 
 
 func refresh():
+	settings_are_being_refreshed = true # destructor or finally whould be nice
 	fill_maps_list()
 	# drut?
 	var world_map = DataWorldMap.get_network_id(IM.game_setup_info.world_map)
 	refresh_map_to(world_map)
 	for index in range(player_slot_panels.size()):
 		_refresh_slot(index)
+
+	uninitialized = false
+	settings_are_being_refreshed = false
 
 
 func refresh_map_to(world_map : String):
@@ -47,13 +62,14 @@ func _refresh_slot(index : int):
 	if not index in range(player_slot_panels.size()):
 		return
 	var ui_slot : WorldPlayerSlotPanel = player_slot_panels[index]
+	ui_slot.setup_ui = self
 	var logic_slot : Slot = \
 		IM.game_setup_info.slots[index] if index in \
 				range(IM.game_setup_info.slots.size()) \
 			else null
 	var color : DataPlayerColor = CFG.DEFAULT_TEAM_COLOR
 	var username : String = ""
-	var race : DataRace = null
+	var race : DataRace = CFG.RACES_LIST[0]
 	var take_leave_button_state : WorldPlayerSlotPanel.TakeLeaveButtonState =\
 		WorldPlayerSlotPanel.TakeLeaveButtonState.GHOST
 	if logic_slot:
@@ -72,11 +88,13 @@ func _refresh_slot(index : int):
 				WorldPlayerSlotPanel.TakeLeaveButtonState.FREE
 		race = logic_slot.race
 		color = CFG.get_team_color_at(logic_slot.color_idx)
+		ui_slot.apply_bots_from_slot(logic_slot)
+
 	ui_slot.set_visible_color(color.color)
 	ui_slot.set_visible_name(username)
 	ui_slot.set_visible_race(race)
 	ui_slot.set_visible_take_leave_button_state(take_leave_button_state)
-	ui_slot.setup_ui = self
+
 
 
 func slot_to_index(slot) -> int:
@@ -112,15 +130,6 @@ func cycle_color_slot(slot : WorldPlayerSlotPanel, backwards : bool) -> bool:
 		_refresh_slot(index)
 	return changed
 
-
-func cycle_race_slot(slot : WorldPlayerSlotPanel, backwards : bool) -> bool:
-	if not game_setup:
-		return false
-	var index : int = slot_to_index(slot)
-	var changed = game_setup.try_to_cycle_race_slot(index, backwards)
-	if changed:
-		_refresh_slot(index)
-	return changed
 
 
 func rebuild():

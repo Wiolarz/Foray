@@ -5,8 +5,8 @@
 
 [sub_resource type="Resource" id="Resource_pj0nc"]
 script = ExtResource("1_gka5w")
-wood = 2
-iron = 5
+wood = 0
+iron = 0
 ruby = 0
 
 [resource]

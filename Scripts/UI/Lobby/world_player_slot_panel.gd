@@ -1,100 +1,86 @@
 class_name WorldPlayerSlotPanel
-extends PanelContainer
-
-enum TakeLeaveButtonState {
-	FREE,
-	TAKEN_BY_YOU,
-	TAKEN_BY_OTHER,
-	GHOST, # state when we display too much slots
-}
-
-var setup_ui = null # TODO some base class for BattleSetup and WorldSetup
-var button_take_leave_state : TakeLeaveButtonState = TakeLeaveButtonState.FREE
-
-@onready var button_take_leave = $HBoxContainer/ButtonTakeLeave
-@onready var label_name = $HBoxContainer/PlayerInfoPanel/Label
-@onready var button_race = $HBoxContainer/ButtonRace
-
-func try_to_take():
-	if not setup_ui:
-		return
-	setup_ui.try_to_take_slot(self)
+extends PlayerSlotPanel
 
 
-func try_to_leave():
-	if not setup_ui:
-		return
-	setup_ui.try_to_leave_slot(self)
+var world_bots_paths : Array[String]
+var races_paths : Array[String]
 
 
-func cycle_color(backwards : bool = false):
-	if not setup_ui:
-		return
-	setup_ui.cycle_color_slot(self, backwards)
+@onready var button_world_bot = $GeneralVContainer/TopBarHContainer/OptionButtonWorldBot
+@onready var button_race = $GeneralVContainer/TopBarHContainer/OptionButtonRace
 
 
-func cycle_race(backwards : bool = false):
-	if not setup_ui:
-		return
-	setup_ui.cycle_race_slot(self, backwards)
+#region Init
+
+func _ready():
+	button_battle_bot = get_node("GeneralVContainer/TopBarHContainer/OptionButtonBattleBot")
+
+	world_bots_paths = FileSystemHelpers.list_files_in_folder(CFG.WORLD_BOTS_PATH, true, true)
+	init_world_bots_button()
+
+	init_race_button()
+
+	super()
 
 
-func set_visible_color(c : Color):
-	var style_box = get_theme_stylebox("panel")
-	if not style_box is StyleBoxFlat:
-		return
-	var style_box_flat = style_box as StyleBoxFlat
-	style_box_flat.bg_color = c
+func init_world_bots_button():
+	button_world_bot.clear()
+	for world_bot_name in world_bots_paths:
+		button_world_bot.add_item(world_bot_name.trim_prefix(CFG.WORLD_BOTS_PATH))
+	button_world_bot.item_selected.connect(world_bot_changed)
 
 
-func set_visible_name(player_name : String):
-	label_name.text = player_name
+func init_race_button():
+	button_race.clear()
+	for race in CFG.RACES_LIST:
+		button_race.add_item(race.race_name)
+	button_race.item_selected.connect(race_changed)
+
+#endregion Init
 
 
-func set_visible_take_leave_button_state(state : TakeLeaveButtonState):
-	# maybe better get this from battle setup, but this is simpler
-	button_take_leave_state = state
-	match state:
-		TakeLeaveButtonState.FREE:
-			button_take_leave.text = "Take"
-			button_take_leave.disabled = false
-		TakeLeaveButtonState.TAKEN_BY_YOU:
-			button_take_leave.text = "Leave"
-			button_take_leave.disabled = false
-		TakeLeaveButtonState.TAKEN_BY_OTHER:
-			if IM.is_slot_steal_allowed():
-				button_take_leave.text = "Steal"
-				button_take_leave.disabled = false
-			else:
-				# ">> TAKEN <<" -- simple "Taken" would be too similar to "Take"
-				button_take_leave.text = ">> TAKEN <<"
-				button_take_leave.disabled = true
-		TakeLeaveButtonState.GHOST:
-			button_take_leave.text = "ghost"
-			button_take_leave.disabled = true
+#region Option Button select
+
+func world_bot_changed(bot_index : int) -> void:
+	# TODO network code
+	IM.game_setup_info.set_world_bot(setup_ui.slot_to_index(self), world_bots_paths[bot_index])
+
+
+func race_changed(race_index : int) -> void:
+	# TODO network code
+	IM.game_setup_info.set_race(setup_ui.slot_to_index(self), CFG.RACES_LIST[race_index])
 
 
 func set_visible_race(race : DataRace):
-	if race == null:
-		button_race.text = "nobody"
-		return
 	button_race.text = race.race_name
 
-
-func _on_button_take_leave_pressed():
-	match button_take_leave_state:
-		TakeLeaveButtonState.FREE:
-			try_to_take()
-		TakeLeaveButtonState.TAKEN_BY_YOU:
-			try_to_leave()
-		TakeLeaveButtonState.TAKEN_BY_OTHER:
-			if IM.is_slot_steal_allowed():
-				try_to_take()
+#endregion Option Button select
 
 
-func _on_button_color_pressed():
-	cycle_color()
+## override
+func show_bots_option_buttons() -> void:
+	button_battle_bot.visible = true
+	button_world_bot.visible = true
 
 
-func _on_button_race_pressed():
-	cycle_race()
+## override
+func hide_bots_option_buttons() -> void:
+	button_battle_bot.visible = false
+	button_world_bot.visible = false
+
+##override
+func apply_bots_from_slot(slot : Slot) -> void:
+	set_battle_bot(slot.battle_bot_path)
+	set_world_bot(slot.world_bot_path)
+
+
+
+func set_world_bot(new_bot_path : String) -> void:
+	var bot_path = new_bot_path if new_bot_path != "" else world_bots_paths[0]
+	var idx = world_bots_paths.find(bot_path)
+	assert(idx != -1, "Invalid bot '%s'" % bot_path)
+	button_world_bot.select(idx)
+	world_bot_changed(idx)
+
+
+

@@ -12,6 +12,7 @@ Additionally it contains unique for that player informations like:
 
 
 var bot_engine : AIInterface
+var world_bot_engine : AIWorldInterface
 
 ## occupier identifies who uses this slot [br]
 ## its an `int` or a `String` [br]
@@ -45,6 +46,13 @@ static func create(new_slot : Slot) -> Player:
 		assert(result.bot_engine != null, "Bot '%s' does not exist" % new_slot.battle_bot_path)
 		result.add_child(result.bot_engine)
 		result.bot_engine.set_player(result)
+
+		if new_slot.world_bot_path != "":
+			assert(FileAccess.file_exists(new_slot.world_bot_path),
+			   "File for bot '%s' does not exist" % [new_slot.world_bot_path])
+			result.world_bot_engine = load(new_slot.world_bot_path).duplicate()
+			result.world_bot_engine.set_player(result)
+
 
 	result.name = "Player_" + result.get_player_name()
 	result.index = new_slot.index

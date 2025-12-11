@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="AiWorldBotAfk" load_steps=2 format=3 uid="uid://bk5e76nowfg8a"]
+
+[ext_resource type="Script" path="res://Scripts/AI/World_AI/afk_world_bot.gd" id="1_ng5qm"]
+
+[resource]
+script = ExtResource("1_ng5qm")

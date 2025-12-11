@@ -187,30 +187,37 @@ func get_faction_by_index(index : int) -> Faction:
 
 
 func check_move_allowed(world_move_info : WorldMoveInfo) -> String:
-	if world_move_info.move_type == WorldMoveInfo.TYPE_TRAVEL:
-		var source : Vector2i = world_move_info.move_source
-		var target : Vector2i = world_move_info.target_tile_coord
-		return check_army_travel(source, target)
-	if world_move_info.move_type == WorldMoveInfo.TYPE_RECRUIT_HERO:
-		var player_index : int = world_move_info.recruit_hero_info.player_index
-		var hero_data : DataHero = world_move_info.recruit_hero_info.data_hero
-		var coord : Vector2i = world_move_info.target_tile_coord
-		return check_recruit_hero(player_index, hero_data, coord)
-	elif world_move_info.move_type == WorldMoveInfo.TYPE_RECRUIT_UNIT:
-		var army_coord : Vector2i = world_move_info.target_tile_coord
-		var city_coord : Vector2i = world_move_info.move_source
-		var unit : DataUnit = world_move_info.data
-		return check_recruit_unit(unit, city_coord, army_coord)
-	elif world_move_info.move_type == WorldMoveInfo.TYPE_START_TRADE:
-		var source : Vector2i = world_move_info.move_source
-		var target : Vector2i = world_move_info.target_coord
-		return check_start_trade(source, target)
-	if world_move_info.move_type == WorldMoveInfo.TYPE_BUILD:
-		var city_coord : Vector2i = world_move_info.target_tile_coord
-		var building : DataBuilding = world_move_info.data
-		return check_build_building(city_coord, building)
-	elif world_move_info.move_type == WorldMoveInfo.TYPE_END_TURN:
-		return ""
+	match world_move_info.move_type:
+		WorldMoveInfo.TYPE_END_TURN:
+			return ""  #TODO check for ongoing battle
+		WorldMoveInfo.TYPE_TRAVEL:
+			var source : Vector2i = world_move_info.move_source
+			var target : Vector2i = world_move_info.target_tile_coord
+			return check_army_travel(source, target)
+		WorldMoveInfo.TYPE_RECRUIT_HERO:
+			var player_index : int = world_move_info.recruit_hero_info.player_index
+			var hero_data : DataHero = world_move_info.recruit_hero_info.data_hero
+			var coord : Vector2i = world_move_info.target_tile_coord
+			return check_recruit_hero(player_index, hero_data, coord)
+		WorldMoveInfo.TYPE_RECRUIT_UNIT:
+			var army_coord : Vector2i = world_move_info.target_tile_coord
+			var city_coord : Vector2i = world_move_info.move_source
+			var unit : DataUnit = world_move_info.data
+			return check_recruit_unit(unit, city_coord, army_coord)
+		WorldMoveInfo.TYPE_START_TRADE:
+			var source : Vector2i = world_move_info.move_source
+			var target : Vector2i = world_move_info.target_coord
+			return check_start_trade(source, target)
+		WorldMoveInfo.TYPE_BUILD:
+			var city_coord : Vector2i = world_move_info.target_tile_coord
+			var building : DataBuilding = world_move_info.data
+			return check_build_building(city_coord, building)
+		WorldMoveInfo.TYPE_RITUAL:
+			var hero : Hero = get_army_at(world_move_info.move_source).hero
+			var target : Vector2i = world_move_info.target_tile_coord
+			var ritual : Ritual = world_move_info.data
+			return check_ritual_cast(target, hero, ritual)
+
 	return "unrecognised move"
 
 
@@ -322,6 +329,14 @@ func check_army_travel(source : Vector2i, target : Vector2i) -> String:
 		return "cannot move into non-enemy army"
 	return ""
 
+func check_ritual_cast(target_coord : Vector2i, hero : Hero, ritual : Ritual) -> String:
+	if not is_ritual_purchasable(ritual, hero):
+		return "ritual cannot be purchased"
+	if not is_ritual_target_valid(target_coord, hero, ritual):
+		return "ritual target is not valid"
+	return ""
+
+
 
 func get_interactable_type_at(coord : Vector2i) -> String:
 
@@ -406,6 +421,9 @@ func do_move(world_move_info : WorldMoveInfo) -> bool:
 		push_error(problem)
 		return false
 	match world_move_info.move_type:
+		WorldMoveInfo.TYPE_END_TURN:
+			do_end_turn()
+			return true
 		WorldMoveInfo.TYPE_TRAVEL:
 			var source : Vector2i = world_move_info.move_source
 			var target : Vector2i = world_move_info.target_tile_coord
@@ -427,9 +445,12 @@ func do_move(world_move_info : WorldMoveInfo) -> bool:
 			var city_coord : Vector2i = world_move_info.target_tile_coord
 			var building : DataBuilding = world_move_info.data
 			return do_build_building(city_coord, building)
-		WorldMoveInfo.TYPE_END_TURN:
-			do_end_turn()
-			return true
+		WorldMoveInfo.TYPE_RITUAL:
+			var army : Army = get_army_at(world_move_info.move_source)
+			var target : Vector2i = world_move_info.target_tile_coord
+			var ritual : Ritual = world_move_info.data
+			cast_ritual(target, army, ritual)
+			return true # TEMP TODO fix it
 		_:
 			assert(false, "unsupported WorldMoveInfo Type")
 			return false
@@ -483,6 +504,8 @@ func do_recruit_hero(data_hero : DataHero,
 			dead_hero.revive()
 			dead_hero.controller_index = current_player_index
 			hero = dead_hero
+			player_state.dead_heroes.erase(dead_hero)
+			break
 	if not hero: # means no hero is revived
 		hero = Hero.construct_hero(data_hero, current_player_index)
 		army.units_data.append(player_state.race.units_data[0])  # fresh hero starts with a level 1 unit
@@ -515,7 +538,6 @@ func do_build_building(coord : Vector2i, building : DataBuilding) -> bool:
 		return false
 	var city := get_city_at(coord)
 	return city.build_building(building)
-
 
 #endregion City Economy
 
@@ -684,6 +706,8 @@ func swap_armies(first_army : Army, second_army : Army) -> void:
 		city.move_to_reserve()
 		change_army_position(first_army, target)
 
+
+## TODO fix teleportation to enemy cities
 func teleport_to_your_city(source : Vector2i, target : Vector2i) -> void:
 	var army : Army = get_army_at(source)
 
@@ -696,6 +720,92 @@ func teleport_to_your_city(source : Vector2i, target : Vector2i) -> void:
 
 
 #endregion Army Movement
+
+
+#region Rituals
+
+static func is_ritual_purchasable(ritual : Ritual, caster : Hero) -> bool:
+	var shaman_present : bool = false
+	for passive in caster.passive_effects:
+		if passive.passive_name == "shaman":
+			shaman_present = true
+	# player cannot cast rituals at negative movement points
+	if caster.movement_points < 0:
+		# hero has negative movement points left
+		return false
+
+	if not shaman_present and \
+	caster.movement_points + caster.ritual_cost_reduction < ritual.mp_cost:
+		# hero doesn't have enough movement points left
+		return false
+
+	return true
+
+
+func is_ritual_target_valid(target_coord : Vector2i, hero : Hero, ritual : Ritual) -> bool:
+	assert(ritual in hero.rituals, "selected_ritual is not present on a hero")
+
+	if not is_ritual_purchasable(ritual, hero):
+		assert(false, "ritual shouldn't be selectable")
+		return false
+
+	match ritual.name:
+		"Town Portal":
+			var target_city : City = get_city_at(target_coord)
+			if not target_city:
+				print("no destination for town portal spell")
+				return false
+			if WS.get_army_at(target_coord).hero:
+				print("hero is present in the city")
+				return false
+			return true
+		"Steal", "Fear":  # any neutral army # TODO add check if army is adjacent to caster
+			var target_neutral_army : Army = get_army_at(target_coord)
+			if not target_neutral_army:
+				print("no army at destination")
+				return false
+			if target_neutral_army.faction:
+				print("army at destination is not neutral")
+				return false
+			return true
+
+	assert(false, "ritual is not supported")
+	return false
+
+
+func cast_ritual(target_coord : Vector2i, hero_army : Army, ritual : Ritual) -> void:
+	var hero : Hero = hero_army.hero
+	assert(ritual in hero.rituals, "selected_ritual is not present on a hero")
+
+
+	var cost : int = ritual.mp_cost
+	var reduction : int = min(hero.ritual_cost_reduction, cost)
+
+	cost -= reduction
+	hero.ritual_cost_reduction -= reduction
+
+	hero.movement_points -= cost
+
+	hero.rituals.erase(ritual)
+
+	#print(ritual)
+	match ritual.name:
+		"Town Portal":
+			var target_city : City = get_city_at(target_coord)
+			assert(target_city, "no destination for town portal spell")
+
+			# TODO check if army is present
+			teleport_to_your_city(hero_army.coord, target_coord)
+			target_city.interact(hero_army)
+		"Steal": #STUB
+			print("Casted Steal")
+		"Fear": #STUB
+			print("Casted Fear")
+		_:
+			assert(false, "ritual casting not supported: " + ritual.name)
+			return
+
+#endregion Rituals
 
 #endregion Player Turn
 
@@ -838,3 +948,176 @@ static func deserialize_army(dict : Dictionary) -> Army:
 	return army
 
 #endregion Networking
+
+
+#region AI tools
+
+#region AI tools - Economic
+
+func get_heroes_to_buy() -> Array[WorldMoveInfo]:
+	var faction = player_states[current_player_index]
+	if faction.cities.size() == 0:
+		return []
+
+	var recruit_hero_moves : Array[WorldMoveInfo] = []
+	for hero in faction.cities[0].get_heroes_to_buy():
+		for city in faction.cities:
+			if city.can_buy_hero(hero):
+				recruit_hero_moves.append(
+					WorldMoveInfo.make_recruit_hero(current_player_index, hero, city.coord))
+
+	return recruit_hero_moves
+
+
+func get_all_building_purchases() -> Array[WorldMoveInfo]:
+	var faction = player_states[current_player_index]
+	if faction.cities.size() == 0:
+		return []
+
+	var build_moves : Array[WorldMoveInfo] = []
+	for city in faction.cities:
+		for building in faction.race.buildings:
+			if city.can_build(building):
+				build_moves.append(WorldMoveInfo.make_build(city.coord, building))
+	return build_moves
+
+
+func get_all_unit_purchases(city : City, army : Army) -> Array[WorldMoveInfo]:
+	var purchase_moves : Array[WorldMoveInfo] = []
+	for unit in city.get_units_to_buy():
+		if army.units_data.size() >= army.hero.max_army_size: # no place in army
+			continue
+		elif not city.unit_has_required_building(unit):
+			continue
+		elif not city.faction.goods.has_enough(unit.cost):
+			continue
+		purchase_moves.append(WorldMoveInfo.make_recruit_unit(city.coord, army.coord, unit))
+
+	return purchase_moves
+
+
+func get_all_goods_spending_moves() -> Array[WorldMoveInfo]:
+	var faction = player_states[current_player_index]
+	if faction.cities.size() == 0:
+		return []
+
+	var spending_moves : Array[WorldMoveInfo] = []
+
+	spending_moves.append_array(get_heroes_to_buy())
+	spending_moves.append_array(get_all_building_purchases())
+
+	for hero in faction.hero_armies:
+		for city in faction.cities:
+			if not GenericHexGrid.is_adjacent(hero.coord, city.coord) and hero.coord != city.coord:
+				continue
+			spending_moves.append_array(get_all_unit_purchases(city, hero))
+	return spending_moves
+
+
+## Tries to optimise unit purchases to fill up max army size while spending as much goods as possible
+func smart_unit_purchases(city : City, army : Army, starting_available_goods : Goods) -> Array[WorldMoveInfo]:
+
+	#TODO with discounts PR, it will need to be changed
+	var possible_unit_purchases : Array[WorldMoveInfo] = get_all_unit_purchases(city, army)
+
+	#TODO with Trade system PR, max army size will need to be changed to not buy units n smart buy that will be left in the city
+	var unit_spots_left : int = army.hero.max_army_size - army.units_data.size()
+	assert(unit_spots_left >= 0, "army has more units than it can carry")
+	if unit_spots_left <= 0 or possible_unit_purchases.size() == 0:
+		printerr("launched function while its not possible to buy anything")
+		return []
+
+
+	var current_best_solution : Array[WorldMoveInfo] = []
+	var current_best_spend_goods := Goods.new(999, 999, 999)
+	var best_filling_solution : int = 99  # number of slots left
+	for i in range(1000):
+		var available_goods : Goods = starting_available_goods.duplicate()
+		var new_solution : Array[WorldMoveInfo] = []
+		var new_army_spots_left : int = unit_spots_left
+
+
+		for spot in range(unit_spots_left):
+
+			var purchase_targets_idx : Array[int] = []
+			purchase_targets_idx.assign(range(possible_unit_purchases.size())) ## GODOT MOMENT
+			var current_target : int = 0
+			var new_purchase : WorldMoveInfo
+
+			while purchase_targets_idx.size() > 0:
+				# knapsack problem solved with random approach
+				current_target = purchase_targets_idx.pick_random()
+				new_purchase = possible_unit_purchases[current_target]
+				if available_goods.has_enough(new_purchase.data.cost):
+					break  # we can purchase this unit
+				purchase_targets_idx.erase(current_target) # we cannot purchase it
+
+			if purchase_targets_idx.size() == 0:  # No more money left to buy units
+				break
+
+			#purchase
+			available_goods.subtract(new_purchase.data.cost)
+			new_solution.append(new_purchase)
+			new_army_spots_left -= 1
+
+		## TODO create additional function parameter, that will be used differently base on race
+		## that will determine if build order preference is on number of units, or their quality
+		var goods_size_diff := available_goods.other_goods_size_in_comparasion(current_best_spend_goods)
+
+		if goods_size_diff != Goods.SizeDifference.SMALLER and \
+		  best_filling_solution >= new_army_spots_left:  # found new best solution
+			current_best_solution = new_solution
+			current_best_spend_goods = available_goods.duplicate()
+			best_filling_solution = new_army_spots_left
+
+
+	return current_best_solution
+
+
+#TODO purchases_shopping_list
+
+#endregion AI tools - Economic
+
+#region AI tools - Exploration
+
+func get_all_combat_destinations() -> Array[Vector2i]:
+	var faction = player_states[current_player_index]
+	if faction.hero_armies.size() == 0:
+		return [] as Array[Vector2i]
+
+	var combat_destinations : Array[Vector2i] = []
+
+	for x in range(grid.hexes.size()):
+		for y in range(grid.hexes[x].size()):
+			if is_enemy_at(Vector2i(x, y), current_player_index):
+				combat_destinations.append(Vector2i(x, y))
+
+	return combat_destinations
+
+
+func assess_combat_difficulty(hero_army : Army, target_army : Army) -> int:
+	var hero_army_level : int = hero_army.get_army_power_level()
+	var target_army_level : int = target_army.get_army_power_level()
+
+	if target_army_level * 1.5 < hero_army_level:
+		return 3
+	elif target_army_level <= hero_army_level:
+		return 2
+	else:
+		return 1
+
+
+##TODO consider modyifing output to return move info instead
+func get_all_ritual_targets(hero : Hero, ritual : Ritual) -> Array[Vector2i]:
+	var result : Array[Vector2i] = []
+	for x in range(grid.hexes.size()):
+		for y in range(grid.hexes[x].size()):
+			if is_ritual_target_valid(Vector2i(x, y), hero, ritual):
+				result.append(Vector2i(x, y))
+
+	return result
+
+
+#endregion AI tools - Exploration
+
+#endregion AI tools

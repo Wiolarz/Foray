@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dql37o7nhkxj6"]
+[gd_scene load_steps=6 format=3 uid="uid://dql37o7nhkxj6"]
 
 [ext_resource type="Script" path="res://Scripts/UI/Lobby/world_player_slot_panel.gd" id="1_5ldju"]
 [ext_resource type="Shader" path="res://Art/UI/player_slot_panel.gdshader" id="1_jkj60"]
@@ -17,15 +17,14 @@ content_margin_right = 10.0
 content_margin_bottom = 0.0
 bg_color = Color(1, 1, 1, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nhatr"]
-bg_color = Color(0, 0, 0, 0.25098)
-
 [node name="WorldPlayerSlotPanel" type="PanelContainer"]
 material = SubResource("ShaderMaterial_aw5fe")
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 100)
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 63.0
+offset_left = -199.5
+offset_right = -949.5
+offset_bottom = 281.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
@@ -33,16 +32,18 @@ theme = SubResource("Theme_ojgk6")
 theme_override_styles/panel = SubResource("StyleBoxFlat_6g5p6")
 script = ExtResource("1_5ldju")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="GeneralVContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TopBarHContainer" type="HBoxContainer" parent="GeneralVContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="PlayerInfoPanel" type="Panel" parent="HBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
+[node name="PlayerInfoPanel" type="Panel" parent="GeneralVContainer/TopBarHContainer"]
+custom_minimum_size = Vector2(150, 45)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_nhatr")
 
-[node name="Label" type="Label" parent="HBoxContainer/PlayerInfoPanel"]
+[node name="Label" type="Label" parent="GeneralVContainer/TopBarHContainer/PlayerInfoPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -54,22 +55,94 @@ text = "Zdzichu"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ButtonTakeLeave" type="Button" parent="HBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
+[node name="OptionButtonWorldBot" type="OptionButton" parent="GeneralVContainer/TopBarHContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+allow_reselect = true
+
+[node name="OptionButtonBattleBot" type="OptionButton" parent="GeneralVContainer/TopBarHContainer"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+allow_reselect = true
+
+[node name="ButtonTakeLeave" type="Button" parent="GeneralVContainer/TopBarHContainer"]
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Take"
 
-[node name="ButtonColor" type="Button" parent="HBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
+[node name="ButtonColor" type="Button" parent="GeneralVContainer/TopBarHContainer"]
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "Color"
 
-[node name="ButtonRace" type="Button" parent="HBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
+[node name="OptionButtonTeam" type="OptionButton" parent="GeneralVContainer/TopBarHContainer"]
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-text = "Elves"
+item_count = 1
+selected = 0
+popup/item_0/text = "Team"
+popup/item_0/id = 0
 
-[connection signal="pressed" from="HBoxContainer/ButtonTakeLeave" to="." method="_on_button_take_leave_pressed"]
-[connection signal="pressed" from="HBoxContainer/ButtonColor" to="." method="_on_button_color_pressed"]
-[connection signal="pressed" from="HBoxContainer/ButtonRace" to="." method="_on_button_race_pressed"]
+[node name="OptionButtonRace" type="OptionButton" parent="GeneralVContainer/TopBarHContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "Race"
+popup/item_0/id = 0
+
+[node name="TimerContainer" type="GridContainer" parent="GeneralVContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="Timer note" type="PanelContainer" parent="GeneralVContainer/TimerContainer"]
+custom_minimum_size = Vector2(250, 30)
+layout_direction = 2
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GeneralVContainer/TimerContainer/Timer note"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Battle Timer [min][sec]:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ReserveTime_Min_Edit" type="SpinBox" parent="GeneralVContainer/TimerContainer"]
+layout_mode = 2
+max_value = 60.0
+value = 3.0
+alignment = 1
+
+[node name="ReserveTime_Sec_Edit" type="SpinBox" parent="GeneralVContainer/TimerContainer"]
+layout_mode = 2
+max_value = 59.0
+alignment = 1
+
+[node name="Timer note2" type="PanelContainer" parent="GeneralVContainer/TimerContainer"]
+custom_minimum_size = Vector2(250, 30)
+layout_direction = 2
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GeneralVContainer/TimerContainer/Timer note2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "increment [sec]:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Pad" type="Control" parent="GeneralVContainer/TimerContainer"]
+layout_mode = 2
+
+[node name="IncrementTimeEdit" type="SpinBox" parent="GeneralVContainer/TimerContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 120.0
+value = 2.0
+alignment = 1
+
+[connection signal="pressed" from="GeneralVContainer/TopBarHContainer/ButtonTakeLeave" to="." method="_on_button_take_leave_pressed"]
+[connection signal="pressed" from="GeneralVContainer/TopBarHContainer/ButtonColor" to="." method="_on_button_color_pressed"]
+[connection signal="item_selected" from="GeneralVContainer/TopBarHContainer/OptionButtonTeam" to="." method="_on_option_button_team_item_selected"]

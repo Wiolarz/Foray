@@ -126,24 +126,6 @@ func try_to_cycle_color_slot(index : int, backwards : bool) -> bool:
 	return true
 
 
-func try_to_cycle_race_slot(index : int, backwards : bool) -> bool:
-	var slots = IM.game_setup_info.slots
-	if index < 0 or index >= slots.size():
-		return false
-	var diff : int = 1 if not backwards else -1
-	if NET.client:
-		NET.client.queue_cycle_race(index, backwards)
-		return false # we will change this after server responds
-	var race_index = CFG.RACES_LIST.find(slots[index].race)
-	var new_race_index = \
-		(race_index + diff) % CFG.RACES_LIST.size()
-	slots[index].race = CFG.RACES_LIST[new_race_index]
-	print("race: ",index," --> ",slots[index].race.get_network_id())
-	if NET.server:
-		NET.server.broadcast_full_game_setup(IM.game_setup_info)
-	return true
-
-
 func try_to_set_world_map_name(map_name : String) -> bool:
 	# drut
 	IM.game_setup_info.set_world_map(load("%s/%s" % [ CFG.WORLD_MAPS_PATH, map_name ]))

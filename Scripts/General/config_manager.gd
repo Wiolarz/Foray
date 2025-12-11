@@ -80,6 +80,7 @@ const BATTLE_MAP_TILES_PATH = "res://Resources/Battle/Battle_tiles/"
 const WORLD_MAP_TILES_PATH = "res://Resources/World/World_tiles/"
 const SYMBOLS_PATH = "res://Resources/Battle/Symbols/"
 const BATTLE_BOTS_PATH = "res://Resources/Battle/Bots"
+const WORLD_BOTS_PATH = "res://Resources/World/Bots"
 const ARMY_PRESETS_PATH = "res://Resources/Presets/Custom_Armies/"
 
 const EMPTY_SYMBOL_PATH = "res://Resources/Battle/Symbols/empty.tres"
@@ -504,6 +505,8 @@ func update_highscore(
 ## returns race and wave_number
 func get_highscore(race : DataRace, difficulty : String, enemy : DataRace = null) -> Array:
 	var ai_key : String = str(get_bot_idx(difficulty))
+	if ai_key == "-1":
+		return [RACES_LIST[0], -1]
 	if enemy:
 		var key = race.race_name + \
 			"|" + ai_key + "|" + enemy.race_name

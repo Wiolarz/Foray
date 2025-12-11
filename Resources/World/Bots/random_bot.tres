@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="AiWorldBotRandom" load_steps=2 format=3 uid="uid://c4cla7u8bhrrc"]
+
+[ext_resource type="Script" path="res://Scripts/AI/World_AI/random_world_bot.gd" id="1_0t54v"]
+
+[resource]
+script = ExtResource("1_0t54v")

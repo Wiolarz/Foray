@@ -139,6 +139,9 @@ func _refresh_slot(index : int) -> void:
 	var reserve_seconds : int = 0
 	var increment_seconds : int = 0
 	var team : int = 0
+
+	ui_slot.setup_ui = self
+
 	if logic_slot:
 		ui_slot.set_army(logic_slot.units_list)
 		if logic_slot.slot_hero:
@@ -163,13 +166,18 @@ func _refresh_slot(index : int) -> void:
 		team = logic_slot.team
 		reserve_seconds = logic_slot.timer_reserve_sec
 		increment_seconds = logic_slot.timer_increment_sec
+
+		ui_slot.apply_bots_from_slot(logic_slot)
+
+
+
 	ui_slot.set_visible_color(color.color)
 	ui_slot.set_visible_name(username)
 	ui_slot.set_visible_team(team)
 	ui_slot.set_visible_take_leave_button_state(take_leave_button_state)
 	ui_slot.set_visible_timers(reserve_seconds, increment_seconds)
-	ui_slot.setup_ui = self
-	ui_slot.set_bot(logic_slot.battle_bot_path)
+
+
 
 
 func slot_to_index(slot : BattlePlayerSlotPanel) -> int:

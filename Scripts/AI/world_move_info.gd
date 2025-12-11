@@ -1,13 +1,14 @@
 class_name WorldMoveInfo
 extends Resource
 
+const TYPE_END_TURN = "end_turn"
 const TYPE_TRAVEL = "travel"
 const TYPE_RECRUIT_HERO = "recruit_hero"
 const TYPE_RECRUIT_UNIT = "recruit_unit"
 const TYPE_TRADE = "trade" # make transaction
 const TYPE_START_TRADE = "start_trade"
 const TYPE_BUILD = "build"
-const TYPE_END_TURN = "end_turn"
+const TYPE_RITUAL = "ritual"
 
 class RecruitHeroInfo extends Resource:
 	@export var player_index : int = -1
@@ -19,6 +20,13 @@ class RecruitHeroInfo extends Resource:
 @export var target_tile_coord: Vector2i
 @export var recruit_hero_info : RecruitHeroInfo = null
 @export var data : Resource = null
+
+#region make moves
+
+static func make_end_turn() -> WorldMoveInfo:
+	var result : WorldMoveInfo = WorldMoveInfo.new()
+	result.move_type = TYPE_END_TURN
+	return result
 
 #TODO: enter_city_ remove, add other MOVE type for opening city trade
 # update: trade state is only UI trait -- only each transaction is a move
@@ -79,6 +87,23 @@ static func make_trade() -> WorldMoveInfo:
 	return result
 
 
+static func make_ritual(
+		army_coord : Vector2i,
+		target_coord : Vector2i,
+		ritual : Ritual
+)-> WorldMoveInfo:
+	var result : WorldMoveInfo = WorldMoveInfo.new()
+	result.move_type = TYPE_RITUAL
+	result.move_source = army_coord
+	result.target_tile_coord = target_coord
+	result.data = ritual
+	return result
+
+#endregion make moves
+
+
+#region Network
+
 static func make_recruit_hero_from_network(player_index : int, \
 		hero : String, coord : Vector2i) -> WorldMoveInfo:
 	return make_recruit_hero(player_index, DataHero.from_network_id(hero), \
@@ -95,10 +120,7 @@ static func make_build_from_network(city_coord : Vector2i, \
 	return make_build(city_coord, DataBuilding.from_network_id(building_data))
 
 
-static func make_end_turn() -> WorldMoveInfo:
-	var result : WorldMoveInfo = WorldMoveInfo.new()
-	result.move_type = TYPE_END_TURN
-	return result
+#endregion Network
 
 
 # TODO make this function at least tell what kind of move it is
