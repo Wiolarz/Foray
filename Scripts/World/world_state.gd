@@ -1096,14 +1096,9 @@ func get_all_combat_destinations() -> Array[Vector2i]:
 
 
 func assess_combat_difficulty(hero_army : Army, target_army : Army) -> int:
-	var hero_army_level : int = 0#hero_army.hero.level TEMP awaits unit data level fix
-	for unit in hero_army.units_data:
-		hero_army_level += unit.level
+	var hero_army_level : int = hero_army.get_army_power_level()
+	var target_army_level : int = target_army.get_army_power_level()
 
-	var target_army_level : int = 0
-	for unit in target_army.units_data:
-		target_army_level += unit.level
-	print(hero_army_level, target_army_level)
 	if target_army_level * 1.5 < hero_army_level:
 		return 3
 	elif target_army_level <= hero_army_level:
