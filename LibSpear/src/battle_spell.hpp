@@ -4,9 +4,8 @@
 #include <format>
 #include "godot_cpp/variant/string.hpp"
 
-#include "battle_structs.hpp"
+#include "unit.hpp"
 
-const unsigned MAX_SPELLS = 100;
 
 struct BattleSpell {
 	/// Spell's state - currently only represents type, but in the future might represent more complex spells as state machines
@@ -23,6 +22,8 @@ struct BattleSpell {
 		WIND_DASH,
 		ANCHOR,
 		SUMMON_DRYAD,
+		FIRE_WALL,
+		SACRIFICE,
 	} state = State::SENTINEL;
 	UnitID unit = NO_UNIT; // An owner for uncast spells
 
@@ -51,6 +52,12 @@ struct BattleSpell {
 		}
 		else if(string == godot::String("Summon Dryad")) {
 			state = State::SUMMON_DRYAD;
+		}
+		else if(string == godot::String("Fire Wall")) {
+			state = State::FIRE_WALL;
+		}
+		else if(string == godot::String("Sacrifice")) {
+			state = State::SACRIFICE;
 		}
 		/// Add new spell-string mappings right before this line
 		else {

@@ -62,10 +62,10 @@ public:
 
 	void set_map_size(Vector2i dimensions);
 	void set_tile(
-			Vector2i pos, bool passable, bool wall, bool swamp, 
-			bool mana_well, bool pit, bool hill, int army, unsigned direction
+			Vector2i pos, bool passable, bool wall, bool swamp,
+			bool mana_well, bool pit, bool hill, bool fire, int army, unsigned direction
 	) {
-		grid.set_tile(Position(pos.x, pos.y), Tile(passable, wall, swamp, mana_well, pit, hill, army, direction));
+		grid.set_tile(Position(pos.x, pos.y), Tile(passable, wall, swamp, mana_well, pit, hill, fire, army, direction));
 	}
 
 	Vector2i get_dims() const {

@@ -87,9 +87,7 @@ void BattleManagerFast::play_move(Move move) {
 				"Target spawn {},{} does not belong to current army", move.pos.x, move.pos.y
 		);
 
-		_move_unit(uid, move.pos);
-		unit.rotation = _tiles.get_tile(move.pos).get_spawn_rotation();
-		unit.status = UnitStatus::ALIVE;
+		_deploy_unit(uid, move.pos);
 
 		int skip_count = 0;
 		_current_army = (_current_army + 1) % _armies.size();
@@ -126,8 +124,8 @@ void BattleManagerFast::play_move(Move move) {
 			unit.rotation = rot_new;
 			_process_unit(uid, MovePhase::TURN);
 
-			bool can_move = unit.status == UnitStatus::ALIVE 
-				&& unit.pos == old_pos 
+			bool can_move = unit.status == UnitStatus::ALIVE
+				&& unit.pos == old_pos
 				&& !unit.is_effect_active(Unit::FLAG_EFFECT_ANCHOR);
 
 			if(can_move) {
@@ -237,7 +235,7 @@ void BattleManagerFast::_process_unit(UnitID unit_id, MovePhase phase) {
 
 		Symbol unit_symbol = unit.symbol_when_rotated(side);
 		Symbol neighbor_symbol = neighbor.symbol_when_rotated(flip(side));
-	
+
 		if(neighbor_symbol.dies_to(unit_symbol, phase) && unit_symbol.get_bow_force(MovePhase::DASH) == 0) {
 			_kill_unit(neighbor_id, unit_id);
 			continue;
@@ -245,7 +243,7 @@ void BattleManagerFast::_process_unit(UnitID unit_id, MovePhase phase) {
 
 		Position direction = neighbor.pos - unit.pos;
 		int push_force = unit_symbol.get_push_force();
- 
+
 		if(neighbor.status != UnitStatus::DEAD && push_force > 0 &&
 			(!neighbor_symbol.parries() || unit_symbol.breaks_parry())) {
 			_process_push(neighbor_id, unit_id, direction, push_force);
@@ -466,7 +464,7 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 				BM_ASSERT(unit1.has_value(), "Unknown unit id for summon dryad spell");
 				BM_ASSERT(!unit2.has_value(), "Unit already found @{},{} while spawning dryad", target.x, target.y);
 				auto [caster, army] = unit1.value();
-				
+
 				Unit new_unit{};
 				new_unit.rotation = get_rotation(caster.pos, target);
 				new_unit.status = UnitStatus::ALIVE;
@@ -476,8 +474,46 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 				Symbol attack{1,  1,  0,   0,    0};
 				new_unit.sides[0] = new_unit.sides[1] = new_unit.sides[5] = attack;
 				new_unit.try_apply_effect(Unit::FLAG_EFFECT_SUMMONING_SICKNESS);
-				
+
 				_summon_unit(new_unit, army, target);
+			}
+			break;
+		case BattleSpell::State::FIRE_WALL:
+			{// TEMP Implementation
+				_tiles.get_tile(target);
+				for(const auto dir: DIRECTIONS) {
+					Position pos = target + dir;
+					if(_tiles.get_tile(pos).is_passable() &&
+					!_tiles.get_tile(pos).is_wall() &&
+					!_tiles.get_tile(pos).is_mana_well() &&
+					!_tiles.get_tile(pos).is_hill() &&
+					!_tiles.get_tile(pos).is_pit()) {
+						_tiles.set_tile(pos, Tile(true, false, false, false, false, false, true, -1, 0));
+
+						UnitID neighbor_id = _unit_cache.get(pos);
+						std::optional<UnitRef> unit = _get_unit(neighbor_id);
+						if(unit.has_value()) {
+							unit->unit.try_apply_effect(Unit::FLAG_EFFECT_BURNING, Unit::EFFECT_INFINITE);
+						}
+					}
+				}
+			}
+			break;
+		case BattleSpell::State::SACRIFICE:
+			{
+				_kill_unit(uid2, NO_UNIT);
+				bool fire_wall_present = false;
+				for(BattleSpell spell : _spells) {
+					if(spell.state == BattleSpell::State::FIRE_WALL && spell.unit == uid) {
+						fire_wall_present = true;
+						break;
+					}
+				}
+
+				if (!fire_wall_present) {
+					_spells[spell_id] = BattleSpell(godot::String("Fire Wall"), uid); // TEMP
+					return; // TEMP
+				}
 			}
 			break;
 		/// Add new spell behaviors right before this line
@@ -491,12 +527,36 @@ void BattleManagerFast::_process_spell(UnitID uid, int8_t spell_id, Position tar
 			return;
 		#endif //DEBUG
 		//  When compiling for release - rely on compiler for compile time warnings
-		// sadly we can't have both default case for runtime checking for 
+		// sadly we can't have both default case for runtime checking for
 		// (unlikely) corrupted states and compile time warning
 		// This is probably the best compromise
 	}
 	spell.state = BattleSpell::State::NONE;
 	spell.unit = NO_UNIT;
+}
+
+int BattleManagerFast::get_unit_spell_count(UnitID unit) {
+	int i = 0;
+	for(BattleSpell& spell : _spells) {
+		if(spell.state != BattleSpell::State::NONE
+		   && spell.state != BattleSpell::State::SENTINEL
+		   && spell.unit == unit
+		) {
+				i++;
+		}
+	}
+	return i;
+}
+
+
+void BattleManagerFast::_deploy_unit(UnitID uid, Position target) {
+	auto unit_opt = _get_unit(uid);
+	BM_ASSERT(unit_opt.has_value(), "Unit id {}/{} was not found while deploying", uid.army, uid.unit);
+	auto [unit, army] = unit_opt.value();
+
+	_move_unit(uid, target);
+	unit.rotation = _tiles.get_tile(target).get_spawn_rotation();
+	unit.status = UnitStatus::ALIVE;
 }
 
 void BattleManagerFast::_summon_unit(Unit& unit, Army& army, Position target) {
@@ -561,6 +621,16 @@ void BattleManagerFast::_update_move_end() {
 				_kill_unit(uid, NO_UNIT);
 				continue;
 			}
+
+			if(unit.is_effect_active(Unit::FLAG_EFFECT_BURNING)
+			&& army_id == static_cast<unsigned int>(_previous_army)) {
+				if(_tiles.get_tile(unit.pos).is_fire()) {
+					_kill_unit(uid, NO_UNIT);
+					continue;
+				} else {
+					unit.remove_effects(Unit::FLAG_EFFECT_BURNING);
+				}
+			}
 		}
 	}
 }
@@ -580,7 +650,7 @@ int BattleManagerFast::get_winner_team() {
 			armies_in_teams_alive[_armies[i].team] += 1;
 		}
 	}
-	
+
 	for(unsigned i = 0; i < MAX_ARMIES; i++) {
 		if(armies_in_teams_alive[i] == 0) {
 			teams_alive--;
@@ -800,10 +870,11 @@ void BattleManagerFast::_spells_append_moves() {
 
 		switch(spell.state) {
 			case BattleSpell::State::TELEPORT:
-				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 3);
+				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 3, TargetType::EMPTY_TILE);
 				break;
 			case BattleSpell::State::FIREBALL:
-				_append_moves_all_tiles(spell.unit, i, INCLUDE_IMPASSABLE);
+				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 2, TargetType::UNIT);
+				//_append_moves_all_tiles(spell.unit, i, INCLUDE_IMPASSABLE);
 				break;
 			case BattleSpell::State::VENGEANCE:
 				_append_moves_unit(spell.unit, i, TeamRelation::ME, INCLUDE_SELF);
@@ -815,13 +886,20 @@ void BattleManagerFast::_spells_append_moves() {
 				_append_curse_moves_unit(spell.unit, i, TeamRelation::ENEMY, INCLUDE_SELF, 2);
 				break;
 			case BattleSpell::State::WIND_DASH:
-				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 1);
+				_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 1, TargetType::EMPTY_TILE);
 				break;
 			case BattleSpell::State::ANCHOR:
-				_append_moves_unit(spell.unit, i, TeamRelation::ANY, INCLUDE_SELF);
+				_append_moves_lines(spell.unit, i, _get_unit(spell.unit).value().unit.pos, 0, 3, TargetType::UNIT);
 				break;
 			case BattleSpell::State::SUMMON_DRYAD:
 				_append_moves_neighbors(spell.unit, i, unit.pos, NO_INCLUDE_IMPASSABLE);
+				break;
+			case BattleSpell::State::FIRE_WALL:
+				_append_moves_in_axial_distance(spell.unit, i, 2, TargetType::EMPTY_TILE);
+				//_append_moves_line(spell.unit, i, unit.pos, unit.rotation, 1, 3);
+				break;
+			case BattleSpell::State::SACRIFICE:
+				_append_moves_unit(spell.unit, i, TeamRelation::ME, NO_INCLUDE_SELF);
 				break;
 			case BattleSpell::State::NONE:
 			case BattleSpell::State::SENTINEL:
@@ -945,8 +1023,8 @@ std::pair<Move, bool> BattleManagerFast::get_random_move(float heuristic_probabi
 	static thread_local std::uniform_real_distribution heur_dist(0.0f, 1.0f);
 
 	bool heur_chosen = heur_dist(rand_engine) < heuristic_probability;
-	const std::vector<Move>& moves_arr = heur_chosen 
-		? get_heuristically_good_moves() 
+	const std::vector<Move>& moves_arr = heur_chosen
+		? get_heuristically_good_moves()
 		: get_legal_moves();
 
 	BM_ASSERT_V(moves_arr.size() != 0, std::make_pair(Move{}, false), "BMFast - get_random_move has 0 moves to choose");
@@ -1032,26 +1110,101 @@ void BattleManagerFast::_append_moves_all_tiles(
 	}
 }
 
-void BattleManagerFast::_append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max) {
+void BattleManagerFast::_append_moves_in_axial_distance(
+		UnitID uid,
+		int8_t spell_id,
+		int distance,
+		TargetType target_type,
+		TargetUnitType target_unit_type) {
+
+	Position caster_pos = _get_unit(uid).value().unit.pos;
+	Vector2i dims = _tiles.get_dims();
+	for(int y = 0; y < dims.y; y++) {
+		for(int x = 0; x < dims.x; x++) {
+			auto pos = Position(x,y);
+			if (caster_pos.axial_distance(pos) > distance) {
+				continue;
+			}
+
+
+			UnitID target = _unit_cache.get(pos);
+
+			if(target_type == TargetType::UNIT) {
+
+				if(target == NO_UNIT) {
+						continue;
+				}
+				if(target_unit_type == TargetUnitType::ALLY
+				&& skip_army(_get_unit(uid).value().army, _get_unit(target).value().army, //TEMP
+				TeamRelation::ALLY)) {
+					continue;
+				}
+				if(target_unit_type == TargetUnitType::ENEMY
+				&& skip_army(_get_unit(uid).value().army, _get_unit(target).value().army, //TEMP
+				TeamRelation::ENEMY)) {
+					continue;
+				}
+				_moves.emplace_back(uid.unit, pos, spell_id);
+				continue;
+			}
+
+			if(_tiles.get_tile(pos).is_passable()) {
+				if(target_type == TargetType::EMPTY_TILE && _unit_cache.get(pos) != NO_UNIT) {
+						continue;
+				}
+
+				_moves.emplace_back(uid.unit, pos, spell_id);
+			}
+		}
+	}
+}
+
+void BattleManagerFast::_append_moves_lines(UnitID uid, int8_t spell_id, Position center,
+int range_min, int range_max, TargetType target_type, TargetUnitType target_unit_type) {
 	int range_min_real = (range_min >= 1) ? range_min : 1;
 	if(range_min == 0 && _tiles.get_tile(center).is_passable()) {
 		_moves.emplace_back(uid.unit, center, spell_id);
 	}
 
 	for(int dir = 0; dir < 6; dir++) {
-		_append_moves_line(uid, spell_id, center, dir, range_min_real, range_max);
+		_append_moves_line(uid, spell_id, center, dir, range_min_real, range_max, target_type, target_unit_type);
 	}
 }
 
-void BattleManagerFast::_append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max) {
+void BattleManagerFast::_append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir,
+int range_min, int range_max, TargetType target_type, TargetUnitType target_unit_type) {
 	for(int r = range_min; r <= range_max; r++) {
 		Position pos = center + DIRECTIONS[dir] * r;
+		// target tile has to be passable AND depending on unit_is_present, target tile either has to contain a unit or not
+		UnitID target = _unit_cache.get(pos);
+		if(target_type == TargetType::UNIT) {
+			if (target == NO_UNIT) {
+				continue;
+			}
+			if(target_unit_type == TargetUnitType::ALLY
+			&& skip_army(_get_unit(uid).value().army, _get_unit(target).value().army, //TEMP
+			TeamRelation::ALLY)) {
+				continue;
+			}
+			if(target_unit_type == TargetUnitType::ENEMY
+			&& skip_army(_get_unit(uid).value().army, _get_unit(target).value().army, //TEMP
+			TeamRelation::ENEMY)) {
+				continue;
+			}
 
-		if(_tiles.get_tile(pos).is_passable() && _unit_cache.get(pos) == NO_UNIT) {
+			_moves.emplace_back(uid.unit, pos, spell_id);
+			continue;
+		}
+
+		if(_tiles.get_tile(pos).is_passable()) {
+			if(target_type == TargetType::EMPTY_TILE && _unit_cache.get(pos) != NO_UNIT) {
+				continue;
+			}
 			_moves.emplace_back(uid.unit, pos, spell_id);
 		}
 	}
 }
+
 
 void BattleManagerFast::_append_moves_neighbors(UnitID uid, int8_t spell_id, Position center, IncludeImpassable include_impassable) {
 	for(const auto dir: DIRECTIONS) {
@@ -1087,6 +1240,10 @@ void BattleManagerFast::_move_unit(UnitID id, Position pos) {
 	}
 	else {
 		unit.flags &= ~Unit::FLAG_ON_SWAMP;
+	}
+
+	if(tile.is_fire()) {
+		unit.try_apply_effect(Unit::FLAG_EFFECT_BURNING, Unit::EFFECT_INFINITE);
 	}
 
 	if(tile.is_mana_well()) {
@@ -1154,8 +1311,8 @@ void BattleManagerFast::_kill_unit(UnitID id, UnitID killer_id) {
 		_update_mana();
 	}
 
-	bool vengeance_activated = unit.is_effect_active(Unit::FLAG_EFFECT_VENGEANCE) 
-		&& killer_id != NO_UNIT 
+	bool vengeance_activated = unit.is_effect_active(Unit::FLAG_EFFECT_VENGEANCE)
+		&& killer_id != NO_UNIT
 		&& get_current_participant() != army.id // Do not avenge when caused by the vengeance bearer
 		&& get_winner_team() == -1; // Do not cause a draw
 
@@ -1163,7 +1320,7 @@ void BattleManagerFast::_kill_unit(UnitID id, UnitID killer_id) {
 		auto killer_opt = _get_unit(killer_id);
 		BM_ASSERT(killer_opt.has_value(), "Unknown killer {}.{}", killer_id.unit, killer_id.army);
 
-		unit.remove_effect(Unit::FLAG_EFFECT_VENGEANCE);
+		unit.remove_effects(Unit::FLAG_EFFECT_VENGEANCE);
 		killer_opt.value().unit.try_apply_effect(Unit::FLAG_EFFECT_DEATH_MARK);
 	}
 
@@ -1289,6 +1446,15 @@ void BattleManagerFastCpp::set_unit_solo_martyr(int army, int martyr_idx, int du
 	bm._armies[army].units[martyr_idx].try_apply_martyr(NO_UNIT, duration);
 }
 
+void BattleManagerFastCpp::set_unit_hero(int army, int idx) {
+	CHECK_UNIT(idx,);
+	CHECK_ARMY(army,);
+
+	BM_ASSERT(bm._armies[army].hero_id_opt == -1, "Hero already exists for army {}", army);
+	bm._armies[army].units[idx].flags |= Unit::FLAG_HERO;
+	bm._armies[army].hero_id_opt = idx;
+}
+
 void BattleManagerFastCpp::set_current_participant(int army) {
 	CHECK_ARMY(army,);
 	bm._current_army = army;
@@ -1338,7 +1504,7 @@ int BattleManagerFastCpp::get_unit_spell_count(int army, int idx) {
 
 	int i = 0;
 	for(BattleSpell& spell : bm._spells) {
-		if(spell.state != BattleSpell::State::NONE 
+		if(spell.state != BattleSpell::State::NONE
 		   && spell.state != BattleSpell::State::SENTINEL
 		   && spell.unit == UnitID(army, idx)
 		) {
@@ -1346,6 +1512,19 @@ int BattleManagerFastCpp::get_unit_spell_count(int army, int idx) {
 		}
 	}
 	return i;
+}
+
+bool BattleManagerFastCpp::is_passive_in_army(int army, godot::String name) {
+	CHECK_ARMY(army, false);
+
+	BattlePassive compared{name};
+
+	for(const BattlePassive& passive : bm._armies[army].passives) {
+		if(passive.type == compared.type) {
+			return true;
+		}
+	}
+	return false;
 }
 
 inline int BattleManagerFastCpp::get_unit_effect_count(int army, int idx) {
@@ -1362,6 +1541,20 @@ inline int BattleManagerFastCpp::get_unit_effect_count(int army, int idx) {
 	return i;
 }
 
+int BattleManagerFastCpp::get_army_passive_count(int army) {
+	CHECK_ARMY(army, 0);
+
+	int i = 0;
+	for(const BattlePassive& passive : bm._armies[army].passives) {
+		if(passive.type != BattlePassive::Type::NONE
+		   && passive.type != BattlePassive::Type::SENTINEL
+		) {
+			i++;
+		}
+	}
+	return i;
+}
+
 
 void BattleManagerFastCpp::insert_spell(int army, int unit, int spell_id, godot::String str) {
 	CHECK_UNIT(unit,);
@@ -1371,9 +1564,16 @@ void BattleManagerFastCpp::insert_spell(int army, int unit, int spell_id, godot:
 	bm._spells[spell_id] = BattleSpell(str, UnitID(army, unit));
 }
 
+void BattleManagerFastCpp::insert_passive(int army, int army_passive_id, godot::String str) {
+	CHECK_ARMY(army,);
+	BM_ASSERT(unsigned(army_passive_id) < MAX_PASSIVES, "Invalid passive id when inserting passive");
+
+	bm._armies[army].passives[army_passive_id] = BattlePassive(str);
+}
+
 void BattleManagerFastCpp::set_cyclone_constants(godot::PackedInt32Array cyclone_values, int mana_well_power) {
-	BM_ASSERT(size_t(cyclone_values.size()) < bm._cyclone_counter_values.size(), 
-			"Cyclone value array to big for LibSpear ({} vs max: {})", 
+	BM_ASSERT(size_t(cyclone_values.size()) < bm._cyclone_counter_values.size(),
+			"Cyclone value array to big for LibSpear ({} vs max: {})",
 			cyclone_values.size(), bm._cyclone_counter_values.size()
 	);
 
@@ -1399,10 +1599,12 @@ void BattleManagerFastCpp::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_unit_martyr", "army", "unit", "martyr_id", "duration"), &BattleManagerFastCpp::set_unit_martyr);
 	ClassDB::bind_method(D_METHOD("set_unit_solo_martyr", "army", "martyr_id", "duration"), &BattleManagerFastCpp::set_unit_solo_martyr);
 	ClassDB::bind_method(D_METHOD("set_army_cyclone_timer", "army", "timer"), &BattleManagerFastCpp::set_army_cyclone_timer);
+	ClassDB::bind_method(D_METHOD("set_unit_hero", "army", "idx"), &BattleManagerFastCpp::set_unit_hero);
 	ClassDB::bind_method(D_METHOD("set_tile_grid", "tilegrid"), &BattleManagerFastCpp::set_tile_grid);
 	ClassDB::bind_method(D_METHOD("set_current_participant", "army"), &BattleManagerFastCpp::set_current_participant);
 	ClassDB::bind_method(D_METHOD("set_cyclone_constants", "cyclone_values", "mana_well_power"), &BattleManagerFastCpp::set_cyclone_constants);
-	ClassDB::bind_method(D_METHOD("insert_spell", "army", "index", "spell"), &BattleManagerFastCpp::insert_spell);
+	ClassDB::bind_method(D_METHOD("insert_spell", "army", "unit", "spell_id", "str"), &BattleManagerFastCpp::insert_spell);
+	ClassDB::bind_method(D_METHOD("insert_passive", "army", "army_passive_id", "str"), &BattleManagerFastCpp::insert_passive);
 	ClassDB::bind_method(D_METHOD("force_battle_ongoing"), &BattleManagerFastCpp::force_battle_ongoing);
 	ClassDB::bind_method(D_METHOD("force_battle_sacrifice"), &BattleManagerFastCpp::force_battle_sacrifice);
 	ClassDB::bind_method(D_METHOD("finish_initialization"), &BattleManagerFastCpp::finish_initialization);
@@ -1413,6 +1615,7 @@ void BattleManagerFastCpp::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_unit_rotation", "army", "unit"), &BattleManagerFastCpp::get_unit_rotation);
 	ClassDB::bind_method(D_METHOD("is_unit_alive", "army", "unit"), &BattleManagerFastCpp::is_unit_alive);
 	ClassDB::bind_method(D_METHOD("is_unit_being_deployed", "army", "unit"), &BattleManagerFastCpp::is_unit_being_deployed);
+	ClassDB::bind_method(D_METHOD("is_unit_a_hero", "army", "unit"), &BattleManagerFastCpp::is_unit_a_hero);
 	ClassDB::bind_method(D_METHOD("get_army_cyclone_timer", "army"), &BattleManagerFastCpp::get_army_cyclone_timer);
 	ClassDB::bind_method(D_METHOD("get_army_mana_points", "army"), &BattleManagerFastCpp::get_army_mana_points);
 	ClassDB::bind_method(D_METHOD("get_cyclone_target"), &BattleManagerFastCpp::get_cyclone_target);
@@ -1430,6 +1633,8 @@ void BattleManagerFastCpp::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("count_spell", "name"), &BattleManagerFastCpp::count_spell);
 	ClassDB::bind_method(D_METHOD("get_unit_effect_count", "army", "unit"), &BattleManagerFastCpp::get_unit_effect_count);
 	ClassDB::bind_method(D_METHOD("get_unit_spell_count", "army", "unit"), &BattleManagerFastCpp::get_unit_spell_count);
+	ClassDB::bind_method(D_METHOD("is_passive_in_army", "army", "name"), &BattleManagerFastCpp::is_passive_in_army);
+	ClassDB::bind_method(D_METHOD("get_army_passive_count", "army"), &BattleManagerFastCpp::get_army_passive_count);
 	ClassDB::bind_method(D_METHOD("get_max_units_in_army"), &BattleManagerFastCpp::get_max_units_in_army);
 
 	ClassDB::bind_method(D_METHOD("set_debug_internals", "name"), &BattleManagerFastCpp::set_debug_internals);

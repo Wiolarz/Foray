@@ -2,13 +2,15 @@ class_name BattleManagerFast
 extends BattleManagerFastCpp
 
 ## A helper class wrapping C++ battle manager
-## and adding useful integration/testing functions
+## and adding useful integration/testing functions [br]
+## Note - mappings between C++ and Godot are only valid
+## for one turn - DO NOT REUSE in more than one turn
 
 var _integrity_check_move: MoveInfo
 
-## Maps BMFast's unit IDs (in format [army, unit]) and int
+## Maps BMFast's unit IDs (in format [army, unit]) -> Godot IDs [army, deploy]
 var summon_mapping_cpp2gd: Dictionary = {}
-## Maps BMFast's unit IDs (in format [army, unit]) and DataUnit
+## Maps Godot IDs [army, deploy] -> BMFast's unit IDs (in format [army, unit])
 var summon_mapping_gd2cpp: Dictionary = {}
 ## Maps BMFast's spell IDs to BattleSpells
 var spell_mapping: Array[BattleSpell] = []
@@ -43,13 +45,13 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 	var max_team = 0
 
 	for army_idx in range(bgstate.armies_in_battle_state.size()):
-		var army = bgstate.armies_in_battle_state[army_idx]
+		var army := bgstate.armies_in_battle_state[army_idx]
 
-		var player_idx = army.army_reference.controller_index
-		var player = IM.get_player_by_index(player_idx)
+		var player_idx : int = army.army_reference.controller_index
+		var player : Player = IM.get_player_by_index(player_idx)
 		# TODO temp hack for world battles
-		var team = player.team if player else max_team + 10000000
-		var team_id = team if team != 0 else (army_idx + 1000000)
+		var team : int = player.team if player else max_team + 10000000
+		var team_id := team if team != 0 else (army_idx + 1000000)
 		if team_id not in new.team_mapping:
 			new.team_mapping[team_id] = max_team
 			max_team += 1
@@ -57,55 +59,32 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 		new.set_army_team(army_idx, new.team_mapping[team_id])
 		new.set_army_cyclone_timer(army_idx, army.cyclone_timer)
 
-		var martyrs = []
-		var martyr_duration = -50
+		var martyrs = ArmyMartyrs.new()
 
 		# Alive unit processing
 		for unit_idx in range(army.units.size()):
-			var unit: Unit = army.units[unit_idx]
-			if unit.dead:
-				continue
-
-			new.insert_unit(army_idx, unit_idx, unit.coord, unit.unit_rotation, false)
-			new.set_unit_score(army_idx, unit_idx, unit.level)
-			new.set_unit_mana(army_idx, unit_idx, unit.mana)
-
-			for i in range(6):
-				new.set_unit_symbol(army_idx, unit_idx, i, unit.symbols[i])
-
-			for spell in unit.spells:
-				new.insert_spell(army_idx, unit_idx, new.spell_mapping.size(), spell.name)
-				new.spell_mapping.push_back(spell)
-				new.spell_army_id_mapping.push_back(army_idx)
-				new.spell_unit_id_mapping.push_back(unit_idx)
-
-			for eff in unit.effects:
-				match eff.name:
-					"Martyr":
-						martyrs.push_back(unit_idx)
-						martyr_duration = eff.duration_counter
-					_:
-						var duration_counter = -1 if eff.passive_effect else eff.duration_counter
-						new.set_unit_effect(army_idx, unit_idx, eff.name, duration_counter)
+			var unit := army.units[unit_idx]
+			new.insert_unit_from(army_idx, army, martyrs, unit_idx, unit)
 
 		# TODO in future there might potentially be more martyrs simultaneously
-		assert(martyrs.size() in [0,1,2], "Unsupported martyr number")
-		if martyrs.size() == 2:
-			new.set_unit_martyr(army_idx, martyrs[0], martyrs[1], martyr_duration)
-		elif martyrs.size() == 1:
-			new.set_unit_solo_martyr(army_idx, martyrs[0], martyr_duration)
+		assert(martyrs.martyrs.size() in [0,1,2], "Unsupported martyr number")
+		if martyrs.martyrs.size() == 2:
+			new.set_unit_martyr(army_idx, martyrs.martyrs[0], martyrs.martyrs[1], martyrs.martyr_duration)
+		elif martyrs.martyrs.size() == 1:
+			new.set_unit_solo_martyr(army_idx, martyrs.martyrs[0], martyrs.martyr_duration)
 
 		# Deployment processing
-		for summon_idx in range(army.units_to_deploy.size()):
-			var unit : Unit = army.units_to_deploy[summon_idx]
-			var unit_idx : int = summon_idx + army.units.size()
+		for deploy_idx in range(army.units_to_deploy.size()):
+			var unit_idx := deploy_idx + army.units.size()
+			var unit := army.units_to_deploy[deploy_idx]
+			new.insert_unit_from(army_idx, army, martyrs, unit_idx, unit, deploy_idx)
 
-			new.insert_unit(army_idx, unit_idx, Vector2i.ZERO, 0, true)
-			for i in range(6):
-				new.set_unit_symbol(army_idx, unit_idx, i, unit.symbols[i])
-
-			new.summon_mapping_cpp2gd[[army_idx, unit_idx]] = summon_idx
-			new.summon_mapping_gd2cpp[unit.template] = [army_idx, unit_idx]
+		# Passives
+		var passive_id = -1
+		var passives = army.hero.passive_effects if army.hero else []
+		for passive : HeroPassive in passives:
+			passive_id += 1
+			new.insert_passive(army_idx, passive_id, passive.passive_name)
 
 	new.finish_initialization()
 
@@ -115,6 +94,55 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 		new.force_battle_sacrifice()
 
 	return new
+
+
+func insert_unit_from(
+		army_idx: int,
+		army: BattleGridState.ArmyInBattleState,
+		martyrs_out: ArmyMartyrs,
+		unit_idx: int,
+		unit: Unit,
+		unit_to_deploy_idx: int = -1
+		) -> void:
+
+	var deploy := unit_to_deploy_idx != -1
+
+	if unit and unit.dead:
+		return
+
+	var coord = unit.coord if unit else Vector2i.ZERO
+	var rotation = unit.unit_rotation if unit else 0
+	insert_unit(army_idx, unit_idx, coord, rotation, deploy)
+	set_unit_score(army_idx, unit_idx, unit.template.level)
+	set_unit_mana(army_idx, unit_idx, unit.template.mana)
+
+	if deploy:
+		var idx := [army_idx, unit_to_deploy_idx]#UnitToDeployIdx.new(army_idx, unit_to_deploy_idx)
+		summon_mapping_cpp2gd[[army_idx, unit_idx]] = idx
+		summon_mapping_gd2cpp[idx] = [army_idx, unit_idx]
+
+	if unit_idx == 0 and army.army_reference.hero:
+		set_unit_hero(army_idx, unit_idx)
+
+	for i in range(6):
+		set_unit_symbol(army_idx, unit_idx, i, unit.template.symbols[i])
+
+	var spells = unit.spells
+	for spell in spells:
+		insert_spell(army_idx, unit_idx, spell_mapping.size(), spell.name)
+		spell_mapping.push_back(spell)
+		spell_army_id_mapping.push_back(army_idx)
+		spell_unit_id_mapping.push_back(unit_idx)
+
+	var effects = unit.effects
+	for eff in effects:
+		match eff.name:
+			"Martyr":
+				martyrs_out.martyrs.push_back(unit_idx)
+				martyrs_out.martyr_duration = eff.duration_counter
+			_:
+				var duration_counter = -1 if eff.passive_effect else eff.duration_counter
+				set_unit_effect(army_idx, unit_idx, eff.name, duration_counter)
 
 
 func set_unit_symbol(army_idx: int, unit_idx: int, symbol_idx: int, symbol: DataSymbol):
@@ -138,7 +166,7 @@ func libspear_tuple_to_move_info(tuple: Array) -> MoveInfo:
 	if is_in_sacrifice_phase():
 		return MoveInfo.make_sacrifice(unit_position)
 	elif is_in_deployment_phase():
-		return MoveInfo.make_deploy(summon_mapping_cpp2gd[uid], position)
+		return MoveInfo.make_deploy(summon_mapping_cpp2gd[uid][1], position)
 	elif tuple.size() == 3: # Magic
 		return MoveInfo.make_magic(unit_position, position, spell_mapping[tuple[2]])
 	else:
@@ -151,7 +179,7 @@ func move_info_to_libspear_tuple(move: MoveInfo) -> Array:
 
 	match move.move_type:
 		MoveInfo.TYPE_DEPLOY:
-			unit = summon_mapping_gd2cpp[move.deployed_unit][1]
+			unit = summon_mapping_gd2cpp[[move.army_idx, move.deployed_unit]][1]
 		MoveInfo.TYPE_MOVE:
 			unit = get_unit_id_on_position(move.move_source)[1]
 		MoveInfo.TYPE_SACRIFICE:
@@ -282,6 +310,21 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 			])
 			is_ok = false
 
+		var passives_size : int = army.hero.passive_effects.size() if army.hero else 0
+		if get_army_passive_count(army_id) != passives_size:
+			push_error("BMFast mismatch - passive count for army %s - fast: %s, slow: %s" % [
+				army_id, get_army_passive_count(army_id), passives_size
+			])
+			is_ok = false
+
+		if army.hero:
+			for passive : HeroPassive in army.hero.passive_effects:
+				if not is_passive_in_army(army_id, passive.passive_name):
+					push_error("BMFast mismatch - passive %s in army %s not present in fast" % [
+						passive.passive_name, army_id
+					])
+					is_ok = false
+
 		#endregion Per-army state
 
 		#region Units
@@ -310,6 +353,13 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 			if unit.unit_rotation != get_unit_rotation(army_id, unit_id):
 				push_error("BMFast mismsatch - unit: id ", unit_str, " slow has rotation ", unit.unit_rotation, \
 						   ",  ", " vs fast's rotation ", get_unit_rotation(army_id, unit_id))
+				is_ok = false
+
+			var should_be_hero = unit_id == 0 and army.hero
+			if is_unit_a_hero(army_id, unit_id) != should_be_hero:
+				push_error("BMFast mismsatch - unit: id ", unit_str, "hero status, slow %s vs fase %s", [
+					unit_str, should_be_hero, is_unit_a_hero(army_id, unit_id)
+				])
 				is_ok = false
 
 			# Dictionary[String, int] - numbers of spells
@@ -387,3 +437,7 @@ func compare_move_list(bgs: BattleGridState) -> bool:
 	return is_ok
 
 #endregion
+
+class ArmyMartyrs:
+	var martyrs : Array[int]
+	var martyr_duration : int

@@ -69,6 +69,11 @@ struct Position {
 		return delta.x == -delta.y || delta.x == 0 || delta.y == 0;
 	}
 
+	int axial_distance(const Position& other) const {
+		return (abs(x - other.x)
+			+ abs(x + y - other.x - other.y)
+			+ abs(y - other.y)) / 2;
+	}
 };
 
 class Symbol {
@@ -162,22 +167,23 @@ public:
 };
 
 class Tile {
-	static const uint8_t PASSABLE = 0x1;
-	static const uint8_t WALL = 0x2;
-	static const uint8_t SWAMP = 0x4;
-	static const uint8_t FORBIDDEN = 0x8;
-	static const uint8_t MANA_WELL = 0x10;
-	static const uint8_t PIT = 0x20;
-	static const uint8_t HILL = 0x40;
-	static const uint8_t SPAWN = 0x80;
+	static const uint16_t PASSABLE = 0x1;
+	static const uint16_t WALL = 0x2;
+	static const uint16_t SWAMP = 0x4;
+	static const uint16_t FORBIDDEN = 0x8;
+	static const uint16_t MANA_WELL = 0x10;
+	static const uint16_t PIT = 0x20;
+	static const uint16_t HILL = 0x40;
+	static const uint16_t SPAWN = 0x80;
+	static const uint16_t FIRE = 0x100;
 
-	uint8_t _flags = FORBIDDEN | WALL;
+	uint16_t _flags = FORBIDDEN | WALL;
 	int8_t _army = -1; // Spawning army for spawning tiles, controlling army for mana wells
 	uint8_t _spawning_direction{};
 
 public:
 	Tile() = default;
-	Tile(bool passable, bool wall, bool swamp, bool mana_well, bool pit, bool hill, int army, unsigned direction) :
+	Tile(bool passable, bool wall, bool swamp, bool mana_well, bool pit, bool hill, bool fire, int army, unsigned direction) :
 		_flags(
 			(passable ? PASSABLE : 0)
 		  | (wall ? WALL : 0)
@@ -185,6 +191,7 @@ public:
 		  | (mana_well ? MANA_WELL : 0)
 		  | (pit ? PIT : 0)
 		  | (hill ? HILL : 0)
+		  | (fire ? FIRE : 0)
 		  | ((!mana_well && army >= 0) ? SPAWN : 0)
 		),
 		_army(army),
@@ -213,6 +220,10 @@ public:
 
 	bool is_pit() {
 		return (_flags & PIT) != 0;
+	}
+
+	bool is_fire() {
+		return (_flags & FIRE) != 0;
 	}
 
 	bool is_spawn() {
