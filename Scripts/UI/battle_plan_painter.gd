@@ -5,6 +5,12 @@ extends Node2D
 var new_arrow : ChessArrow
 var arrows_to_draw : Array[ChessArrow] = []  # Array[Array[Vector2]]
 
+func update_drawings() -> void:
+	#multi stuff
+	print("test")
+	queue_redraw()
+
+
 
 func _draw():
 	var _line_width : float = 80.0
@@ -19,7 +25,7 @@ func _draw():
 func erase():
 	arrows_to_draw = []
 	Helpers.remove_all_children(self)
-	queue_redraw()
+	update_drawings()
 
 
 static func get_color_from_index(color_idx : int) -> Color:
@@ -68,7 +74,7 @@ func planning_input( \
 
 		if tile_coord not in new_arrow.hex_path:
 			new_arrow.add_hex(tile_coord)
-			queue_redraw()
+			update_drawings()
 		return
 
 	# mouse press is released, draw final
@@ -77,6 +83,7 @@ func planning_input( \
 		return
 
 	add_child(new_arrow.end_node)
+	update_drawings()
 	new_arrow = null  # reset arrow path
 
 ## if there is an danger along the path, line turnes red
@@ -96,7 +103,7 @@ func draw_path( \
 		new_arrow.add_hex(path[idx])
 
 	add_child(new_arrow.end_node)
-	queue_redraw()
+	update_drawings()
 
 
 class ChessArrow:

@@ -1059,6 +1059,13 @@ func get_current_time_left_ms() -> int:
 func planning_input(tile_coord : Vector2i, is_it_pressed : bool) -> void:
 	_painter_node.planning_input(tile_coord, is_it_pressed, self)
 
+
+func toggle_ally_arrows(focus_mode : bool) -> void:
+	if focus_mode:
+		_painter_node.hide()
+	else:
+		_painter_node.show()
+
 #endregion Painting
 
 

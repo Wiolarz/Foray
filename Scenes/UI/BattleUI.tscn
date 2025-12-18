@@ -88,9 +88,21 @@ offset_bottom = 222.0
 grow_horizontal = 2
 theme_override_constants/separation = 5
 
-[node name="Label" type="Label" parent="TopR/PlayersContainer/Players"]
+[node name="HBoxContainer" type="HBoxContainer" parent="TopR/PlayersContainer/Players"]
+layout_mode = 2
+theme_override_constants/separation = 80
+alignment = 1
+
+[node name="Label" type="Label" parent="TopR/PlayersContainer/Players/HBoxContainer"]
 layout_mode = 2
 text = "Players:"
+
+[node name="FocusButton" type="Button" parent="TopR/PlayersContainer/Players/HBoxContainer"]
+layout_mode = 2
+tooltip_text = "Hide chat and allies chess arrows"
+toggle_mode = true
+button_pressed = true
+text = "Focus"
 
 [node name="Button" type="Button" parent="TopR/PlayersContainer/Players"]
 layout_mode = 2
@@ -390,6 +402,7 @@ text = "Proceed"
 
 [connection signal="pressed" from="TopL/Menu" to="." method="_on_menu_pressed"]
 [connection signal="pressed" from="TopL/SwitchCamera" to="." method="_on_switch_camera_pressed"]
+[connection signal="pressed" from="TopR/PlayersContainer/Players/HBoxContainer/FocusButton" to="." method="_on_focus_button_pressed"]
 [connection signal="pressed" from="ReplayControls/Pause" to="." method="_on_pause_pressed"]
 [connection signal="pressed" from="ReplayControls/Step" to="." method="_on_step_pressed"]
 [connection signal="pressed" from="ReplayControls/Play" to="." method="_on_play_pressed"]
