@@ -97,13 +97,19 @@ func _process(_delta):
 
 
 func controller_changed():
-	$ControlerSprite.visible = true
 	var controller : Player = IM.get_player_by_index(hex.place.controller_index)
 	var color_name : String = controller.get_player_color().name
 	var path =  "%s%s_color.png" % [CFG.PLAYER_COLORS_PATH, color_name]
 	var texture = RES.load(path) as Texture2D
 	assert(texture, "failed to load background " + path)
-	$ControlerSprite.texture = texture
+	$ControllerColor.texture = texture
+
+
+func map_editor_ownership_status(is_owned : bool) -> void:
+	$OwnershipSprite.visible = not is_owned
+	if is_owned:
+		return
+	$OwnershipSprite.texture = RES.load("res://Art/player_colors/gray_color.png")
 
 
 ## for map editor only
@@ -112,6 +118,19 @@ func paint(brush : DataTile) -> void:
 	$Sprite2D.texture = RES.load(brush.texture_path)
 	if brush.is_it_deploy_tile():
 		$Sprite2D.rotation_degrees = brush.get_spawn_direction() * 60
+		return
+	if brush.is_it_city_tile():
+		var _neutral := false
+		if int(type[DataTile.PLAYER_INDEX]) == DataTile.NEUTRAL_CITY:
+			$ControllerColor.texture = CFG.NEUTRAL_COLOR_TEXTURE
+			_neutral = true
+		else: # Player city
+			$ControllerColor.texture = CFG.TEAM_COLOR_TEXTURES[int(type[DataTile.PLAYER_INDEX])  - 1]
+
+		if int(type[DataTile.CITY_RACE_INDEX]) == DataTile.ANY_CITY:
+			assert(not _neutral, "attempt to paint neutral any city, advanced race cities are not yet implemented")
+			return
+		$Sprite2D.texture = RES.load(CFG.RACES_LIST[int(type[DataTile.CITY_RACE_INDEX]) - 1].city_texture_path)
 
 
 func set_hovered(is_hovered : bool):

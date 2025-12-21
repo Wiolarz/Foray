@@ -22,3 +22,4 @@ units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource
 heroes = Array[Resource("res://Resources/Races/data_hero.gd")]([ExtResource("5_qpatp"), ExtResource("6_njwc8"), ExtResource("7_ejoag")])
 buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_q2ttk"), ExtResource("2_j4rs3"), ExtResource("3_kotkv"), ExtResource("4_h4i84")])
 description = "T>M>P"
+city_texture_path = "res://Art/world_map/simple_city_orange.png"

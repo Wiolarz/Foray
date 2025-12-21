@@ -92,10 +92,7 @@ func get_current_map(trim : bool) -> DataWorldMap:
 			column.append(tile_data)
 		grid_data.append(column)
 	WorldEditGrid._make_nulls_sentinels(grid_data)
-	map.max_player_number = _find_max_player_number()
 	map.grid_data = grid_data
-	if map.max_player_number < 1:
-		return null
 	return map
 
 

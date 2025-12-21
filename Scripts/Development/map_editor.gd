@@ -22,6 +22,7 @@ var current_button: TextureButton
 @onready var new_battle_button = $Bottom/HBox/NewBattleMap
 
 @onready var context_button : OptionButton = $RMenuContainer/ContextOptionButton
+@onready var context_button2 : OptionButton = $RMenuContainer/ContextOptionButton2
 
 var world_grid : WorldEditGrid
 
@@ -69,9 +70,21 @@ func _create_button(map_tile : String) -> TextureButton:
 func grid_input(coord : Vector2i) -> void:
 	if CFG.MAP_EDITOR_BATTLE:
 		if current_brush.is_it_deploy_tile():
-			current_brush.type[DataTile.get_spawn_direction_index()] = str(context_button.selected)
+			current_brush.type[DataTile.SPAWN_DIRECTION_INDEX] = str(context_button.selected)
 		BM.paint(coord, current_brush)
 	else:
+		if current_brush.is_it_city_tile():
+			#Player
+			var _player_index : int = context_button2.selected
+			if _player_index == context_button2.item_count - 1: # last element
+				_player_index = 0 # NEUTRAL
+				if _player_index == context_button.selected:  #TODO implement advanced neutral cities
+					return
+			else:
+				_player_index += 1 # PLAYER INDEX
+			current_brush.type[DataTile.PLAYER_INDEX] = str(_player_index)
+			# RACE
+			current_brush.type[DataTile.CITY_RACE_INDEX] = str(context_button.selected)
 		world_grid.paint(coord, current_brush)
 
 
@@ -90,17 +103,28 @@ func _switch_grid_type() -> void:
 
 func _switch_context_button() -> void:
 	context_button.clear()
+	context_button2.clear()
 	if CFG.MAP_EDITOR_BATTLE:
 		var i := -1
 		for direction in GenericHexGrid.GridDirections.keys():
 			i += 1
 			var option_text : String = direction
 			context_button.add_item(option_text)
+		context_button2.hide()
 	else:
 		context_button.add_item("Any Race")
 		for race in CFG.RACES_LIST:
 			var option_text : String = race.race_name
 			context_button.add_item(option_text)
+		context_button2.show()
+		context_button2.add_item("1 Player")
+		context_button2.add_item("2 Player")
+		context_button2.add_item("3 Player")
+		context_button2.add_item("4 Player")
+		context_button2.add_item("neutral")
+
+
+
 
 
 func _load_tile_buttons():
@@ -177,8 +201,21 @@ func _optimize_grid_size(local_tile_grid : Array) -> Array:
 	return local_tile_grid
 
 
-func _generate_world_max_player_number(_local_tile_grid : Array) -> int:
-	return 2  # TEMP
+func _generate_world_player_slots(tile_grid : WorldEditGrid) -> Dictionary:
+	var player_slots : Dictionary = {}
+	var local_tile_grid : Array = tile_grid.grid.hexes
+	for tile_column : Array in local_tile_grid:
+		for tile : DataTile in tile_column:
+			if not tile.is_it_city_tile():
+				continue # TODO add heroes without a starting city
+
+			var player_idx : int = DataTile.get_type_player_ownership(tile.type)
+			if player_idx not in player_slots.keys():
+				player_slots[player_idx] = DataTile.get_city_race(tile.type)
+			elif player_slots[player_idx] != DataTile.get_city_race(tile.type):
+				print("player has multiple races assigned")
+				return {} # TODO once map editor were to assign another race it should just replace all previous cities
+	return player_slots
 
 
 func _generate_battle_players_slots(local_tile_grid : Array) -> Dictionary:
@@ -203,7 +240,7 @@ func _on_load_map_pressed():
 	if CFG.MAP_EDITOR_BATTLE:
 		map_path = CFG.BATTLE_MAPS_PATH
 	map_path += map_file_name_input.text + ".tres"
-	var map_to_load = load(map_path)
+	var map_to_load = ResourceLoader.load(map_path, "", ResourceLoader.CACHE_MODE_REPLACE)
 	assert(map_to_load != null, "there is no selected map to be loaded")
 
 	WM.clear_world()
@@ -255,6 +292,10 @@ func get_battle_map(trim : bool = true) -> DataBattleMap:
 
 func get_world_map(trim : bool =  true) -> DataWorldMap:
 	var map = world_grid.get_current_map(trim)
+	map.player_slots = _generate_world_player_slots(world_grid)
+	print(map.player_slots)
+	if map.player_slots.keys().size() == 0:
+		return null
 	return map
 
 

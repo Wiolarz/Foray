@@ -22,3 +22,4 @@ units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource
 heroes = Array[Resource("res://Resources/Races/data_hero.gd")]([ExtResource("5_sc7c3"), ExtResource("6_5h038"), ExtResource("7_ttm8f")])
 buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_dt4cj"), ExtResource("2_5fxsu"), ExtResource("3_ktbvq"), ExtResource("4_cwvi5")])
 description = "Elite > Magic > Horde"
+city_texture_path = "res://Art/world_map/cyclops_city.png"

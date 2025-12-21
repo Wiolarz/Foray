@@ -39,6 +39,13 @@ selected = 0
 popup/item_0/text = "Direction: Left (0)"
 popup/item_0/id = 0
 
+[node name="ContextOptionButton2" type="OptionButton" parent="RMenuContainer"]
+layout_mode = 2
+item_count = 1
+selected = 0
+popup/item_0/text = "1 Player"
+popup/item_0/id = 0
+
 [node name="TopBar" type="PanelContainer" parent="."]
 offset_left = 3.0
 offset_top = 3.0

@@ -22,3 +22,4 @@ units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource
 heroes = Array[Resource("res://Resources/Races/data_hero.gd")]([ExtResource("5_811w1"), ExtResource("6_5iyhu"), ExtResource("7_ha0i5")])
 buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_ric5p"), ExtResource("2_mfg18"), ExtResource("3_6vaij"), ExtResource("4_06kyo")])
 description = "Elite > Horde > Magic"
+city_texture_path = "res://Art/world_map/orcs_city.png"
