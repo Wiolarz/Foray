@@ -1,6 +1,9 @@
 #include "tile_grid_fast.hpp"
 #include <algorithm>
 
+using namespace godot;
+
+namespace libspear {
 
 void TileGridFast::set_tile(Position pos, Tile type) {
 	unsigned idx = pos.x + pos.y * _dims.x;
@@ -43,4 +46,4 @@ void TileGridFastCpp::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_map_size", "dimensions"), &TileGridFastCpp::set_map_size);
 }
 
-
+}

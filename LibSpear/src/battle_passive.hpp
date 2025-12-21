@@ -4,6 +4,8 @@
 #include <format>
 #include "godot_cpp/variant/string.hpp"
 
+namespace libspear {
+
 struct BattlePassive {
 	enum class Type : uint8_t {
 		NONE,
@@ -16,7 +18,7 @@ struct BattlePassive {
         BALLISTA_SUMMON, // Requires no logic in LibSpear, only for bookkeeping
 	} type = Type::SENTINEL;
 
-	BattlePassive() = default;
+	constexpr BattlePassive() = default;
 	BattlePassive(godot::String string) {
 		if(string == godot::String("ballista_summon")) {
 			type = Type::BALLISTA_SUMMON;
@@ -38,6 +40,13 @@ struct BattlePassive {
 			ERR_FAIL_MSG(std::format("Unknown passive: '{}'", string.ascii().get_data()).c_str());
 		}
 	}
+
+	constexpr operator bool() const noexcept {
+		using enum Type;
+		return type != NONE and type != SENTINEL;
+	}
 };
+
+}
 
 #endif // BATTLE_PASSIVE_H

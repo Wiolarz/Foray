@@ -8,6 +8,7 @@
 #include "godot_cpp/variant/vector2i.hpp"
 #include "godot_cpp/variant/string.hpp"
 
+namespace libspear {
 
 enum class UnitStatus : uint8_t {
 	DEPLOYING,
@@ -34,42 +35,43 @@ struct Position {
 	int8_t x{};
 	int8_t y{};
 
-	Position() : x(0), y(0) {};
-	Position(int8_t x, int8_t y) : x(x), y(y) {};
+	constexpr Position() = default;
+	constexpr Position(int8_t x, int8_t y) noexcept : x(x), y(y) {};
 	Position(godot::Vector2i p) : x(p.x), y(p.y) {};
 
-	Position operator+(const Position& other) const {
+	constexpr Position operator+(const Position& other) const {
 		return Position(x + other.x, y + other.y);
 	}
 
-	Position& operator+=(const Position& other) {
+	constexpr Position& operator+=(const Position& other) {
 		x += other.x;
 		y += other.y;
 		return *this;
 	}
 
-	Position operator-(const Position& other) const {
+	constexpr Position operator-(const Position& other) const {
 		return Position(x - other.x, y - other.y);
 	}
 
-	Position& operator-=(const Position& other) {
+	constexpr Position& operator-=(const Position& other) {
 		x -= other.x;
 		y -= other.y;
 		return *this;
 	}
 
-	Position operator*(const int mult) const {
+	constexpr Position operator*(const int mult) const {
 		return Position(x * mult, y * mult);
 	}
 
-	std::strong_ordering operator<=>(const Position& other) const = default;
+	constexpr std::strong_ordering
+	operator<=>(const Position& other) const = default;
 
-	bool is_in_line_with(Position other) const {
+	constexpr bool is_in_line_with(Position other) const {
 		Position delta = *this - other;
 		return delta.x == -delta.y || delta.x == 0 || delta.y == 0;
 	}
 
-	int axial_distance(const Position& other) const {
+	constexpr int axial_distance(const Position& other) const {
 		return (abs(x - other.x)
 			+ abs(x + y - other.x - other.y)
 			+ abs(y - other.y)) / 2;
@@ -92,8 +94,8 @@ public:
 
 	static const int MIN_SHIELD_DEFENSE = 2;
 
-	Symbol() = default;
-	Symbol(uint8_t attack_strength, uint8_t defense_strength, uint8_t push_force, uint8_t ranged_reach, uint8_t flags)
+	constexpr Symbol() = default;
+	constexpr Symbol(uint8_t attack_strength, uint8_t defense_strength, uint8_t push_force, uint8_t ranged_reach, uint8_t flags) noexcept
 		: _attack_strength(attack_strength),
 		_defense_strength(defense_strength),
 		_push_strength(push_force),
@@ -103,37 +105,37 @@ public:
 
 	}
 
-	int get_attack_force() {
+	constexpr int get_attack_force() const noexcept {
 		return _attack_strength;
 	}
 
-	int get_counter_force() {
+	constexpr int get_counter_force() const noexcept {
 		return (_flags & FLAG_COUNTER_ATTACK) ? _attack_strength : 0;
 	}
 
-	int get_defense_force() {
+	constexpr int get_defense_force() const noexcept {
 		return _defense_strength;
 	}
 
-	bool does_bow_activate_on(MovePhase phase) {
+	constexpr bool does_bow_activate_on(MovePhase phase) const noexcept {
 		return phase == MovePhase::DASH // Should never occur naturally, special value for convenience
 			|| (phase == MovePhase::LEAP && (_flags & FLAG_ACTIVATE_ON_LEAP))
 			|| (phase == MovePhase::TURN && (_flags & FLAG_ACTIVATE_ON_TURN));
 	}
 
-	int get_bow_force(MovePhase phase) {
+	constexpr int get_bow_force(MovePhase phase) const noexcept {
 		return (_ranged_reach > 1 && does_bow_activate_on(phase)) ? _attack_strength : 0;
 	}
 
-	int get_reach() {
+	constexpr int get_reach() const noexcept {
 		return _ranged_reach;
 	}
 
-	int get_push_force() {
+	constexpr int get_push_force() const noexcept {
 		return _push_strength;
 	}
 
-	bool protects_against(Symbol other, MovePhase phase) {
+	constexpr bool protects_against(Symbol other, MovePhase phase) const noexcept {
 		// Parry disables melee attacks
 		if(other.get_bow_force(phase) <= 0 && (parries() && !other.breaks_parry())) {
 			return true;
@@ -143,25 +145,25 @@ public:
 		return other_force <= get_defense_force();
 	}
 
-	bool holds_ground_against(Symbol other) {
+	constexpr bool holds_ground_against(Symbol other) const noexcept {
 		bool parry_succesful = parries() && !other.breaks_parry();
 		bool push_succesful = other.get_push_force() > 0 && !parry_succesful;
 		return protects_against(other, MovePhase::TURN) && !push_succesful;
 	}
 
-	bool dies_to(Symbol other, MovePhase phase) {
+	constexpr bool dies_to(Symbol other, MovePhase phase) const noexcept {
 		return !protects_against(other, phase);
 	}
 
-	bool parries() {
+	constexpr bool parries() const noexcept {
 		return (_flags & FLAG_PARRY);
 	}
 
-	bool breaks_parry() {
+	constexpr bool breaks_parry() const noexcept {
 		return (_flags & FLAG_PARRY_BREAK);
 	}
 
-	void print() {
+	void print() const {
 		printf("a%dc%dd%d", get_attack_force(), get_counter_force(), get_defense_force());
 	}
 };
@@ -182,8 +184,8 @@ class Tile {
 	uint8_t _spawning_direction{};
 
 public:
-	Tile() = default;
-	Tile(bool passable, bool wall, bool swamp, bool mana_well, bool pit, bool hill, bool fire, int army, unsigned direction) :
+	constexpr Tile() = default;
+	constexpr Tile(bool passable, bool wall, bool swamp, bool mana_well, bool pit, bool hill, bool fire, int army, unsigned direction) noexcept :
 		_flags(
 			(passable ? PASSABLE : 0)
 		  | (wall ? WALL : 0)
@@ -198,43 +200,43 @@ public:
 		_spawning_direction(direction)
 	{}
 
-	bool is_passable() {
+	constexpr bool is_passable() const noexcept {
 		return (_flags & PASSABLE) != 0;
 	}
 
-	bool is_wall() {
+	constexpr bool is_wall() const noexcept {
 		return (_flags & WALL) != 0;
 	}
 
-	bool is_swamp() {
+	constexpr bool is_swamp() const noexcept {
 		return (_flags & SWAMP) != 0;
 	}
 
-	bool is_mana_well() {
+	constexpr bool is_mana_well() const noexcept {
 		return (_flags & MANA_WELL) != 0;
 	}
 
-	bool is_hill() {
+	constexpr bool is_hill() const noexcept {
 		return (_flags & HILL) != 0;
 	}
 
-	bool is_pit() {
+	constexpr bool is_pit() const noexcept {
 		return (_flags & PIT) != 0;
 	}
 
-	bool is_fire() {
+	constexpr bool is_fire() const noexcept {
 		return (_flags & FIRE) != 0;
 	}
 
-	bool is_spawn() {
+	constexpr bool is_spawn() const noexcept {
 		return (_flags & SPAWN) != 0;
 	}
 
-	int get_spawning_army() {
+	constexpr int get_spawning_army() const noexcept {
 		return is_spawn() ? _army : -1;
 	}
 
-	int get_controlling_army() {
+	constexpr int get_controlling_army() const noexcept {
 		return is_mana_well() ? _army : -1;
 	}
 
@@ -243,12 +245,12 @@ public:
 		_army = army_id;
 	}
 
-	unsigned get_spawn_rotation() {
+	constexpr unsigned get_spawn_rotation() const noexcept {
 		return _spawning_direction;
 	}
 };
 
-const std::array<Position, 6> DIRECTIONS = {
+constexpr inline std::array<Position, 6> DIRECTIONS = {
 	Position(-1, 0),
 	Position(0, -1),
 	Position(1, -1),
@@ -258,7 +260,7 @@ const std::array<Position, 6> DIRECTIONS = {
 };
 
 
-inline int get_rotation(Position origin, Position relative) {
+constexpr inline int get_rotation(Position origin, Position relative) noexcept {
 	Position pos = relative - origin;
 	for(int i = 0; i < 6; i++) {
 		if(DIRECTIONS[i] == pos) {
@@ -268,11 +270,11 @@ inline int get_rotation(Position origin, Position relative) {
 	return 6;
 }
 
-inline int flip(int rot) {
+constexpr inline int flip(int rot) noexcept {
 	return (rot + 3) % 6;
 }
 
-_FORCE_INLINE_ int clamp(int val, int min, int max) {
+constexpr _FORCE_INLINE_ int clamp(int val, int min, int max) noexcept {
 	if(val < min) {
 		return min;
 	}
@@ -282,5 +284,6 @@ _FORCE_INLINE_ int clamp(int val, int min, int max) {
 	return val;
 }
 
+}
 
 #endif

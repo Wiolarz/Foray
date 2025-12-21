@@ -12,6 +12,8 @@
 #include "data.hpp"
 #include "army.hpp"
 
+namespace libspear {
+
 class BattleManagerFast;
 class BattleMCTSManager;
 
@@ -65,16 +67,6 @@ struct Move {
 	}
 };
 
-template<>
-struct std::hash<Move> {
-	 std::size_t operator()(const Move& move) const {
-		auto h1 = std::hash<unsigned>{}(move.unit);
-		auto h2 = std::hash<unsigned>{}(move.pos.x);
-		auto h3 = std::hash<unsigned>{}(move.pos.y);
-		return h1 ^ (h2 << 1) ^ (h3 << 2);
-	}
-};
-
 /// Reference to unit and its army - please use it only as a
 /// temporary convenience value and only ever use it as a local variable.
 /// Do not pass it to functions/objects - pass UnitIDs instead
@@ -101,6 +93,18 @@ enum IncludeSelf : bool {
 enum IncludeImpassable : bool {
 	INCLUDE_IMPASSABLE = true,
 	NO_INCLUDE_IMPASSABLE = false
+};
+
+}
+
+template<>
+struct std::hash<libspear::Move> {
+	 std::size_t operator()(const libspear::Move& move) const {
+		auto h1 = std::hash<unsigned>{}(move.unit);
+		auto h2 = std::hash<unsigned>{}(move.pos.x);
+		auto h3 = std::hash<unsigned>{}(move.pos.y);
+		return h1 ^ (h2 << 1) ^ (h3 << 2);
+	}
 };
 
 #endif //BATTLE_STRUCTS_H

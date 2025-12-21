@@ -9,6 +9,7 @@
 #include <random>
 #include <omp.h>
 
+namespace libspear {
 
 BattleMCTSNode::BattleMCTSNode(BattleManagerFast bm, BattleMCTSManager& manager, BattleMCTSNode* parent, Move move) 
 	: _manager(manager),
@@ -324,6 +325,7 @@ void BattleMCTSManager::set_root(BattleManagerFastCpp* bmwrapper) {
 }
 
 void BattleMCTSManager::_bind_methods() {
+	using namespace godot;
 	ClassDB::bind_method(D_METHOD("get_optimal_move", "reward_per_visit_dither"), &BattleMCTSManager::get_optimal_move_gd);
 	ClassDB::bind_method(D_METHOD("iterate", "iterations"), &BattleMCTSManager::iterate);
 	ClassDB::bind_method(D_METHOD("set_root", "battle_manager"), &BattleMCTSManager::set_root);
@@ -341,3 +343,4 @@ void BattleMCTSManager::_bind_methods() {
 	BIND_MCTS_PARAMETER(Variant::INT, debug_max_saved_fail_replays);
 }
 
+}

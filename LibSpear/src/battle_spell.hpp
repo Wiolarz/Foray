@@ -6,6 +6,7 @@
 
 #include "unit.hpp"
 
+namespace libspear {
 
 struct BattleSpell {
 	/// Spell's state - currently only represents type, but in the future might represent more complex spells as state machines
@@ -27,7 +28,11 @@ struct BattleSpell {
 	} state = State::SENTINEL;
 	UnitID unit = NO_UNIT; // An owner for uncast spells
 
-	BattleSpell() = default;
+	constexpr BattleSpell() = default;
+	constexpr operator bool() const noexcept {
+		using enum State;
+		return state != NONE and state != SENTINEL;
+	}
 	BattleSpell(godot::String string, UnitID _unit) {
 		if(string == godot::String("Teleport")) {
 			state = State::TELEPORT;
@@ -67,5 +72,7 @@ struct BattleSpell {
 		unit = _unit;
 	}
 };
+
+}
 
 #endif
