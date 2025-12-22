@@ -74,6 +74,7 @@ func grid_input(coord : Vector2i) -> void:
 		BM.paint(coord, current_brush)
 	else:
 		if current_brush.is_it_city_tile():
+			current_brush = current_brush.duplicate()
 			#Player
 			var _player_index : int = context_button2.selected
 			if _player_index == context_button2.item_count - 1: # last element
@@ -86,7 +87,6 @@ func grid_input(coord : Vector2i) -> void:
 			# RACE
 			current_brush.type[DataTile.CITY_RACE_INDEX] = str(context_button.selected)
 		world_grid.paint(coord, current_brush)
-
 
 
 func _switch_grid_type() -> void:
@@ -122,9 +122,6 @@ func _switch_context_button() -> void:
 		context_button2.add_item("3 Player")
 		context_button2.add_item("4 Player")
 		context_button2.add_item("neutral")
-
-
-
 
 
 func _load_tile_buttons():
@@ -201,6 +198,7 @@ func _optimize_grid_size(local_tile_grid : Array) -> Array:
 	return local_tile_grid
 
 
+## can potentially modify city tiles player index to make them contiguous
 func _generate_world_player_slots(tile_grid : WorldEditGrid) -> Dictionary:
 	var player_slots : Dictionary = {}
 	var local_tile_grid : Array = tile_grid.grid.hexes
@@ -214,8 +212,41 @@ func _generate_world_player_slots(tile_grid : WorldEditGrid) -> Dictionary:
 				player_slots[player_idx] = DataTile.get_city_race(tile.type)
 			elif player_slots[player_idx] != DataTile.get_city_race(tile.type):
 				print("player has multiple races assigned")
-				return {} # TODO once map editor were to assign another race it should just replace all previous cities
-	return player_slots
+				# consider TODO once map editor were to assign another race it should just replace all previous cities
+				return {}
+
+	## consider moving below code to another function as it modifies map tiles
+	## pair of old player idx and proper contiguous index
+	var player_idx_translation : Dictionary = {}
+	## Array[int]
+	var players_indexes : Array = player_slots.keys() # TEMP players need to be in order
+	var players_are_set_correctly : bool = true
+	players_indexes.sort()
+	var i = 0
+	for player_idx in players_indexes: # 0 is for neutrals
+		i += 1
+		player_idx_translation[player_idx] = i
+		if i not in players_indexes:
+			players_are_set_correctly = false
+
+	if players_are_set_correctly:  # no further fixes required
+		return player_slots
+	else:
+		return {}
+
+	## TODO finish
+	var fixed_player_slots : Dictionary = {}
+
+	## changing city tiles to align with contiguous indexes
+	for tile_column : Array in local_tile_grid:
+		for tile : DataTile in tile_column:
+			if not tile.is_it_city_tile():
+				continue # TODO add heroes without a starting city
+			var player_idx : int = DataTile.get_type_player_ownership(tile.type)
+			tile.type[DataTile.PLAYER_INDEX] = str(player_idx_translation[player_idx])
+			fixed_player_slots[player_idx_translation[player_idx]] = DataTile.get_city_race(tile.type)
+
+	return fixed_player_slots
 
 
 func _generate_battle_players_slots(local_tile_grid : Array) -> Dictionary:
@@ -283,7 +314,7 @@ func get_battle_map(trim : bool = true) -> DataBattleMap:
 
 	result.grid_width = manager_grid_data.size()
 	result.grid_height = manager_grid_data[0].size()
-	var player_slots =  _generate_battle_players_slots(manager_grid_data)
+	var player_slots = _generate_battle_players_slots(manager_grid_data)
 	# print(player_slots)
 	result.player_slots = player_slots
 	result.max_player_number = player_slots.keys().size()
@@ -293,9 +324,11 @@ func get_battle_map(trim : bool = true) -> DataBattleMap:
 func get_world_map(trim : bool =  true) -> DataWorldMap:
 	var map = world_grid.get_current_map(trim)
 	map.player_slots = _generate_world_player_slots(world_grid)
+
 	print(map.player_slots)
 	if map.player_slots.keys().size() == 0:
 		return null
+	map.max_player_number = map.player_slots.size() # TEMP
 	return map
 
 
