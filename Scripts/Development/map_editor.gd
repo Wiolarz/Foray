@@ -83,7 +83,7 @@ func grid_input(coord : Vector2i) -> void:
 					return
 			else:
 				_player_index += 1 # PLAYER INDEX
-			current_brush.type[DataTile.PLAYER_INDEX] = str(_player_index)
+			current_brush.type[DataTile.CITY_PLAYER_INDEX] = str(_player_index)
 			# RACE
 			current_brush.type[DataTile.CITY_RACE_INDEX] = str(context_button.selected)
 		world_grid.paint(coord, current_brush)
@@ -243,7 +243,7 @@ func _generate_world_player_slots(tile_grid : WorldEditGrid) -> Dictionary:
 			if not tile.is_it_city_tile():
 				continue # TODO add heroes without a starting city
 			var player_idx : int = DataTile.get_type_player_ownership(tile.type)
-			tile.type[DataTile.PLAYER_INDEX] = str(player_idx_translation[player_idx])
+			tile.type[DataTile.CITY_PLAYER_INDEX] = str(player_idx_translation[player_idx])
 			fixed_player_slots[player_idx_translation[player_idx]] = DataTile.get_city_race(tile.type)
 
 	return fixed_player_slots

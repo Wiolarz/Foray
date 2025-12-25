@@ -25,7 +25,7 @@ func is_it_city_tile() -> bool:
 
 
 static func is_type_city_tile(tile_type : String) -> bool:
-	return tile_type.ends_with("_city")
+	return tile_type.begins_with("city")
 
 
 ## if no ownership returns -1
@@ -42,9 +42,12 @@ static func get_city_race(city_type : String) -> DataRace:
 
 
 static func get_type_player_ownership(tile_type : String) -> int:
-	if not tile_type[PLAYER_INDEX].is_valid_int():
+	var used_type := DEPLOY_PLAYER_INDEX
+	if DataTile.is_type_city_tile(tile_type):
+		used_type = CITY_PLAYER_INDEX
+	if not tile_type[used_type].is_valid_int():
 		return -1
-	return tile_type[PLAYER_INDEX].to_int()
+	return tile_type[used_type].to_int()
 
 
 
@@ -54,10 +57,11 @@ func get_spawn_direction() -> int:
 
 
 # MAGIC NUMBERS
-const PLAYER_INDEX := 0
+const DEPLOY_PLAYER_INDEX := 0
 const SPAWN_DIRECTION_INDEX := 2
-const CITY_RACE_INDEX := 2
 
+const CITY_RACE_INDEX := 7
+const CITY_PLAYER_INDEX := 5
 const NEUTRAL_CITY := 0
 const ANY_CITY := 0
 

@@ -643,6 +643,8 @@ func recreate_tile_forms() -> void:
 			var tile : TileForm = TileForm.create_world_tile_new(hex, coord, \
 				to_position(coord))
 			tile_grid.add_child(tile)
+			if hex.place.faction:
+				tile.controller_changed()
 
 
 func recreate_army_forms() -> void:

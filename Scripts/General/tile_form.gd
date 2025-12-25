@@ -29,7 +29,7 @@ static func create_world_editor_tile(data_tile : DataTile, coord_ : Vector2i,
 static func create_world_tile_new(hex_ : WorldHex, coord_ : Vector2i, \
 		new_position : Vector2) -> TileForm:
 	var result : TileForm = CFG.HEX_TILE_FORM_SCENE.instantiate()
-	var image = hex_.get_image()
+	var image := hex_.get_image()
 	result.type = "SENTINEL"
 	if hex_.place:
 		assert(coord_ == hex_.place.coord)
@@ -105,13 +105,6 @@ func controller_changed():
 	$ControllerColor.texture = texture
 
 
-func map_editor_ownership_status(is_owned : bool) -> void:
-	$OwnershipSprite.visible = not is_owned
-	if is_owned:
-		return
-	$OwnershipSprite.texture = RES.load("res://Art/player_colors/gray_color.png")
-
-
 ## for map editor only
 func paint(brush : DataTile) -> void:
 	type = brush.type
@@ -121,11 +114,11 @@ func paint(brush : DataTile) -> void:
 		return
 	if brush.is_it_city_tile():
 		var _neutral := false
-		if int(type[DataTile.PLAYER_INDEX]) == DataTile.NEUTRAL_CITY:
+		if int(type[DataTile.CITY_PLAYER_INDEX]) == DataTile.NEUTRAL_CITY:
 			$ControllerColor.texture = CFG.NEUTRAL_COLOR_TEXTURE
 			_neutral = true
 		else: # Player city
-			$ControllerColor.texture = CFG.TEAM_COLOR_TEXTURES[int(type[DataTile.PLAYER_INDEX])  - 1]
+			$ControllerColor.texture = CFG.TEAM_COLOR_TEXTURES[int(type[DataTile.CITY_PLAYER_INDEX])  - 1]
 
 		if int(type[DataTile.CITY_RACE_INDEX]) == DataTile.ANY_CITY:
 			assert(not _neutral, "attempt to paint neutral any city, advanced race cities are not yet implemented")
