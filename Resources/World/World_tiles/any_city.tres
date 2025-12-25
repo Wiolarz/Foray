@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1_ndycd")
-type = "1_0_city"
+type = "city 1 0"
 texture_path = "res://Art/world_map/city_any.png"
 flip_horizontal = false
