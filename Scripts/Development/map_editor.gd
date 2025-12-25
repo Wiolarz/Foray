@@ -199,10 +199,9 @@ func _optimize_grid_size(local_tile_grid : Array) -> Array:
 
 
 ## can potentially modify city tiles player index to make them contiguous
-func _generate_world_player_slots(tile_grid : WorldEditGrid) -> Dictionary:
+func _generate_world_player_slots(tile_grid : DataWorldMap) -> Dictionary:
 	var player_slots : Dictionary = {}
-	var local_tile_grid : Array = tile_grid.grid.hexes
-	for tile_column : Array in local_tile_grid:
+	for tile_column : Array in tile_grid.grid_data:
 		for tile : DataTile in tile_column:
 			if not tile.is_it_city_tile():
 				continue # TODO add heroes without a starting city
@@ -238,7 +237,7 @@ func _generate_world_player_slots(tile_grid : WorldEditGrid) -> Dictionary:
 	var fixed_player_slots : Dictionary = {}
 
 	## changing city tiles to align with contiguous indexes
-	for tile_column : Array in local_tile_grid:
+	for tile_column : Array in tile_grid.grid_data:
 		for tile : DataTile in tile_column:
 			if not tile.is_it_city_tile():
 				continue # TODO add heroes without a starting city
@@ -281,10 +280,12 @@ func _on_load_map_pressed():
 		if CFG.MAP_EDITOR_BATTLE:
 			_switch_grid_type()
 		world_grid.load_map(map_to_load)
+		UI.set_camera(E.CameraPosition.WORLD, true)
 	else:
 		if not CFG.MAP_EDITOR_BATTLE:
 			_switch_grid_type()
 		BM.load_editor_map(map_to_load)
+		UI.set_camera(E.CameraPosition.BATTLE, true)
 
 
 func get_battle_map(trim : bool = true) -> DataBattleMap:
@@ -322,8 +323,8 @@ func get_battle_map(trim : bool = true) -> DataBattleMap:
 
 
 func get_world_map(trim : bool =  true) -> DataWorldMap:
-	var map = world_grid.get_current_map(trim)
-	map.player_slots = _generate_world_player_slots(world_grid)
+	var map := world_grid.get_current_map(trim)
+	map.player_slots = _generate_world_player_slots(map)
 
 	print(map.player_slots)
 	if map.player_slots.keys().size() == 0:

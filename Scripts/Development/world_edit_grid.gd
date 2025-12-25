@@ -139,7 +139,16 @@ func _find_real_bot_right() -> Vector2i:
 	if col < 0 or row < 0: # empty map so set map to one sentinel
 		col = 0
 		row = 0
-	return Vector2i(col + 1, row + 1)
+	return Vector2i(col, row)
+
+
+func get_bounding_box_rect() -> Rect2:
+	var top_left_tile_form : TileForm = _find_tile_form(_find_real_top_left())
+	var bottom_right_tile_form : TileForm = _find_tile_form(_find_real_bot_right())
+	var box_size : Vector2 = \
+		bottom_right_tile_form.global_position - \
+		top_left_tile_form.global_position
+	return Rect2(top_left_tile_form.global_position, box_size)
 
 
 func _find_max_player_number() -> int:
