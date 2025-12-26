@@ -64,8 +64,8 @@ func get_current_map(trim : bool) -> DataWorldMap:
 		top_left = _find_real_top_left()
 		bot_right = _find_real_bot_right()
 	var map : DataWorldMap = DataWorldMap.new()
-	map.grid_width = bot_right.x - top_left.x
-	map.grid_height = bot_right.y - top_left.y
+	map.grid_width = bot_right.x - top_left.x + 1
+	map.grid_height = bot_right.y - top_left.y + 1
 	print("top left:  %s" % top_left)
 	print("bot right: %s" % bot_right)
 	print("grid size: %s" % Vector2i(map.grid_width, map.grid_height))
