@@ -240,7 +240,7 @@ func _is_clear() -> bool:
 func _on_turn_started(player : Player) -> void:
 	if not _battle_is_ongoing:
 		return
-
+	
 	if _scripted_battle:
 		var current_event := BattleEventDescription.generate_current_battle_event(_battle_grid_state)
 		_scripted_battle.show_text_bubbles(current_event)
@@ -745,7 +745,11 @@ func _perform_move_info(move_info : MoveInfo) -> void:
 	# Make sure there's anything to tween to avoid errors
 	ANIM.main_tween().parallel().tween_interval(0.01)
 	# When the animation's done, emit a signal
-	ANIM.main_tween().tween_callback(func(): move_animation_done.emit())
+	ANIM.main_tween().tween_callback(func(): 
+		move_animation_done.emit()
+		# visualise move
+		turn_move_visualisation(move_info)
+	)
 	# Play the recorded animation
 	ANIM.main_tween().play()
 
@@ -1086,3 +1090,93 @@ func _on_unit_death() -> void:
 	_scripted_battle.show_text_bubbles(current_event)
 
 #endregion Scripted Battles
+
+
+#region Move Highlight
+
+
+# internal state of Move Highlight
+var _highligh_moves : Array[MoveInfo]
+
+
+func turn_move_visualisation(move_info : MoveInfo) -> void:
+	# make sure tile_grid was not cleared
+	if not _tile_grid:
+		return
+	
+	_clear_highlighted_moves()
+	_highlight_move(move_info)
+
+
+func _clear_highlighted_moves() -> void:
+	for highlight_move in _highligh_moves:
+		_clear_move_hightlight(highlight_move)
+
+
+func _highlight_move(move_info : MoveInfo) -> void:
+	var color = Color.TRANSPARENT
+	var source: TileForm = null
+	var destination: TileForm = null
+	match move_info.move_type:
+		MoveInfo.TYPE_MOVE:
+			source = (_tile_grid.get_hex(move_info.move_source) as TileForm)
+			color = Color.YELLOW
+		MoveInfo.TYPE_DEPLOY:
+			color = Color.BLUE
+		MoveInfo.TYPE_SACRIFICE:
+			color = Color.BLACK
+		MoveInfo.TYPE_MAGIC:
+			color = Color.CHARTREUSE
+	
+	destination = (_tile_grid.get_hex(move_info.target_tile_coord) as TileForm)
+	
+	if source:
+		source.set_hightlight_border_settings(TileForm.HighlightBorderSettings.create().setColor(color))
+	if destination:
+		destination.set_hightlight_border_settings(TileForm.HighlightBorderSettings.create().setColor(color))
+	
+	for action in move_info.actions_list:
+		if action is MoveInfo.KilledUnit:
+			var unit = action.unit
+			var cords = unit.coord
+			var tile = (_tile_grid.get_hex(cords) as TileForm)
+			tile.set_hightlight_border_settings(TileForm.HighlightBorderSettings.create().setColor(Color.RED))
+		elif action is MoveInfo.PushedUnit:
+			var tile = (_tile_grid.get_hex(action.from_coord) as TileForm)
+			tile.set_hightlight_border_settings(TileForm.HighlightBorderSettings.create().setColor(Color.RED))
+			tile = (_tile_grid.get_hex(action.to_coord) as TileForm)
+			tile.set_hightlight_border_settings(TileForm.HighlightBorderSettings.create().setColor(Color.RED))
+			
+	_highligh_moves.append(move_info)
+
+
+func _clear_move_hightlight(move_info : MoveInfo) -> void:	
+	var source: TileForm = null
+	var destination: TileForm = null
+	# sepcific logic per type
+	match move_info.move_type:
+		MoveInfo.TYPE_MOVE:
+			source = (_tile_grid.get_hex(move_info.move_source) as TileForm)
+	# for all types we have common destination tile
+	destination = (_tile_grid.get_hex(move_info.target_tile_coord) as TileForm)
+	
+	if source:
+		source.hide_highlight_border()
+		
+	if destination:
+		destination.hide_highlight_border()
+	
+	for action in move_info.actions_list:
+		if action is MoveInfo.KilledUnit:
+			var unit = action.unit
+			var cords = unit.coord
+			var tile = (_tile_grid.get_hex(cords) as TileForm)
+			tile.hide_highlight_border()
+		elif action is MoveInfo.PushedUnit:
+			var tile = (_tile_grid.get_hex(action.from_coord) as TileForm)
+			tile.hide_highlight_border()
+			tile = (_tile_grid.get_hex(action.to_coord) as TileForm)
+			tile.hide_highlight_border()
+
+
+#endregion Move Highlight

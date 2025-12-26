@@ -2,6 +2,8 @@ class_name TileForm
 
 extends Area2D
 
+@onready var highlight_border: Line2D = %HighlightBorder
+
 var coord : Vector2i
 
 var type : String = "SENTINEL"
@@ -109,6 +111,15 @@ func set_hovered(is_hovered : bool):
 	material.set_shader_parameter("highlight_intensity", intensity)
 
 
+func set_hightlight_border_settings(settings : HighlightBorderSettings) -> void:
+	if settings.visible:
+		self.highlight_border.show()
+	self.highlight_border.default_color = settings.color
+	self.highlight_border.width = settings.width
+
+func hide_highlight_border() -> void:
+	self.highlight_border.hide()
+
 func _set_coord(new_coord: Vector2i):
 	coord = new_coord
 	$CoordLabel.text = str(new_coord)
@@ -117,3 +128,25 @@ func _set_texture(texture: Texture2D):
 	$Sprite2D.texture = texture
 
 
+class HighlightBorderSettings:
+	var color: Color = Color.TRANSPARENT
+	var width: int = 30
+	var visible: bool = true
+	
+	static func create() -> HighlightBorderSettings:
+		return HighlightBorderSettings.new()
+	
+		
+	func setColor(_color: Color) -> HighlightBorderSettings:
+		self.color = _color
+		return self
+	
+		
+	func setWidth(_width: int) -> HighlightBorderSettings:
+		self.width = _width
+		return self
+	
+	
+	func setVisible(_visible: bool) -> HighlightBorderSettings:
+		self.visible = _visible
+		return self
