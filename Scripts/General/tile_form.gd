@@ -25,20 +25,20 @@ static func create_world_editor_tile(data_tile : DataTile, coord_ : Vector2i,
 
 
 
-## ugly, FIXME
-static func create_world_tile_new(hex_ : WorldHex, coord_ : Vector2i, \
+## ugly, FIXME TEMP TODO
+static func create_world_tile_new(world_hex : WorldHex, coord_ : Vector2i, \
 		new_position : Vector2) -> TileForm:
 	var result : TileForm = CFG.HEX_TILE_FORM_SCENE.instantiate()
-	var image := hex_.get_image()
+	var image := world_hex.get_image()
 	result.type = "SENTINEL"
-	if hex_.place:
-		assert(coord_ == hex_.place.coord)
-		result.type = hex_.place.get_type()
+	if world_hex.place:
+		assert(coord_ == world_hex.place.coord)
+		result.type = world_hex.place.get_type()
 	result._set_coord(coord_)
 	result._set_texture(image)
 	result.name = "Tile_%s_%s" % [ coord_, result.type ]
 	result.position = new_position
-	result.hex = hex_
+	result.hex = world_hex
 	var place : Place = result.hex.place
 	place.controller_changed.connect(result.controller_changed)
 	return result
@@ -111,16 +111,15 @@ func paint(brush : DataTile) -> void:
 	$Sprite2D.texture = RES.load(brush.texture_path)
 	if brush.is_it_deploy_tile():
 		$Sprite2D.rotation_degrees = brush.get_spawn_direction() * 60
-		return
-	if brush.is_it_city_tile():
+	elif brush.is_it_city_tile():
 		var _neutral := false
 		if int(type[DataTile.CITY_PLAYER_INDEX]) == DataTile.NEUTRAL_CITY:
-			$ControllerColor.texture = CFG.NEUTRAL_COLOR_TEXTURE
+			$ControllerColor.texture = CFG.NEUTRAL_STRONG_COLOR_TEXTURE
 			_neutral = true
 		else: # Player city
-			$ControllerColor.texture = CFG.TEAM_COLOR_TEXTURES[int(type[DataTile.CITY_PLAYER_INDEX])  - 1]
+			$ControllerColor.texture = CFG.CITY_STRONG_COLOR_TEXTURES[int(type[DataTile.CITY_PLAYER_INDEX])  - 1]
 
-		if int(type[DataTile.CITY_RACE_INDEX]) == DataTile.ANY_CITY:
+		if int(type[DataTile.CITY_RACE_INDEX]) == DataTile.ANY_CITY: ## TEMP
 			assert(not _neutral, "attempt to paint neutral any city, advanced race cities are not yet implemented")
 			return
 		$Sprite2D.texture = RES.load(CFG.RACES_LIST[int(type[DataTile.CITY_RACE_INDEX]) - 1].city_texture_path)

@@ -244,9 +244,17 @@ var DEPLOY_TILES_TEXTURES : Array[Texture2D] = [
 	preload("res://Art/battle_map/deploy_green.png"),
 	preload("res://Art/battle_map/deploy_pink.png"),
 ]
-
+var CITY_STRONG_COLOR_TEXTURES : Array[Texture2D] = [
+	preload("res://Art/player_colors/strong_world_colors/strong_blue.png"),
+	preload("res://Art/player_colors/strong_world_colors/strong_orange.png"),
+	preload("res://Art/player_colors/strong_world_colors/strong_red.png"),
+	preload("res://Art/player_colors/strong_world_colors/strong_purple.png"),
+	preload("res://Art/player_colors/strong_world_colors/strong_green.png"),
+	preload("res://Art/player_colors/strong_world_colors/strong_yellow.png"),
+]
 
 var NEUTRAL_COLOR_TEXTURE : Texture2D = preload("res://Art/player_colors/gray_color.png")
+var NEUTRAL_STRONG_COLOR_TEXTURE : Texture2D = preload("res://Art/player_colors/strong_world_colors/strong_grey.png")
 
 var NEUTRAL_COLOR := \
 	DataPlayerColor.create_with_texture("neutral", Color(0.5, 0.5, 0.5), \

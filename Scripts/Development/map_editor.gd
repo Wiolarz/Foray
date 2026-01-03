@@ -121,6 +121,8 @@ func _switch_context_button() -> void:
 		context_button2.add_item("2 Player")
 		context_button2.add_item("3 Player")
 		context_button2.add_item("4 Player")
+		context_button2.add_item("5 Player")
+		context_button2.add_item("6 Player")
 		context_button2.add_item("neutral")
 
 
