@@ -27,3 +27,24 @@ landing spot free/occupied - if a tile directly "behind" a pit from the directio
  1 ally - FALSE
  You cannot move to a tile where an ally is present, UI should prevent it as selecting a tile with ally present attempts to select that unit instead of trying to move there.
  
+ # Spell
+ Every spell is handled by two functions placed in "Magic" region:
+ ## `is_spell_target_valid()`
+
+`provided caster, spell and target tile`
+
+`returns true` if the spell can be casted on that target.
+
+ Its used after player input to determine if its valid.
+ 
+ Additionally its called after player selects a spell its called on every tile on battle to provide visual clue on viable targets.
+ ### Structure
+ Except for few unique spells most are restricted by a simple set of variables saved in spell resource.
+ ## `_perform_magic()`
+ `provided caster, spell and target tile`
+ 
+  performs the spell effect based on spell unique name.
+  
+  While some spells are generic enough to group them as it done to spells applying magical effects, most are unique.
+
+ 
