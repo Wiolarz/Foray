@@ -57,10 +57,115 @@ func _create_button(map_tile : String) -> TextureButton:
 		current_button.modulate = Color.DIM_GRAY
 		tile_name_label.text = tile.type
 
+		if DataTile.is_type_city_tile(tile.type) or DataTile.is_type_deploy_tile(tile.type):
+			context_button.show()
+			context_button2.show()
+		else:
+			context_button.hide()
+			context_button2.hide()
+
 	new_button.pressed.connect(lambda)  # self._button_pressed
 	return new_button
 
 #endregion Setup
+
+
+#region New Empty map
+
+func _generate_empty_map(size_x : int = 5, size_y : int = 5) -> Array: # -> Array[Array[DataTile]]
+	WM.clear_world()
+	BM.unload_for_editor()
+	var grid_data = []
+
+	for tile_column in range(size_x):
+		var current_column = []
+		grid_data.append(current_column)
+		for tile in range(size_y):
+			current_column.append(create_empty_tile())
+
+	return grid_data
+
+
+func _on_new_world_map_pressed():
+	if CFG.MAP_EDITOR_BATTLE:
+		_switch_grid_type()
+	map_file_name_input.text = "new_world"
+
+	BM.unload_for_editor()
+	_drop_world_grid()
+
+	world_grid = WorldEditGrid.new()
+	world_grid.resize(Vector2i(5, 5))
+
+	get_parent().add_child(world_grid)
+	world_grid.name = "EW_GRID"
+
+
+func _on_new_battle_map_pressed():
+	if not CFG.MAP_EDITOR_BATTLE:
+		_switch_grid_type()
+	map_file_name_input.text = "new_battleground"
+
+	_drop_world_grid()
+
+	var new_map = DataBattleMap.new()
+	var grid_data = _generate_empty_map()
+	new_map.grid_data = grid_data
+
+	new_map.grid_height = grid_data.size()
+	new_map.grid_width = grid_data[0].size()
+	#print(new_map.grid_height, " ", new_map.grid_width)
+	BM.unload_for_editor()
+	BM.load_editor_map(new_map)
+
+
+func _drop_world_grid():
+	if not world_grid:
+		return
+	world_grid.get_parent().remove_child(world_grid)
+	world_grid.queue_free()
+	world_grid = null
+
+#endregion New Empty map
+
+
+#region Loading Map
+
+func _on_open_button_pressed():
+	$FileDialog.root_subfolder = CFG.WORLD_MAPS_PATH \
+			if not CFG.MAP_EDITOR_BATTLE else CFG.BATTLE_MAPS_PATH
+	$FileDialog.show()
+
+
+func _on_file_dialog_file_selected(path : String):
+	map_file_name_input.text = path.get_file().trim_suffix(".tres")
+	_on_load_map_pressed()
+
+
+func _on_load_map_pressed():
+	var map_path = CFG.WORLD_MAPS_PATH
+	if CFG.MAP_EDITOR_BATTLE:
+		map_path = CFG.BATTLE_MAPS_PATH
+	map_path += map_file_name_input.text + ".tres"
+	var map_to_load = ResourceLoader.load(map_path, "", ResourceLoader.CACHE_MODE_REPLACE)
+	assert(map_to_load != null, "there is no selected map to be loaded")
+
+	WM.clear_world()
+	BM.unload_for_editor()
+
+	if map_to_load is DataWorldMap:
+		if CFG.MAP_EDITOR_BATTLE:
+			_switch_grid_type()
+		world_grid.load_map(map_to_load)
+		UI.set_camera(E.CameraPosition.WORLD, true)
+	else:
+		if not CFG.MAP_EDITOR_BATTLE:
+			_switch_grid_type()
+		BM.load_editor_map(map_to_load)
+		UI.set_camera(E.CameraPosition.BATTLE, true)
+
+
+#endregion Loading Map
 
 
 #region Tools
@@ -70,6 +175,10 @@ func _create_button(map_tile : String) -> TextureButton:
 func grid_input(coord : Vector2i) -> void:
 	if CFG.MAP_EDITOR_BATTLE:
 		if current_brush.is_it_deploy_tile():
+			current_brush = current_brush.duplicate()
+			var _player_index : int = context_button2.selected + 1
+			current_brush.type[DataTile.DEPLOY_PLAYER_INDEX] = str(_player_index)
+
 			current_brush.type[DataTile.SPAWN_DIRECTION_INDEX] = str(context_button.selected)
 		BM.paint(coord, current_brush)
 	else:
@@ -104,25 +213,20 @@ func _switch_grid_type() -> void:
 func _switch_context_button() -> void:
 	context_button.clear()
 	context_button2.clear()
+	for i in range(1, len(CFG.TEAM_COLORS) + 1):
+		context_button2.add_item(str(i) + " Player")
 	if CFG.MAP_EDITOR_BATTLE:
 		var i := -1
 		for direction in GenericHexGrid.GridDirections.keys():
 			i += 1
 			var option_text : String = direction
 			context_button.add_item(option_text)
-		context_button2.hide()
 	else:
 		context_button.add_item("Any Race")
 		for race in CFG.RACES_LIST:
 			var option_text : String = race.race_name
 			context_button.add_item(option_text)
-		context_button2.show()
-		context_button2.add_item("1 Player")
-		context_button2.add_item("2 Player")
-		context_button2.add_item("3 Player")
-		context_button2.add_item("4 Player")
-		context_button2.add_item("5 Player")
-		context_button2.add_item("6 Player")
+
 		context_button2.add_item("neutral")
 
 
@@ -262,33 +366,6 @@ func _generate_battle_players_slots(local_tile_grid : Array) -> Dictionary:
 					player_slots[player_idx] = 1
 	return player_slots
 
-#endregion Saving Map
-
-
-#region Buttons
-
-func _on_load_map_pressed():
-	var map_path = CFG.WORLD_MAPS_PATH
-	if CFG.MAP_EDITOR_BATTLE:
-		map_path = CFG.BATTLE_MAPS_PATH
-	map_path += map_file_name_input.text + ".tres"
-	var map_to_load = ResourceLoader.load(map_path, "", ResourceLoader.CACHE_MODE_REPLACE)
-	assert(map_to_load != null, "there is no selected map to be loaded")
-
-	WM.clear_world()
-	BM.unload_for_editor()
-
-	if map_to_load is DataWorldMap:
-		if CFG.MAP_EDITOR_BATTLE:
-			_switch_grid_type()
-		world_grid.load_map(map_to_load)
-		UI.set_camera(E.CameraPosition.WORLD, true)
-	else:
-		if not CFG.MAP_EDITOR_BATTLE:
-			_switch_grid_type()
-		BM.load_editor_map(map_to_load)
-		UI.set_camera(E.CameraPosition.BATTLE, true)
-
 
 func get_battle_map(trim : bool = true) -> DataBattleMap:
 	var result = DataBattleMap.new()
@@ -335,10 +412,6 @@ func get_world_map(trim : bool =  true) -> DataWorldMap:
 	return map
 
 
-func show_info(message : String) -> void:
-	message_label.text = message
-
-
 func _on_save_map_pressed():
 	print("saving map")
 	var map_file_name : String = map_file_name_input.text
@@ -367,77 +440,18 @@ func _on_save_map_pressed():
 	# _on_load_map_pressed()
 
 
-func _generate_empty_map(size_x : int = 5, size_y : int = 5) -> Array: # -> Array[Array[DataTile]]
-	WM.clear_world()
-	BM.unload_for_editor()
-	var grid_data = []
+func show_info(message : String) -> void:
+	message_label.text = message
 
-	for tile_column in range(size_x):
-		var current_column = []
-		grid_data.append(current_column)
-		for tile in range(size_y):
-			current_column.append(create_empty_tile())
-
-	return grid_data
+#endregion Saving Map
 
 
-func _on_new_world_map_pressed():
-	if CFG.MAP_EDITOR_BATTLE:
-		_switch_grid_type()
-	map_file_name_input.text = "new_world"
-
-	BM.unload_for_editor()
-	_drop_world_grid()
-
-	world_grid = WorldEditGrid.new()
-	world_grid.resize(Vector2i(5, 5))
-
-	get_parent().add_child(world_grid)
-	world_grid.name = "EW_GRID"
-
-
-func _on_new_battle_map_pressed():
-	if not CFG.MAP_EDITOR_BATTLE:
-		_switch_grid_type()
-	map_file_name_input.text = "new_battleground"
-
-	_drop_world_grid()
-
-	var new_map = DataBattleMap.new()
-	var grid_data = _generate_empty_map()
-	new_map.grid_data = grid_data
-
-	new_map.grid_height = grid_data.size()
-	new_map.grid_width = grid_data[0].size()
-	#print(new_map.grid_height, " ", new_map.grid_width)
-	BM.unload_for_editor()
-	BM.load_editor_map(new_map)
-
-
-func _drop_world_grid():
-	if not world_grid:
-		return
-	world_grid.get_parent().remove_child(world_grid)
-	world_grid.queue_free()
-	world_grid = null
-
-
-func _on_open_button_pressed():
-	$FileDialog.root_subfolder = CFG.WORLD_MAPS_PATH \
-			if not CFG.MAP_EDITOR_BATTLE else CFG.BATTLE_MAPS_PATH
-	$FileDialog.show()
-
-
-func _on_file_dialog_file_selected(path : String):
-	map_file_name_input.text = path.get_file().trim_suffix(".tres")
-	_on_load_map_pressed()
-
+#region Buttons
 
 func _on_back_button_pressed():
 	hide()
 	IM.go_to_main_menu()
 
-#endregion Buttons
 
 func create_empty_tile() -> DataTile:
 	return load(CFG.SENTINEL_TILE_PATH)
@@ -487,3 +501,5 @@ func _on_add_row_pressed():
 		size.y += 1
 		world_grid.resize(size)
 		UI.set_camera(E.CameraPosition.WORLD, false)
+
+#endregion Buttons

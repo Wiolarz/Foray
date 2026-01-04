@@ -459,7 +459,7 @@ func _on_unit_deployment(unit : Unit) -> void:
 		for row : Array in _tile_grid.hexes:
 			for tile : TileForm in row:
 				# TODO replace it with better map editor features
-				if tile.type in ["1_player_spawn", "2_player_spawn", "3_player_spawn", "4_player_spawn"]:
+				if DataTile.is_type_deploy_tile(tile.type):
 					tile.get_node("Sprite2D").texture = load("res://Art/battle_map/grass_tile.png")
 
 	# TODO imo should be refactored

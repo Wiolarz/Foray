@@ -110,6 +110,7 @@ func paint(brush : DataTile) -> void:
 	type = brush.type
 	$Sprite2D.texture = RES.load(brush.texture_path)
 	if brush.is_it_deploy_tile():
+		$Sprite2D.texture = CFG.DEPLOY_TILES_TEXTURES[int(type[DataTile.DEPLOY_PLAYER_INDEX]) - 1]
 		$Sprite2D.rotation_degrees = brush.get_spawn_direction() * 60
 	elif brush.is_it_city_tile():
 		var _neutral := false

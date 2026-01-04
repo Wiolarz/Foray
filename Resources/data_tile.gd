@@ -17,7 +17,7 @@ func is_it_deploy_tile() -> bool:
 
 
 static func is_type_deploy_tile(tile_type : String) -> bool:
-	return tile_type.ends_with("_player_spawn")
+	return tile_type.begins_with("player_spawn")
 
 
 func is_it_city_tile() -> bool:
@@ -52,13 +52,14 @@ static func get_type_player_ownership(tile_type : String) -> int:
 
 
 func get_spawn_direction() -> int:
-	assert(type.ends_with("_player_spawn"), "checked spawn direction for not spawn tile")
+	assert(type.begins_with("player_spawn"), "checked spawn direction for not spawn tile")
 	return int(type[SPAWN_DIRECTION_INDEX])
 
 
 # MAGIC NUMBERS
-const DEPLOY_PLAYER_INDEX := 0
-const SPAWN_DIRECTION_INDEX := 2
+## TODO change the logic to utilize spaces between parameters or rework the tile types
+const DEPLOY_PLAYER_INDEX := 13
+const SPAWN_DIRECTION_INDEX := 15
 
 const CITY_RACE_INDEX := 7
 const CITY_PLAYER_INDEX := 5
