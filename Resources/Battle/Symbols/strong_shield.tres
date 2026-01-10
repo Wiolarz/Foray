@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="DataSymbol" load_steps=33 format=3 uid="uid://j3ikip34n140"]
 
 [ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="1_s0ldv"]
-[ext_resource type="Texture2D" uid="uid://bdo2w0dm2abi8" path="res://Art/animations/shield_block.png" id="2_nvrug"]
+[ext_resource type="Texture2D" uid="uid://du3mf3t46dtak" path="res://Art/animations/shield_block.png" id="2_nvrug"]
 [ext_resource type="Script" uid="uid://xmxwn8o7es5d" path="res://Resources/Battle/symbol_animation.gd" id="3_up8vc"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_f42tl"]
