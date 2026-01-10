@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://q0k58xy6fkre"]
 
-[ext_resource type="Script" path="res://Scripts/UI/Educational/Practice/campaign_battles_menu.gd" id="1_cvlrg"]
+[ext_resource type="Script" uid="uid://dbcsb58b3wkmq" path="res://Scripts/UI/Educational/Practice/campaign_battles_menu.gd" id="1_cvlrg"]
 
 [node name="CampaignBattles" type="Panel"]
 anchors_preset = 15

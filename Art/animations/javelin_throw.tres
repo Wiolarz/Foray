@@ -1,8 +1,8 @@
 [gd_resource type="SpriteFrames" script_class="SymbolAnimation" load_steps=31 format=3 uid="uid://cllk0gaalq3a4"]
 
 [ext_resource type="Texture2D" uid="uid://doskv82n8btte" path="res://Art/animations/empty_texture.tres" id="1_eqf8p"]
-[ext_resource type="Texture2D" uid="uid://d0fdelje8xe38" path="res://Art/animations/javelin_throw.png" id="1_j7p2w"]
-[ext_resource type="Script" path="res://Resources/Battle/symbol_animation.gd" id="1_w3hx2"]
+[ext_resource type="Texture2D" uid="uid://c5bdq2x2ssgjk" path="res://Art/animations/javelin_throw.png" id="1_j7p2w"]
+[ext_resource type="Script" uid="uid://xmxwn8o7es5d" path="res://Resources/Battle/symbol_animation.gd" id="1_w3hx2"]
 [ext_resource type="SpriteFrames" uid="uid://do183rew6gq2p" path="res://Art/animations/javelin_hit.tres" id="2_obi5y"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_y7sx8"]
@@ -201,12 +201,6 @@ animations = [{
 "speed": 24.0
 }]
 script = ExtResource("1_w3hx2")
-offset = Vector2(0, 0)
 scale = Vector2(4, 4)
-failed_offset = Vector2(0, 0)
-hit_on_frame = 0
 projectile_animation_frames = ExtResource("2_obi5y")
 teleport_at = 30
-blocking_offset = Vector2(0, 0)
-blocking_scale = Vector2(1, 1)
-block_on_frame = 0

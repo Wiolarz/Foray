@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://w7gt7at72a2o"]
 
-[ext_resource type="Texture2D" uid="uid://1hbpqpqeo60k" path="res://Art/magic/spell_icons/blood_curse.png" id="1_ict6s"]
-[ext_resource type="Script" path="res://Scripts/UI/Educational/BattleWiki/wiki_spell_button.gd" id="2_uy6rs"]
+[ext_resource type="Texture2D" uid="uid://ebi38vgpupvv" path="res://Art/magic/spell_icons/blood_curse.png" id="1_ict6s"]
+[ext_resource type="Script" uid="uid://cx4ilcjkrieu4" path="res://Scripts/UI/Educational/BattleWiki/wiki_spell_button.gd" id="2_uy6rs"]
 
 [node name="SpellButton" type="TextureButton"]
 custom_minimum_size = Vector2(200, 200)

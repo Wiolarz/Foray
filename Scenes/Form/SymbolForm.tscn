@@ -1,11 +1,11 @@
 [gd_scene load_steps=8 format=3 uid="uid://bc4yv21yc35fw"]
 
-[ext_resource type="Texture2D" uid="uid://hemq1q4l7xbk" path="res://Art/items/blue_axe.png" id="1_pef6c"]
-[ext_resource type="Script" path="res://Scripts/Battle/symbol_form.gd" id="1_qtp2l"]
+[ext_resource type="Texture2D" uid="uid://cxxylsg7lychq" path="res://Art/items/blue_axe.png" id="1_pef6c"]
+[ext_resource type="Script" uid="uid://dfyhc7bur2q2g" path="res://Scripts/Battle/symbol_form.gd" id="1_qtp2l"]
 [ext_resource type="Texture2D" uid="uid://doskv82n8btte" path="res://Art/animations/empty_texture.tres" id="2_i4jbc"]
-[ext_resource type="Texture2D" uid="uid://dcfoqyj258cwm" path="res://Art/icon.svg" id="3_7i7x6"]
-[ext_resource type="Texture2D" uid="uid://cr7323ik8ktci" path="res://Art/evil_icon.png" id="3_akavx"]
-[ext_resource type="Script" path="res://Resources/Battle/symbol_animation.gd" id="4_3babq"]
+[ext_resource type="Texture2D" uid="uid://b4ygoobk12rf8" path="res://Art/icon.svg" id="3_7i7x6"]
+[ext_resource type="Texture2D" uid="uid://dob6mk6lvjga2" path="res://Art/evil_icon.png" id="3_akavx"]
+[ext_resource type="Script" uid="uid://xmxwn8o7es5d" path="res://Resources/Battle/symbol_animation.gd" id="4_3babq"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ueobs"]
 animations = [{
@@ -38,13 +38,6 @@ animations = [{
 "speed": 5.0
 }]
 script = ExtResource("4_3babq")
-offset = Vector2(0, 0)
-scale = Vector2(1, 1)
-hit_on_frame = 0
-teleport_at = 0
-blocking_offset = Vector2(0, 0)
-blocking_scale = Vector2(1, 1)
-block_on_frame = 0
 
 [node name="Base" type="Node2D"]
 script = ExtResource("1_qtp2l")

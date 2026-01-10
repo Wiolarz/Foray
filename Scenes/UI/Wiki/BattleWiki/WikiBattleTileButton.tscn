@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b6xtjog47hpwu"]
 
-[ext_resource type="Texture2D" uid="uid://cuyjne8lpdskl" path="res://Art/battle_map/rock.png" id="1_7llu2"]
-[ext_resource type="Script" path="res://Scripts/UI/Educational/WorldWiki/wiki_world_tile_button.gd" id="2_4ouah"]
+[ext_resource type="Texture2D" uid="uid://beylxnjvaar07" path="res://Art/battle_map/rock.png" id="1_7llu2"]
+[ext_resource type="Script" uid="uid://v7klpfapj2jj" path="res://Scripts/UI/Educational/WorldWiki/wiki_world_tile_button.gd" id="2_4ouah"]
 
 [node name="BattleTerrainButton" type="TextureButton"]
 custom_minimum_size = Vector2(175, 200)

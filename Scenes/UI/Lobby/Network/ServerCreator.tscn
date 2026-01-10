@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dv7ndu5dc7rex"]
 
-[ext_resource type="Script" path="res://Scripts/UI/Lobby/Network/server_creator.gd" id="1_5bd3v"]
+[ext_resource type="Script" uid="uid://b1bmtx35e7cka" path="res://Scripts/UI/Lobby/Network/server_creator.gd" id="1_5bd3v"]
 
 [node name="ServerCreator" type="ScrollContainer"]
 anchors_preset = 15

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://hl5te0kpi734"]
 
-[ext_resource type="Script" path="res://Scripts/UI/World/world_summary_player_stats.gd" id="1_2oyyj"]
+[ext_resource type="Script" uid="uid://of32y4pb8o3k" path="res://Scripts/UI/World/world_summary_player_stats.gd" id="1_2oyyj"]
 
 [node name="PlayerStats" type="VBoxContainer"]
 clip_contents = true

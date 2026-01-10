@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bmu8u1j2leqdl"]
 
-[ext_resource type="Texture2D" uid="uid://cfgnyay571bur" path="res://Art/world_map/mountains.png" id="1_3bjrq"]
-[ext_resource type="Script" path="res://Scripts/UI/Educational/WorldWiki/wiki_world_tile_button.gd" id="2_eadcc"]
+[ext_resource type="Texture2D" uid="uid://cs60j31o5faep" path="res://Art/world_map/mountains.png" id="1_3bjrq"]
+[ext_resource type="Script" uid="uid://v7klpfapj2jj" path="res://Scripts/UI/Educational/WorldWiki/wiki_world_tile_button.gd" id="2_eadcc"]
 
 [node name="WorldTerrainButton" type="TextureButton"]
 custom_minimum_size = Vector2(175, 200)
