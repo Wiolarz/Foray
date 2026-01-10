@@ -37,6 +37,7 @@ RES="*res://Scripts/General/resource_manager.gd"
 
 [debug]
 
+gdscript/warnings/unused_signal=0
 gdscript/warnings/static_called_on_instance=0
 gdscript/warnings/integer_division=0
 
