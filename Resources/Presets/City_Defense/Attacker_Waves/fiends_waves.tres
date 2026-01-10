@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="PresetWaves" load_steps=17 format=3 uid="uid://ds8d2gxxattve"]
+[gd_resource type="Resource" script_class="PresetWaves" load_steps=18 format=3 uid="uid://ds8d2gxxattve"]
 
 [ext_resource type="Resource" uid="uid://dliueq8eloawq" path="res://Resources/Races/fiends.tres" id="1_4olse"]
-[ext_resource type="Script" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="1_fkbdg"]
-[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="3_i4g2w"]
+[ext_resource type="Script" uid="uid://pkro2nylrsgo" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="1_fkbdg"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="3_i4g2w"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="4_b4ioe"]
 [ext_resource type="Resource" uid="uid://dik61pe44pl11" path="res://Resources/Battle/Units/Fiends/fiend_2_cultist.tres" id="4_lhrfu"]
 [ext_resource type="Resource" uid="uid://bl5d73derv1y3" path="res://Resources/Battle/Units/Fiends/fiend_3_impaler.tres" id="5_55sfm"]
 [ext_resource type="Resource" uid="uid://dhptbxwrrbtlu" path="res://Resources/Battle/Units/Fiends/fiend_1_servant.tres" id="6_feb18"]
@@ -13,33 +14,27 @@
 
 [sub_resource type="Resource" id="Resource_k33c6"]
 script = ExtResource("3_i4g2w")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_lhrfu"), ExtResource("5_55sfm")])
-team = 0
+units = Array[ExtResource("4_b4ioe")]([ExtResource("4_lhrfu"), ExtResource("5_55sfm")])
 
 [sub_resource type="Resource" id="Resource_b0ogk"]
 script = ExtResource("3_i4g2w")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("6_feb18"), ExtResource("5_55sfm"), ExtResource("7_vk8xf")])
-team = 0
+units = Array[ExtResource("4_b4ioe")]([ExtResource("6_feb18"), ExtResource("5_55sfm"), ExtResource("7_vk8xf")])
 
 [sub_resource type="Resource" id="Resource_0x8ey"]
 script = ExtResource("3_i4g2w")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("6_feb18"), ExtResource("4_lhrfu"), ExtResource("7_vk8xf"), ExtResource("8_1toag")])
-team = 0
+units = Array[ExtResource("4_b4ioe")]([ExtResource("6_feb18"), ExtResource("4_lhrfu"), ExtResource("7_vk8xf"), ExtResource("8_1toag")])
 
 [sub_resource type="Resource" id="Resource_fnhcn"]
 script = ExtResource("3_i4g2w")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("6_feb18"), ExtResource("4_lhrfu"), ExtResource("5_55sfm"), ExtResource("8_1toag"), ExtResource("9_spamp")])
-team = 0
+units = Array[ExtResource("4_b4ioe")]([ExtResource("6_feb18"), ExtResource("4_lhrfu"), ExtResource("5_55sfm"), ExtResource("8_1toag"), ExtResource("9_spamp")])
 
 [sub_resource type="Resource" id="Resource_v8quo"]
 script = ExtResource("3_i4g2w")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("6_feb18"), ExtResource("4_lhrfu"), ExtResource("5_55sfm"), ExtResource("7_vk8xf"), ExtResource("9_spamp"), ExtResource("8_1toag")])
-team = 0
+units = Array[ExtResource("4_b4ioe")]([ExtResource("6_feb18"), ExtResource("4_lhrfu"), ExtResource("5_55sfm"), ExtResource("7_vk8xf"), ExtResource("9_spamp"), ExtResource("8_1toag")])
 
 [sub_resource type="Resource" id="Resource_es1p0"]
 script = ExtResource("3_i4g2w")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("6_feb18"), ExtResource("4_lhrfu"), ExtResource("5_55sfm"), ExtResource("7_vk8xf"), ExtResource("9_spamp"), ExtResource("8_1toag"), ExtResource("10_sfi8r")])
-team = 0
+units = Array[ExtResource("4_b4ioe")]([ExtResource("6_feb18"), ExtResource("4_lhrfu"), ExtResource("5_55sfm"), ExtResource("7_vk8xf"), ExtResource("9_spamp"), ExtResource("8_1toag"), ExtResource("10_sfi8r")])
 
 [resource]
 script = ExtResource("1_fkbdg")

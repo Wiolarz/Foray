@@ -1,71 +1,60 @@
-[gd_resource type="Resource" script_class="DataWorldMap" load_steps=13 format=3]
+[gd_resource type="Resource" script_class="DataWorldMap" load_steps=13 format=3 uid="uid://kqmfi2i82f0c"]
 
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_7gsxn"]
-[ext_resource type="Script" path="res://Resources/World/data_world_map.gd" id="2_1qotx"]
+[ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_7gsxn"]
+[ext_resource type="Script" uid="uid://bc7dlvxt87gdx" path="res://Resources/World/data_world_map.gd" id="2_1qotx"]
 
 [sub_resource type="Resource" id="Resource_yk0rd"]
 script = ExtResource("1_7gsxn")
 type = "WALL"
 texture_path = "res://Art/world_map/mountains.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_k8xpj"]
 script = ExtResource("1_7gsxn")
 type = "outpost wood"
 texture_path = "res://Art/world_map/outpost_wood.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_t3c60"]
 script = ExtResource("1_7gsxn")
 type = "EMPTY"
 texture_path = "res://Art/world_map/world_grass_hill.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_u81ij"]
 script = ExtResource("1_7gsxn")
 type = "outpost iron"
 texture_path = "res://Art/world_map/outpost_iron.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_22nlq"]
 script = ExtResource("1_7gsxn")
 type = "city 1 0"
 texture_path = "res://Art/world_map/city_any.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_otfii"]
 script = ExtResource("1_7gsxn")
 type = "hunt_spot iron"
 texture_path = "res://Art/world_map/hunt_iron.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_dei25"]
 script = ExtResource("1_7gsxn")
 type = "hunt_spot wood"
 texture_path = "res://Art/world_map/hunt_wood.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_f4slv"]
 script = ExtResource("1_7gsxn")
 type = "hunt_spot ruby"
 texture_path = "res://Art/world_map/hunt_ruby.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_3bpan"]
 script = ExtResource("1_7gsxn")
 type = "outpost ruby"
 texture_path = "res://Art/world_map/outpost_ruby.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_hrytv"]
 script = ExtResource("1_7gsxn")
 type = "city 2 0"
 texture_path = "res://Art/world_map/city_any.png"
-flip_horizontal = false
 
 [resource]
 script = ExtResource("2_1qotx")
-max_player_number = 2
 grid_width = 12
 grid_height = 8
 grid_data = [[SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_k8xpj"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_u81ij"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_22nlq"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_otfii"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_dei25"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_f4slv"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_3bpan"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_3bpan"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_f4slv"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_dei25"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_otfii"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_hrytv"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_u81ij"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_k8xpj"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd")]]

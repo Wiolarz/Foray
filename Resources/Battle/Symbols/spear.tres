@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://bp747guikipcb"]
 
-[ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_rdbby"]
+[ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="1_rdbby"]
 [ext_resource type="SpriteFrames" uid="uid://c74utw2dcipbg" path="res://Art/animations/spear.tres" id="2_akrjp"]
 
 [resource]
@@ -10,10 +10,4 @@ texture_path = "res://Art/items/spear.png"
 symbol_animation = ExtResource("2_akrjp")
 attack_power = 2
 defense_power = 0
-push_power = 0
 counter_attack = true
-parry = false
-parry_break = false
-reach = 0
-activate_turn = true
-activate_move = true

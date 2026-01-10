@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="PresetWaves" load_steps=18 format=3 uid="uid://dmqm4fluw07ne"]
+[gd_resource type="Resource" script_class="PresetWaves" load_steps=19 format=3 uid="uid://dmqm4fluw07ne"]
 
 [ext_resource type="Resource" uid="uid://dw5h2qrh35374" path="res://Resources/Races/elf.tres" id="1_7h3fr"]
-[ext_resource type="Script" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="1_dtw3h"]
-[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="3_ywd85"]
+[ext_resource type="Script" uid="uid://pkro2nylrsgo" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="1_dtw3h"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="3_ywd85"]
 [ext_resource type="Resource" uid="uid://0vft0atich8r" path="res://Resources/Battle/Units/Elves/elf_1_spearmen.tres" id="4_k5b8o"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="4_mrayy"]
 [ext_resource type="Resource" uid="uid://dyrqq63ykm0j8" path="res://Resources/Battle/Units/Elves/elf_4_medusa.tres" id="5_qrhpw"]
 [ext_resource type="Resource" uid="uid://clmtb3vi2x3my" path="res://Resources/Battle/Units/Elves/elf_3_royal_guard.tres" id="6_iqtqc"]
 [ext_resource type="Resource" uid="uid://b44kr1rcexp3v" path="res://Resources/Battle/Units/Elves/elf_unit_hero_noble.tres" id="7_vp0vv"]
@@ -15,38 +16,32 @@
 [sub_resource type="Resource" id="Resource_owa8g"]
 resource_name = "spear+medusa"
 script = ExtResource("3_ywd85")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_k5b8o"), ExtResource("5_qrhpw")])
-team = 0
+units = Array[ExtResource("4_mrayy")]([ExtResource("4_k5b8o"), ExtResource("5_qrhpw")])
 
 [sub_resource type="Resource" id="Resource_477sl"]
 resource_name = "3 noble"
 script = ExtResource("3_ywd85")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_k5b8o"), ExtResource("6_iqtqc"), ExtResource("7_vp0vv")])
-team = 0
+units = Array[ExtResource("4_mrayy")]([ExtResource("4_k5b8o"), ExtResource("6_iqtqc"), ExtResource("7_vp0vv")])
 
 [sub_resource type="Resource" id="Resource_4sj54"]
 resource_name = "4 fencer"
 script = ExtResource("3_ywd85")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_k5b8o"), ExtResource("5_qrhpw"), ExtResource("6_iqtqc"), ExtResource("8_0uxys")])
-team = 0
+units = Array[ExtResource("4_mrayy")]([ExtResource("4_k5b8o"), ExtResource("5_qrhpw"), ExtResource("6_iqtqc"), ExtResource("8_0uxys")])
 
 [sub_resource type="Resource" id="Resource_h8mao"]
 resource_name = "4 stalker"
 script = ExtResource("3_ywd85")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("6_iqtqc"), ExtResource("7_vp0vv"), ExtResource("9_aa7aq"), ExtResource("10_8c6p0")])
-team = 0
+units = Array[ExtResource("4_mrayy")]([ExtResource("6_iqtqc"), ExtResource("7_vp0vv"), ExtResource("9_aa7aq"), ExtResource("10_8c6p0")])
 
 [sub_resource type="Resource" id="Resource_e05qj"]
 resource_name = "5 archmage"
 script = ExtResource("3_ywd85")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("5_qrhpw"), ExtResource("6_iqtqc"), ExtResource("9_aa7aq"), ExtResource("10_8c6p0"), ExtResource("11_7l3v1")])
-team = 0
+units = Array[ExtResource("4_mrayy")]([ExtResource("5_qrhpw"), ExtResource("6_iqtqc"), ExtResource("9_aa7aq"), ExtResource("10_8c6p0"), ExtResource("11_7l3v1")])
 
 [sub_resource type="Resource" id="Resource_lqgay"]
 resource_name = "6 druid"
 script = ExtResource("3_ywd85")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("6_iqtqc"), ExtResource("10_8c6p0"), ExtResource("7_vp0vv"), ExtResource("8_0uxys"), ExtResource("11_7l3v1"), ExtResource("9_aa7aq")])
-team = 0
+units = Array[ExtResource("4_mrayy")]([ExtResource("6_iqtqc"), ExtResource("10_8c6p0"), ExtResource("7_vp0vv"), ExtResource("8_0uxys"), ExtResource("11_7l3v1"), ExtResource("9_aa7aq")])
 
 [resource]
 script = ExtResource("1_dtw3h")

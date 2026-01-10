@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://cckmckjh7etcr"]
 
-[ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_bfguc"]
+[ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="1_bfguc"]
 [ext_resource type="SpriteFrames" uid="uid://dgtkoataeuj5j" path="res://Art/animations/push.tres" id="2_ppjve"]
 
 [resource]
@@ -9,11 +9,4 @@ symbol_name = "fist"
 texture_path = "res://Art/items/claws.png"
 symbol_animation = ExtResource("2_ppjve")
 attack_power = 2
-defense_power = 1
 push_power = 2
-counter_attack = false
-parry = false
-parry_break = false
-reach = 0
-activate_turn = true
-activate_move = true

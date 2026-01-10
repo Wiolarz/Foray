@@ -1,20 +1,20 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=6 format=3 uid="uid://bi7fwl6i8o6a3"]
+[gd_resource type="Resource" script_class="DataHero" load_steps=8 format=3 uid="uid://bi7fwl6i8o6a3"]
 
-[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_ae8ie"]
+[ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_ae8ie"]
 [ext_resource type="Resource" uid="uid://cy0eh6aop7ce7" path="res://Resources/Battle/Units/Elves/elf_unit_hero_druid.tres" id="2_s2ujb"]
-[ext_resource type="Script" path="res://Resources/Races/data_hero.gd" id="3_brb1u"]
+[ext_resource type="Script" uid="uid://c5wg42c04n0wx" path="res://Resources/Races/data_hero.gd" id="3_brb1u"]
+[ext_resource type="Script" uid="uid://b41h5o8sjhdsk" path="res://Resources/Battle/hero_passive.gd" id="4_61cgn"]
+[ext_resource type="Script" uid="uid://hul0nnm2cjqj" path="res://Resources/World/rituals.gd" id="5_6fc1m"]
 
 [sub_resource type="Resource" id="Resource_pcl0g"]
 script = ExtResource("1_ae8ie")
 wood = 4
 iron = 3
-ruby = 0
 
 [sub_resource type="Resource" id="Resource_b63au"]
 script = ExtResource("1_ae8ie")
 wood = 1
 iron = 1
-ruby = 0
 
 [resource]
 script = ExtResource("3_brb1u")
@@ -22,7 +22,3 @@ hero_name = "druid"
 cost = SubResource("Resource_pcl0g")
 revive_cost = SubResource("Resource_b63au")
 data_unit = ExtResource("2_s2ujb")
-starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([])
-starting_level = 1
-max_army_size = 3
-starting_rituals = Array[Resource("res://Resources/World/rituals.gd")]([])

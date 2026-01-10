@@ -1,9 +1,8 @@
 [gd_resource type="Resource" script_class="DataTile" load_steps=2 format=3 uid="uid://d1ru2fono2y34"]
 
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_mawcs"]
+[ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_mawcs"]
 
 [resource]
 script = ExtResource("1_mawcs")
 type = "SENTINEL"
 texture_path = "res://Art/world_map/sentinel.png"
-flip_horizontal = false

@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://sr1570kq7sm8"]
 
-[ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_5wrht"]
+[ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="1_5wrht"]
 [ext_resource type="SpriteFrames" uid="uid://cgm614vjrppqs" path="res://Art/animations/shield.tres" id="2_g88pr"]
 
 [resource]
@@ -8,12 +8,4 @@ script = ExtResource("1_5wrht")
 symbol_name = "shield"
 texture_path = "res://Art/items/pavise.png"
 symbol_animation = ExtResource("2_g88pr")
-attack_power = 0
 defense_power = 2
-push_power = 0
-counter_attack = false
-parry = false
-parry_break = false
-reach = 0
-activate_turn = true
-activate_move = true

@@ -1,49 +1,42 @@
-[gd_resource type="Resource" script_class="DataBattleMap" load_steps=10 format=3]
+[gd_resource type="Resource" script_class="DataBattleMap" load_steps=10 format=3 uid="uid://b8eh3j4qj8iwm"]
 
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_bku71"]
-[ext_resource type="Script" path="res://Resources/Battle/data_battle_map.gd" id="2_hxspy"]
+[ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_bku71"]
+[ext_resource type="Script" uid="uid://07v64r170uow" path="res://Resources/Battle/data_battle_map.gd" id="2_hxspy"]
 
 [sub_resource type="Resource" id="Resource_we60h"]
 script = ExtResource("1_bku71")
 type = "SENTINEL"
 texture_path = "res://Art/world_map/sentinel.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_4jmhq"]
 script = ExtResource("1_bku71")
 type = "player_deploy1130"
 texture_path = "res://Art/battle_map/deploy_blue.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_3djw8"]
 script = ExtResource("1_bku71")
 type = "EMPTY"
 texture_path = "res://Art/battle_map/grass_tile.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_73tby"]
 script = ExtResource("1_bku71")
 type = "wall"
 texture_path = "res://Art/battle_map/rock.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_ms550"]
 script = ExtResource("1_bku71")
 type = "mana_well"
 texture_path = "res://Art/battle_map/mana_well.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_bglad"]
 script = ExtResource("1_bku71")
 type = "hole"
 texture_path = "res://Art/battle_map/hole.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_hfin0"]
 script = ExtResource("1_bku71")
 type = "player_deploy2100"
 texture_path = "res://Art/battle_map/deploy_yellow.png"
-flip_horizontal = false
 
 [resource]
 script = ExtResource("2_hxspy")
@@ -51,7 +44,6 @@ player_slots = {
 1: 10,
 2: 10
 }
-max_player_number = 2
 grid_width = 10
 grid_height = 7
 grid_data = [[SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq")], [SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq"), SubResource("Resource_3djw8")], [SubResource("Resource_we60h"), SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_73tby")], [SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_ms550")], [SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_73tby"), SubResource("Resource_3djw8"), SubResource("Resource_bglad"), SubResource("Resource_73tby")], [SubResource("Resource_73tby"), SubResource("Resource_bglad"), SubResource("Resource_3djw8"), SubResource("Resource_73tby"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8")], [SubResource("Resource_ms550"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_hfin0"), SubResource("Resource_hfin0")], [SubResource("Resource_73tby"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_hfin0"), SubResource("Resource_hfin0"), SubResource("Resource_hfin0"), SubResource("Resource_we60h")], [SubResource("Resource_3djw8"), SubResource("Resource_hfin0"), SubResource("Resource_hfin0"), SubResource("Resource_hfin0"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h")], [SubResource("Resource_hfin0"), SubResource("Resource_hfin0"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h")]]

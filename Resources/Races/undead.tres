@@ -1,25 +1,28 @@
-[gd_resource type="Resource" script_class="DataRace" load_steps=15 format=3 uid="uid://dx1c0jp2spa4i"]
+[gd_resource type="Resource" script_class="DataRace" load_steps=18 format=3 uid="uid://dx1c0jp2spa4i"]
 
+[ext_resource type="Script" uid="uid://b86ur2c8mgwcl" path="res://Resources/Races/data_building.gd" id="1_1rup6"]
 [ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="1_x3ggh"]
 [ext_resource type="Resource" uid="uid://bdcjijsj36d16" path="res://Resources/Races/Buildings/Barracks_2.tres" id="2_xsrup"]
 [ext_resource type="Resource" uid="uid://4to52cd5bq7w" path="res://Resources/Races/Buildings/Barracks_3.tres" id="3_byntk"]
 [ext_resource type="Resource" uid="uid://c58tmflxit2cf" path="res://Resources/Races/Buildings/Sawmill.tres" id="4_1q38u"]
 [ext_resource type="Resource" uid="uid://b5832pkksr873" path="res://Resources/Races/Heroes/Undead/undead_hero_necromancer.tres" id="5_2486t"]
+[ext_resource type="Script" uid="uid://c5wg42c04n0wx" path="res://Resources/Races/data_hero.gd" id="6_6b8c5"]
 [ext_resource type="Resource" uid="uid://hi0yrvk6sqbs" path="res://Resources/Races/Heroes/Undead/undead_hero_reaper.tres" id="6_x1v3t"]
 [ext_resource type="Resource" uid="uid://me6nyqtuubw2" path="res://Resources/Races/Heroes/Undead/undead_hero_scavenger.tres" id="7_0uq73"]
-[ext_resource type="Script" path="res://Resources/Races/data_race.gd" id="8_dpodv"]
+[ext_resource type="Script" uid="uid://xj5cnhe2t57k" path="res://Resources/Races/data_race.gd" id="8_dpodv"]
 [ext_resource type="Resource" uid="uid://3x0qi3t8cq" path="res://Resources/Battle/Units/Undead/undead_1_skelly.tres" id="9_6cilx"]
 [ext_resource type="Resource" uid="uid://b851iu7je1hs4" path="res://Resources/Battle/Units/Undead/undead_2_gardener.tres" id="10_x0j44"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="11_0g1cm"]
 [ext_resource type="Resource" uid="uid://clxq0oak6mwep" path="res://Resources/Battle/Units/Undead/undead_3_watcher.tres" id="11_m1lth"]
-[ext_resource type="Resource" uid="uid://dhpbh4go40wia" path="res://Resources/Battle/Units/Undead/undead_4_ghoul.tres" id="12_i5oj0"]
+[ext_resource type="Resource" uid="uid://dt1seo2gyur7s" path="res://Resources/Battle/Units/Undead/undead_4_ghoul.tres" id="12_i5oj0"]
 [ext_resource type="Resource" uid="uid://d0cockm8rdoxt" path="res://Resources/Battle/Units/Undead/undead_5_death_knight.tres" id="13_2tgku"]
 [ext_resource type="Resource" uid="uid://dfe0ek2xxvv6m" path="res://Resources/Battle/Units/Undead/undead_6_lich.tres" id="14_31tw5"]
 
 [resource]
 script = ExtResource("8_dpodv")
 race_name = "undead"
-units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("9_6cilx"), ExtResource("10_x0j44"), ExtResource("11_m1lth"), ExtResource("12_i5oj0"), ExtResource("13_2tgku"), ExtResource("14_31tw5")])
-heroes = Array[Resource("res://Resources/Races/data_hero.gd")]([ExtResource("5_2486t"), ExtResource("6_x1v3t"), ExtResource("7_0uq73")])
-buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_x3ggh"), ExtResource("2_xsrup"), ExtResource("3_byntk"), ExtResource("4_1q38u")])
+units_data = Array[ExtResource("11_0g1cm")]([ExtResource("9_6cilx"), ExtResource("10_x0j44"), ExtResource("11_m1lth"), ExtResource("12_i5oj0"), ExtResource("13_2tgku"), ExtResource("14_31tw5")])
+heroes = Array[ExtResource("6_6b8c5")]([ExtResource("5_2486t"), ExtResource("6_x1v3t"), ExtResource("7_0uq73")])
+buildings = Array[ExtResource("1_1rup6")]([ExtResource("1_x3ggh"), ExtResource("2_xsrup"), ExtResource("3_byntk"), ExtResource("4_1q38u")])
 description = "Magic > Horde > Elite"
 city_texture_path = "res://Art/world_map/undead_city.png"

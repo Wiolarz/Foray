@@ -1,22 +1,22 @@
-[gd_resource type="Resource" script_class="ScriptedBattle" load_steps=8 format=3 uid="uid://df8h3kvp2gu4j"]
+[gd_resource type="Resource" script_class="ScriptedBattle" load_steps=10 format=3 uid="uid://df8h3kvp2gu4j"]
 
-[ext_resource type="Script" path="res://Resources/Campaign/scripted_battle.gd" id="1_luqo0"]
-[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_nx2o0"]
+[ext_resource type="Script" uid="uid://cmo0n6c34e7as" path="res://Resources/Campaign/scripted_battle.gd" id="1_luqo0"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_nx2o0"]
 [ext_resource type="Resource" uid="uid://bxb7842q7rrib" path="res://Resources/Battle/Units/Classic/orc3.tres" id="2_qk7h4"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="2_urjr0"]
 [ext_resource type="Resource" uid="uid://bwyu6qg7dsisg" path="res://Resources/Battle/Units/Classic/orc1.tres" id="3_o8a1k"]
-[ext_resource type="Resource" uid="uid://bkla74bu46in0" path="res://Resources/Battle/Battle_Maps/8x7duel_10maxUnits.tres" id="4_ks26a"]
+[ext_resource type="Resource" uid="uid://b8eh3j4qj8iwm" path="res://Resources/Battle/Battle_Maps/8x7duel_10maxUnits.tres" id="4_ks26a"]
+[ext_resource type="Script" uid="uid://dvlydmh65virc" path="res://Resources/Campaign/text_bubble.gd" id="7_rq7p2"]
 
 [sub_resource type="Resource" id="Resource_exq3w"]
 resource_name = "Halbards"
 script = ExtResource("1_nx2o0")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_qk7h4"), ExtResource("2_qk7h4"), ExtResource("2_qk7h4")])
-team = 0
+units = Array[ExtResource("2_urjr0")]([ExtResource("2_qk7h4"), ExtResource("2_qk7h4"), ExtResource("2_qk7h4")])
 
 [sub_resource type="Resource" id="Resource_t4t1b"]
 resource_name = "Horde"
 script = ExtResource("1_nx2o0")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k")])
-team = 0
+units = Array[ExtResource("2_urjr0")]([ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k"), ExtResource("3_o8a1k")])
 
 [resource]
 script = ExtResource("1_luqo0")
@@ -24,7 +24,5 @@ scenario_name = "Horde vs Halbard"
 description = "Try to kill as many enemy units using your weak forces.
 ----
 Try to kill all enemy units while minimazing your losses."
-player_side = 0
 armies = Array[ExtResource("1_nx2o0")]([SubResource("Resource_exq3w"), SubResource("Resource_t4t1b")])
 battle_map = ExtResource("4_ks26a")
-text_bubbles = Array[Resource("res://Resources/Campaign/text_bubble.gd")]([])

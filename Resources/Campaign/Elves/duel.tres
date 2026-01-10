@@ -1,30 +1,26 @@
-[gd_resource type="Resource" script_class="ScriptedBattle" load_steps=8 format=3 uid="uid://0l4pxlo5wi02"]
+[gd_resource type="Resource" script_class="ScriptedBattle" load_steps=10 format=3 uid="uid://0l4pxlo5wi02"]
 
-[ext_resource type="Script" path="res://Resources/Campaign/scripted_battle.gd" id="1_grfgo"]
+[ext_resource type="Script" uid="uid://cmo0n6c34e7as" path="res://Resources/Campaign/scripted_battle.gd" id="1_grfgo"]
 [ext_resource type="Resource" uid="uid://bi7fwl6i8o6a3" path="res://Resources/Races/Heroes/Elves/elf_hero_druid.tres" id="1_l22ta"]
-[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="2_vf6oe"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="2_vf6oe"]
 [ext_resource type="Resource" uid="uid://dvcmnrwfkynkj" path="res://Resources/Races/Heroes/Elves/elf_hero_noble.tres" id="3_dip8m"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="3_x3qh5"]
 [ext_resource type="Resource" uid="uid://klcvdl4qaq05" path="res://Resources/Battle/Battle_Maps/basic5x5.tres" id="4_rokl1"]
+[ext_resource type="Script" uid="uid://dvlydmh65virc" path="res://Resources/Campaign/text_bubble.gd" id="7_f77ky"]
 
 [sub_resource type="Resource" id="Resource_chnei"]
 resource_name = "Archamage"
 script = ExtResource("2_vf6oe")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([])
 hero = ExtResource("1_l22ta")
-team = 0
 
 [sub_resource type="Resource" id="Resource_2emi5"]
 resource_name = "Noble"
 script = ExtResource("2_vf6oe")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([])
 hero = ExtResource("3_dip8m")
-team = 0
 
 [resource]
 script = ExtResource("1_grfgo")
 scenario_name = "Duel"
 description = "First introductory fight"
-player_side = 0
 armies = Array[ExtResource("2_vf6oe")]([SubResource("Resource_chnei"), SubResource("Resource_2emi5")])
 battle_map = ExtResource("4_rokl1")
-text_bubbles = Array[Resource("res://Resources/Campaign/text_bubble.gd")]([])

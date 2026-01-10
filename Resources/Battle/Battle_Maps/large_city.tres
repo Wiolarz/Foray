@@ -1,61 +1,52 @@
-[gd_resource type="Resource" script_class="DataBattleMap" load_steps=12 format=3]
+[gd_resource type="Resource" script_class="DataBattleMap" load_steps=12 format=3 uid="uid://d27bijv8i600u"]
 
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_qj17b"]
-[ext_resource type="Script" path="res://Resources/Battle/data_battle_map.gd" id="2_47xat"]
+[ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_qj17b"]
+[ext_resource type="Script" uid="uid://07v64r170uow" path="res://Resources/Battle/data_battle_map.gd" id="2_47xat"]
 
 [sub_resource type="Resource" id="Resource_ban5h"]
 script = ExtResource("1_qj17b")
 type = "SENTINEL"
 texture_path = "res://Art/world_map/sentinel.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_bi28r"]
 script = ExtResource("1_qj17b")
 type = "player_deploy1130"
 texture_path = "res://Art/battle_map/deploy_blue.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_spmf4"]
 script = ExtResource("1_qj17b")
 type = "EMPTY"
 texture_path = "res://Art/battle_map/grass_tile.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_s1duf"]
 script = ExtResource("1_qj17b")
 type = "swamp"
 texture_path = "res://Art/battle_map/swamp.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_env3o"]
 script = ExtResource("1_qj17b")
 type = "mana_well"
 texture_path = "res://Art/battle_map/mana_well.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_e2jeh"]
 script = ExtResource("1_qj17b")
 type = "EMPTY"
 texture_path = "res://Art/battle_map/grass_tile_variant_1.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_5ytdi"]
 script = ExtResource("1_qj17b")
 type = "wall"
 texture_path = "res://Art/battle_map/rock.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_io56w"]
 script = ExtResource("1_qj17b")
 type = "hole"
 texture_path = "res://Art/battle_map/hole.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_k2nn0"]
 script = ExtResource("1_qj17b")
 type = "player_deploy2100"
 texture_path = "res://Art/battle_map/deploy_yellow.png"
-flip_horizontal = false
 
 [resource]
 script = ExtResource("2_47xat")
@@ -63,7 +54,6 @@ player_slots = {
 1: 9,
 2: 9
 }
-max_player_number = 2
 grid_width = 13
 grid_height = 9
 grid_data = [[SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_bi28r"), SubResource("Resource_bi28r")], [SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_bi28r"), SubResource("Resource_bi28r"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4")], [SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_bi28r"), SubResource("Resource_bi28r"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_s1duf")], [SubResource("Resource_ban5h"), SubResource("Resource_bi28r"), SubResource("Resource_bi28r"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_s1duf"), SubResource("Resource_spmf4")], [SubResource("Resource_bi28r"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_env3o"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4")], [SubResource("Resource_e2jeh"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_5ytdi"), SubResource("Resource_spmf4"), SubResource("Resource_env3o"), SubResource("Resource_s1duf")], [SubResource("Resource_s1duf"), SubResource("Resource_s1duf"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4")], [SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_io56w"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4")], [SubResource("Resource_spmf4"), SubResource("Resource_env3o"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_io56w"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_k2nn0")], [SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_k2nn0"), SubResource("Resource_k2nn0"), SubResource("Resource_ban5h")], [SubResource("Resource_spmf4"), SubResource("Resource_5ytdi"), SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_k2nn0"), SubResource("Resource_k2nn0"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h")], [SubResource("Resource_spmf4"), SubResource("Resource_spmf4"), SubResource("Resource_k2nn0"), SubResource("Resource_k2nn0"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h")], [SubResource("Resource_k2nn0"), SubResource("Resource_k2nn0"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h"), SubResource("Resource_ban5h")]]

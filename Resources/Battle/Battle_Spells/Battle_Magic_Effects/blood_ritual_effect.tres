@@ -1,10 +1,9 @@
 [gd_resource type="Resource" script_class="DataMagicEffect" load_steps=2 format=3 uid="uid://80r5anpxulsh"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/data_magic_effect.gd" id="1_oacus"]
+[ext_resource type="Script" uid="uid://lgbukttoatcv" path="res://Scripts/Battle/data_magic_effect.gd" id="1_oacus"]
 
 [resource]
 script = ExtResource("1_oacus")
 name = "Blood Ritual"
 icon_path = "res://Art/magic/spell_icons/blood_curse.png"
-spell_effects = Array[ExtResource("1_oacus")]([])
 passive_effect = true
