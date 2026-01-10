@@ -122,7 +122,7 @@ var RACES_LIST : Array[DataRace] = [
 const UNIT_FORM_SCENE = preload("res://Scenes/Form/UnitForm.tscn")
 var HEX_TILE_FORM_SCENE := load("res://Scenes/Form/TileForm.tscn") as PackedScene
 
-const DEPLOY_BUTTON_TEXTURE : Texture2D = preload("res://Art/battle_map/grass.png")
+const DEPLOY_BUTTON_TEXTURE : Texture2D = preload("res://Art/battle_map/grass_tile.png")
 const EMPTY_SLOT_TEXTURE : Texture2D = preload("res://Art/items/hex_border_light.png")
 
 const DEFAULT_ARMY_FORM = preload("res://Scenes/Form/ArmyForm.tscn")
@@ -224,9 +224,10 @@ var TEAM_COLORS : Array[DataPlayerColor] = [
 	DataPlayerColor.create("blue", Color(0.0, 0.4, 1.0)),
 	DataPlayerColor.create("orange", Color(0.9, 0.5, 0.0)),
 	DataPlayerColor.create("red", Color(1.0, 0.0, 0.0)),
-	DataPlayerColor.create("purple", Color(0.9, 0.2, 0.85)),
+	DataPlayerColor.create("purple", Color.MEDIUM_PURPLE),
 	DataPlayerColor.create("green", Color(0.0, 0.9, 0.0)),
-	DataPlayerColor.create("yellow", Color(0.9, 0.8, 0.0)),
+	DataPlayerColor.create("pink", Color.DEEP_PINK),
+	#DataPlayerColor.create("yellow", Color(0.9, 0.8, 0.0)),
 ]
 var TEAM_COLOR_TEXTURES : Array[Texture2D] = [
 	preload("res://Art/player_colors/blue_color.png"),
@@ -234,7 +235,8 @@ var TEAM_COLOR_TEXTURES : Array[Texture2D] = [
 	preload("res://Art/player_colors/red_color.png"),
 	preload("res://Art/player_colors/purple_color.png"),
 	preload("res://Art/player_colors/green_color.png"),
-	preload("res://Art/player_colors/yellow_color.png"),
+	preload("res://Art/player_colors/pink_color.png"),
+	#preload("res://Art/player_colors/yellow_color.png"),
 ]
 var DEPLOY_TILES_TEXTURES : Array[Texture2D] = [
 	preload("res://Art/battle_map/deploy_blue.png"),

@@ -529,8 +529,7 @@ func get_player_mana(player : Player) -> int:
 ## visually captures the well
 ## unit get's their coord updated during animation
 func capture_mana_well(coord : Vector2i, unit : Unit) -> void:
-
-	var controller_sprite = _tile_grid.get_hex(coord).get_node("ControlerSprite")
+	var controller_sprite = _tile_grid.get_hex(coord).get_node("ControllerColor")
 	controller_sprite.visible = true
 	var data_color : DataPlayerColor = unit.controller.get_player_color()
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://blufc0sx3kr7b"
-path="res://.godot/imported/purple_color.png-0370e0ecbb4241ba7358a610125c00b3.ctex"
+uid="uid://dfka0wf2b35e1"
+path="res://.godot/imported/pink_color.png-7c5207d29ffdf15b08dafaf4dc3c53be.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/player_colors/purple_color.png"
-dest_files=["res://.godot/imported/purple_color.png-0370e0ecbb4241ba7358a610125c00b3.ctex"]
+source_file="res://Art/player_colors/pink_color.png"
+dest_files=["res://.godot/imported/pink_color.png-7c5207d29ffdf15b08dafaf4dc3c53be.ctex"]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
