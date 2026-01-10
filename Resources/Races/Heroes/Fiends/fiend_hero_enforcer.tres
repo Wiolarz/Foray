@@ -1,20 +1,16 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=6 format=3 uid="uid://cjvk5ebevdqo"]
+[gd_resource type="Resource" script_class="DataHero" load_steps=8 format=3 uid="uid://cjvk5ebevdqo"]
 
-[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_0tfq4"]
-[ext_resource type="Script" path="res://Resources/Races/data_hero.gd" id="1_5vsfn"]
+[ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_0tfq4"]
+[ext_resource type="Script" uid="uid://c5wg42c04n0wx" path="res://Resources/Races/data_hero.gd" id="1_5vsfn"]
 [ext_resource type="Resource" uid="uid://k1ro1wsvvk5h" path="res://Resources/Battle/Units/Fiends/fiend_hero_enforcer.tres" id="2_r5of7"]
+[ext_resource type="Script" uid="uid://b41h5o8sjhdsk" path="res://Resources/Battle/hero_passive.gd" id="4_jkmif"]
+[ext_resource type="Script" uid="uid://hul0nnm2cjqj" path="res://Resources/World/rituals.gd" id="5_yyl5f"]
 
 [sub_resource type="Resource" id="Resource_ufyhu"]
 script = ExtResource("1_0tfq4")
-wood = 0
-iron = 0
-ruby = 0
 
 [sub_resource type="Resource" id="Resource_5fuki"]
 script = ExtResource("1_0tfq4")
-wood = 0
-iron = 0
-ruby = 0
 
 [resource]
 script = ExtResource("1_5vsfn")
@@ -22,7 +18,3 @@ hero_name = "Enforcer"
 cost = SubResource("Resource_ufyhu")
 revive_cost = SubResource("Resource_5fuki")
 data_unit = ExtResource("2_r5of7")
-starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([])
-starting_level = 1
-max_army_size = 3
-max_movement_points = 3

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://da3yl34ys750t"]
 
 [ext_resource type="PackedScene" uid="uid://cyu8o32kcgtcv" path="res://Scenes/UI/World/TradeArmyPanel.tscn" id="1_jm8dv"]
-[ext_resource type="Script" path="res://Scripts/UI/World/trade_screen.gd" id="1_kncfa"]
+[ext_resource type="Script" uid="uid://2kcql8r1p4n2" path="res://Scripts/UI/World/trade_screen.gd" id="1_kncfa"]
 
 [node name="TradeScreen" type="PanelContainer"]
 anchors_preset = 15

@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://ceurpxmgmn5c1"]
 
-[ext_resource type="Shader" path="res://Art/tile_overall_shader.gdshader" id="1_egcue"]
-[ext_resource type="Script" path="res://Scripts/General/tile_form.gd" id="1_uelmv"]
-[ext_resource type="Texture2D" uid="uid://dffoe1yqgsgjm" path="res://Art/world_map/sentinel.png" id="2_utlft"]
-[ext_resource type="Texture2D" uid="uid://crdvx0u53quig" path="res://Art/player_colors/gray_color.png" id="3_eg6ph"]
+[ext_resource type="Shader" uid="uid://dvvhpegfb4n64" path="res://Art/tile_overall_shader.gdshader" id="1_egcue"]
+[ext_resource type="Script" uid="uid://c2irlhl8snyny" path="res://Scripts/General/tile_form.gd" id="1_uelmv"]
+[ext_resource type="Texture2D" uid="uid://cxmj0635eybqq" path="res://Art/world_map/sentinel.png" id="2_utlft"]
+[ext_resource type="Texture2D" uid="uid://bxbtyl5ujxbla" path="res://Art/player_colors/gray_color.png" id="3_eg6ph"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wh5ai"]
 resource_local_to_scene = true

@@ -1,15 +1,18 @@
-[gd_resource type="Resource" script_class="DataRace" load_steps=15 format=3 uid="uid://dliueq8eloawq"]
+[gd_resource type="Resource" script_class="DataRace" load_steps=18 format=3 uid="uid://dliueq8eloawq"]
 
-[ext_resource type="Script" path="res://Resources/Races/data_race.gd" id="1_nw0v3"]
+[ext_resource type="Script" uid="uid://b86ur2c8mgwcl" path="res://Resources/Races/data_building.gd" id="1_213iv"]
+[ext_resource type="Script" uid="uid://xj5cnhe2t57k" path="res://Resources/Races/data_race.gd" id="1_nw0v3"]
 [ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="1_q2ttk"]
 [ext_resource type="Resource" uid="uid://bdcjijsj36d16" path="res://Resources/Races/Buildings/Barracks_2.tres" id="2_j4rs3"]
 [ext_resource type="Resource" uid="uid://4to52cd5bq7w" path="res://Resources/Races/Buildings/Barracks_3.tres" id="3_kotkv"]
 [ext_resource type="Resource" uid="uid://c58tmflxit2cf" path="res://Resources/Races/Buildings/Sawmill.tres" id="4_h4i84"]
 [ext_resource type="Resource" uid="uid://d1feykna5ubfo" path="res://Resources/Races/Heroes/Fiends/fiend_hero_prophet.tres" id="5_qpatp"]
+[ext_resource type="Script" uid="uid://c5wg42c04n0wx" path="res://Resources/Races/data_hero.gd" id="6_08tgl"]
 [ext_resource type="Resource" uid="uid://cjvk5ebevdqo" path="res://Resources/Races/Heroes/Fiends/fiend_hero_enforcer.tres" id="6_njwc8"]
 [ext_resource type="Resource" uid="uid://dgnjky4w720c1" path="res://Resources/Races/Heroes/Fiends/fiend_hero_rigid.tres" id="7_ejoag"]
 [ext_resource type="Resource" uid="uid://dhptbxwrrbtlu" path="res://Resources/Battle/Units/Fiends/fiend_1_servant.tres" id="9_fx7fc"]
 [ext_resource type="Resource" uid="uid://dik61pe44pl11" path="res://Resources/Battle/Units/Fiends/fiend_2_cultist.tres" id="10_51vy3"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="11_4p72x"]
 [ext_resource type="Resource" uid="uid://bl5d73derv1y3" path="res://Resources/Battle/Units/Fiends/fiend_3_impaler.tres" id="11_xltke"]
 [ext_resource type="Resource" uid="uid://dw8ubgqhc0opp" path="res://Resources/Battle/Units/Fiends/fiend_4_bruiser.tres" id="12_mfcmw"]
 [ext_resource type="Resource" uid="uid://cj2klucehwp7" path="res://Resources/Battle/Units/Fiends/fiend_5_sacrificer.tres" id="13_frp4v"]
@@ -18,8 +21,8 @@
 [resource]
 script = ExtResource("1_nw0v3")
 race_name = "Fiends"
-units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("9_fx7fc"), ExtResource("10_51vy3"), ExtResource("11_xltke"), ExtResource("12_mfcmw"), ExtResource("13_frp4v"), ExtResource("14_xqvb8")])
-heroes = Array[Resource("res://Resources/Races/data_hero.gd")]([ExtResource("5_qpatp"), ExtResource("6_njwc8"), ExtResource("7_ejoag")])
-buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_q2ttk"), ExtResource("2_j4rs3"), ExtResource("3_kotkv"), ExtResource("4_h4i84")])
+units_data = Array[ExtResource("11_4p72x")]([ExtResource("9_fx7fc"), ExtResource("10_51vy3"), ExtResource("11_xltke"), ExtResource("12_mfcmw"), ExtResource("13_frp4v"), ExtResource("14_xqvb8")])
+heroes = Array[ExtResource("6_08tgl")]([ExtResource("5_qpatp"), ExtResource("6_njwc8"), ExtResource("7_ejoag")])
+buildings = Array[ExtResource("1_213iv")]([ExtResource("1_q2ttk"), ExtResource("2_j4rs3"), ExtResource("3_kotkv"), ExtResource("4_h4i84")])
 description = "T>M>P"
 city_texture_path = "res://Art/world_map/fiends_city.png"

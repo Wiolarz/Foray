@@ -1,55 +1,47 @@
-[gd_resource type="Resource" script_class="DataBattleMap" load_steps=11 format=3]
+[gd_resource type="Resource" script_class="DataBattleMap" load_steps=11 format=3 uid="uid://t1equnls77c"]
 
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_m4hiv"]
-[ext_resource type="Script" path="res://Resources/Battle/data_battle_map.gd" id="2_qd1a8"]
+[ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_m4hiv"]
+[ext_resource type="Script" uid="uid://07v64r170uow" path="res://Resources/Battle/data_battle_map.gd" id="2_qd1a8"]
 
 [sub_resource type="Resource" id="Resource_ualql"]
 script = ExtResource("1_m4hiv")
 type = "SENTINEL"
 texture_path = "res://Art/world_map/sentinel.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_vyd1q"]
 script = ExtResource("1_m4hiv")
 type = "mana_well"
 texture_path = "res://Art/battle_map/mana_well.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_uoy02"]
 script = ExtResource("1_m4hiv")
 type = "EMPTY"
 texture_path = "res://Art/battle_map/grass_tile.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_q872o"]
 script = ExtResource("1_m4hiv")
 type = "EMPTY"
 texture_path = "res://Art/battle_map/grass_tile_variant_1.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_g6cjo"]
 script = ExtResource("1_m4hiv")
 type = "wall"
 texture_path = "res://Art/battle_map/rock.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_o5iyj"]
 script = ExtResource("1_m4hiv")
 type = "player_deploy1110"
 texture_path = "res://Art/battle_map/deploy_blue.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_q6n58"]
 script = ExtResource("1_m4hiv")
 type = "hole"
 texture_path = "res://Art/battle_map/hole.png"
-flip_horizontal = false
 
 [sub_resource type="Resource" id="Resource_p1t2u"]
 script = ExtResource("1_m4hiv")
 type = "player_deploy2100"
 texture_path = "res://Art/battle_map/deploy_yellow.png"
-flip_horizontal = false
 
 [resource]
 script = ExtResource("2_qd1a8")
@@ -57,7 +49,6 @@ player_slots = {
 1: 1,
 2: 3
 }
-max_player_number = 2
 grid_width = 8
 grid_height = 6
 grid_data = [[SubResource("Resource_ualql"), SubResource("Resource_vyd1q"), SubResource("Resource_uoy02"), SubResource("Resource_uoy02"), SubResource("Resource_uoy02"), SubResource("Resource_q872o")], [SubResource("Resource_uoy02"), SubResource("Resource_g6cjo"), SubResource("Resource_g6cjo"), SubResource("Resource_g6cjo"), SubResource("Resource_uoy02"), SubResource("Resource_o5iyj")], [SubResource("Resource_uoy02"), SubResource("Resource_uoy02"), SubResource("Resource_uoy02"), SubResource("Resource_vyd1q"), SubResource("Resource_g6cjo"), SubResource("Resource_ualql")], [SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_ualql")], [SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_ualql")], [SubResource("Resource_uoy02"), SubResource("Resource_uoy02"), SubResource("Resource_q6n58"), SubResource("Resource_uoy02"), SubResource("Resource_ualql"), SubResource("Resource_ualql")], [SubResource("Resource_p1t2u"), SubResource("Resource_p1t2u"), SubResource("Resource_q6n58"), SubResource("Resource_uoy02"), SubResource("Resource_ualql"), SubResource("Resource_ualql")], [SubResource("Resource_ualql"), SubResource("Resource_ualql"), SubResource("Resource_ualql"), SubResource("Resource_p1t2u"), SubResource("Resource_ualql"), SubResource("Resource_ualql")]]

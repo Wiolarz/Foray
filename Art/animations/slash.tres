@@ -1,7 +1,7 @@
 [gd_resource type="SpriteFrames" script_class="SymbolAnimation" load_steps=23 format=3 uid="uid://fch32vlpkdg"]
 
-[ext_resource type="Script" path="res://Resources/Battle/symbol_animation.gd" id="1_pbhwx"]
-[ext_resource type="Texture2D" uid="uid://b1lrm3yk6nfr2" path="res://Art/animations/Slash.png" id="1_utdxt"]
+[ext_resource type="Script" uid="uid://xmxwn8o7es5d" path="res://Resources/Battle/symbol_animation.gd" id="1_pbhwx"]
+[ext_resource type="Texture2D" uid="uid://l7uo16w0yxq2" path="res://Art/animations/Slash.png" id="1_utdxt"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a020y"]
 atlas = ExtResource("1_utdxt")
@@ -155,7 +155,3 @@ offset = Vector2(-500, -200)
 scale = Vector2(4, 4)
 failed_offset = Vector2(0, -300)
 hit_on_frame = 4
-teleport_at = 0
-blocking_offset = Vector2(0, 0)
-blocking_scale = Vector2(1, 1)
-block_on_frame = 0

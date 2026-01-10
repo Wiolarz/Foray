@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b7jfsxfq2gkxs"]
 
-[ext_resource type="Script" path="res://Scripts/UI/volume_slider.gd" id="1_3svej"]
-[ext_resource type="Texture2D" uid="uid://0lpxbb0xhfsn" path="res://Art/old/spear.png" id="2_rwqxd"]
+[ext_resource type="Script" uid="uid://ckftb4yhncae2" path="res://Scripts/UI/volume_slider.gd" id="1_3svej"]
+[ext_resource type="Texture2D" uid="uid://bysq16k1yvtki" path="res://Art/old/spear.png" id="2_rwqxd"]
 
 [node name="VolumeSlider" type="VBoxContainer"]
 custom_minimum_size = Vector2(60, 240)

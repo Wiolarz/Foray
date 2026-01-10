@@ -6,7 +6,7 @@ extends EditorScript
 ## to run use File > Run (default shortcut ctrl + shift + X)
 
 const START_DIR = "res://Resources"
-const EXTENSIONS = [ "tres", "res" ]
+const EXTENSIONS = [ "tres", "res" , "png", "tscn" ]
 
 
 func _run():

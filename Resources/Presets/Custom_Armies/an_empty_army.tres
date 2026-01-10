@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="PresetArmy" load_steps=2 format=3 uid="uid://cylve5l0orr7h"]
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=3 format=3 uid="uid://cylve5l0orr7h"]
 
-[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_nv8jt"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_nv8jt"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="2_gbvxn"]
 
 [resource]
 script = ExtResource("1_nv8jt")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([])
-team = 0

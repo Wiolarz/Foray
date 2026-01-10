@@ -1,10 +1,10 @@
 [gd_scene load_steps=13 format=3 uid="uid://cwv8isdmpg34u"]
 
-[ext_resource type="Script" path="res://Scripts/Development/tile_editor.gd" id="1_x074o"]
-[ext_resource type="Shader" path="res://Art/UI/background.gdshader" id="2_812di"]
+[ext_resource type="Script" uid="uid://bef0trj6ig5k4" path="res://Scripts/Development/tile_editor.gd" id="1_x074o"]
+[ext_resource type="Shader" uid="uid://dx17bf7srxnxf" path="res://Art/UI/background.gdshader" id="2_812di"]
 [ext_resource type="StyleBox" uid="uid://cr3cpjlxxfm4r" path="res://Art/UI/marble_box.tres" id="3_occqe"]
 [ext_resource type="PackedScene" uid="uid://ceurpxmgmn5c1" path="res://Scenes/Form/TileForm.tscn" id="4_r3svn"]
-[ext_resource type="Shader" path="res://Art/tile_overall_shader.gdshader" id="5_3icxv"]
+[ext_resource type="Shader" uid="uid://dvvhpegfb4n64" path="res://Art/tile_overall_shader.gdshader" id="5_3icxv"]
 [ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="6_6n0xr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ea3xn"]

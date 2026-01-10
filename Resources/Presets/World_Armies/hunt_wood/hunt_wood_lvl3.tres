@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="PresetArmy" load_steps=3 format=3 uid="uid://dn2teepi0hd4u"]
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=4 format=3 uid="uid://dn2teepi0hd4u"]
 
-[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_6xuj5"]
-[ext_resource type="Resource" uid="uid://bujeesyrw6q5e" path="res://Resources/Battle/Units/Neutral/wood_dryad.tres" id="2_hipin"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_6xuj5"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="2_b451o"]
+[ext_resource type="Resource" uid="uid://vetcam2arfu" path="res://Resources/Battle/Units/Neutral/wood_dryad.tres" id="2_hipin"]
 
 [resource]
 script = ExtResource("1_6xuj5")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_hipin"), ExtResource("2_hipin"), ExtResource("2_hipin")])
+units = Array[ExtResource("2_b451o")]([ExtResource("2_hipin"), ExtResource("2_hipin"), ExtResource("2_hipin")])

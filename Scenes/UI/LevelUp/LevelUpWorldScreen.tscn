@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://5g2iqdyqmc75"]
 
-[ext_resource type="Script" path="res://Scripts/UI/LevelUp/level_up_world.gd" id="1_kwwbk"]
+[ext_resource type="Script" uid="uid://b1ctfirr1iuiy" path="res://Scripts/UI/LevelUp/level_up_world.gd" id="1_kwwbk"]
 [ext_resource type="PackedScene" uid="uid://b7fpb6r5mluj1" path="res://Scenes/UI/LevelUp/TierTalentPanel.tscn" id="2_j8sai"]
 [ext_resource type="PackedScene" uid="uid://m7kfrja5xmn4" path="res://Scenes/UI/LevelUp/TierSkillPanel.tscn" id="3_3qo4o"]
 

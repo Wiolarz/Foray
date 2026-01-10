@@ -1,18 +1,13 @@
-[gd_resource type="Resource" script_class="DataBuilding" load_steps=4 format=3 uid="uid://c58tmflxit2cf"]
+[gd_resource type="Resource" script_class="DataBuilding" load_steps=5 format=3 uid="uid://c58tmflxit2cf"]
 
-[ext_resource type="Script" path="res://Resources/Races/data_building.gd" id="1_b0dm8"]
-[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_gka5w"]
+[ext_resource type="Script" uid="uid://b86ur2c8mgwcl" path="res://Resources/Races/data_building.gd" id="1_b0dm8"]
+[ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_gka5w"]
+[ext_resource type="Script" uid="uid://bbqlqxlj8j67p" path="res://Scripts/World/Economy/discount.gd" id="2_ft5g2"]
 
 [sub_resource type="Resource" id="Resource_pj0nc"]
 script = ExtResource("1_gka5w")
-wood = 0
-iron = 0
-ruby = 0
 
 [resource]
 script = ExtResource("1_b0dm8")
 name = "sawmill"
 cost = SubResource("Resource_pj0nc")
-requirements = Array[ExtResource("1_b0dm8")]([])
-discounts = Array[Resource("res://Scripts/World/Economy/discount.gd")]([])
-outpost_requirement = ""

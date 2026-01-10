@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cmmq8s1lme2oe"]
 
-[ext_resource type="Texture2D" uid="uid://bxt8qblt76cyj" path="res://Art/magic/mana_icon.png" id="1_mdav6"]
-[ext_resource type="Texture2D" uid="uid://xoe78lmyi4dg" path="res://Art/battle_map/mana_well.png" id="2_6tlng"]
+[ext_resource type="Texture2D" uid="uid://del4skbrhgoim" path="res://Art/magic/mana_icon.png" id="1_mdav6"]
+[ext_resource type="Texture2D" uid="uid://cft2vohkrios5" path="res://Art/battle_map/mana_well.png" id="2_6tlng"]
 
 [node name="WikiMagicCyclone" type="Panel"]
 clip_contents = true

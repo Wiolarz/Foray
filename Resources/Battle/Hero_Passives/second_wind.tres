@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="HeroPassive" load_steps=2 format=3 uid="uid://thwdmxod3ef0"]
 
-[ext_resource type="Script" path="res://Resources/Battle/hero_passive.gd" id="1_rnqlx"]
+[ext_resource type="Script" uid="uid://b41h5o8sjhdsk" path="res://Resources/Battle/hero_passive.gd" id="1_rnqlx"]
 
 [resource]
 script = ExtResource("1_rnqlx")

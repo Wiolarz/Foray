@@ -1,25 +1,24 @@
-[gd_resource type="Resource" script_class="PresetBattle" load_steps=13 format=3 uid="uid://b11t4fdtracdy"]
+[gd_resource type="Resource" script_class="PresetBattle" load_steps=14 format=3 uid="uid://b11t4fdtracdy"]
 
-[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_wyayb"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_wyayb"]
 [ext_resource type="Resource" uid="uid://1yy1fjfn2n8k" path="res://Resources/Battle/Units/Elves/elf_unit_hero_stalker.tres" id="2_s548k"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="2_wjq0m"]
 [ext_resource type="Resource" uid="uid://clmtb3vi2x3my" path="res://Resources/Battle/Units/Elves/elf_3_royal_guard.tres" id="3_rmvn8"]
-[ext_resource type="Resource" uid="uid://bh4qurujj27rh" path="res://Resources/Battle/Units/Classic/elf3.tres" id="4_bbcar"]
+[ext_resource type="Resource" uid="uid://dr5dk0w41qymq" path="res://Resources/Battle/Units/Classic/elf3.tres" id="4_bbcar"]
 [ext_resource type="Resource" uid="uid://bwyu6qg7dsisg" path="res://Resources/Battle/Units/Classic/orc1.tres" id="5_0rbau"]
 [ext_resource type="Resource" uid="uid://0vft0atich8r" path="res://Resources/Battle/Units/Elves/elf_1_spearmen.tres" id="5_tmdq1"]
 [ext_resource type="Resource" uid="uid://syrr32f2nn6u" path="res://Resources/Battle/Units/Classic/orc2.tres" id="6_68vsf"]
 [ext_resource type="Resource" uid="uid://c0ufbeh75ygcc" path="res://Resources/Battle/Units/Orcs/orc_6_champion.tres" id="7_hkmd5"]
-[ext_resource type="Resource" uid="uid://b6iypsngmypss" path="res://Resources/Battle/Battle_Maps/basic5x5.tres" id="8_o8u31"]
-[ext_resource type="Script" path="res://Resources/Presets/preset_battle.gd" id="9_0p03i"]
+[ext_resource type="Resource" uid="uid://klcvdl4qaq05" path="res://Resources/Battle/Battle_Maps/basic5x5.tres" id="8_o8u31"]
+[ext_resource type="Script" uid="uid://b4slskcsa0n83" path="res://Resources/Presets/preset_battle.gd" id="9_0p03i"]
 
 [sub_resource type="Resource" id="Resource_8gfw6"]
 script = ExtResource("1_wyayb")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_s548k"), ExtResource("3_rmvn8"), ExtResource("4_bbcar"), ExtResource("5_tmdq1")])
-team = 0
+units = Array[ExtResource("2_wjq0m")]([ExtResource("2_s548k"), ExtResource("3_rmvn8"), ExtResource("4_bbcar"), ExtResource("5_tmdq1")])
 
 [sub_resource type="Resource" id="Resource_renb5"]
 script = ExtResource("1_wyayb")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("7_hkmd5"), ExtResource("5_0rbau"), ExtResource("6_68vsf")])
-team = 0
+units = Array[ExtResource("2_wjq0m")]([ExtResource("7_hkmd5"), ExtResource("5_0rbau"), ExtResource("6_68vsf")])
 
 [resource]
 script = ExtResource("9_0p03i")

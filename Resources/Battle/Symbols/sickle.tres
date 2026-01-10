@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://bpp7uuufysbuh"]
 
-[ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_xia24"]
+[ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="1_xia24"]
 [ext_resource type="SpriteFrames" uid="uid://fch32vlpkdg" path="res://Art/animations/slash.tres" id="2_5mdtv"]
 
 [resource]
@@ -9,12 +9,4 @@ symbol_name = "sickle"
 texture_path = "res://Art/items/sickle.png"
 symbol_animation = ExtResource("2_5mdtv")
 attack_power = 2
-defense_power = 1
-push_power = 0
-counter_attack = false
 swift_attack = true
-parry = false
-parry_break = false
-reach = 0
-activate_turn = true
-activate_move = true

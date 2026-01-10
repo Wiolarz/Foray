@@ -1,9 +1,8 @@
 [gd_resource type="Resource" script_class="DataTile" load_steps=2 format=3 uid="uid://cqspugdn1fq"]
 
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_unfbe"]
+[ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_unfbe"]
 
 [resource]
 script = ExtResource("1_unfbe")
 type = "wall"
 texture_path = "res://Art/battle_map/rock.png"
-flip_horizontal = false
