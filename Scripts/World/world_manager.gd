@@ -57,10 +57,7 @@ func get_bounds_global_position() -> Rect2:
 		var rect : Rect2 = UI.map_editor.world_grid.get_bounding_box_rect()
 		#LOG print("rect:", rect)
 		return rect
-	if not world_game_is_active():
-		printerr("asking not initialized grid for camera bounding box")
-		return Rect2(0, 0, 0, 0)
-
+	assert(world_game_is_active(), "asking not initialized grid for camera bounding box")
 	var top_left_hex = WS.get_top_left_hex()
 	var bottom_right_hex = WS.get_bottom_right_hex()
 	var top_left_tile_form : TileForm = get_tile_of_hex(top_left_hex)

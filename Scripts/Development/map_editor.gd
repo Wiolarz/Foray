@@ -21,6 +21,7 @@ var current_button: TextureButton
 @onready var new_world_button = $Bottom/HBox/NewWorldMap
 @onready var new_battle_button = $Bottom/HBox/NewBattleMap
 
+##TODO refactor context buttons to be a separate buttons for each unique tile type that needs them
 @onready var context_button : OptionButton = $RMenuContainer/ContextOptionButton
 @onready var context_button2 : OptionButton = $RMenuContainer/ContextOptionButton2
 
@@ -114,7 +115,7 @@ func _on_new_battle_map_pressed():
 
 	new_map.grid_height = grid_data.size()
 	new_map.grid_width = grid_data[0].size()
-	#print(new_map.grid_height, " ", new_map.grid_width)
+	#LOGprint(new_map.grid_height, " ", new_map.grid_width)
 	BM.unload_for_editor()
 	BM.load_editor_map(new_map)
 
@@ -173,6 +174,7 @@ func _on_load_map_pressed():
 ## Called when user presses on the map tile
 ## Replaces target map tile with currently selected "brush" (map tile type)
 func grid_input(coord : Vector2i) -> void:
+	# BATTLE
 	if CFG.MAP_EDITOR_BATTLE:
 		if current_brush.is_it_deploy_tile():
 			current_brush = current_brush.duplicate()
@@ -181,21 +183,24 @@ func grid_input(coord : Vector2i) -> void:
 
 			current_brush.type[DataTile.SPAWN_DIRECTION_INDEX] = str(context_button.selected)
 		BM.paint(coord, current_brush)
-	else:
-		if current_brush.is_it_city_tile():
-			current_brush = current_brush.duplicate()
-			#Player
-			var _player_index : int = context_button2.selected
-			if _player_index == context_button2.item_count - 1: # last element
-				_player_index = 0 # NEUTRAL
-				if _player_index == context_button.selected:  #TODO implement advanced neutral cities
-					return
-			else:
-				_player_index += 1 # PLAYER INDEX
-			current_brush.type[DataTile.CITY_PLAYER_INDEX] = str(_player_index)
-			# RACE
-			current_brush.type[DataTile.CITY_RACE_INDEX] = str(context_button.selected)
-		world_grid.paint(coord, current_brush)
+		return
+
+	# WORLD
+	if current_brush.is_it_city_tile():
+		current_brush = current_brush.duplicate()
+		# PLAYER
+		var _player_index : int = context_button2.selected
+		if _player_index == context_button2.item_count - 1: # last element
+			_player_index = 0 # NEUTRAL
+			if _player_index == context_button.selected:  # 0 index is ANY_CITY TODO implement advanced neutral cities
+				return
+		else:
+			_player_index += 1 # >0 -> ACTIVE PLAYER
+		current_brush.type[DataTile.CITY_PLAYER_INDEX] = str(_player_index)
+		# RACE
+		current_brush.type[DataTile.CITY_RACE_INDEX] = str(context_button.selected)
+
+	world_grid.paint(coord, current_brush)
 
 
 func _switch_grid_type() -> void:
@@ -216,9 +221,7 @@ func _switch_context_button() -> void:
 	for i in range(1, len(CFG.TEAM_COLORS) + 1):
 		context_button2.add_item(str(i) + " Player")
 	if CFG.MAP_EDITOR_BATTLE:
-		var i := -1
 		for direction in GenericHexGrid.GridDirections.keys():
-			i += 1
 			var option_text : String = direction
 			context_button.add_item(option_text)
 	else:
@@ -339,7 +342,7 @@ func _generate_world_player_slots(tile_grid : DataWorldMap) -> Dictionary:
 	else:
 		return {}
 
-	## TODO finish
+	## STUB unfinished
 	var fixed_player_slots : Dictionary = {}
 
 	## changing city tiles to align with contiguous indexes
@@ -395,7 +398,7 @@ func get_battle_map(trim : bool = true) -> DataBattleMap:
 	result.grid_width = manager_grid_data.size()
 	result.grid_height = manager_grid_data[0].size()
 	var player_slots = _generate_battle_players_slots(manager_grid_data)
-	# print(player_slots)
+	#LOG.print(player_slots)
 	result.player_slots = player_slots
 	result.max_player_number = player_slots.keys().size()
 	return result

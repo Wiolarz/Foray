@@ -65,12 +65,13 @@ static func create_battle_tile(data: DataTile, new_coord : Vector2i) -> TileForm
 	var sprite : Sprite2D = result.get_node("Sprite2D")
 	if data.is_it_deploy_tile():
 		sprite.rotation_degrees = data.get_spawn_direction() * 60
-		if IM.in_map_editor:
+		if IM.in_map_editor: # loading the map in editor
 			sprite.texture = CFG.DEPLOY_TILES_TEXTURES[data.get_player_ownership()]
 		else:
 			sprite.texture = CFG.DEPLOY_TILES_TEXTURES[IM.players[data.get_player_ownership()].color_idx]
 	else:
 		sprite.texture = RES.load(data.texture_path)
+		sprite.rotation_degrees = 0
 	return result
 
 
@@ -120,7 +121,7 @@ func paint(brush : DataTile) -> void:
 		else: # Player city
 			$ControllerColor.texture = CFG.CITY_STRONG_COLOR_TEXTURES[int(type[DataTile.CITY_PLAYER_INDEX])  - 1]
 
-		if int(type[DataTile.CITY_RACE_INDEX]) == DataTile.ANY_CITY: ## TEMP
+		if int(type[DataTile.CITY_RACE_INDEX]) == DataTile.ANY_RACE_CITY: ## TEMP
 			assert(not _neutral, "attempt to paint neutral any city, advanced race cities are not yet implemented")
 			return
 		$Sprite2D.texture = RES.load(CFG.RACES_LIST[int(type[DataTile.CITY_RACE_INDEX]) - 1].city_texture_path)
