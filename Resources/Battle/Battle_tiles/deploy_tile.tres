@@ -1,9 +1,9 @@
 [gd_resource type="Resource" script_class="DataTile" load_steps=2 format=3 uid="uid://dodgvh3elmres"]
 
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_lqslj"]
+[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_d26i6"]
 
 [resource]
-script = ExtResource("1_lqslj")
-type = "1_0_player_spawn"
+script = ExtResource("1_d26i6")
+type = "player_deploy 1 0"
 texture_path = "res://Art/battle_map/deploy_blue.png"
 flip_horizontal = false
