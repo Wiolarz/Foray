@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://biuvugk468hlt"
-path="res://.godot/imported/grass.png-41ce4a20f7671de9ecd83cdc7a8bd3f6.ctex"
+uid="uid://x8ygd2gd75gu"
+path="res://.godot/imported/deploy_green.png-f91ec1ded2cd40e8e7271180f6fe3014.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/battle_map/grass.png"
-dest_files=["res://.godot/imported/grass.png-41ce4a20f7671de9ecd83cdc7a8bd3f6.ctex"]
+source_file="res://Art/battle_map/deploy_green.png"
+dest_files=["res://.godot/imported/deploy_green.png-f91ec1ded2cd40e8e7271180f6fe3014.ctex"]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ft461wwhtywb"
-path="res://.godot/imported/blue_player_spawn.png-014758231762abd8686323714953553b.ctex"
+uid="uid://b176y125qosuc"
+path="res://.godot/imported/deploy_yellow.png-3ed92c1c8b0985be9831eb55c6d3d95d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/battle_map/blue_player_spawn.png"
-dest_files=["res://.godot/imported/blue_player_spawn.png-014758231762abd8686323714953553b.ctex"]
+source_file="res://Art/battle_map/deploy_yellow.png"
+dest_files=["res://.godot/imported/deploy_yellow.png-3ed92c1c8b0985be9831eb55c6d3d95d.ctex"]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

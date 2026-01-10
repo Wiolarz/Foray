@@ -9,7 +9,7 @@
 [ext_resource type="Resource" uid="uid://dvcmnrwfkynkj" path="res://Resources/Races/Heroes/Elves/elf_hero_noble.tres" id="6_upuhb"]
 [ext_resource type="Resource" uid="uid://b2y53doccjmg8" path="res://Resources/Races/Heroes/Elves/elf_hero_stalker.tres" id="7_5ndp3"]
 [ext_resource type="Resource" uid="uid://0vft0atich8r" path="res://Resources/Battle/Units/Elves/elf_1_spearmen.tres" id="9_dabp8"]
-[ext_resource type="Resource" path="res://Resources/Battle/Units/Elves/elf_2_seer.tres" id="10_f0qq2"]
+[ext_resource type="Resource" uid="uid://bcq6q1yqfy18r" path="res://Resources/Battle/Units/Elves/elf_2_seer.tres" id="10_f0qq2"]
 [ext_resource type="Resource" uid="uid://clmtb3vi2x3my" path="res://Resources/Battle/Units/Elves/elf_3_royal_guard.tres" id="11_so1er"]
 [ext_resource type="Resource" uid="uid://cyecnaijg3se1" path="res://Resources/Battle/Units/Elves/elf_5_fencer.tres" id="12_2mgbu"]
 [ext_resource type="Resource" uid="uid://dyrqq63ykm0j8" path="res://Resources/Battle/Units/Elves/elf_4_medusa.tres" id="12_dtlkm"]
@@ -22,3 +22,4 @@ units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource
 heroes = Array[Resource("res://Resources/Races/data_hero.gd")]([ExtResource("5_6hi7f"), ExtResource("6_upuhb"), ExtResource("7_5ndp3")])
 buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_ivls3"), ExtResource("2_3jrvc"), ExtResource("3_3qdd6"), ExtResource("4_dggrk")])
 description = "Magic > Elite > Horde"
+city_texture_path = "res://Art/world_map/elves_city.png"

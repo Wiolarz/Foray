@@ -57,9 +57,12 @@ func _ready() -> void:
 
 ## Camera bounds
 func get_bounds_global_position() -> Rect2:
-	if not world_game_is_active():
-		push_warning("asking not initialized grid for camera bounding box")
-		return Rect2(0, 0, 0, 0)
+	if IM.in_map_editor: #TEMP solution, goal is for the camera to use sentinel hexes for its bounding box,
+		## but in world map it doesn't see them, so this temporary solution allows users to move around map by placing new tiles in the "corners"
+		var rect : Rect2 = UI.map_editor.world_grid.get_bounding_box_rect()
+		#LOG print("rect:", rect)
+		return rect
+	assert(world_game_is_active(), "asking not initialized grid for camera bounding box")
 	var top_left_hex = WS.get_top_left_hex()
 	var bottom_right_hex = WS.get_bottom_right_hex()
 	var top_left_tile_form : TileForm = get_tile_of_hex(top_left_hex)
@@ -629,6 +632,8 @@ func recreate_tile_forms() -> void:
 			var tile : TileForm = TileForm.create_world_tile_new(hex, coord, \
 				to_position(coord))
 			tile_grid.add_child(tile)
+			if hex.place.faction:  # apply ownership color
+				tile.controller_changed()
 
 
 func recreate_army_forms() -> void:

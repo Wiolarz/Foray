@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkcv8ipw5vgsc"
-path="res://.godot/imported/red_player_spawn.png-769909632a6080c6ae55d29dcb55e47f.ctex"
+uid="uid://b2g85n8aid6x6"
+path="res://.godot/imported/elves_city.png-3930a099def99505f76579ac7805705f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/battle_map/red_player_spawn.png"
-dest_files=["res://.godot/imported/red_player_spawn.png-769909632a6080c6ae55d29dcb55e47f.ctex"]
+source_file="res://Art/world_map/elves_city.png"
+dest_files=["res://.godot/imported/elves_city.png-3930a099def99505f76579ac7805705f.ctex"]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=false
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
