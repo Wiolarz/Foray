@@ -136,7 +136,7 @@ static func get_hunt_army_presets(folder_path : String) -> Array[PresetArmy]:
 	return armies
 
 
-func to_specific_serializable(dict : Dictionary) -> void:
+func to_specific_serializable(dict : Dictionary[String, Variant]) -> void:
 	dict["present_goods"] = _present_goods.to_array()
 	dict["current_level"] = current_level
 	# "alive_army" not needed -- deduced
@@ -144,7 +144,7 @@ func to_specific_serializable(dict : Dictionary) -> void:
 	dict["hunt_spot_type"] = hunt_spot_type
 
 
-func paste_specific_serializable(dict : Dictionary) -> void:
+func paste_specific_serializable(dict : Dictionary[String, Variant]) -> void:
 	_set_type(dict["hunt_spot_type"])
 	current_level = dict["current_level"]
 	_present_goods = Goods.from_array(dict["present_goods"])

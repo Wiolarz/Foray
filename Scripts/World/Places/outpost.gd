@@ -68,9 +68,9 @@ func get_map_description() -> String:
 	return per_turn.to_string_short("empty")
 
 
-func to_specific_serializable(dict : Dictionary) -> void:
+func to_specific_serializable(dict : Dictionary[String, Variant]) -> void:
 	dict["outpost_type"] = outpost_type
 
 
-func paste_specific_serializable_state(dict : Dictionary) -> void:
+func paste_specific_serializable_state(dict : Dictionary[String, Variant]) -> void:
 	_set_type(dict["outpost_type"])

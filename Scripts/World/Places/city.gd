@@ -11,12 +11,12 @@ var garrison_reserve : Army
 
 #region INIT
 
-static func translate_city_args(args : PackedStringArray) -> Dictionary:
+static func translate_city_args(args : PackedStringArray) -> Dictionary[String, Variant]:
 	assert(args[0].is_valid_int(), "unrecognized player index: %s" % args[0])
 	assert(args[1].is_valid_int(), "unrecognized race index: %s" % args[1])
-	var result : Dictionary = {
+	var result : Dictionary[String, Variant] = {
 		"player_index" = args[0].to_int() - 1, # TEMP, we assume no neutral cities yet
-		"race_index" = args[1].to_int()} # STUB awaits neutral cities
+		"race_index" = args[1].to_int()} # STUB awaits neutral cities #TODO consider using race names instead of indexes
 	return result
 
 
@@ -24,7 +24,7 @@ static func translate_city_args(args : PackedStringArray) -> Dictionary:
 static func create_place(coord_ : Vector2i, args : PackedStringArray) -> Place:
 	var result = City.new()
 
-	var args_dict : Dictionary = City.translate_city_args(args)
+	var args_dict : Dictionary[String, Variant] = City.translate_city_args(args)
 
 	if args_dict["player_index"] >= 0:
 		var owner_faction : Faction = WS.player_states[args_dict["player_index"]]
@@ -239,13 +239,13 @@ func get_building(building : DataBuilding) -> DataBuilding:
 
 #region Networking
 
-func to_specific_serializable(dict : Dictionary) -> void:
+func to_specific_serializable(dict : Dictionary[String, Array]) -> void:
 	dict["buildings"] = []
 	for building in buildings:
 		dict["buildings"].append(DataBuilding.get_network_id(building))
 
 
-func paste_specific_serializable_state(dict : Dictionary) -> void:
+func paste_specific_serializable_state(dict : Dictionary[String, Array]) -> void:
 	buildings = []
 	for b in dict["buildings"]:
 		buildings.append(DataBuilding.from_network_id(b))

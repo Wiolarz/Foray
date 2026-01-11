@@ -308,8 +308,8 @@ func _optimize_grid_size(local_tile_grid : Array) -> Array:
 
 
 ## can potentially modify city tiles player index to make them contiguous
-func _generate_world_player_slots(tile_grid : DataWorldMap) -> Dictionary:
-	var player_slots : Dictionary = {}
+func _generate_world_player_slots(tile_grid : DataWorldMap) -> Dictionary[int, DataRace]:
+	var player_slots : Dictionary[int, DataRace] = {}
 	for tile_column : Array in tile_grid.grid_data:
 		for tile : DataTile in tile_column:
 			if not tile.is_it_city_tile():
@@ -325,7 +325,7 @@ func _generate_world_player_slots(tile_grid : DataWorldMap) -> Dictionary:
 
 	## consider moving below code to another function as it modifies map tiles
 	## pair of old player idx and proper contiguous index
-	var player_idx_translation : Dictionary = {}
+	var player_idx_translation : Dictionary[int, int] = {}
 	## Array[int]
 	var players_indexes : Array = player_slots.keys() # TEMP players need to be in order
 	var players_are_set_correctly : bool = true
@@ -343,7 +343,7 @@ func _generate_world_player_slots(tile_grid : DataWorldMap) -> Dictionary:
 		return {}
 
 	## STUB unfinished
-	var fixed_player_slots : Dictionary = {}
+	var fixed_player_slots : Dictionary[int, DataRace] = {}
 
 	## changing city tiles to align with contiguous indexes
 	for tile_column : Array in tile_grid.grid_data:
@@ -357,8 +357,9 @@ func _generate_world_player_slots(tile_grid : DataWorldMap) -> Dictionary:
 	return fixed_player_slots
 
 
-func _generate_battle_players_slots(local_tile_grid : Array) -> Dictionary:
-	var player_slots : Dictionary = {}
+## Dic[player_index, number_of_deploy_tiles]
+func _generate_battle_players_slots(local_tile_grid : Array) -> Dictionary[int, int]:
+	var player_slots : Dictionary[int, int] = {}
 	for tile_column : Array in local_tile_grid:
 		for tile : TileForm in tile_column:
 			if DataTile.is_type_deploy_tile(tile.type):

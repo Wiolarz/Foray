@@ -18,8 +18,8 @@ var edited_resource : Resource
 
 var dirty_changes : Resource
 
-## Dictionary int -> String (DataTile path)
-var browser_tree_id_to_resource_path : Dictionary = {}
+## Dic[tree_id, DataTile_path]
+var browser_tree_id_to_resource_path : Dictionary[int, String] = {}
 
 ## prepared resized texture for open button in browser
 var open_button_texture : Texture2D

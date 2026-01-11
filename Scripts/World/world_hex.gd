@@ -12,7 +12,7 @@ var data_tile : DataTile = null
 
 
 func init_place(type_name : String, coord : Vector2i, \
-		ser : Dictionary) -> void:
+		ser : Dictionary[String, Variant]) -> void:
 	assert(not ser or ser["type"] == type_name)
 	var loading_from_ser = ser.size() > 0
 	if type_name == "SENTINEL":

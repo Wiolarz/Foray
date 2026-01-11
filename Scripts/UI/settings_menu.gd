@@ -61,12 +61,12 @@ func _declare_toggle(option : StringName, node : CheckBox):
 #region - Enum List
 
 ## Connect enum variable to an option button
-func _declare_enum_list(enum_var : StringName, node : OptionButton, value_mappings : Dictionary):
+func _declare_enum_list(enum_var : StringName, node : OptionButton, value_mappings : Dictionary[int, String]):
 	var id_enum_mappings := {}
 	var enum_id_mappings := {}
 
 	var c := -1
-	for enum_item in value_mappings:
+	for enum_item : int in value_mappings:
 		c += 1
 		node.add_item(value_mappings[enum_item])
 		id_enum_mappings[c] = enum_item
