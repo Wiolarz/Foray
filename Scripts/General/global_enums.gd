@@ -1,4 +1,4 @@
-class_name E
+@abstract class_name E
 extends Object
 
 
@@ -40,8 +40,3 @@ static func player_type_to_name(pt : PlayerType) -> String:
 
 static func world_map_tile_to_name(wmt : WorldMapTiles) -> String:
 	return WorldMapTiles.keys()[wmt].to_lower()
-
-
-func _init():
-	assert(false, "do not instantiate this class, it's static only")
-

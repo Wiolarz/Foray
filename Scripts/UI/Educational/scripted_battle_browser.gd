@@ -1,4 +1,4 @@
-class_name ScriptedBattleBrowser
+@abstract class_name ScriptedBattleBrowser
 extends ContentBrowser
 
 var _battle : ScriptedBattle :
