@@ -1,11 +1,11 @@
-[gd_resource type="Resource" script_class="PresetArmy" load_steps=5 format=3 uid="uid://dgr124wvu0hxb"]
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=6 format=3 uid="uid://dgr124wvu0hxb"]
 
-[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_wp26v"]
-[ext_resource type="Resource" uid="uid://c3d8o8qw4dfa4" path="res://Resources/Battle/Units/Cyclops/cyclops_1_brigand.tres" id="2_6yr5r"]
-[ext_resource type="Resource" uid="uid://cir43eqa3uet2" path="res://Resources/Battle/Units/Cyclops/cyclops_4_protector.tres" id="3_o1kpw"]
-[ext_resource type="Resource" uid="uid://b4ajym7wahumg" path="res://Resources/Battle/Units/Cyclops/cyclops_3_raider.tres" id="4_nnupi"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_wp26v"]
+[ext_resource type="Resource" uid="uid://b6korfv0myh6v" path="res://Resources/Battle/Units/Cyclops/cyclops_1_brigand.tres" id="2_6yr5r"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="2_il4wp"]
+[ext_resource type="Resource" uid="uid://rprut87c1orl" path="res://Resources/Battle/Units/Cyclops/cyclops_4_protector.tres" id="3_o1kpw"]
+[ext_resource type="Resource" uid="uid://dfgv5dm3b60nx" path="res://Resources/Battle/Units/Cyclops/cyclops_3_raider.tres" id="4_nnupi"]
 
 [resource]
 script = ExtResource("1_wp26v")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_6yr5r"), ExtResource("3_o1kpw"), ExtResource("4_nnupi")])
-team = 0
+units = Array[ExtResource("2_il4wp")]([ExtResource("2_6yr5r"), ExtResource("3_o1kpw"), ExtResource("4_nnupi")])

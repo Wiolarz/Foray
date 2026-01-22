@@ -5,6 +5,12 @@ extends Resource
 @export var iron : int = 0
 @export var ruby : int = 0
 
+enum SizeDifference {
+	BIGGER,
+	EQUAL,
+	SMALLER,
+}
+
 func _init(new_wood: int = 0, new_iron : int = 0, new_ruby : int = 0):
 	wood = new_wood
 	iron = new_iron
@@ -34,6 +40,19 @@ func clear():
 	iron = 0
 	ruby = 0
 
+
+func other_goods_size_in_comparasion(resource : Goods,
+	wood_value : int = 1, iron_value : int = 2, ruby_value : int = 3) -> SizeDifference:
+	if ruby == resource.ruby and iron == resource.iron and wood == resource.wood:
+		return SizeDifference.EQUAL
+
+	if wood * wood_value + iron * iron_value + ruby * ruby_value <= \
+	 resource.wood * wood_value + resource.iron * iron_value + resource.ruby * ruby_value:
+		return SizeDifference.BIGGER
+	else:
+		return SizeDifference.SMALLER
+
+
 func to_string_short(empty: String = "") -> String:
 	if wood == 0 and iron == 0 and ruby == 0:
 		return empty
@@ -50,8 +69,10 @@ func to_string_short(empty: String = "") -> String:
 		result += "%d 💎" % ruby
 	return result
 
+
 func _to_string() -> String:
 	return "%d 🪓| %d ⛏️| %d 💎" % to_array()
+
 
 func to_array() -> Array[int]:
 	return [wood, iron, ruby]

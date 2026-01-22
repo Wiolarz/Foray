@@ -1,11 +1,11 @@
 [gd_scene load_steps=13 format=3 uid="uid://dy1m42bfkq2wv"]
 
-[ext_resource type="Script" path="res://Scripts/Development/unit_editor.gd" id="1_77kxj"]
+[ext_resource type="Script" uid="uid://c4r64siv6ioox" path="res://Scripts/Development/unit_editor.gd" id="1_77kxj"]
 [ext_resource type="StyleBox" uid="uid://cr3cpjlxxfm4r" path="res://Art/UI/marble_box.tres" id="2_bfpmc"]
-[ext_resource type="Shader" path="res://Art/UI/background.gdshader" id="2_cswse"]
+[ext_resource type="Shader" uid="uid://dx17bf7srxnxf" path="res://Art/UI/background.gdshader" id="2_cswse"]
 [ext_resource type="PackedScene" uid="uid://sh62rfw7ulr8" path="res://Scenes/Form/UnitForm.tscn" id="3_yftbb"]
 [ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="4_bwq2j"]
-[ext_resource type="Shader" path="res://Art/tile_overall_shader.gdshader" id="5_0c0x6"]
+[ext_resource type="Shader" uid="uid://dvvhpegfb4n64" path="res://Art/tile_overall_shader.gdshader" id="5_0c0x6"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ea3xn"]
 shader = ExtResource("2_cswse")

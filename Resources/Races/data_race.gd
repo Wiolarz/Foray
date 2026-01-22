@@ -14,6 +14,8 @@ extends Resource
 
 @export_multiline var description : String
 
+@export_file var city_texture_path : String
+
 func get_network_id() -> String:
 	return resource_path
 

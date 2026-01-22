@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://j6n24hs0xavf"]
 
-[ext_resource type="Shader" path="res://Art/UI/player_slot_panel.gdshader" id="1_04gfn"]
-[ext_resource type="Script" path="res://Scripts/UI/Lobby/battle_player_slot_panel.gd" id="2_ifloy"]
+[ext_resource type="Shader" uid="uid://cbulj12ojwuef" path="res://Art/UI/player_slot_panel.gdshader" id="1_04gfn"]
+[ext_resource type="Script" uid="uid://7i3yxvjqxsu5" path="res://Scripts/UI/Lobby/battle_player_slot_panel.gd" id="2_ifloy"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_aw5fe"]
 shader = ExtResource("1_04gfn")

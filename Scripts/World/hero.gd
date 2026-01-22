@@ -34,8 +34,8 @@ var max_movement_points : int = 3 :
 
 		return result_max
 
-var movement_points = 3
-var movements_points_renewal = 3
+var movement_points : int = 3
+var movements_points_renewal : int = 3
 
 ## world coord, where hero wants to travel
 var travel_path : Array[Vector2i]
@@ -43,8 +43,8 @@ var travel_path : Array[Vector2i]
 
 var wounded : bool = false
 
-var xp = 0
-var level = 1
+var xp : int = 0
+var level : int = 1
 
 ## List of rituals player can cast each turn
 var rituals_book : Array[Ritual] = []

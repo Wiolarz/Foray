@@ -67,6 +67,15 @@ func get_movement_points() -> int:
 	return 0
 
 
+## currently only used by AI, simplified strength assessment
+func get_army_power_level() -> int:
+	var army_level : int = 0 #hero.level TEMP awaits unit data level fix
+	for unit in units_data:
+		army_level += unit.level
+
+	return army_level
+
+
 func add_xp(gained_xp : int) -> void:
 	if hero:
 		hero.add_xp(gained_xp)

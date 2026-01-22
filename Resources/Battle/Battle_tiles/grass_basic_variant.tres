@@ -1,9 +1,8 @@
 [gd_resource type="Resource" script_class="DataTile" load_steps=2 format=3 uid="uid://84qb8hvt5c5n"]
 
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_fqadc"]
+[ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_fqadc"]
 
 [resource]
 script = ExtResource("1_fqadc")
 type = "EMPTY"
 texture_path = "res://Art/battle_map/grass_tile_variant_1.png"
-flip_horizontal = false

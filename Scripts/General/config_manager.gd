@@ -80,6 +80,7 @@ const BATTLE_MAP_TILES_PATH = "res://Resources/Battle/Battle_tiles/"
 const WORLD_MAP_TILES_PATH = "res://Resources/World/World_tiles/"
 const SYMBOLS_PATH = "res://Resources/Battle/Symbols/"
 const BATTLE_BOTS_PATH = "res://Resources/Battle/Bots"
+const WORLD_BOTS_PATH = "res://Resources/World/Bots"
 const ARMY_PRESETS_PATH = "res://Resources/Presets/Custom_Armies/"
 
 const EMPTY_SYMBOL_PATH = "res://Resources/Battle/Symbols/empty.tres"
@@ -122,7 +123,7 @@ var RACES_LIST : Array[DataRace] = [
 const UNIT_FORM_SCENE = preload("res://Scenes/Form/UnitForm.tscn")
 var HEX_TILE_FORM_SCENE := load("res://Scenes/Form/TileForm.tscn") as PackedScene
 
-const DEPLOY_BUTTON_TEXTURE : Texture2D = preload("res://Art/battle_map/grass.png")
+const DEPLOY_BUTTON_TEXTURE : Texture2D = preload("res://Art/battle_map/grass_tile.png")
 const EMPTY_SLOT_TEXTURE : Texture2D = preload("res://Art/items/hex_border_light.png")
 
 const DEFAULT_ARMY_FORM = preload("res://Scenes/Form/ArmyForm.tscn")
@@ -224,9 +225,10 @@ var TEAM_COLORS : Array[DataPlayerColor] = [
 	DataPlayerColor.create("blue", Color(0.0, 0.4, 1.0)),
 	DataPlayerColor.create("orange", Color(0.9, 0.5, 0.0)),
 	DataPlayerColor.create("red", Color(1.0, 0.0, 0.0)),
-	DataPlayerColor.create("purple", Color(0.9, 0.2, 0.85)),
+	DataPlayerColor.create("purple", Color.MEDIUM_PURPLE),
 	DataPlayerColor.create("green", Color(0.0, 0.9, 0.0)),
-	DataPlayerColor.create("yellow", Color(0.9, 0.8, 0.0)),
+	DataPlayerColor.create("pink", Color.DEEP_PINK),
+	#DataPlayerColor.create("yellow", Color(0.9, 0.8, 0.0)),
 ]
 var TEAM_COLOR_TEXTURES : Array[Texture2D] = [
 	preload("res://Art/player_colors/blue_color.png"),
@@ -234,9 +236,28 @@ var TEAM_COLOR_TEXTURES : Array[Texture2D] = [
 	preload("res://Art/player_colors/red_color.png"),
 	preload("res://Art/player_colors/purple_color.png"),
 	preload("res://Art/player_colors/green_color.png"),
-	preload("res://Art/player_colors/yellow_color.png"),
+	preload("res://Art/player_colors/pink_color.png"),
+	#preload("res://Art/player_colors/yellow_color.png"),
 ]
+var DEPLOY_TILES_TEXTURES : Array[Texture2D] = [
+	preload("res://Art/battle_map/deploy_blue.png"),
+	preload("res://Art/battle_map/deploy_yellow.png"),
+	preload("res://Art/battle_map/deploy_red.png"),
+	preload("res://Art/battle_map/deploy_purple.png"),
+	preload("res://Art/battle_map/deploy_green.png"),
+	preload("res://Art/battle_map/deploy_pink.png"),
+]
+var CITY_STRONG_COLOR_TEXTURES : Array[Texture2D] = [
+	preload("res://Art/player_colors/strong_world_colors/strong_blue.png"),
+	preload("res://Art/player_colors/strong_world_colors/strong_orange.png"),
+	preload("res://Art/player_colors/strong_world_colors/strong_red.png"),
+	preload("res://Art/player_colors/strong_world_colors/strong_purple.png"),
+	preload("res://Art/player_colors/strong_world_colors/strong_green.png"),
+	preload("res://Art/player_colors/strong_world_colors/strong_yellow.png"),
+]
+
 var NEUTRAL_COLOR_TEXTURE : Texture2D = preload("res://Art/player_colors/gray_color.png")
+var NEUTRAL_STRONG_COLOR_TEXTURE : Texture2D = preload("res://Art/player_colors/strong_world_colors/strong_grey.png")
 
 var NEUTRAL_COLOR := \
 	DataPlayerColor.create_with_texture("neutral", Color(0.5, 0.5, 0.5), \
@@ -507,11 +528,9 @@ func update_highscore(
 
 ## returns race and wave_number
 func get_highscore(race : DataRace, difficulty : String, enemy : DataRace = null) -> Array:
-	var ai_key_value : int = get_bot_idx(difficulty)
-	if ai_key_value == -1:
-		return [RACES_LIST[0], 0]
-	var ai_key : String = str(ai_key_value)
-
+	var ai_key : String = str(get_bot_idx(difficulty))
+	if ai_key == "-1":
+		return [RACES_LIST[0], -1]
 	if enemy:
 		var key = race.race_name + \
 			"|" + ai_key + "|" + enemy.race_name

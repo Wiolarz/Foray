@@ -1,8 +1,10 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://clxq0oak6mwep"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=9 format=3 uid="uid://clxq0oak6mwep"]
 
-[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_1ww60"]
-[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_7pufr"]
+[ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_1ww60"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="2_7pufr"]
 [ext_resource type="Resource" uid="uid://c61kr7bqpyhr0" path="res://Resources/Battle/Symbols/bow.tres" id="3_hiesn"]
+[ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="3_lf62m"]
+[ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="4_0s4e4"]
 [ext_resource type="Resource" uid="uid://cmgmw6atlub6f" path="res://Resources/Battle/Symbols/push.tres" id="4_j77qu"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_swycm"]
 
@@ -10,14 +12,11 @@
 script = ExtResource("1_1ww60")
 wood = 4
 iron = 2
-ruby = 0
 
 [resource]
 script = ExtResource("2_7pufr")
 unit_name = "Watcher"
 texture_path = "res://Art/units/undead/undead_4_archer.png"
-symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_hiesn"), ExtResource("4_j77qu"), ExtResource("5_swycm"), ExtResource("5_swycm"), ExtResource("5_swycm"), ExtResource("4_j77qu")])
+symbols = Array[ExtResource("4_0s4e4")]([ExtResource("3_hiesn"), ExtResource("4_j77qu"), ExtResource("5_swycm"), ExtResource("5_swycm"), ExtResource("5_swycm"), ExtResource("4_j77qu")])
 cost = SubResource("Resource_vofdp")
 level = 3
-mana = 0
-spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

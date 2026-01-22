@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="DataSymbol" load_steps=33 format=3 uid="uid://j3ikip34n140"]
 
-[ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_s0ldv"]
-[ext_resource type="Texture2D" uid="uid://bdo2w0dm2abi8" path="res://Art/animations/shield_block.png" id="2_nvrug"]
-[ext_resource type="Script" path="res://Resources/Battle/symbol_animation.gd" id="3_up8vc"]
+[ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="1_s0ldv"]
+[ext_resource type="Texture2D" uid="uid://du3mf3t46dtak" path="res://Art/animations/shield_block.png" id="2_nvrug"]
+[ext_resource type="Script" uid="uid://xmxwn8o7es5d" path="res://Resources/Battle/symbol_animation.gd" id="3_up8vc"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_f42tl"]
 atlas = ExtResource("2_nvrug")
@@ -208,10 +208,6 @@ animations = [{
 "speed": 24.0
 }]
 script = ExtResource("3_up8vc")
-offset = Vector2(0, 0)
-scale = Vector2(1, 1)
-hit_on_frame = 0
-teleport_at = 0
 blocking_offset = Vector2(230, 0)
 blocking_scale = Vector2(5, 5)
 
@@ -220,12 +216,4 @@ script = ExtResource("1_s0ldv")
 symbol_name = "red_shield"
 texture_path = "res://Art/items/red_pavise.png"
 symbol_animation = SubResource("SpriteFrames_6qquj")
-attack_power = 0
 defense_power = 3
-push_power = 0
-counter_attack = false
-parry = false
-parry_break = false
-reach = 0
-activate_turn = true
-activate_move = true

@@ -1,16 +1,14 @@
-[gd_resource type="Resource" script_class="BattleSpell" load_steps=2 format=3 uid="uid://rvifpr2apuv3"]
+[gd_resource type="Resource" script_class="BattleSpell" load_steps=3 format=3 uid="uid://rvifpr2apuv3"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/battle_spell.gd" id="1_g2q60"]
+[ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="1_g2q60"]
+[ext_resource type="Script" uid="uid://lgbukttoatcv" path="res://Scripts/Battle/data_magic_effect.gd" id="2_rpwvp"]
 
 [resource]
 script = ExtResource("1_g2q60")
 name = "Sacrifice"
 icon_path = "res://Art/magic/spell_icons/sacrifice.png"
 description = "Sacrifice an ally unit to gain mana and refresh your spells."
-spell_effects = Array[Resource("res://Scripts/Battle/data_magic_effect.gd")]([])
-cast_range = -1
-direction_cast = 0
-target_type = 0
+target_type = 1
 needs_movable_tile = false
-target_unit_type = 0
-not_self = false
+target_unit_type = 1
+not_self = true

@@ -9,10 +9,14 @@ var buildings : Array[DataBuilding] = []
 var garrison_reserve : Army
 
 
+#region INIT
+
 static func translate_city_args(args : PackedStringArray) -> Dictionary:
-	assert(args[0].is_valid_int(), "unrecognised parameter: %s" % args[0])
-	var result : Dictionary = {"player_index" = args[0].to_int()}
-	# TODO add race restriction
+	assert(args[0].is_valid_int(), "unrecognized player index: %s" % args[0])
+	assert(args[1].is_valid_int(), "unrecognized race index: %s" % args[1])
+	var result : Dictionary = {
+		"player_index" = args[0].to_int() - 1, # TEMP, we assume no neutral cities yet
+		"race_index" = args[1].to_int()} # STUB awaits neutral cities
 	return result
 
 
@@ -41,6 +45,13 @@ func get_army_at_start() -> PresetArmy:
 	new_garrison.team = faction.controller.team
 
 	return new_garrison
+
+
+func get_image_override() -> Resource:
+	assert(faction)
+	return RES.load(faction.race.city_texture_path)
+
+#endregion INIT
 
 
 # overwrite

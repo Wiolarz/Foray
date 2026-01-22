@@ -10,12 +10,14 @@ var battle_id : int
 func set_player(controlled_player: Player):
 	me = controlled_player
 
+
 func choose_move(_battle_state : BattleGridState) -> MoveInfo:
 	assert(false, "ERROR: AI interface has not been implemented (for player %s)" % [me])
 	# dead code, just to force godot to not throw warnings on awaiting and mark this method as async
 	await Signal()
 	return null
 
+
+## An OPTIONAL interface function
 func cleanup_after_move():
-	# An OPTIONAL interface function
 	pass

@@ -199,7 +199,7 @@ func load_ritual_book(hero : Hero, preview : bool = false) -> void:
 				selected_ritual = ritual
 				selected_ritual_button = button
 				selected_ritual_button.modulate = Color.RED
-		if not preview and WM.is_ritual_purchasable(ritual, hero):
+		if not preview and WS.is_ritual_purchasable(ritual, hero):
 			button.pressed.connect(lambda)
 		else:
 			button.modulate = Color.GRAY

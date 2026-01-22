@@ -1,12 +1,13 @@
-[gd_resource type="Resource" script_class="PresetWaves" load_steps=17 format=3 uid="uid://cbygxejdljvke"]
+[gd_resource type="Resource" script_class="PresetWaves" load_steps=18 format=3 uid="uid://cbygxejdljvke"]
 
-[ext_resource type="Script" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="1_p70r8"]
+[ext_resource type="Script" uid="uid://pkro2nylrsgo" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="1_p70r8"]
 [ext_resource type="Resource" uid="uid://dx1c0jp2spa4i" path="res://Resources/Races/undead.tres" id="1_yp5pf"]
-[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="3_p54oo"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="3_p54oo"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="4_7xmai"]
 [ext_resource type="Resource" uid="uid://3x0qi3t8cq" path="res://Resources/Battle/Units/Undead/undead_1_skelly.tres" id="4_o5s8s"]
 [ext_resource type="Resource" uid="uid://clxq0oak6mwep" path="res://Resources/Battle/Units/Undead/undead_3_watcher.tres" id="5_b0o5j"]
 [ext_resource type="Resource" uid="uid://b851iu7je1hs4" path="res://Resources/Battle/Units/Undead/undead_2_gardener.tres" id="6_aub8r"]
-[ext_resource type="Resource" uid="uid://dhpbh4go40wia" path="res://Resources/Battle/Units/Undead/undead_4_ghoul.tres" id="7_on8ga"]
+[ext_resource type="Resource" uid="uid://dt1seo2gyur7s" path="res://Resources/Battle/Units/Undead/undead_4_ghoul.tres" id="7_on8ga"]
 [ext_resource type="Resource" uid="uid://d0cockm8rdoxt" path="res://Resources/Battle/Units/Undead/undead_5_death_knight.tres" id="8_l61k8"]
 [ext_resource type="Resource" uid="uid://dfe0ek2xxvv6m" path="res://Resources/Battle/Units/Undead/undead_6_lich.tres" id="9_feljt"]
 [ext_resource type="Resource" uid="uid://d18rrv3v75dk6" path="res://Resources/Battle/Units/Undead/undead_hero_reaper.tres" id="10_b30bf"]
@@ -14,38 +15,32 @@
 [sub_resource type="Resource" id="Resource_hfhk0"]
 resource_name = "skelly+watcher"
 script = ExtResource("3_p54oo")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_o5s8s"), ExtResource("5_b0o5j")])
-team = 0
+units = Array[ExtResource("4_7xmai")]([ExtResource("4_o5s8s"), ExtResource("5_b0o5j")])
 
 [sub_resource type="Resource" id="Resource_2h0tx"]
 resource_name = "skelly+watcher+gardener"
 script = ExtResource("3_p54oo")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_o5s8s"), ExtResource("5_b0o5j"), ExtResource("6_aub8r")])
-team = 0
+units = Array[ExtResource("4_7xmai")]([ExtResource("4_o5s8s"), ExtResource("5_b0o5j"), ExtResource("6_aub8r")])
 
 [sub_resource type="Resource" id="Resource_y3p4d"]
 resource_name = "5-2skelly+ghoul+watcher+gardener"
 script = ExtResource("3_p54oo")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_o5s8s"), ExtResource("4_o5s8s"), ExtResource("7_on8ga"), ExtResource("5_b0o5j"), ExtResource("6_aub8r")])
-team = 0
+units = Array[ExtResource("4_7xmai")]([ExtResource("4_o5s8s"), ExtResource("4_o5s8s"), ExtResource("7_on8ga"), ExtResource("5_b0o5j"), ExtResource("6_aub8r")])
 
 [sub_resource type="Resource" id="Resource_5n83g"]
 resource_name = "5-knight"
 script = ExtResource("3_p54oo")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_o5s8s"), ExtResource("7_on8ga"), ExtResource("7_on8ga"), ExtResource("6_aub8r"), ExtResource("8_l61k8")])
-team = 0
+units = Array[ExtResource("4_7xmai")]([ExtResource("4_o5s8s"), ExtResource("7_on8ga"), ExtResource("7_on8ga"), ExtResource("6_aub8r"), ExtResource("8_l61k8")])
 
 [sub_resource type="Resource" id="Resource_yjcq6"]
 resource_name = "7-lich"
 script = ExtResource("3_p54oo")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_o5s8s"), ExtResource("4_o5s8s"), ExtResource("5_b0o5j"), ExtResource("6_aub8r"), ExtResource("7_on8ga"), ExtResource("8_l61k8"), ExtResource("9_feljt")])
-team = 0
+units = Array[ExtResource("4_7xmai")]([ExtResource("4_o5s8s"), ExtResource("4_o5s8s"), ExtResource("5_b0o5j"), ExtResource("6_aub8r"), ExtResource("7_on8ga"), ExtResource("8_l61k8"), ExtResource("9_feljt")])
 
 [sub_resource type="Resource" id="Resource_tco7o"]
 resource_name = "8-reaper"
 script = ExtResource("3_p54oo")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_o5s8s"), ExtResource("7_on8ga"), ExtResource("5_b0o5j"), ExtResource("5_b0o5j"), ExtResource("6_aub8r"), ExtResource("8_l61k8"), ExtResource("9_feljt"), ExtResource("10_b30bf")])
-team = 0
+units = Array[ExtResource("4_7xmai")]([ExtResource("4_o5s8s"), ExtResource("7_on8ga"), ExtResource("5_b0o5j"), ExtResource("5_b0o5j"), ExtResource("6_aub8r"), ExtResource("8_l61k8"), ExtResource("9_feljt"), ExtResource("10_b30bf")])
 
 [resource]
 script = ExtResource("1_p70r8")

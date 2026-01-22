@@ -1,16 +1,19 @@
-[gd_resource type="Resource" script_class="DataRace" load_steps=15 format=3 uid="uid://cxfflypli72u5"]
+[gd_resource type="Resource" script_class="DataRace" load_steps=18 format=3 uid="uid://cxfflypli72u5"]
 
+[ext_resource type="Script" uid="uid://b86ur2c8mgwcl" path="res://Resources/Races/data_building.gd" id="1_68hom"]
 [ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="1_dt4cj"]
 [ext_resource type="Resource" uid="uid://bdcjijsj36d16" path="res://Resources/Races/Buildings/Barracks_2.tres" id="2_5fxsu"]
 [ext_resource type="Resource" uid="uid://4to52cd5bq7w" path="res://Resources/Races/Buildings/Barracks_3.tres" id="3_ktbvq"]
 [ext_resource type="Resource" uid="uid://c58tmflxit2cf" path="res://Resources/Races/Buildings/Sawmill.tres" id="4_cwvi5"]
 [ext_resource type="Resource" uid="uid://dne6m64cvoilw" path="res://Resources/Races/Heroes/Cyclops/cyclop_hero_chieftan.tres" id="5_sc7c3"]
 [ext_resource type="Resource" uid="uid://wb8b0k7j4fdq" path="res://Resources/Races/Heroes/Cyclops/cyclop_hero_reaver.tres" id="6_5h038"]
+[ext_resource type="Script" uid="uid://c5wg42c04n0wx" path="res://Resources/Races/data_hero.gd" id="6_dtupd"]
 [ext_resource type="Resource" uid="uid://c50s8j4uad6pg" path="res://Resources/Races/Heroes/Cyclops/cyclop_hero_hag.tres" id="7_ttm8f"]
-[ext_resource type="Script" path="res://Resources/Races/data_race.gd" id="8_i4dqh"]
+[ext_resource type="Script" uid="uid://xj5cnhe2t57k" path="res://Resources/Races/data_race.gd" id="8_i4dqh"]
 [ext_resource type="Resource" uid="uid://b6korfv0myh6v" path="res://Resources/Battle/Units/Cyclops/cyclops_1_brigand.tres" id="9_sbtbe"]
 [ext_resource type="Resource" uid="uid://dfgv5dm3b60nx" path="res://Resources/Battle/Units/Cyclops/cyclops_3_raider.tres" id="10_0xen0"]
 [ext_resource type="Resource" uid="uid://b2ml8ahuoyqi" path="res://Resources/Battle/Units/Cyclops/cyclops_2_horn_druid.tres" id="10_6lilr"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="11_ufpdl"]
 [ext_resource type="Resource" uid="uid://rprut87c1orl" path="res://Resources/Battle/Units/Cyclops/cyclops_4_protector.tres" id="12_g584v"]
 [ext_resource type="Resource" uid="uid://c1o2vlrj5a8mp" path="res://Resources/Battle/Units/Cyclops/cyclops_5_totem_druid.tres" id="13_fln05"]
 [ext_resource type="Resource" uid="uid://dtjy2v6oplcp6" path="res://Resources/Battle/Units/Cyclops/cyclops_6_giant.tres" id="13_x4oaf"]
@@ -18,7 +21,8 @@
 [resource]
 script = ExtResource("8_i4dqh")
 race_name = "cyclops"
-units_data = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("9_sbtbe"), ExtResource("10_6lilr"), ExtResource("10_0xen0"), ExtResource("12_g584v"), ExtResource("13_fln05"), ExtResource("13_x4oaf")])
-heroes = Array[Resource("res://Resources/Races/data_hero.gd")]([ExtResource("5_sc7c3"), ExtResource("6_5h038"), ExtResource("7_ttm8f")])
-buildings = Array[Resource("res://Resources/Races/data_building.gd")]([ExtResource("1_dt4cj"), ExtResource("2_5fxsu"), ExtResource("3_ktbvq"), ExtResource("4_cwvi5")])
+units_data = Array[ExtResource("11_ufpdl")]([ExtResource("9_sbtbe"), ExtResource("10_6lilr"), ExtResource("10_0xen0"), ExtResource("12_g584v"), ExtResource("13_fln05"), ExtResource("13_x4oaf")])
+heroes = Array[ExtResource("6_dtupd")]([ExtResource("5_sc7c3"), ExtResource("6_5h038"), ExtResource("7_ttm8f")])
+buildings = Array[ExtResource("1_68hom")]([ExtResource("1_dt4cj"), ExtResource("2_5fxsu"), ExtResource("3_ktbvq"), ExtResource("4_cwvi5")])
 description = "Elite > Magic > Horde"
+city_texture_path = "res://Art/world_map/cyclops_city.png"

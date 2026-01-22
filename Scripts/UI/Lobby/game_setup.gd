@@ -27,7 +27,7 @@ var current_player_to_set : String = "" # if empty we select for us
 func _ready():
 	IM.game_setup_info_changed.connect(refresh_after_connection_change)
 	NET.server_settings_changed.connect(refresh_after_connection_change)
-	## button/world toggle buttons, default world
+	## button/world toggle buttons
 	button_battle.button_group = button_world.button_group
 	if CFG.DEFAULT_MODE_IS_BATTLE:
 		select_battle()
@@ -35,7 +35,6 @@ func _ready():
 		select_world()
 
 	if client_side:
-
 		button_battle.disabled = true
 		button_world.disabled = true
 		button_confirm.disabled = true
@@ -121,24 +120,6 @@ func try_to_cycle_color_slot(index : int, backwards : bool) -> bool:
 		if is_color_unique.call():
 			slots[index].color_idx = new_color_index
 			break
-	if NET.server:
-		NET.server.broadcast_full_game_setup(IM.game_setup_info)
-	return true
-
-
-func try_to_cycle_race_slot(index : int, backwards : bool) -> bool:
-	var slots = IM.game_setup_info.slots
-	if index < 0 or index >= slots.size():
-		return false
-	var diff : int = 1 if not backwards else -1
-	if NET.client:
-		NET.client.queue_cycle_race(index, backwards)
-		return false # we will change this after server responds
-	var race_index = CFG.RACES_LIST.find(slots[index].race)
-	var new_race_index = \
-		(race_index + diff) % CFG.RACES_LIST.size()
-	slots[index].race = CFG.RACES_LIST[new_race_index]
-	print("race: ",index," --> ",slots[index].race.get_network_id())
 	if NET.server:
 		NET.server.broadcast_full_game_setup(IM.game_setup_info)
 	return true

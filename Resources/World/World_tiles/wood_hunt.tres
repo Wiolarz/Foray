@@ -1,9 +1,8 @@
 [gd_resource type="Resource" script_class="DataTile" load_steps=2 format=3 uid="uid://ctuvxbafxbqnp"]
 
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_joy02"]
+[ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_joy02"]
 
 [resource]
 script = ExtResource("1_joy02")
 type = "hunt_spot wood"
 texture_path = "res://Art/world_map/hunt_wood.png"
-flip_horizontal = false

@@ -58,7 +58,7 @@ static func create_form_of_army(hex : WorldHex, position_ : Vector2) \
 		result.change_visual_unit_leader()
 		result.get_node("MoveLabel").text = ""
 		result.get_node("DescriptionLabel").text = ""
-		
+
 
 
 	result.position = position_

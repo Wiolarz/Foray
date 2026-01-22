@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="PresetWaves" load_steps=18 format=3 uid="uid://b8jmiqqxj6hvc"]
+[gd_resource type="Resource" script_class="PresetWaves" load_steps=19 format=3 uid="uid://b8jmiqqxj6hvc"]
 
 [ext_resource type="Resource" uid="uid://cxfflypli72u5" path="res://Resources/Races/cyclops.tres" id="1_p5dqj"]
-[ext_resource type="Script" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="2_cqf15"]
-[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="3_m0guk"]
+[ext_resource type="Script" uid="uid://pkro2nylrsgo" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="2_cqf15"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="3_m0guk"]
 [ext_resource type="Resource" uid="uid://b6korfv0myh6v" path="res://Resources/Battle/Units/Cyclops/cyclops_1_brigand.tres" id="4_1c6r6"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="4_dnnl7"]
 [ext_resource type="Resource" uid="uid://dfgv5dm3b60nx" path="res://Resources/Battle/Units/Cyclops/cyclops_3_raider.tres" id="5_b8fap"]
 [ext_resource type="Resource" uid="uid://tpkjdhqhnom4" path="res://Resources/Battle/Units/Cyclops/cyclops_hero_reaver.tres" id="6_btdn6"]
 [ext_resource type="Resource" uid="uid://b2ml8ahuoyqi" path="res://Resources/Battle/Units/Cyclops/cyclops_2_horn_druid.tres" id="6_ciww0"]
@@ -15,33 +16,27 @@
 [sub_resource type="Resource" id="Resource_mweqf"]
 resource_name = "brigand+raider"
 script = ExtResource("3_m0guk")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_1c6r6"), ExtResource("5_b8fap")])
-team = 0
+units = Array[ExtResource("4_dnnl7")]([ExtResource("4_1c6r6"), ExtResource("5_b8fap")])
 
 [sub_resource type="Resource" id="Resource_ubtcp"]
 script = ExtResource("3_m0guk")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_1c6r6"), ExtResource("6_ciww0"), ExtResource("8_3favh")])
-team = 0
+units = Array[ExtResource("4_dnnl7")]([ExtResource("4_1c6r6"), ExtResource("6_ciww0"), ExtResource("8_3favh")])
 
 [sub_resource type="Resource" id="Resource_hdo7w"]
 script = ExtResource("3_m0guk")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("5_b8fap"), ExtResource("8_3favh"), ExtResource("6_btdn6"), ExtResource("9_sswmc")])
-team = 0
+units = Array[ExtResource("4_dnnl7")]([ExtResource("5_b8fap"), ExtResource("8_3favh"), ExtResource("6_btdn6"), ExtResource("9_sswmc")])
 
 [sub_resource type="Resource" id="Resource_srnqd"]
 script = ExtResource("3_m0guk")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("6_ciww0"), ExtResource("8_3favh"), ExtResource("9_sswmc"), ExtResource("7_ge5xi")])
-team = 0
+units = Array[ExtResource("4_dnnl7")]([ExtResource("6_ciww0"), ExtResource("8_3favh"), ExtResource("9_sswmc"), ExtResource("7_ge5xi")])
 
 [sub_resource type="Resource" id="Resource_oie72"]
 script = ExtResource("3_m0guk")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("6_ciww0"), ExtResource("8_3favh"), ExtResource("9_sswmc"), ExtResource("11_yog27"), ExtResource("7_ge5xi")])
-team = 0
+units = Array[ExtResource("4_dnnl7")]([ExtResource("6_ciww0"), ExtResource("8_3favh"), ExtResource("9_sswmc"), ExtResource("11_yog27"), ExtResource("7_ge5xi")])
 
 [sub_resource type="Resource" id="Resource_ksdy4"]
 script = ExtResource("3_m0guk")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("4_1c6r6"), ExtResource("5_b8fap"), ExtResource("8_3favh"), ExtResource("9_sswmc"), ExtResource("11_yog27"), ExtResource("7_ge5xi")])
-team = 0
+units = Array[ExtResource("4_dnnl7")]([ExtResource("4_1c6r6"), ExtResource("5_b8fap"), ExtResource("8_3favh"), ExtResource("9_sswmc"), ExtResource("11_yog27"), ExtResource("7_ge5xi")])
 
 [resource]
 script = ExtResource("2_cqf15")

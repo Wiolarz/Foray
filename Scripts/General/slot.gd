@@ -18,8 +18,10 @@ var timer_increment_sec : int = CFG.CHESS_CLOCK_BATTLE_TURN_INCREMENT_MS
 
 ## index of color see `CFG.TEAM_COLORS`
 var color_idx : int = 0
-var battle_bot_path : String
 
+
+var battle_bot_path : String
+var world_bot_path : String  # World mode only
 
 ## for battle only mode
 var units_list : Array[DataUnit] = [null,null,null,null,null] #TODO refactor to change variable to private as we have a clean getter for it
@@ -29,6 +31,7 @@ var slot_hero : Hero = null
 
 # for World mode only
 var race : DataRace = null
+
 
 
 """

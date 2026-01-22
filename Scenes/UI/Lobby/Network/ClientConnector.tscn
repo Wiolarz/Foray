@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dunktaeebf6f1"]
 
-[ext_resource type="Script" path="res://Scripts/UI/Lobby/Network/client_connector.gd" id="1_axf84"]
+[ext_resource type="Script" uid="uid://wbsfb6pwxhvw" path="res://Scripts/UI/Lobby/Network/client_connector.gd" id="1_axf84"]
 [ext_resource type="StyleBox" uid="uid://c2e7veyqe1234" path="res://Art/UI/background_frames/sky.tres" id="2_cnvfh"]
 [ext_resource type="StyleBox" uid="uid://c2e7veyqebinm" path="res://Art/UI/background_frames/green.tres" id="2_rgjdf"]
 

@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://ceurpxmgmn5c1"]
 
-[ext_resource type="Shader" path="res://Art/tile_overall_shader.gdshader" id="1_egcue"]
-[ext_resource type="Script" path="res://Scripts/General/tile_form.gd" id="1_uelmv"]
-[ext_resource type="Texture2D" uid="uid://dffoe1yqgsgjm" path="res://Art/world_map/sentinel.png" id="2_utlft"]
-[ext_resource type="Texture2D" uid="uid://clhjrsljrp7f7" path="res://Art/player_colors/red_color.png" id="3_d5jcp"]
+[ext_resource type="Shader" uid="uid://dvvhpegfb4n64" path="res://Art/tile_overall_shader.gdshader" id="1_egcue"]
+[ext_resource type="Script" uid="uid://c2irlhl8snyny" path="res://Scripts/General/tile_form.gd" id="1_uelmv"]
+[ext_resource type="Texture2D" uid="uid://cxmj0635eybqq" path="res://Art/world_map/sentinel.png" id="2_utlft"]
+[ext_resource type="Texture2D" uid="uid://bxbtyl5ujxbla" path="res://Art/player_colors/gray_color.png" id="3_eg6ph"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wh5ai"]
 resource_local_to_scene = true
@@ -20,6 +20,11 @@ script = ExtResource("1_uelmv")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 use_parent_material = true
 polygon = PackedVector2Array(-822, -476, 0, -967, 860, -471, 863, 486, 0, 959, -823, 492)
+
+[node name="ControllerColor" type="Sprite2D" parent="."]
+use_parent_material = true
+position = Vector2(20, 0)
+texture = ExtResource("3_eg6ph")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 use_parent_material = true
@@ -56,12 +61,5 @@ theme_override_font_sizes/font_size = 150
 text = "description"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="ControlerSprite" type="Sprite2D" parent="."]
-visible = false
-use_parent_material = true
-position = Vector2(0, -239)
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("3_d5jcp")
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]

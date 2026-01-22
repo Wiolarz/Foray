@@ -43,6 +43,20 @@ func set_team(slot_index : int, team_idx : int):
 	slots[slot_index].team = team_idx
 
 
+#region World Slot Settings
+
+func set_race(slot_index : int, race : DataRace) -> void:
+	slots[slot_index].race = race
+
+
+func set_world_bot(slot_index : int, path : String):
+	slots[slot_index].world_bot_path = path
+
+#endregion World Slot Settings
+
+
+#region Custom Battle Slot Settings
+
 ## Gameplay setting a unit to memory
 func set_unit(slot_index : int, unit_index : int, unit_data : DataUnit):
 	slots[slot_index].units_list[unit_index] = unit_data
@@ -64,6 +78,7 @@ func set_timer(slot_index : int, reserve_sec : int, increment_sec : int):
 	slots[slot_index].timer_reserve_sec = reserve_sec
 	slots[slot_index].timer_increment_sec = increment_sec
 
+#endregion Custom Battle Slot Settings
 
 func to_dictionary(local_username : String = "") -> Dictionary:
 	var result = {

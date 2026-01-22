@@ -41,7 +41,7 @@ class BattleManagerFast {
 	ArmyList _armies{};
 	std::array<BattleSpell, MAX_SPELLS> _spells{};
 	TileGridFast _tiles{};
-	
+
 	std::array<int8_t, 16> _cyclone_counter_values{-1};
 	int8_t _mana_well_power = -1;
 
@@ -54,6 +54,11 @@ class BattleManagerFast {
 	bool _heuristic_moves_dirty = true;
 	bool _debug_internals = false;
 
+	//TODO reafactor spell targeting to match variables in battle_spell.gd
+	enum class TargetType : uint8_t {ANY, UNIT, EMPTY_TILE};
+	enum class TargetUnitType : uint8_t {ANY, ALLY, ENEMY}; // refactor to fit with TeamRelation variable
+	//enum class DirectionCast : uint8_t {ANY, FRONT, STRAIGHT};
+
 
 	void _process_unit(UnitID uid, MovePhase phase);
 	void _process_bow(UnitID uid, MovePhase phase);
@@ -64,13 +69,14 @@ class BattleManagerFast {
 	void _check_blood_curse(int8_t army_id);
 
 	void _spells_append_moves();
+	int get_unit_spell_count(UnitID unit);
 
 	void _append_moves_unit(UnitID uid, int8_t spell_id, TeamRelation relation, IncludeSelf include_self);
-  void _append_curse_moves_unit(UnitID uid, int8_t spell_id, TeamRelation relation, IncludeSelf include_self, int8_t min_units);
+	void _append_curse_moves_unit(UnitID uid, int8_t spell_id, TeamRelation relation, IncludeSelf include_self, int8_t min_units);
 	void _append_moves_all_tiles(UnitID uid, int8_t spell_id, IncludeImpassable include_impassable);
-
-	void _append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max);
-	void _append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max);
+	void _append_moves_in_axial_distance(UnitID uid, int8_t spell_id, int distance, TargetType target_type = TargetType::ANY, TargetUnitType target_unit_type = TargetUnitType::ANY);
+	void _append_moves_lines(UnitID uid, int8_t spell_id, Position center, int range_min, int range_max, TargetType target_type = TargetType::ANY, TargetUnitType target_unit_type = TargetUnitType::ANY);
+	void _append_moves_line(UnitID uid, int8_t spell_id, Position center, uint8_t dir, int range_min, int range_max, TargetType target_type = TargetType::ANY, TargetUnitType target_unit_type = TargetUnitType::ANY);
 	void _append_moves_neighbors(UnitID uid, int8_t spell_id, Position center, IncludeImpassable include_impassable);
 
 	void _refresh_legal_moves();
@@ -80,6 +86,7 @@ class BattleManagerFast {
 	void _move_unit(UnitID id, Position pos);
 	void _kill_unit(UnitID id, UnitID killer_id);
 	void _summon_unit(Unit& unit, Army& army, Position target);
+	void _deploy_unit(UnitID uid, Position target);
 
 	void _next_army();
 
@@ -201,8 +208,10 @@ public:
 	void set_unit_effect(int army, int idx, godot::String effect, int duration);
 	void set_unit_martyr(int army, int idx, int martyr_id, int duration);
 	void set_unit_solo_martyr(int army, int martyr_id, int duration);
+	void set_unit_hero(int army, int idx);
 
 	void insert_spell(int army, int unit, int spell_id, godot::String spell_name);
+	void insert_passive(int army, int army_passive_id, godot::String str);
 	void set_army_cyclone_timer(int army, int timer);
 	void set_tile_grid(TileGridFastCpp* tilegrid);
 	void set_current_participant(int army);
@@ -232,8 +241,11 @@ public:
 	int count_spell(int army, int idx, godot::String name);
 	int get_unit_spell_count(int army, int idx);
 
+	int get_army_passive_count(int army);
+	bool is_passive_in_army(int army, godot::String name);
+
 	Vector2i get_unit_position(int army, int unit) const {
-		Position p = bm._armies[army].units[unit].pos; 
+		Position p = bm._armies[army].units[unit].pos;
 		return Vector2i(p.x, p.y);
 	}
 
@@ -255,6 +267,10 @@ public:
 
 	bool is_unit_alive(int army, int unit) const {
 		return bm._armies[army].units[unit].status == UnitStatus::ALIVE;
+	}
+
+	bool is_unit_a_hero(int army, int unit) const {
+		return bm._armies[army].units[unit].flags & Unit::FLAG_HERO;
 	}
 
 	bool is_unit_being_deployed(int army, int unit) const {

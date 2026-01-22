@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c03ghryhyskuh"]
 
-[ext_resource type="Script" path="res://Scripts/AI/MCTS/ai_battle_bot_mcts.gd" id="1_nohmd"]
+[ext_resource type="Script" uid="uid://dwrdcy2x0io5f" path="res://Scripts/AI/MCTS/ai_battle_bot_mcts.gd" id="1_nohmd"]
 
 [node name="MctsEasy" type="Node"]
 script = ExtResource("1_nohmd")
