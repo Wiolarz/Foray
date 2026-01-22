@@ -45,6 +45,7 @@ var target_unit_type := TargetUnitType.ANY
 var not_self : bool = false
 
 
+## Dic[String, Variant]
 func _get_property_list() -> Array[Dictionary]:
 	# By default, `hammer_type` is not visible in the editor.
 
@@ -61,7 +62,7 @@ func _get_property_list() -> Array[Dictionary]:
 	if cast_range != 0 and not needs_movable_tile:
 		not_self_property = PROPERTY_USAGE_DEFAULT
 
-	var properties :  Array[Dictionary] = []
+	var properties : Array[Dictionary] = []
 
 	properties.append({
 		"name": "needs_movable_tile",

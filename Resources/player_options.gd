@@ -71,7 +71,7 @@ extends Resource
 
 #region Saves
 
-@export var highscores : Dictionary
+@export var highscores : Dictionary[String, int]
 
 ## Saved: race, army, goods, enemy_wave, enemy_race
 @export var city_defense_save : Array

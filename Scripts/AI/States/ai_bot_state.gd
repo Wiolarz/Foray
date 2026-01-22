@@ -1,4 +1,4 @@
-class_name AiBotState
+@abstract class_name AiBotState
 extends Node
 
 """
@@ -19,6 +19,4 @@ func _init(my_tags : Array[ExampleBot.TAG], my_player:Player):
 	me = my_player
 
 
-func choose_move(_battle_state : BattleGridState) -> MoveInfo:
-	assert(false, "basic State shouldn't be used")
-	return null
+@abstract func choose_move(_battle_state : BattleGridState) -> MoveInfo

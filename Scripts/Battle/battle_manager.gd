@@ -6,7 +6,7 @@ var _battle_is_ongoing : bool = false
 var _battle_grid_state : BattleGridState # GAMEPLAY combat state
 
 var _tile_grid : GenericHexGrid # Grid<TileForm> - VISUALs in a grid
-var _unit_to_unit_form : Dictionary # gameplay unit to VISUAL mapping
+var _unit_to_unit_form : Dictionary[Unit, UnitForm] # gameplay unit to VISUAL mapping
 var _grid_tiles_node : Node2D # parent for tiles VISUAL
 var _unit_forms_node : Node2D # parent for units VISUAL
 var _border_node : Node2D # parent for border tiles VISUAL

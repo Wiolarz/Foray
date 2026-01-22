@@ -28,7 +28,7 @@ func init_battle_mode(host : bool):
 	game_setup_info.game_mode = GameSetupInfo.GameMode.BATTLE
 
 	if host:
-		var preset : Dictionary = get_default_or_last_battle_preset()
+		var preset : Dictionary[String, Variant] = get_default_or_last_battle_preset()
 		game_setup_info.apply_battle_preset(preset["data"], preset["name"])
 
 #region Game setup
@@ -215,7 +215,7 @@ func create_army_from_preset(army_preset : PresetArmy, player_index : int) -> Ar
 	return army
 
 
-func get_default_or_last_battle_preset() -> Dictionary:
+func get_default_or_last_battle_preset() -> Dictionary[String, Variant]:
 	var last_preset_name : String = CFG.LAST_USED_BATTLE_PRESET_NAME
 	var last_preset_path : String = CFG.BATTLE_PRESETS_PATH + "/" + last_preset_name
 	var last_preset_data : PresetBattle

@@ -475,7 +475,7 @@ var LAST_OPENED_WORLD_WIKI_TAB : WorldWiki :
 var CITY_DEFENSE_SAVE : Array :
 	get: return player_options.city_defense_save
 
-var HIGHSCORES : Dictionary :
+var HIGHSCORES : Dictionary[String, int] :
 	get: return player_options.highscores
 
 func get_bot_idx(bot_path : String) -> int:
@@ -505,7 +505,7 @@ func reset_highscores() -> void:
 			continue
 		for player_race in RACES_LIST:
 			for enemy_race in RACES_LIST:
-				var key = player_race.race_name + \
+				var key : String = player_race.race_name + \
 					"|" + str(bot_index) + "|" + enemy_race.race_name
 
 				player_options.highscores[key] = 0

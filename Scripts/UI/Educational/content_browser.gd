@@ -1,4 +1,4 @@
-class_name ContentBrowser
+@abstract class_name ContentBrowser
 extends Panel
 
 @onready var _column_container : BoxContainer = $MarginContainer/VBoxContainer/Columns
@@ -23,8 +23,7 @@ func _ready():
 #region Overridable
 
 ## Defines folder path for "content_folder_path" and Variant for "_selected_item"
-func _set_types() -> void:
-	assert(false, "has to be overriden")
+@abstract func _set_types() -> void
 
 
 ## Optional Override
@@ -32,13 +31,13 @@ func get_description() -> String:
 	return ""
 
 
-func activate_content() -> void:
-	assert(false, "has to be overriden")
+## Required
+@abstract func activate_content() -> void
 
 
-## Optional Override
-func additonal_selected_content_function() -> void:
-	pass
+## Optional
+func additional_selected_content_function() -> void:
+	return
 
 #endregion Overridable
 
@@ -72,7 +71,7 @@ func _on_content_clicked(content_path : String):
 	var displayed_text : String = get_description()
 
 	_description.set_text(displayed_text)
-	additonal_selected_content_function()
+	additional_selected_content_function()
 
 
 func _on_play_button_pressed():

@@ -1,4 +1,4 @@
-class_name LevelUpScreen
+@abstract class_name LevelUpScreen
 extends Control
 
 var selected_hero : Hero
@@ -36,9 +36,8 @@ func _ready() -> void:
 		tier_panel.ability_chosen.connect(_selected_ability)
 
 
-# to be overriden
-func _assign_tier_panels() -> void:
-	assert(false)
+
+@abstract func _assign_tier_panels() -> void
 
 
 func apply_talents_and_abilities() -> void:

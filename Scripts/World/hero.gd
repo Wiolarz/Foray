@@ -143,8 +143,8 @@ func add_ritual(ritual : Ritual) -> void:
 	rituals.append(ritual.duplicate())
 
 
-func to_network_serializable() -> Dictionary:
-	var dict : Dictionary = {}
+func to_network_serializable() -> Dictionary[String, Variant]:
+	var dict : Dictionary[String, Variant] = {}
 	dict["data_hero"] = DataHero.get_network_id(template)
 	dict["name"] = hero_name
 	dict["movement_points"] = movement_points
@@ -153,7 +153,7 @@ func to_network_serializable() -> Dictionary:
 	return dict
 
 
-static func from_network_serializable(dict : Dictionary, controller_index_ : int) -> Hero:
+static func from_network_serializable(dict : Dictionary[String, Variant], controller_index_ : int) -> Hero:
 	var data_hero = DataHero.from_network_id(dict["data_hero"])
 	var hero : Hero = Hero.construct_hero(data_hero, controller_index_)
 	hero.hero_name = dict["name"]

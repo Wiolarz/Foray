@@ -80,8 +80,8 @@ func set_timer(slot_index : int, reserve_sec : int, increment_sec : int):
 
 #endregion Custom Battle Slot Settings
 
-func to_dictionary(local_username : String = "") -> Dictionary:
-	var result = {
+func to_dictionary(local_username : String = "") -> Dictionary[String, Variant]:
+	var result : Dictionary[String, Variant] = {
 		"game_mode": game_mode_to_str(),
 		"world_map": DataWorldMap.get_network_id(world_map),
 		"battle_map": DataBattleMap.get_network_id(battle_map),
@@ -102,7 +102,7 @@ func to_dictionary(local_username : String = "") -> Dictionary:
 	return result
 
 
-static func from_dictionary(dict : Dictionary, \
+static func from_dictionary(dict : Dictionary[String, Variant], \
 		local_username : String = "") -> GameSetupInfo:
 	var result = GameSetupInfo.new()
 	if "game_mode" in dict and dict["game_mode"] is String:
@@ -113,7 +113,7 @@ static func from_dictionary(dict : Dictionary, \
 		result.battle_map = DataBattleMap.from_network_id(dict["battle_map"])
 	if "slots" in dict and dict["slots"] is Array:
 		for i in dict["slots"].size():
-			var read_slot : Dictionary = dict["slots"][i]
+			var read_slot : Dictionary[String, Variant] = dict["slots"][i]
 			var new_slot : Slot = Slot.new()
 			new_slot.index = i
 			if "occupier" in read_slot:

@@ -1,8 +1,5 @@
-class_name Helpers
+@abstract class_name Helpers
 extends RefCounted
-
-func _init():
-	assert(false, "static class, do not create")
 
 
 static func remove_all_children(node : Node, include_internal : bool = false):
