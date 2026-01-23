@@ -1,77 +1,36 @@
-# Krong 3 - Polyspear
+# Foray
 
-Polyspear is a turn based strategy game.
+It's an open source turn based strategy game, a mix between Chess and Heroes of Might and Magic.
 
-Inspirations include
-- chess (no random element)
-- heroes (game structure)
-- asymetric multiplayer strategy games \
-(intentionally designed imbalance,\
-compensated by skill gap, allies, diplomacy etc)
+Developed by members of "Krąg Godota", KNTG Polygon subcommunity organized by Wiolarz
 
-Developed as a part of "Krąg Godota", a community organised by Wiolarz
-for people interested in learning Godot with regular weekly meetings.
-Part of Polygon gamedev enthusiasts organisation.
+ [Code documentation](Documentation/readme.md)
 
-Currently polyspear is the main project Krong is working on.
-
-- [Polyspear documentation](Documentation/readme.md)
-
-## Other projects
-
-Available as branches on this repo:
-
- - [Brawler](https://github.com/Wiolarz/Krong/tree/Brawler)
-
- - [Schmup](https://github.com/Wiolarz/Krong/tree/Shmup)
-
- - [Kings Hunt](https://github.com/Wiolarz/Krong/tree/King's_Hunt_development)
-
- - [Krąg season 2: Text game](https://github.com/Wiolarz/Krong/tree/K2TextGame1)
-
- - [Krąg season 2: Sealth](https://github.com/Wiolarz/Krong/tree/K2CrowdStealth)
-
- - [Krąg season 1](https://github.com/Wiolarz/Krong/tree/season_1)
-
- - [Project template](https://github.com/Wiolarz/Krong/tree/Project_Template)
-
-
-## Polyspear key bindings
-
-Generally use mouse / touchscreen
-
-- `KEY_SELECT` = Left mouse button
-- `KEYS WSAD or Arrows` = camera movement
-- `middle mouse button + drag` = drag camera
-- `KEY_GO_BACK` = ESC (UI navigation shortcut)
-- `KEY_MAXIMIZE_WINDOW` = F2
-
-Debug
-- `KEY_BOT_SPEED_SLOW` = 3 (number key)
-- `KEY_BOT_SPEED_MEDIUM` = 2
-- `KEY_BOT_SPEED_FAST` = 1
-- `KEY_DEBUG_COLLISION_SHAPES` = F4
-
-Other
-- `KEY_EXIT_GAME` = F1
-- `KEY_MENU` = ~
-- `KEY_CHEAT_MODE` = F3
-- `KEY_SAVE_GAME` = F5
-- `KEY_LOAD_GAME` = F6
+![Foray Battle Screenshot](Documentation/Documentation_Images/foray_battle_screenshot.png)
 
 
 
-## Git branches
+# Authors
 
-- `main` - main Polyspear development branch, shouldn't contain major bugs
-- `release/polyspear` - "Production playable" release, updated after completing some milestone and testing
-- `polyspear_Xyz` - feature branches, waitinng to be merged to Polyspear
-- `otherProjectName` - there are other projects like brawler, shmup, etc.
+## Active Contributors
+- Wiolarz
+- Pierożek (PieroganoReggiano)
+- Carcinizer
+- Bartollo
+- Anka_AKAxTC
 
-## Aletrnative implementations
+## Former Contributors
+- Pavelee
+- Trupen (MrTrupen)
+- Mienso (ZimneMienso)
+- Majones (FiloFelonFox)
+- Toksyczna
+- Deathguard12 (bartoszstepien01)
+- Zephyr (NamespaceV)
+
+## Alternative implementations
 
 Project vision is a long running one. See previous implementations in other engines.
-
 
 Unity - C#
 - [https://github.com/defacto2k15/PolySpear](https://github.com/defacto2k15/PolySpear)
@@ -80,19 +39,19 @@ Unreal - C++
 - [https://github.com/y3snt/Hegzy/tree/gameplay-refactor](https://github.com/y3snt/Hegzy/tree/gameplay-refactor)
 
 
+# Older projects still present on this repository
+Brawler and Shmup are the only somewhat playable games
 
-# Authors
+ - [Krąg season 2: Brawler](https://github.com/Wiolarz/Foray/tree/K2Brawler)
 
-- Wiolarz
-- Pierożek (PieroganoReggiano)
-- Carcinizer
-- Deathguard12 (bartoszstepien01)
-- Toksyczna
-- Bartollo
-- Mienso
-- Majones (MarcinMarszewski)
+ - [Krąg season 2: Schmup](https://github.com/Wiolarz/Foray/tree/K2Shmup)
 
-## Former Contributors
+ - [Krąg season 2:Kings Hunt](https://github.com/Wiolarz/Foray/tree/K2King's_Hunt)
 
-- Trupen (MrTrupen)
-- Zephyr (NamespaceV)
+ - [Krąg season 2: Text game](https://github.com/Wiolarz/Foray/tree/K2TextGame1)
+
+ - [Krąg season 2: Stealth game](https://github.com/Wiolarz/Foray/tree/K2CrowdStealth)
+
+ - [Krąg season 1: old and simple code experiments](https://github.com/Wiolarz/Foray/tree/season_1)
+
+ - [Old Project template](https://github.com/Wiolarz/Foray/tree/Project_Template)
