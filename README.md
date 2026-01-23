@@ -22,8 +22,8 @@ Developed by members of "Krąg Godota", KNTG Polygon subcommunity organized by W
 ## Former Contributors
 - Pavelee
 - Trupen (MrTrupen)
-- Mienso
-- Majones (MarcinMarszewski)
+- Mienso (ZimneMienso)
+- Majones (FiloFelonFox)
 - Toksyczna
 - Deathguard12 (bartoszstepien01)
 - Zephyr (NamespaceV)
