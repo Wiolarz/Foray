@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://d030cg7m2orr1"]
 
-[ext_resource type="Script" path="res://Scripts/UI/LevelUp/passive_button.gd" id="1_mewah"]
+[ext_resource type="Script" uid="uid://b7klu58jwwju3" path="res://Scripts/UI/LevelUp/passive_button.gd" id="1_mewah"]
 
 [node name="PassiveButton" type="PanelContainer"]
 anchors_preset = 15

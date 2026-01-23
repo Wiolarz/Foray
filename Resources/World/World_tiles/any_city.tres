@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="DataTile" load_steps=2 format=3 uid="uid://dm1h2oli57uji"]
+
+[ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_ndycd"]
+
+[resource]
+script = ExtResource("1_ndycd")
+type = "city 1 0"
+texture_path = "res://Art/world_map/city_any.png"

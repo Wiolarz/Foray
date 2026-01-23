@@ -2,8 +2,8 @@ class_name AIWorldBotRandom
 extends AIWorldInterface
 
 
-## pairs of heroes and their map coord targets
-var hero_targets : Dictionary = {} # hero name and object armyform as target
+## pairs of heroes (hero_name) and their map coord targets
+var hero_targets : Dictionary[String, Army] = {}
 
 
 func choose_move() -> WorldMoveInfo:

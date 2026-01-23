@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="DataTile" load_steps=2 format=3 uid="uid://5o3ophwk70k8"]
-
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_rkla1"]
-
-[resource]
-script = ExtResource("1_rkla1")
-type = "3_player_spawn"
-texture_path = "res://Art/player_colors/purple_color.png"
-flip_horizontal = false

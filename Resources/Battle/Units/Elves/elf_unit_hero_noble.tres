@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://b44kr1rcexp3v"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=9 format=3 uid="uid://b44kr1rcexp3v"]
 
-[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_vcx17"]
-[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_6kbtx"]
+[ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_vcx17"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="2_6kbtx"]
 [ext_resource type="Resource" uid="uid://bp747guikipcb" path="res://Resources/Battle/Symbols/spear.tres" id="3_bi52n"]
+[ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="3_qoj62"]
 [ext_resource type="Resource" uid="uid://sr1570kq7sm8" path="res://Resources/Battle/Symbols/shield.tres" id="4_iqq4y"]
+[ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="4_pohqm"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_6pgeb"]
 
 [sub_resource type="Resource" id="Resource_o8yk3"]
@@ -16,8 +18,5 @@ ruby = 1
 script = ExtResource("2_6kbtx")
 unit_name = "Noble"
 texture_path = "res://Art/units/elf/elf_hero_noble.png"
-symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_bi52n"), ExtResource("4_iqq4y"), ExtResource("5_6pgeb"), ExtResource("5_6pgeb"), ExtResource("5_6pgeb"), ExtResource("4_iqq4y")])
+symbols = Array[ExtResource("4_pohqm")]([ExtResource("3_bi52n"), ExtResource("4_iqq4y"), ExtResource("5_6pgeb"), ExtResource("5_6pgeb"), ExtResource("5_6pgeb"), ExtResource("4_iqq4y")])
 cost = SubResource("Resource_o8yk3")
-level = 1
-mana = 0
-spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

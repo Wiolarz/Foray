@@ -57,14 +57,15 @@ func paint(coord : Vector2i, data_tile : DataTile) -> void:
 
 
 func get_current_map(trim : bool) -> DataWorldMap:
+	var tiles_present : Array[DataTile] = []
 	var top_left = Vector2i(0, 0)
 	var bot_right = Vector2i(grid.width, grid.height)
 	if trim:
 		top_left = _find_real_top_left()
 		bot_right = _find_real_bot_right()
 	var map : DataWorldMap = DataWorldMap.new()
-	map.grid_width = bot_right.x - top_left.x
-	map.grid_height = bot_right.y - top_left.y
+	map.grid_width = bot_right.x - top_left.x + 1
+	map.grid_height = bot_right.y - top_left.y + 1
 	print("top left:  %s" % top_left)
 	print("bot right: %s" % bot_right)
 	print("grid size: %s" % Vector2i(map.grid_width, map.grid_height))
@@ -72,18 +73,26 @@ func get_current_map(trim : bool) -> DataWorldMap:
 	for x in range(top_left.x, bot_right.x + 1):
 		var column = []
 		for y in range(top_left.y, bot_right.y + 1):
-			var tile = grid.get_hex(Vector2i(x, y))
-			if tile:
-				tile = tile.duplicate()
+			var tile_data : DataTile = grid.get_hex(Vector2i(x, y))
+			if tile_data:
+				tile_data = tile_data.duplicate()
 			else:
-				tile = WorldEditGrid.create_empty_tile()
-			column.append(tile)
+				tile_data = WorldEditGrid.create_empty_tile()
+
+			var is_it_the_same_tile : bool = false
+			for saved_tile in tiles_present:
+				if tile_data.is_this_the_same_tile(saved_tile):
+					tile_data = saved_tile
+					is_it_the_same_tile = true
+					break
+
+			if not is_it_the_same_tile:
+				tiles_present.append(tile_data)
+
+			column.append(tile_data)
 		grid_data.append(column)
 	WorldEditGrid._make_nulls_sentinels(grid_data)
-	map.max_player_number = _find_max_player_number()
 	map.grid_data = grid_data
-	if map.max_player_number < 1:
-		return null
 	return map
 
 
@@ -130,7 +139,16 @@ func _find_real_bot_right() -> Vector2i:
 	if col < 0 or row < 0: # empty map so set map to one sentinel
 		col = 0
 		row = 0
-	return Vector2i(col + 1, row + 1)
+	return Vector2i(col, row)
+
+
+func get_bounding_box_rect() -> Rect2:
+	var top_left_tile_form : TileForm = _find_tile_form(_find_real_top_left())
+	var bottom_right_tile_form : TileForm = _find_tile_form(_find_real_bot_right())
+	var box_size : Vector2 = \
+		bottom_right_tile_form.global_position - \
+		top_left_tile_form.global_position
+	return Rect2(top_left_tile_form.global_position, box_size)
 
 
 func _find_max_player_number() -> int:

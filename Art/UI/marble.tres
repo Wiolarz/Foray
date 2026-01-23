@@ -15,6 +15,6 @@ domain_warp_fractal_type = 2
 [resource]
 width = 1024
 height = 1024
-seamless = true
-color_ramp = SubResource("Gradient_blneb")
 noise = SubResource("FastNoiseLite_yqeej")
+color_ramp = SubResource("Gradient_blneb")
+seamless = true

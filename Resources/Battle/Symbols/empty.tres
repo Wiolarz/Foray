@@ -1,17 +1,8 @@
 [gd_resource type="Resource" script_class="DataSymbol" load_steps=2 format=3 uid="uid://o4rlmfc33rsh"]
 
-[ext_resource type="Script" path="res://Resources/Battle/data_symbol.gd" id="1_cblen"]
+[ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="1_cblen"]
 
 [resource]
 script = ExtResource("1_cblen")
 symbol_name = "empty"
-texture_path = ""
-attack_power = 0
 defense_power = 0
-push_power = 0
-counter_attack = false
-parry = false
-parry_break = false
-reach = 0
-activate_turn = true
-activate_move = true

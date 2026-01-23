@@ -9,9 +9,9 @@ extends BattleManagerFastCpp
 var _integrity_check_move: MoveInfo
 
 ## Maps BMFast's unit IDs (in format [army, unit]) -> Godot IDs [army, deploy]
-var summon_mapping_cpp2gd: Dictionary = {}
+var summon_mapping_cpp2gd: Dictionary[Array, Array] = {}
 ## Maps Godot IDs [army, deploy] -> BMFast's unit IDs (in format [army, unit])
-var summon_mapping_gd2cpp: Dictionary = {}
+var summon_mapping_gd2cpp : Dictionary[Array, Array] = {}
 ## Maps BMFast's spell IDs to BattleSpells
 var spell_mapping: Array[BattleSpell] = []
 ## Maps BMFast's spell IDs to the army ID of the unit that has this spell
@@ -20,7 +20,7 @@ var spell_army_id_mapping: Array[int] = []
 var spell_unit_id_mapping: Array[int] = []
 
 ## Maps team ids to BMFast's team ids (BMFast's team ids must be less than max army number)
-var team_mapping: Dictionary = {}
+var team_mapping: Dictionary[int, int] = {}
 
 ## Make a BattleManagerFast for MCTS purposes.
 ## Parameter tgrid may be null, in which case TileGridFast is created automatically
@@ -42,9 +42,9 @@ static func from(bgstate: BattleGridState, tgrid: TileGridFast = null) -> Battle
 		BattleGridState.MANA_WELL_POWER
 	)
 
-	var max_team = 0
+	var max_team := 0
 
-	for army_idx in range(bgstate.armies_in_battle_state.size()):
+	for army_idx : int in range(bgstate.armies_in_battle_state.size()):
 		var army := bgstate.armies_in_battle_state[army_idx]
 
 		var player_idx : int = army.army_reference.controller_index
@@ -117,7 +117,7 @@ func insert_unit_from(
 	set_unit_mana(army_idx, unit_idx, unit.template.mana)
 
 	if deploy:
-		var idx := [army_idx, unit_to_deploy_idx]#UnitToDeployIdx.new(army_idx, unit_to_deploy_idx)
+		var idx : Array[int] = [army_idx, unit_to_deploy_idx]#UnitToDeployIdx.new(army_idx, unit_to_deploy_idx)
 		summon_mapping_cpp2gd[[army_idx, unit_idx]] = idx
 		summon_mapping_gd2cpp[idx] = [army_idx, unit_idx]
 
@@ -362,8 +362,8 @@ func compare_grid_state(bgs: BattleGridState) -> bool:
 				])
 				is_ok = false
 
-			# Dictionary[String, int] - numbers of spells
-			var spell_dict := {}
+			## numbers of spells
+			var spell_dict : Dictionary[String, int] = {}
 
 			for spell in unit.spells:
 				spell_dict[spell.name] = spell_dict.get(spell.name, 0) + 1

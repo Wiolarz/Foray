@@ -1,22 +1,21 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=6 format=3]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=8 format=3 uid="uid://tdyeebj1ogsl"]
 
-[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_33fl6"]
-[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="2_fe6q4"]
-[ext_resource type="Resource" path="res://Resources/Battle/Symbols/spear.tres" id="3_0fmkg"]
-[ext_resource type="Resource" path="res://Resources/Battle/Symbols/empty.tres" id="4_4yv01"]
+[ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_33fl6"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="2_fe6q4"]
+[ext_resource type="Resource" uid="uid://bp747guikipcb" path="res://Resources/Battle/Symbols/spear.tres" id="3_0fmkg"]
+[ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="3_2kvq4"]
+[ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="4_1re33"]
+[ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="4_4yv01"]
 
 [sub_resource type="Resource" id="Resource_k8g4u"]
 script = ExtResource("1_33fl6")
 wood = 10
-iron = 0
-ruby = 0
 
 [resource]
 script = ExtResource("2_fe6q4")
 unit_name = "elf_1"
 texture_path = "res://Art/units/elf/elf_spearmen.png"
-symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("3_0fmkg"), ExtResource("4_4yv01"), ExtResource("4_4yv01"), ExtResource("4_4yv01"), ExtResource("4_4yv01"), ExtResource("4_4yv01")])
+symbols = Array[ExtResource("4_1re33")]([ExtResource("3_0fmkg"), ExtResource("4_4yv01"), ExtResource("4_4yv01"), ExtResource("4_4yv01"), ExtResource("4_4yv01"), ExtResource("4_4yv01")])
 cost = SubResource("Resource_k8g4u")
 level = 2
 mana = 2
-spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([])

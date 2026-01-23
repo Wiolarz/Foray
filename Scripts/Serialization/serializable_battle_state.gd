@@ -15,7 +15,7 @@ func valid() -> bool:
 
 static func get_network_serialized(battle_state : SerializableBattleState) \
 		-> PackedByteArray:
-	var dict : Dictionary = {}
+	var dict : Dictionary[String, Variant] = {}
 	var breplay = battle_state.replay
 	if breplay:
 		dict["moves"] = []
@@ -34,7 +34,7 @@ static func get_network_serialized(battle_state : SerializableBattleState) \
 static func from_network_serialized(ser : PackedByteArray) \
 		-> SerializableBattleState:
 	var result = SerializableBattleState.new()
-	var dict : Dictionary = bytes_to_var(ser)
+	var dict : Dictionary[String, Variant] = bytes_to_var(ser)
 
 	# replay
 	if "moves" in dict and dict["moves"] is Array:

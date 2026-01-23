@@ -6,7 +6,7 @@ var _battle_is_ongoing : bool = false
 var _battle_grid_state : BattleGridState # GAMEPLAY combat state
 
 var _tile_grid : GenericHexGrid # Grid<TileForm> - VISUALs in a grid
-var _unit_to_unit_form : Dictionary # gameplay unit to VISUAL mapping
+var _unit_to_unit_form : Dictionary[Unit, UnitForm] # gameplay unit to VISUAL mapping
 var _grid_tiles_node : Node2D # parent for tiles VISUAL
 var _unit_forms_node : Node2D # parent for units VISUAL
 var _border_node : Node2D # parent for border tiles VISUAL
@@ -459,7 +459,7 @@ func _on_unit_deployment(unit : Unit) -> void:
 		for row : Array in _tile_grid.hexes:
 			for tile : TileForm in row:
 				# TODO replace it with better map editor features
-				if tile.type in ["1_player_spawn", "2_player_spawn", "3_player_spawn", "4_player_spawn"]:
+				if DataTile.is_type_deploy_tile(tile.type):
 					tile.get_node("Sprite2D").texture = load("res://Art/battle_map/grass_tile.png")
 
 	# TODO imo should be refactored
@@ -529,8 +529,7 @@ func get_player_mana(player : Player) -> int:
 ## visually captures the well
 ## unit get's their coord updated during animation
 func capture_mana_well(coord : Vector2i, unit : Unit) -> void:
-
-	var controller_sprite = _tile_grid.get_hex(coord).get_node("ControlerSprite")
+	var controller_sprite = _tile_grid.get_hex(coord).get_node("ControllerColor")
 	controller_sprite.visible = true
 	var data_color : DataPlayerColor = unit.controller.get_player_color()
 

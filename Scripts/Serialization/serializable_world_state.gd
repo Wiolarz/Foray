@@ -8,8 +8,8 @@ class PlayerState extends Resource:
 	@export var armies : Array[Vector2i]
 	# TODO consider saving race here
 
-@export var army_hexes : Dictionary
-@export var place_hexes : Dictionary
+@export var army_hexes : Dictionary[Vector2i, Dictionary]
+@export var place_hexes : Dictionary[Vector2i, Variant]
 @export var current_player : int = 0
 @export var players : Array[PlayerState]
 
@@ -30,7 +30,7 @@ static func get_network_serialized(world_state : SerializableWorldState) \
 			"outpost_buildings" : player.outpost_buildings,
 			"armies": player.armies,
 		})
-	var dict : Dictionary = {
+	var dict : Dictionary[String, Variant] = {
 		"armies": world_state.army_hexes,
 		"places": world_state.place_hexes,
 		"current_player": world_state.current_player,

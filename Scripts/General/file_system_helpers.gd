@@ -1,4 +1,4 @@
-class_name FileSystemHelpers
+@abstract class_name FileSystemHelpers
 
 static func list_files_in_folder(
 		folder_path : String,
@@ -48,7 +48,3 @@ static func list_folders_in_folder(
 					subdir_files[i] = subdir + "/" + subdir_files[i]
 			result.append_array(subdir_files)
 	return result
-
-
-func _init():
-	assert(false, "static class do not instantiate")

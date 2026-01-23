@@ -14,7 +14,7 @@ func _ready():
 		ai_difficulty_selection.add_item(bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
 
 
-func additonal_selected_content_function() -> void:
+func additional_selected_content_function() -> void:
 	player_side.max_value = _battle.armies.size()
 
 

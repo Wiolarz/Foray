@@ -1,13 +1,13 @@
-[gd_resource type="Resource" script_class="BattleSpell" load_steps=2 format=3 uid="uid://bmrgon7ovm2hl"]
+[gd_resource type="Resource" script_class="BattleSpell" load_steps=3 format=3 uid="uid://bmrgon7ovm2hl"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/battle_spell.gd" id="1_0306o"]
+[ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="1_0306o"]
+[ext_resource type="Script" uid="uid://lgbukttoatcv" path="res://Scripts/Battle/data_magic_effect.gd" id="2_o1nj3"]
 
 [resource]
 script = ExtResource("1_0306o")
 name = "Teleport"
 icon_path = "res://Art/magic/spell_icons/teleport.png"
 description = "Choose a tile in front of the caster, caster is teleported there activating his attacks"
-spell_effects = Array[Resource("res://Scripts/Battle/data_magic_effect.gd")]([])
 cast_range = 3
 direction_cast = 1
 target_type = 2

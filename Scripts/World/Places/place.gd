@@ -72,20 +72,20 @@ func capture(_faction : Faction) -> void:
 	return
 
 
-static func get_network_serializable(place : Place) -> Dictionary:
+static func get_network_serializable(place : Place) -> Dictionary[String, Variant]:
 	if not place:
 		return {}
-	var dict : Dictionary = {}
+	var dict : Dictionary[String, Variant] = {}
 	place.to_specific_serializable(dict)
 	dict["type"] = place.get_type()
 	dict["player"] = place.controller_index
 	return dict
 
 
-static func from_network_serializable(dict : Dictionary, coord_ : Vector2i) -> Place:
+static func from_network_serializable(dict : Dictionary[String, Variant], coord_ : Vector2i) -> Place:
 	var type = dict["type"]
 	var script_path = "%s/%s.gd" % [ PATH_TODO_MOVE_TO_CONFIG, type ]
-	var script = load(script_path) as Script
+	var script = load(script_path) as Script # TODO change it to a safer approach
 	assert(script)
 	var place : Place = script.create_place(coord_, PackedStringArray())
 	var player_index = dict["player"]
@@ -105,7 +105,7 @@ func is_basic() -> bool:
 ## should be overridden by each place
 ## This function has to copy such information of state that it would be
 ## possible to add it to the state after "create_place" call
-func to_specific_serializable(_dict : Dictionary) -> void:
+func to_specific_serializable(_dict : Dictionary[String, Variant]) -> void:
 	pass # does nothing for empty places
 
 
@@ -113,7 +113,7 @@ func to_specific_serializable(_dict : Dictionary) -> void:
 ## This function has to recover every information that is not recovered by
 ## "create_place" of the type with defaults and changing player which is done
 ## earlier
-func paste_specific_serializable_state(_dict : Dictionary) -> void:
+func paste_specific_serializable_state(_dict : Dictionary[String, Variant]) -> void:
 	pass # does nothing for empty places
 
 #endregion Overridable functions

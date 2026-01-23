@@ -25,20 +25,20 @@ static func create_world_editor_tile(data_tile : DataTile, coord_ : Vector2i,
 
 
 
-## ugly, FIXME
-static func create_world_tile_new(hex_ : WorldHex, coord_ : Vector2i, \
+## ugly, FIXME TEMP TODO
+static func create_world_tile_new(world_hex : WorldHex, coord_ : Vector2i, \
 		new_position : Vector2) -> TileForm:
 	var result : TileForm = CFG.HEX_TILE_FORM_SCENE.instantiate()
-	var image = hex_.get_image()
+	var image := world_hex.get_image()
 	result.type = "SENTINEL"
-	if hex_.place:
-		assert(coord_ == hex_.place.coord)
-		result.type = hex_.place.get_type()
+	if world_hex.place:
+		assert(coord_ == world_hex.place.coord)
+		result.type = world_hex.place.get_type()
 	result._set_coord(coord_)
 	result._set_texture(image)
 	result.name = "Tile_%s_%s" % [ coord_, result.type ]
 	result.position = new_position
-	result.hex = hex_
+	result.hex = world_hex
 	var place : Place = result.hex.place
 	place.controller_changed.connect(result.controller_changed)
 	return result
@@ -60,8 +60,18 @@ static func create_battle_tile(data: DataTile, new_coord : Vector2i) -> TileForm
 	result.grid_type = GameSetupInfo.GameMode.BATTLE
 	result.type = data.type
 	result._set_coord(new_coord)
-	result._set_texture(RES.load(data.texture_path))
+
 	result.name = "Tile_" + str(new_coord) + "_" + data.type
+	var sprite : Sprite2D = result.get_node("Sprite2D")
+	if data.is_it_deploy_tile():
+		sprite.rotation_degrees = data.get_spawn_direction() * 60
+		if IM.in_map_editor: # loading the map in editor
+			sprite.texture = CFG.DEPLOY_TILES_TEXTURES[data.get_player_ownership()]
+		else:
+			sprite.texture = CFG.DEPLOY_TILES_TEXTURES[IM.players[data.get_player_ownership()].color_idx]
+	else:
+		sprite.texture = RES.load(data.texture_path)
+		sprite.rotation_degrees = 0
 	return result
 
 
@@ -88,19 +98,33 @@ func _process(_delta):
 
 
 func controller_changed():
-	$ControlerSprite.visible = true
 	var controller : Player = IM.get_player_by_index(hex.place.controller_index)
 	var color_name : String = controller.get_player_color().name
 	var path =  "%s%s_color.png" % [CFG.PLAYER_COLORS_PATH, color_name]
 	var texture = RES.load(path) as Texture2D
 	assert(texture, "failed to load background " + path)
-	$ControlerSprite.texture = texture
+	$ControllerColor.texture = texture
 
 
 ## for map editor only
 func paint(brush : DataTile) -> void:
 	type = brush.type
 	$Sprite2D.texture = RES.load(brush.texture_path)
+	if brush.is_it_deploy_tile():
+		$Sprite2D.texture = CFG.DEPLOY_TILES_TEXTURES[int(type[DataTile.DEPLOY_PLAYER_INDEX]) - 1]
+		$Sprite2D.rotation_degrees = brush.get_spawn_direction() * 60
+	elif brush.is_it_city_tile():
+		var _neutral := false
+		if int(type[DataTile.CITY_PLAYER_INDEX]) == DataTile.NEUTRAL_CITY:
+			$ControllerColor.texture = CFG.NEUTRAL_STRONG_COLOR_TEXTURE
+			_neutral = true
+		else: # Player city
+			$ControllerColor.texture = CFG.CITY_STRONG_COLOR_TEXTURES[int(type[DataTile.CITY_PLAYER_INDEX])  - 1]
+
+		if int(type[DataTile.CITY_RACE_INDEX]) == DataTile.ANY_RACE_CITY: ## TEMP
+			assert(not _neutral, "attempt to paint neutral any city, advanced race cities are not yet implemented")
+			return
+		$Sprite2D.texture = RES.load(CFG.RACES_LIST[int(type[DataTile.CITY_RACE_INDEX]) - 1].city_texture_path)
 
 
 func set_hovered(is_hovered : bool):

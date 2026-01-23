@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=7 format=3 uid="uid://dvcmnrwfkynkj"]
+[gd_resource type="Resource" script_class="DataHero" load_steps=9 format=3 uid="uid://dvcmnrwfkynkj"]
 
-[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_8faem"]
+[ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_8faem"]
 [ext_resource type="Resource" uid="uid://b44kr1rcexp3v" path="res://Resources/Battle/Units/Elves/elf_unit_hero_noble.tres" id="2_fmenc"]
-[ext_resource type="Script" path="res://Resources/Races/data_hero.gd" id="3_vrhid"]
+[ext_resource type="Script" uid="uid://c5wg42c04n0wx" path="res://Resources/Races/data_hero.gd" id="3_vrhid"]
+[ext_resource type="Script" uid="uid://b41h5o8sjhdsk" path="res://Resources/Battle/hero_passive.gd" id="4_33g2c"]
 [ext_resource type="Resource" uid="uid://bcxhm3aauivnm" path="res://Resources/Battle/Hero_Passives/magic_weapons.tres" id="4_eij1s"]
+[ext_resource type="Script" uid="uid://hul0nnm2cjqj" path="res://Resources/World/rituals.gd" id="6_hb8ow"]
 
 [sub_resource type="Resource" id="Resource_pcl0g"]
 script = ExtResource("1_8faem")
@@ -23,7 +25,4 @@ hero_name = "noble"
 cost = SubResource("Resource_pcl0g")
 revive_cost = SubResource("Resource_54csl")
 data_unit = ExtResource("2_fmenc")
-starting_passives = Array[Resource("res://Resources/Battle/hero_passive.gd")]([ExtResource("4_eij1s")])
-starting_level = 1
-max_army_size = 3
-starting_rituals = Array[Resource("res://Resources/World/rituals.gd")]([])
+starting_passives = Array[ExtResource("4_33g2c")]([ExtResource("4_eij1s")])

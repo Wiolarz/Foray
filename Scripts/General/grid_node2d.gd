@@ -3,6 +3,7 @@ extends Node2D
 
 ## Base class for putting grids in 2d space in a tree.
 ## E.g. for visualising grid data, handling click events etc
+## Most often used as a parent class
 
 const VISUAL_EMPTY_BORDER = 20.0 # Hex Sprite draw gaps
 #const TILE_OFFSET_HORIZONTAL_PER_X : float = 529.0 + VISUAL_EMPTY_BORDER # current sprite size 529

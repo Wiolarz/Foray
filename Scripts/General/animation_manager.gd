@@ -11,7 +11,7 @@ enum PlaybackMode {
 }
 
 # An ORDERED set of currently running tweens with their settings
-var _running_tweens : Dictionary # Dictionary[Tween, TweenPlaybackSettings]
+var _running_tweens : Dictionary[Tween, TweenPlaybackSettings]
 var _main_tween : Tween
 var _playback_mode : PlaybackMode = PlaybackMode.NORMAL
 var _speed_scale : float = 1.0

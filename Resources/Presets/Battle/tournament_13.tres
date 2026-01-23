@@ -1,11 +1,12 @@
-[gd_resource type="Resource" script_class="PresetBattle" load_steps=5 format=3 uid="uid://krus7v3jobdg"]
+[gd_resource type="Resource" script_class="PresetBattle" load_steps=6 format=3 uid="uid://krus7v3jobdg"]
 
-[ext_resource type="Script" path="res://Resources/Presets/preset_battle.gd" id="1_8y5es"]
+[ext_resource type="Script" uid="uid://b4slskcsa0n83" path="res://Resources/Presets/preset_battle.gd" id="1_8y5es"]
 [ext_resource type="Resource" uid="uid://ci7gmtn4w3cpr" path="res://Resources/Presets/Custom_Armies/cyclops.tres" id="1_ir7ou"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_xbhf1"]
 [ext_resource type="Resource" uid="uid://cqptha5n3agx0" path="res://Resources/Presets/Custom_Armies/undead.tres" id="2_67sjn"]
-[ext_resource type="Resource" uid="uid://cgfg4cp47swkb" path="res://Resources/Battle/Battle_Maps/medium_varied.tres" id="3_aps5r"]
+[ext_resource type="Resource" uid="uid://bixwhg5fsfl8j" path="res://Resources/Battle/Battle_Maps/medium_varied.tres" id="3_aps5r"]
 
 [resource]
 script = ExtResource("1_8y5es")
-armies = Array[Resource("res://Resources/Presets/preset_army.gd")]([ExtResource("2_67sjn"), ExtResource("1_ir7ou")])
+armies = Array[ExtResource("1_xbhf1")]([ExtResource("2_67sjn"), ExtResource("1_ir7ou")])
 battle_map = ExtResource("3_aps5r")

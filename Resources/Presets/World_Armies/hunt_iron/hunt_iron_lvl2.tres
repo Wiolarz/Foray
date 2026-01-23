@@ -1,8 +1,9 @@
-[gd_resource type="Resource" script_class="PresetArmy" load_steps=3 format=3 uid="uid://c4awgc7gfsmhd"]
+[gd_resource type="Resource" script_class="PresetArmy" load_steps=4 format=3 uid="uid://c4awgc7gfsmhd"]
 
-[ext_resource type="Script" path="res://Resources/Presets/preset_army.gd" id="1_0bfoo"]
+[ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_0bfoo"]
 [ext_resource type="Resource" uid="uid://dddn4h4ttpirx" path="res://Resources/Battle/Units/Neutral/iron_golem.tres" id="2_a4jp0"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="2_q2neo"]
 
 [resource]
 script = ExtResource("1_0bfoo")
-units = Array[Resource("res://Resources/Battle/data_unit.gd")]([ExtResource("2_a4jp0"), ExtResource("2_a4jp0")])
+units = Array[ExtResource("2_q2neo")]([ExtResource("2_a4jp0"), ExtResource("2_a4jp0")])

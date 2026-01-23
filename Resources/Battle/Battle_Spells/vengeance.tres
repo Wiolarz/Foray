@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="BattleSpell" load_steps=3 format=3 uid="uid://oq31g85fljuf"]
+[gd_resource type="Resource" script_class="BattleSpell" load_steps=4 format=3 uid="uid://oq31g85fljuf"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/battle_spell.gd" id="1_oxtud"]
+[ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="1_oxtud"]
 [ext_resource type="Resource" uid="uid://dh1qm8s82lxmd" path="res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/vengeance_effect.tres" id="2_gmkfr"]
+[ext_resource type="Script" uid="uid://lgbukttoatcv" path="res://Scripts/Battle/data_magic_effect.gd" id="2_xqqwr"]
 
 [resource]
 script = ExtResource("1_oxtud")
@@ -11,9 +12,7 @@ description = "Choose an ally unit -> For the next 6 turns
 if an enemy unit during their turn were to make a move, leading to this units death, it will die too
 
 But if it were to be the last unit killed, spell won't take effect as the battle will be over."
-spell_effects = Array[Resource("res://Scripts/Battle/data_magic_effect.gd")]([ExtResource("2_gmkfr")])
-cast_range = -1
-direction_cast = 0
+spell_effects = Array[ExtResource("2_xqqwr")]([ExtResource("2_gmkfr")])
 target_type = 1
 needs_movable_tile = false
 target_unit_type = 1

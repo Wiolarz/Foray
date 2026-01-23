@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b7fpb6r5mluj1"]
 
-[ext_resource type="Script" path="res://Scripts/UI/LevelUp/tier_talent_panel.gd" id="1_3y1pe"]
+[ext_resource type="Script" uid="uid://dfm01goppmcp5" path="res://Scripts/UI/LevelUp/tier_talent_panel.gd" id="1_3y1pe"]
 [ext_resource type="PackedScene" uid="uid://d030cg7m2orr1" path="res://Scenes/UI/LevelUp/PassiveButton.tscn" id="2_pbd4n"]
 
 [node name="TierTalentPanel" type="PanelContainer"]

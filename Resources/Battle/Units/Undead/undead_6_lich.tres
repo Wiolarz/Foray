@@ -1,14 +1,15 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=7 format=3 uid="uid://dfe0ek2xxvv6m"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=9 format=3 uid="uid://dfe0ek2xxvv6m"]
 
-[ext_resource type="Script" path="res://Scripts/World/Economy/goods.gd" id="1_xxvw5"]
-[ext_resource type="Script" path="res://Resources/Battle/data_unit.gd" id="3_dflqx"]
+[ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_xxvw5"]
+[ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="3_1a1bo"]
+[ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="3_dflqx"]
 [ext_resource type="Resource" uid="uid://bpp7uuufysbuh" path="res://Resources/Battle/Symbols/sickle.tres" id="4_amk25"]
 [ext_resource type="Resource" uid="uid://34m12aa1mich" path="res://Resources/Battle/Battle_Spells/martyr.tres" id="4_fhb2r"]
+[ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="5_vo8i1"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="6_fsos2"]
 
 [sub_resource type="Resource" id="Resource_vofdp"]
 script = ExtResource("1_xxvw5")
-wood = 0
 iron = 3
 ruby = 3
 
@@ -16,8 +17,8 @@ ruby = 3
 script = ExtResource("3_dflqx")
 unit_name = "Lich"
 texture_path = "res://Art/units/undead/undead_6_lich.png"
-symbols = Array[Resource("res://Resources/Battle/data_symbol.gd")]([ExtResource("4_amk25"), ExtResource("4_amk25"), ExtResource("6_fsos2"), ExtResource("6_fsos2"), ExtResource("6_fsos2"), ExtResource("4_amk25")])
+symbols = Array[ExtResource("5_vo8i1")]([ExtResource("4_amk25"), ExtResource("4_amk25"), ExtResource("6_fsos2"), ExtResource("6_fsos2"), ExtResource("6_fsos2"), ExtResource("4_amk25")])
 cost = SubResource("Resource_vofdp")
 level = 6
 mana = 4
-spells = Array[Resource("res://Scripts/Battle/battle_spell.gd")]([ExtResource("4_fhb2r")])
+spells = Array[ExtResource("3_1a1bo")]([ExtResource("4_fhb2r")])

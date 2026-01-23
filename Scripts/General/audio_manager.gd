@@ -12,7 +12,7 @@ extends Node
 ## 3. Add an entry in a dictionary below
 
 
-@onready var sounds : Dictionary = {
+@onready var sounds : Dictionary[String, Node] = {
 	"click": $Click,
 	"ingame_click": $IngameClick,
 	"parry": $Parry,
@@ -27,7 +27,7 @@ extends Node
 ## 1. Put the music in Audio/Music folder [br]
 ## 2. Make sure to enable loop (double-click on a music file -> Loop) [br]
 ## 3. Add an entry in a dictionary below``
-@onready var tracks : Dictionary = {
+@onready var tracks : Dictionary[String, Resource] = {
 	"menu": preload("res://Audio/Music/exp.mp3"),
 	"battle": preload("res://Audio/Music/polyspear_battle_demo_update.ogg"),
 	"battle_drums": preload("res://Audio/Music/combat_drums.wav"),
@@ -37,7 +37,8 @@ extends Node
 
 var current_track : String = ""
 
-@onready var bus_idxs : Dictionary = {
+## Dic[volume_type, AudioServer_bus_idx]
+@onready var bus_idxs : Dictionary[String, int] = {
 	"volume_master": AudioServer.get_bus_index("Master"),
 	"volume_music":  AudioServer.get_bus_index("Music"),
 	"volume_game":   AudioServer.get_bus_index("Game"),

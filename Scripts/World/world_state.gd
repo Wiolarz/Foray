@@ -11,7 +11,7 @@ var defeated_factions : Array[Faction] = []
 var move_hold_on_combat : Array[Vector2i] # TODO some better form
 
 var pathfinding : AStar2D
-var coord_to_index : Dictionary = {}
+var coord_to_index : Dictionary[Vector2i, int] = {}
 
 ## TODO consider not using signals here
 ## this is signal used by other managers
@@ -58,7 +58,7 @@ func start_world(map : DataWorldMap,
 			var coord := Vector2i(x, y)
 			var hex : WorldHex = WorldHex.new()
 			hex.data_tile = map.grid_data[x][y]
-			var place_ser : Dictionary = {}
+			var place_ser : Dictionary[String, Variant] = {}
 			var type : String = hex.data_tile.type
 			if saved_state:
 				place_ser = saved_state.place_hexes.get(coord, {})
@@ -79,7 +79,7 @@ func start_world(map : DataWorldMap,
 						hex.place.garrison_reserve = hex.army
 
 			if saved_state and coord in saved_state.army_hexes:
-				var loaded : Dictionary = saved_state.army_hexes[coord]
+				var loaded : Dictionary[String, Variant] = saved_state.army_hexes[coord]
 				var army : Army = null
 				if loaded:
 					army = deserialize_army(loaded)
@@ -670,7 +670,7 @@ func change_army_position(army : Army, target_coord : Vector2i) -> void:
 		var number_of_units_to_be_left : int = army.units_data.size() - army.max_army_size
 
 		for unit_over_limit_idx in range(number_of_units_to_be_left):
-			source_hex.place.garrison_reserve.units_data.append(army.units_data[-unit_over_limit_idx - 1])
+			source_hex.place.garrison_reserve.units_data.append(army.units_data[-1])
 			army.units_data.pop_back()
 
 		WM.world_ui.refresh_army_panel()
@@ -922,8 +922,8 @@ func to_network_serializable() -> SerializableWorldState:
 	return result
 
 
-func _get_serialized_army(army) -> Dictionary:
-	var army_dict : Dictionary = {}
+func _get_serialized_army(army) -> Dictionary[String, Variant]:
+	var army_dict : Dictionary[String, Variant] = {}
 	army_dict["player"] = army.controller_index
 
 	if army.hero:
@@ -938,7 +938,7 @@ func _get_serialized_army(army) -> Dictionary:
 	return army_dict
 
 
-static func deserialize_army(dict : Dictionary) -> Army:
+static func deserialize_army(dict : Dictionary[String, Variant]) -> Army:
 	var army : Army = Army.new()
 	army.controller_index = dict["player"]
 	if "hero" in dict:

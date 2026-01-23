@@ -12,13 +12,12 @@ var mutex := Mutex.new()
 var update_markers := false
 var run_mcts := false
 
-## MoveInfo => float
-var move_scores_raw : Dictionary
+var move_scores_raw : Dictionary[MoveInfo, float]
 var min_score := 0.0
 var max_score := 1.0
 
-## Vector2i => PositionMarker
-var pos_markers: Dictionary
+## Dic[coord, Array[PositionMarker]]
+var pos_markers: Dictionary[Vector2i, Array]
 var markers : Array[Node2D]
 
 @onready var reference_bot = load("res://Resources/Battle/Bots/MCTS_Hard.tscn")
