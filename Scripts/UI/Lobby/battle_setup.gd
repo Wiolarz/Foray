@@ -30,6 +30,8 @@ func _ready():
 	fill_presets_list()
 	UI.resources_list_changed.connect(refresh_after_resource_list_changed)
 
+	hero_level_up.confirm_button.connect(_on_level_up_confirm_button_pressed)
+
 
 ## It is used to know if changes in gui are made by user and should be passed to
 ## backend (change setup info and send over network) OR made by refreshing
@@ -97,7 +99,7 @@ func make_client_side() -> void:
 	var presets = preset_select
 	presets.queue_free()
 
-#endregion
+#endregion Initial Setup
 
 
 ## Updates UI to match GameState in IM
@@ -176,8 +178,6 @@ func _refresh_slot(index : int) -> void:
 	ui_slot.set_visible_team(team)
 	ui_slot.set_visible_take_leave_button_state(take_leave_button_state)
 	ui_slot.set_visible_timers(reserve_seconds, increment_seconds)
-
-
 
 
 func slot_to_index(slot : BattlePlayerSlotPanel) -> int:
@@ -323,4 +323,4 @@ func _on_level_up_confirm_button_pressed():
 	hero_level_up.apply_talents_and_abilities()
 	hide_hero_level_up()
 
-#endregion
+#endregion Changing settings

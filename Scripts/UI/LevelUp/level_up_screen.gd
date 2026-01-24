@@ -28,12 +28,14 @@ func _ready() -> void:
 		tier_idx += 1
 		tier_panel.init_tier_panel(tier_idx)
 		tier_panel.talent_chosen.connect(_selected_talent)
+		tier_panel.talent_hover.connect(_hover_talent)
 
 	tier_idx = -1
 	for tier_panel in tier_skill_panels:
 		tier_idx += 1
 		tier_panel.init_tier_panel(tier_idx)
 		tier_panel.ability_chosen.connect(_selected_ability)
+		tier_panel.ability_hover.connect(_hover_ability)
 
 
 # to be overriden
@@ -81,5 +83,17 @@ func _selected_ability(tier : int, button_idx : int, selected : bool) -> void:
 		description.text = "_"
 		return
 	var new_ability : HeroPassive = CFG.abilities[tier][button_idx]
+	if new_ability:
+		description.text = new_ability.description
+
+
+func _hover_ability(tier : int, button_idx : int) -> void:
+	var new_ability : HeroPassive = CFG.abilities[tier][button_idx]
+	if new_ability:
+		description.text = new_ability.description
+
+
+func _hover_talent(tier : int, button_idx : int) -> void:
+	var new_ability : HeroPassive = CFG.talents[tier][button_idx]
 	if new_ability:
 		description.text = new_ability.description
