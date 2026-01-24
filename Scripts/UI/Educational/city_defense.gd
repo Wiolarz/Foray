@@ -214,8 +214,11 @@ func save_game() -> void:
 
 ## used once starting the game and during purchases reset
 func load_save() -> void:
-	if CFG.CITY_DEFENSE_SAVE.size() == 0:
+	if CFG.CITY_DEFENSE_SAVE.size() == 0: # No saved game
 		return
+	if CFG.CITY_DEFENSE_SAVE[1].hero == null:  # TEMP safeguard to prevent loading older version saves
+		return
+	
 	_start_new_run(true)
 	player_race = CFG.RACES_LIST[CFG.CITY_DEFENSE_SAVE[0]]
 
