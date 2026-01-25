@@ -44,5 +44,12 @@ func _on_hero_level_value_item_selected(_index : int):
 		tier_panel.set_hero(selected_hero, false)
 
 
+func city_defense_lock_hero_level():
+	hero_level_value.disabled = true
+	hero_level_value.text = "Hero Level: " + str(selected_hero.level)
+	for tier_panel : PanelContainer in tier_panels:
+		tier_panel.set_hero(selected_hero, false)
+
+
 func _on_confirm_button_pressed():
 	confirm_button.emit()

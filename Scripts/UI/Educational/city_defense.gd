@@ -76,6 +76,8 @@ var attacker_waves : PresetWaves
 @onready var next_wave_selection : OptionButton = $MarginContainer/VBoxContainer/VBoxCurrentRun/VBoxNextWave/HBoxNextWaveInfo/OptionWaveSelection
 
 
+@onready var level_up_screen : LevelUpScreen = $MarginContainer/VBoxContainer/VBoxCurrentRun/LevelUpLobbyScreen
+
 # Current run data:
 var current_roster : Army
 
@@ -140,6 +142,11 @@ func _ready():
 	$MarginContainer/VBoxContainer/VBoxCurrentRun/CurrentRosterTopBar/ResetPurchasesButton.\
 		pressed.connect(load_save)
 
+	## Level up mechanics
+	$MarginContainer/VBoxContainer/VBoxCurrentRun/HBoxArmy.show_level_up_screen.connect(_show_level_up_screen)
+	level_up_screen.confirm_button.connect(_confirm_level_up)
+	level_up_screen.hide()
+
 
 func attacker_changed(attacker_index) -> void:
 	new_run_attacker_waves_path = attacker_waves_folder_path + attacker_waves_presets[attacker_index]
@@ -170,8 +177,8 @@ func _start_new_run(is_save_being_loaded : bool = false) -> void:
 	current_roster = Army.new()
 	var army_preset : PresetArmy = load(new_run_army_path)
 	current_roster.units_data = army_preset.units
-	current_roster.hero = Hero.construct_hero(player_race.heroes[0], 0)
 
+	_load_hero(player_race.heroes[0])
 
 	continue_button.disabled = false
 	IM.is_city_defense_active = true
@@ -191,6 +198,13 @@ func _start_new_run(is_save_being_loaded : bool = false) -> void:
 
 	if not is_save_being_loaded:
 		save_game()
+
+
+func _load_hero(hero_data : DataHero) -> void:
+	current_roster.hero = Hero.construct_hero(hero_data, 0)
+	level_up_screen.selected_hero = current_roster.hero
+	level_up_screen.city_defense_lock_hero_level()
+
 
 #endregion New Run Setup
 
@@ -218,15 +232,15 @@ func load_save() -> void:
 		return
 	if CFG.CITY_DEFENSE_SAVE[1].hero == null:  # TEMP safeguard to prevent loading older version saves
 		return
-	
+
 	_start_new_run(true)
 	player_race = CFG.RACES_LIST[CFG.CITY_DEFENSE_SAVE[0]]
 
 	var preset_army : PresetArmy = CFG.CITY_DEFENSE_SAVE[1]
 	current_roster = Army.new()
 	current_roster.units_data = preset_army.units.duplicate()
-	var hero := Hero.construct_hero(preset_army.hero, 0)
-	current_roster.hero = hero
+
+	_load_hero(preset_army.hero)
 
 	player_goods = CFG.CITY_DEFENSE_SAVE[2].duplicate()
 	current_wave = CFG.CITY_DEFENSE_SAVE[3]
@@ -320,7 +334,8 @@ func _launch_battle():
 
 ## after BM ends battle with IM.is_city_defense_active being true it calls IM which calls this
 func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
-	if not armies[0].can_fight():  # player lost
+	## PLAYER LOST
+	if not armies[0].can_fight():
 		IM.is_city_defense_active = false
 		is_run_ongoing = false
 		continue_button.disabled = true
@@ -328,10 +343,21 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 		CFG.save_player_options()
 		return
 
+	## PLAYER WON
 	update_highscores()
 
 	for dead_unit : Unit in armies[0].dead_units:
 		current_roster.units_data.erase(dead_unit.template)
+
+	var killed_units : Array[int]
+	for killed_unit : Unit in armies[1].dead_units:
+		killed_units.append(killed_unit.level)
+	killed_units.sort()
+
+	for killed_unit in killed_units:
+		if current_roster.hero.level <= killed_unit:
+			current_roster.hero.add_xp(1)
+	level_up_screen.city_defense_lock_hero_level()
 
 	# goods awards 0 is starting amount, so we always add + 1
 	if current_wave + 1 >= goods_awards.size():
@@ -354,6 +380,24 @@ func battle_ended(armies : Array[BattleGridState.ArmyInBattleState]) -> void:
 		_displayed_next_wave_changed(current_wave + 1)
 
 #endregion Run UI
+
+
+#region Run UI additional systems
+
+func _show_level_up_screen() -> void:
+	for child in current_run_container.get_children():
+		child.hide()
+	level_up_screen.show()
+
+
+func _confirm_level_up() -> void:
+	for child in current_run_container.get_children():
+		child.show()
+	level_up_screen.hide()
+	level_up_screen.selected_hero.passive_effects.clear()
+	level_up_screen.apply_talents_and_abilities()
+
+#endregion Run UI additional systems
 
 
 #region Highscores
