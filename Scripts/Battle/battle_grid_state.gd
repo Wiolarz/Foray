@@ -104,8 +104,10 @@ func move_info_execute(move_info : MoveInfo) -> void:
 	currently_processed_move_info = move_info
 
 	# BMFast integrity check - live testing purposes only
-	var bmfast = BattleManagerFast.from(self)
-	bmfast.check_integrity_before_move(self, move_info)
+	var bmfast : BattleManagerFast = null
+	if CFG.player_options.bmfast_integrity_check_mode != CFG.BMFastIntegrityCheckMode.DISABLE:
+		bmfast = BattleManagerFast.from(self)
+		bmfast.check_integrity_before_move(self, move_info)
 
 	var source_tile_coord := move_info.move_source
 
@@ -147,7 +149,8 @@ func move_info_execute(move_info : MoveInfo) -> void:
 	currently_processed_move_info = null
 
 	# BMFast integrity check contd. - live testing purposes only
-	bmfast.check_integrity_after_move(self)
+	if CFG.player_options.bmfast_integrity_check_mode != CFG.BMFastIntegrityCheckMode.DISABLE:
+		bmfast.check_integrity_after_move(self)
 
 #endregion move_info support
 
