@@ -6,6 +6,7 @@ extends GenericHexGrid
 
 ## emitted when tile transforms into new one.
 signal tile_changed(coord : Vector2i)
+signal just_summoned_a_unit(coord : Vector2i)
 
 enum MoveConsequences {
 	NONE,
@@ -789,16 +790,18 @@ func _perform_dash(unit : Unit, target_tile_coord : Vector2i, power : int = 3) -
 		_kill_unit(unit)
 
 
+## Visible Unit has to be manually added within BM _perform_move_info
 func _summon_a_unit(caster : Unit, summoned_unit : DataUnit, target_tile_coord : Vector2i) -> void:
 	var direction : int = GenericHexGrid.direction_to_adjacent(caster.coord, target_tile_coord)
 	var unit : Unit = caster.army_in_battle.summon_unit(summoned_unit, target_tile_coord, direction)
-
 
 	# Apply summon sickness
 	var success : bool = unit.try_adding_magic_effect(load(CFG.SUMMONING_SICKNESS_PATH))
 	assert(success, "failure to apply summoning sickness effect")
 
 	_put_unit_on_grid(unit, target_tile_coord)
+	## Unit has to be placed on the grid before it can be visually created
+	just_summoned_a_unit.emit(target_tile_coord)  # VISUALS creates UnitForm
 
 
 ## changes coordinates of the unit ONLY (doesn't activate attack or anything like that)
@@ -1060,11 +1063,17 @@ func is_spell_target_valid(caster : Unit, coord : Vector2i, spell : BattleSpell)
 			var target = get_unit(coord)
 			if target.army_in_battle.alive_not_summoned_units_number() == 1:
 				return false
-	return true
+		"Mirror Image":
+			var copied_unit : Unit = get_unit(coord)
+			var spawn_coord : Vector2i = adjacent_coord(coord, copied_unit.unit_rotation)
+			if get_unit(spawn_coord) or not _get_battle_hex(spawn_coord).can_be_moved_to:
+				return false
+	return true  # All checks have passed
 
 
 ## spell takes an effect
 func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpell) -> void:
+	unit.spells.erase(spell)
 
 	match spell.name:
 		"Vengeance", "Blood Ritual", "Anchor":
@@ -1137,11 +1146,28 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 				var target : Unit = get_unit(tile_coord)
 				if target:
 					target.try_adding_magic_effect(load(CFG.BURNING_PATH))
+		"Mirror Image":
+			var copied_unit : Unit = get_unit(target_tile_coord)
+			var spawn_coord : Vector2i = adjacent_coord(target_tile_coord, unit.unit_rotation)
+			_summon_a_unit(copied_unit, copied_unit.template, spawn_coord)  # TODO check why passing not adjacent unit, causes errors which aren't printed
+			var summoned_unit : Unit = get_unit(spawn_coord)
+			summoned_unit.spells = copied_unit.spells.duplicate()
+			summoned_unit.effects.append_array(copied_unit.effects.duplicate())
+
+			for i : int in range(summoned_unit.effects.size() - Unit.MAX_EFFECTS_PER_UNIT):
+				summoned_unit.effects.pop_back()
+
+			var skip_summoning_sickness : bool = true
+			for effect : MagicEffect in summoned_unit.effects:
+				if skip_summoning_sickness:
+					skip_summoning_sickness = false
+					continue
+				summoned_unit.unit_magic_effect.emit(effect)
 		_:
 			printerr("Spell perform not supported: ", spell.name)
 			return
 
-	unit.spells.erase(spell) # Remove to test casting multiple times
+
 
 
 ## spell effects that occur after allmove related event already took place [br]
