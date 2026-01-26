@@ -876,7 +876,10 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 		killer_army.killed_units.append(target.level)
 
 		#TODO move this elsewhere so that durability gets lowered by 1 each killing turn regardless of number of killed units
-		for effect in currently_active_unit.effects:
+		var effects = [] # TEMP fix to a bug that prevented using cheats
+		if currently_active_unit:
+			effects = currently_active_unit.effects
+		for effect in effects:
 			if effect.name == "Magic Weapon":
 				effect.magic_weapon_durability -= 1
 				if effect.magic_weapon_durability < 1:
