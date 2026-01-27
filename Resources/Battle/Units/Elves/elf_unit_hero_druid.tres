@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_m78i2"]
 [ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="3_a81vi"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="3_tkndh"]
-[ext_resource type="Resource" uid="uid://bmrgon7ovm2hl" path="res://Resources/Battle/Battle_Spells/teleport.tres" id="4_a81vi"]
+[ext_resource type="Resource" uid="uid://b1hm816b76y5v" path="res://Resources/Battle/Battle_Spells/mirror_image.tres" id="4_a81vi"]
 [ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="5_goin3"]
 [ext_resource type="Resource" uid="uid://dcxon0wq646p5" path="res://Resources/Battle/Symbols/mace.tres" id="6_j1u76"]
 

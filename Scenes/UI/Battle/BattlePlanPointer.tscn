@@ -1,13 +1,10 @@
 [gd_scene load_steps=2 format=3 uid="uid://ddhv4syx37x4i"]
 
-[sub_resource type="TextMesh" id="TextMesh_dv5gn"]
-text = "⬡"
-pixel_size = 1.0
+[ext_resource type="Texture2D" uid="uid://bqwresnh1w8ph" path="res://Art/UI/hex_pointer.png" id="1_e1pvu"]
 
 [node name="BattlePlanPointer" type="Node2D"]
 scale = Vector2(2, 2)
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-position = Vector2(0, 31)
-scale = Vector2(35, 35)
-mesh = SubResource("TextMesh_dv5gn")
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_e1pvu")
