@@ -1166,6 +1166,27 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 					skip_summoning_sickness = false
 					continue
 				summoned_unit.unit_magic_effect.emit(effect)
+		"Stone Pillar":
+			var enemy_targets : Array[Unit] = []
+			var ally_targets : Array[Unit] = []
+			for direction in DIRECTION_TO_OFFSET:
+				var target := get_unit(target_tile_coord + direction)
+				if target and target.army_in_battle.team == unit.army_in_battle.team:
+					ally_targets.append(target)
+				elif target:
+					enemy_targets.append(target)
+
+			for enemy_unit in enemy_targets: # kill enemy units first
+				_push_enemy(enemy_unit, GenericHexGrid.direction_to_adjacent(target_tile_coord, enemy_unit.coord), 3)
+
+			# we only start killing ally units after we are sure battle didn't end yet
+			if not battle_is_ongoing():
+				return
+
+			var priority_enemy_army : ArmyInBattleState = _find_proper_exp_winner(unit.army_in_battle.team)
+
+			for ally_unit in ally_targets: # kill rest
+				_push_enemy(ally_unit, GenericHexGrid.direction_to_adjacent(target_tile_coord, ally_unit.coord), 3)
 		_:
 			printerr("Spell perform not supported: ", spell.name)
 			return

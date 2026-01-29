@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=9 format=3 uid="uid://cqbnuhod7wdaw"]
+[gd_resource type="Resource" script_class="DataUnit" load_steps=10 format=3 uid="uid://cqbnuhod7wdaw"]
 
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_rxdyx"]
 [ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="2_5kgr1"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="3_swbtp"]
 [ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="4_04ted"]
 [ext_resource type="Resource" uid="uid://dy85xcp8g7gbq" path="res://Resources/Battle/Symbols/sword.tres" id="4_6gare"]
+[ext_resource type="Resource" uid="uid://kex3u1vof3uc" path="res://Resources/Battle/Battle_Spells/stone_pillar.tres" id="4_6qde6"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="4_jthyp"]
 
 [sub_resource type="Resource" id="Resource_k8g4u"]
@@ -19,3 +20,4 @@ texture_path = "res://Art/units/dwarves/dwarf_hero_cleric.png"
 symbols = Array[ExtResource("4_04ted")]([ExtResource("3_3f16a"), ExtResource("4_6gare"), ExtResource("4_jthyp"), ExtResource("4_jthyp"), ExtResource("4_jthyp"), ExtResource("4_6gare")])
 cost = SubResource("Resource_k8g4u")
 mana = 3
+spells = Array[ExtResource("3_swbtp")]([ExtResource("4_6qde6")])
