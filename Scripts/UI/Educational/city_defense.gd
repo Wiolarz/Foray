@@ -178,7 +178,7 @@ func _start_new_run(is_save_being_loaded : bool = false) -> void:
 	var army_preset : PresetArmy = load(new_run_army_path)
 	current_roster.units_data = army_preset.units
 
-	_load_hero(player_race.heroes[0])
+	_load_hero(player_race.heroes[0]) # TODO improve heroes presence in city defense
 
 	continue_button.disabled = false
 	IM.is_city_defense_active = true
