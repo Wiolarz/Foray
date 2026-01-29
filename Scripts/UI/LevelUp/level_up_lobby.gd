@@ -1,12 +1,13 @@
 extends LevelUpScreen
 
+signal confirm_button
 
 @onready var hero_level_value : OptionButton = $VBox/HeroLevelValue
 
 
 func _assign_tier_panels() -> void:
 	description = $VBox/RichTextLabel
-	
+
 	tier_talent_panels = []
 	tier_talent_panels.append($VBox/TierPanels/TierTalentPanel)
 	tier_talent_panels.append($VBox/TierPanels/TierTalentPanel2)
@@ -41,3 +42,14 @@ func _on_hero_level_value_item_selected(_index : int):
 	selected_hero.level = hero_level
 	for tier_panel : PanelContainer in tier_panels:
 		tier_panel.set_hero(selected_hero, false)
+
+
+func city_defense_lock_hero_level():
+	hero_level_value.disabled = true
+	hero_level_value.text = "Hero Level: " + str(selected_hero.level)
+	for tier_panel : PanelContainer in tier_panels:
+		tier_panel.set_hero(selected_hero, false)
+
+
+func _on_confirm_button_pressed():
+	confirm_button.emit()

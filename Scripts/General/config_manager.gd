@@ -326,8 +326,8 @@ func get_cyclone_value(mana_difference: int, _mana_wells: int):
 
 const HERO_LEVEL_CAP = 7
 
-## TODO allign it to the race weakest hero
-const CITY_MAX_ARMY_SIZE = 6 # temp change from to 2 to 6 for city defense game mode
+## TODO align it to the race weakest hero
+const CITY_MAX_ARMY_SIZE = 3
 
 func get_start_goods() -> Goods:
 	#return Goods.new(10,5,3)
@@ -514,8 +514,12 @@ func reset_highscores() -> void:
 
 func update_highscore(
 		player_race : DataRace, enemy_race : DataRace, difficulty : String, wave : int) -> void:
+
+	var difficulty_value : int = get_bot_idx(difficulty)
+	if difficulty_value == -1:
+		return
 	var key : String = player_race.race_name + \
-		"|" + str(get_bot_idx(difficulty))  + "|" + enemy_race.race_name
+		"|" + str(difficulty_value)  + "|" + enemy_race.race_name
 	assert(key in player_options.highscores.keys())
 	if player_options.highscores[key] < wave:
 		player_options.highscores[key] = wave

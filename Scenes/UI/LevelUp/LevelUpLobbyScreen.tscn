@@ -21,8 +21,8 @@ layout_mode = 2
 
 [node name="HeroLevelValue" type="OptionButton" parent="VBox"]
 layout_mode = 2
-item_count = 6
 selected = 0
+item_count = 6
 popup/item_0/text = "Hero Level: 1"
 popup/item_0/id = 0
 popup/item_1/text = "2"
@@ -72,4 +72,9 @@ layout_mode = 2
 text = "Examle skill/passive description"
 fit_content = true
 
+[node name="ConfirmButton" type="Button" parent="VBox"]
+layout_mode = 2
+text = "Confirm"
+
 [connection signal="item_selected" from="VBox/HeroLevelValue" to="." method="_on_hero_level_value_item_selected"]
+[connection signal="pressed" from="VBox/ConfirmButton" to="." method="_on_confirm_button_pressed"]

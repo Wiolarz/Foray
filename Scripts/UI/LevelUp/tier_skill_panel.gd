@@ -3,6 +3,7 @@ extends PanelContainer
 
 
 signal ability_chosen(tier_idx : int, button_idx : int, deselect : bool)
+signal ability_hover(tier_idx : int, button_idx : int)
 
 ## helps determine already selected passives
 var tier : int
@@ -20,9 +21,9 @@ var hero_level : int
 var number_of_available_abilities : int
 
 @onready var ability_buttons : Array[PassiveButton] = [
-	$MainContainer/TierSkills/PowerSkillButton,
-	$MainContainer/TierSkills/TacticSkillButton,
-	$MainContainer/TierSkills/MagicSkillButton,
+	$TierSkills/PowerSkillButton,
+	$TierSkills/TacticSkillButton,
+	$TierSkills/MagicSkillButton,
 ]
 
 ## called by _ready in level_up_screen
@@ -36,6 +37,7 @@ func init_tier_panel(tier_ : int) -> void:
 			ability_button.load_passive(ability)
 
 		ability_button.button_pressed.connect(_ability_pressed.bind(button_idx))
+		ability_button.button_hover.connect(_hover.bind(button_idx))
 
 
 #region Hero level
@@ -165,5 +167,9 @@ func _ability_pressed(pressed_button_idx : int):
 
 	if buttons_indexes.size() == 1:  # Two buttons are pressed -> disable 3rd one
 		ability_buttons[buttons_indexes[0]].disable()
+
+
+func _hover(button_idx : int) -> void:
+	ability_hover.emit(tier, button_idx)
 
 #endregion Buttons

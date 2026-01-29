@@ -42,10 +42,6 @@ layout_mode = 2
 [node name="LevelUpLobbyScreen" parent="VBoxLevelUp" instance=ExtResource("2_sstiq")]
 layout_mode = 2
 
-[node name="LevelUpConfirmButton" type="Button" parent="VBoxLevelUp"]
-layout_mode = 2
-text = "Confirm"
-
 [node name="VBox" type="VBoxContainer" parent="."]
 layout_mode = 2
 theme_override_constants/separation = 20
@@ -107,6 +103,5 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_jgcdk")
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_e6gkv")
 
-[connection signal="pressed" from="VBoxLevelUp/LevelUpConfirmButton" to="." method="_on_level_up_confirm_button_pressed"]
 [connection signal="item_selected" from="VBox/PresetSelect/ColorRect/PresetList" to="." method="_on_preset_list_item_selected"]
 [connection signal="item_selected" from="VBox/MapSelect/ColorRect/MapList" to="." method="_on_map_list_item_selected"]

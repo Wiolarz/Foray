@@ -2,6 +2,7 @@ class_name PassiveButton
 extends PanelContainer
 
 signal button_pressed
+signal button_hover
 
 ## TODO add passive icon
 ## TODO add logic related on hover to display description
@@ -52,3 +53,7 @@ func deselect() -> void:
 ## Only activated through human input
 func _on_button_pressed():
 	button_pressed.emit()
+
+
+func _on_button_mouse_entered():
+	button_hover.emit()

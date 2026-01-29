@@ -3,18 +3,19 @@ extends PanelContainer
 
 
 signal talent_chosen(tier_idx : int, button_idx : int)
+signal talent_hover(tier_idx : int, button_idx : int)
 
 ## helps determine already selected passives
 var tier : int
 ## dynamically limits buttons
 var hero_level : int
 
-@onready var tier_name = $MainContainer/TierLabel
+@onready var tier_name = $TierUpgrades/TierLabel
 
 @onready var talent_buttons : Array[PassiveButton] = [
-	$MainContainer/TierUpgrades/PowerPassiveButton,
-	$MainContainer/TierUpgrades/TacticPassiveButton,
-	$MainContainer/TierUpgrades/MagicPassiveButton
+	$TierUpgrades/PowerPassiveButton,
+	$TierUpgrades/TacticPassiveButton,
+	$TierUpgrades/MagicPassiveButton
 ]
 
 ## called by _ready in level_up_screen
@@ -30,6 +31,7 @@ func init_tier_panel(tier_ : int) -> void:
 			talent_button.load_passive(talent)
 
 		talent_button.button_pressed.connect(_talent_pressed.bind(button_idx))
+		talent_button.button_hover.connect(_hover.bind(button_idx))
 
 
 #region Hero level
@@ -106,5 +108,8 @@ func _talent_pressed(pressed_button_idx : int):
 		button_idx += 1
 		if pressed_button_idx != button_idx:
 			talent_button.pressed = false
+
+func _hover(button_idx : int) -> void:
+	talent_hover.emit(tier, button_idx)
 
 #endregion Buttons
