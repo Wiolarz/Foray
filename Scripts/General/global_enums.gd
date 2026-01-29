@@ -13,6 +13,7 @@ enum MoveType
 {
 	TURN,
 	MOVE,
+	SPECIAL,
 }
 
 

@@ -1187,6 +1187,18 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 
 			for ally_unit in ally_targets: # kill rest
 				_push_enemy(ally_unit, GenericHexGrid.direction_to_adjacent(target_tile_coord, ally_unit.coord), 3)
+		"Frenzy":
+			var enemy : Unit = get_unit(target_tile_coord)
+			_push_enemy(enemy, enemy.unit_rotation, 1) # would die to our spears here
+
+			## TODO refactor swift attacks check for special cases, replace bool with enum
+			_process_offensive_symbols(enemy, E.MoveType.SPECIAL, false)
+			_process_offensive_symbols(enemy, E.MoveType.SPECIAL, true)
+			var enemy_army : ArmyInBattleState = enemy.army_in_battle
+			enemy.army_in_battle = unit.army_in_battle
+			_process_offensive_symbols(enemy, E.MoveType.SPECIAL, true)
+			_process_offensive_symbols(enemy, E.MoveType.SPECIAL, false)
+			enemy.army_in_battle = enemy_army
 		_:
 			printerr("Spell perform not supported: ", spell.name)
 			return

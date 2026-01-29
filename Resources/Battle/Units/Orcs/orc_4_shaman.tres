@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_hudil"]
 [ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="3_mkw83"]
 [ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="3_tuqnc"]
-[ext_resource type="Resource" uid="uid://ctuxbjxwfy4h3" path="res://Resources/Battle/Battle_Spells/blood_ritual.tres" id="4_hmyoj"]
 [ext_resource type="Resource" uid="uid://cngonnqsgsd6e" path="res://Resources/Battle/Symbols/axe.tres" id="4_lgx82"]
+[ext_resource type="Resource" uid="uid://bufbdtdw30ux" path="res://Resources/Battle/Battle_Spells/frenzy.tres" id="4_tuqnc"]
 [ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="5_226mm"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_n1pjr"]
 [ext_resource type="Resource" uid="uid://cmgmw6atlub6f" path="res://Resources/Battle/Symbols/push.tres" id="5_tbg5r"]
@@ -23,4 +23,4 @@ symbols = Array[ExtResource("5_226mm")]([ExtResource("4_lgx82"), ExtResource("5_
 cost = SubResource("Resource_h1m34")
 level = 4
 mana = 2
-spells = Array[ExtResource("3_tuqnc")]([ExtResource("4_hmyoj")])
+spells = Array[ExtResource("3_tuqnc")]([ExtResource("4_tuqnc")])
