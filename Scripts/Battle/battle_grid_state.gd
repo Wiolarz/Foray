@@ -1199,6 +1199,11 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 			_process_offensive_symbols(enemy, E.MoveType.SPECIAL, true)
 			_process_offensive_symbols(enemy, E.MoveType.SPECIAL, false)
 			enemy.army_in_battle = enemy_army
+		"Anti-Magic Shield":
+			var target : Unit = get_unit(target_tile_coord)
+			target.effects = []
+			spell.cast_effect(target, "casting")
+			spell.cast_effect(target, "secondary_casting") # TEMP 2x cast to mocup effect of blocking addition of new spells
 		_:
 			printerr("Spell perform not supported: ", spell.name)
 			return

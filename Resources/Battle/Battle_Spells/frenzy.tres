@@ -7,9 +7,7 @@
 script = ExtResource("1_fb1sq")
 name = "Frenzy"
 icon_path = "uid://brq6uen2d5oi7"
-description = "Chosen enemy unit will die after it becomes the last unit left alive on the enemy side
-
-Spell cannot be casted if enemy has less than 3 units left."
+description = "Target enemy unit in straight line from the caster is pushed one tile ahead, then perfomrs attacks on both enemy and allies."
 cast_range = 3
 direction_cast = 2
 target_type = 1

@@ -157,9 +157,12 @@ func enchanted_unit_dies() -> void:
 ## each new effects needs to be addded here
 func cast_effect(target : Unit, event_type : String) -> void:
 	match name:
-		"Vengeance", "Blood Ritual", "Martyr", "Anchor":
+		"Vengeance", "Blood Ritual", "Martyr", "Anchor", "Anti-Magic Shield":
 			if event_type == "casting":
 				target.try_adding_magic_effect(spell_effects[0])
+			elif event_type == "secondary_casting":
+				target.try_adding_magic_effect(spell_effects[1])
+
 
 
 static func get_network_id(spell : BattleSpell) -> String:
