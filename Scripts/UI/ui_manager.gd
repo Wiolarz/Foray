@@ -1,13 +1,11 @@
 # Singleton - UI
 extends Node
 
-var main_menu
-var ui_overlay
-var map_editor
-var unit_editor
-var tile_editor
-var host_lobby
-var client_lobby
+var main_menu   : CanvasLayer	 # Scripts\UI\main_menu.gd
+var ui_overlay  : CanvasLayer	 # Scripts\UI\ui_overlay.gd
+var map_editor  : CanvasLayer 	 # Scripts\Development\map_editor.gd
+var unit_editor : ResourceEditor # Scripts\Development\unit_editor.gd
+var tile_editor : ResourceEditor # Scripts\Development\tile_editor.gd
 
 var camera : PolyCamera
 var current_camera_position = E.CameraPosition.WORLD
