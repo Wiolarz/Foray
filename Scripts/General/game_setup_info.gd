@@ -102,7 +102,7 @@ func to_dictionary(local_username : String = "") -> Dictionary[String, Variant]:
 	return result
 
 
-static func from_dictionary(dict : Dictionary[String, Variant], \
+static func from_dictionary(dict : Dictionary, \
 		local_username : String = "") -> GameSetupInfo:
 	var result = GameSetupInfo.new()
 	if "game_mode" in dict and dict["game_mode"] is String:
@@ -113,7 +113,7 @@ static func from_dictionary(dict : Dictionary[String, Variant], \
 		result.battle_map = DataBattleMap.from_network_id(dict["battle_map"])
 	if "slots" in dict and dict["slots"] is Array:
 		for i in dict["slots"].size():
-			var read_slot : Dictionary[String, Variant] = dict["slots"][i]
+			var read_slot : Dictionary = dict["slots"][i]
 			var new_slot : Slot = Slot.new()
 			new_slot.index = i
 			if "occupier" in read_slot:
