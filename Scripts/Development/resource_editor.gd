@@ -128,10 +128,12 @@ func save_resource() -> void:
 
 ## Parses name for new resource and validates it. Returns empty string on error.
 func _get_validated_resource_name() -> String:
-	var name : String = resource_name_edit.text
-	if name.length() == 0 or not name.is_valid_filename() or name[0] == ".":
+	var resource_name : String = resource_name_edit.text
+	if resource_name.length() == 0 \
+	or not resource_name.is_valid_filename() \
+	or resource_name[0] == ".":
 		return ""
-	return name
+	return resource_name
 
 #endregion Overrideable functions
 

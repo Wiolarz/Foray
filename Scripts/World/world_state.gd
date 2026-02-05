@@ -840,7 +840,7 @@ func spawn_army_from_preset(army_preset : PresetArmy, coord : Vector2i, \
 
 
 #STUB
-func _end_of_turn_callbacks(player_index : int) -> void:
+func _end_of_turn_callbacks(_player_index : int) -> void:
 	pass
 
 

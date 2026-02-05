@@ -15,5 +15,5 @@ func load(path: String):
 	return _cache[path]
 
 ## Load a resource in background so that it's ready for the next [RES.] load()
-func prepare_load(path: String):
+func prepare_load(_path: String):
 	assert(false, "TODO")

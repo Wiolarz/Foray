@@ -157,7 +157,9 @@ func bot_performs_move() -> void:
 
 	var thinking_begin_s = Time.get_ticks_msec() / 1000.0
 	var move : WorldMoveInfo = null
+	@warning_ignore_start("redundant_await") # GODOT MOMENT
 	move = await bot.choose_move()
+	@warning_ignore_restore("redundant_await")
 	assert(move)
 	#while move.move_type != WorldMoveInfo.TYPE_END_TURN:
 	await _ai_thinking_delay(thinking_begin_s) # moving too fast feels weird

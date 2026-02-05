@@ -267,7 +267,9 @@ func _on_turn_started(player : Player) -> void:
 		var battle_id = bot.battle_id
 
 		var thinking_begin_s = Time.get_ticks_msec() / 1000.0
+		@warning_ignore_start("redundant_await") # GODOT MOMENT
 		var move = await bot.choose_move(_battle_grid_state)
+		@warning_ignore_restore("redundant_await")
 		await _ai_thinking_delay(thinking_begin_s) # moving too fast feels weird
 
 		if is_instance_valid(bot): # it may have been destroyed after thinking delay
