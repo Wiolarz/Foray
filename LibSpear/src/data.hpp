@@ -6,7 +6,7 @@
 #include <array>
 
 #include "godot_cpp/variant/vector2i.hpp"
-#include "godot_cpp/variant/string.hpp"
+#include "godot_cpp/variant/char_string.hpp"
 
 namespace libspear {
 

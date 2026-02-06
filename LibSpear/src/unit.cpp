@@ -1,6 +1,7 @@
 #include "unit.hpp"
 
 #include <format>
+#include "godot_cpp/variant/string.hpp"
 
 namespace libspear {
 
