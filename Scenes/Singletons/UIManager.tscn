@@ -1,6 +1,33 @@
-[gd_scene load_steps=2 format=3 uid="uid://choi7p83wrgne"]
+[gd_scene load_steps=9 format=3 uid="uid://choi7p83wrgne"]
 
 [ext_resource type="Script" uid="uid://conms6t6nu1yq" path="res://Scripts/UI/ui_manager.gd" id="1_fhfuw"]
+[ext_resource type="PackedScene" uid="uid://b4ndp6v0ts1on" path="res://Scenes/UI/MainMenu.tscn" id="2_eu0wa"]
+[ext_resource type="PackedScene" uid="uid://l0kojvcxbfky" path="res://Scenes/UI/Editors/MapEditor.tscn" id="3_xglmm"]
+[ext_resource type="PackedScene" uid="uid://dy1m42bfkq2wv" path="res://Scenes/UI/Editors/UnitEditor.tscn" id="4_0jri5"]
+[ext_resource type="PackedScene" uid="uid://cwv8isdmpg34u" path="res://Scenes/UI/Editors/TileEditor.tscn" id="5_1ubwt"]
+[ext_resource type="PackedScene" uid="uid://k6nqj736t85k" path="res://Scenes/UI/UIOverlay.tscn" id="6_k5455"]
+[ext_resource type="PackedScene" uid="uid://bawliiem6bw0u" path="res://Scenes/UI/BattleUI.tscn" id="7_wv8i8"]
+[ext_resource type="PackedScene" uid="uid://bpkvpkoi22q8" path="res://Scenes/UI/World/WorldUI.tscn" id="8_4u5hp"]
 
 [node name="UIManager" type="Node"]
 script = ExtResource("1_fhfuw")
+
+[node name="MainMenu" parent="." instance=ExtResource("2_eu0wa")]
+
+[node name="MapEditor" parent="." instance=ExtResource("3_xglmm")]
+visible = false
+
+[node name="UnitEditor" parent="." instance=ExtResource("4_0jri5")]
+visible = false
+
+[node name="TileEditor" parent="." instance=ExtResource("5_1ubwt")]
+visible = false
+
+[node name="UIOverlay" parent="." instance=ExtResource("6_k5455")]
+visible = false
+
+[node name="BattleUI" parent="." instance=ExtResource("7_wv8i8")]
+visible = false
+
+[node name="WorldUI" parent="." instance=ExtResource("8_4u5hp")]
+visible = false

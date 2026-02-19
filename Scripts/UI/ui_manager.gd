@@ -1,13 +1,13 @@
 # Singleton - UI
 extends Node
 
-var main_menu   : CanvasLayer	 # Scripts\UI\main_menu.gd
-var ui_overlay  : CanvasLayer	 # Scripts\UI\ui_overlay.gd
-var map_editor  : CanvasLayer 	 # Scripts\Development\map_editor.gd
-var unit_editor : ResourceEditor # Scripts\Development\unit_editor.gd
-var tile_editor : ResourceEditor # Scripts\Development\tile_editor.gd
-var battle_ui	: BattleUI		 # Scripts\UI\battle_ui.gd
-var world_ui	: WorldUI		 # Scripts\UI\world_ui.gd
+@onready var main_menu   : CanvasLayer = $MainMenu	 # Scripts\UI\main_menu.gd
+@onready var ui_overlay  : CanvasLayer = $UIOverlay	 # Scripts\UI\ui_overlay.gd
+@onready var map_editor  : CanvasLayer = $MapEditor 	 # Scripts\Development\map_editor.gd
+@onready var unit_editor : ResourceEditor = $UnitEditor # Scripts\Development\unit_editor.gd
+@onready var tile_editor : ResourceEditor = $TileEditor # Scripts\Development\tile_editor.gd
+@onready var battle_ui	: BattleUI = $BattleUI		 # Scripts\UI\battle_ui.gd
+@onready var world_ui	: WorldUI = $WorldUI		 # Scripts\UI\world_ui.gd
 
 var camera : PolyCamera
 var current_camera_position = E.CameraPosition.WORLD
@@ -19,22 +19,6 @@ func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 	IM.init_game_setup() # drut
-
-	main_menu    = load("res://Scenes/UI/MainMenu.tscn").instantiate()
-	ui_overlay   = load("res://Scenes/UI/UIOverlay.tscn").instantiate()
-	map_editor   = load("res://Scenes/UI/Editors/MapEditor.tscn").instantiate()
-	unit_editor  = load("res://Scenes/UI/Editors/UnitEditor.tscn").instantiate()
-	tile_editor  = load("res://Scenes/UI/Editors/TileEditor.tscn").instantiate()
-	battle_ui	 = load("res://Scenes/UI/BattleUi.tscn").instantiate()
-	world_ui	 = load("res://Scenes/UI/World/WorldUi.tscn").instantiate()
-
-	add_child(main_menu)
-	add_child(map_editor)
-	add_child(unit_editor)
-	add_child(tile_editor)
-	add_child(ui_overlay)
-	add_child(battle_ui)
-	add_child(world_ui)
 
 	_hide_all()
 

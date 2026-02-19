@@ -17,6 +17,10 @@ var in_map_editor : bool = false
 var is_city_defense_active : bool = false
 
 
+func _ready():
+	#TODO verify its a proper place for this init
+	init_game_setup()
+
 func init_game_setup():
 	game_setup_info = GameSetupInfo.create_empty()
 
