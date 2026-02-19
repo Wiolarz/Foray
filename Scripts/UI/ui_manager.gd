@@ -6,6 +6,8 @@ var ui_overlay  : CanvasLayer	 # Scripts\UI\ui_overlay.gd
 var map_editor  : CanvasLayer 	 # Scripts\Development\map_editor.gd
 var unit_editor : ResourceEditor # Scripts\Development\unit_editor.gd
 var tile_editor : ResourceEditor # Scripts\Development\tile_editor.gd
+var battle_ui	: BattleUI		 # Scripts\UI\battle_ui.gd
+var world_ui	: WorldUI		 # Scripts\UI\world_ui.gd
 
 var camera : PolyCamera
 var current_camera_position = E.CameraPosition.WORLD
@@ -23,22 +25,18 @@ func _ready():
 	map_editor   = load("res://Scenes/UI/Editors/MapEditor.tscn").instantiate()
 	unit_editor  = load("res://Scenes/UI/Editors/UnitEditor.tscn").instantiate()
 	tile_editor  = load("res://Scenes/UI/Editors/TileEditor.tscn").instantiate()
+	battle_ui	 = load("res://Scenes/UI/BattleUi.tscn").instantiate()
+	world_ui	 = load("res://Scenes/UI/World/WorldUi.tscn").instantiate()
 
 	add_child(main_menu)
 	add_child(map_editor)
 	add_child(unit_editor)
 	add_child(tile_editor)
 	add_child(ui_overlay)
+	add_child(battle_ui)
+	add_child(world_ui)
 
 	_hide_all()
-
-
-func add_custom_screen(custom_ui : CanvasLayer):
-	add_child(custom_ui)
-	custom_ui.hide()
-	# we need them always at the top
-	if ui_overlay:
-		move_child(ui_overlay, -1)
 
 
 func go_to_custom_ui(custom_ui : CanvasLayer):
