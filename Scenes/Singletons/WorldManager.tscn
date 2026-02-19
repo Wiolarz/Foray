@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://3axa0r3xl7fj"]
+
+[ext_resource type="Script" uid="uid://cayaefbq6w8t" path="res://Scripts/World/world_manager.gd" id="1_rgco6"]
+
+[node name="WorldManager" type="Node2D"]
+script = ExtResource("1_rgco6")
