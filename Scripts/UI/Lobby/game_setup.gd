@@ -128,6 +128,7 @@ func try_to_cycle_color_slot(index : int, backwards : bool) -> bool:
 func try_to_set_world_map_name(map_name : String) -> bool:
 	# drut
 	IM.game_setup_info.set_world_map(load("%s/%s" % [ CFG.WORLD_MAPS_PATH, map_name ]))
+	assert(IM.game_setup_info.world_map, "world map did not load properly")
 	if NET.server:
 		NET.server.broadcast_full_game_setup(IM.game_setup_info)
 	# TODO here load this map and adjust slot number
@@ -169,8 +170,8 @@ func select_battle():
 	CFG.save_player_options()
 
 	button_battle.button_pressed = true
-	if not IM.game_setup_info.is_in_mode_battle():
-		IM.init_battle_mode(not NET.client)
+
+	IM.init_battle_mode(not NET.client) # applies preset settings
 	_select_setup_page(multi_battle_setup_scene)
 	if NET.server:
 		NET.server.broadcast_full_game_setup(IM.game_setup_info)

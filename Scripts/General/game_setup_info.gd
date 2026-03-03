@@ -7,13 +7,12 @@ extends RefCounted
 ## and other temporary objects that should not be saved
 
 enum GameMode {
-	UNKNOWN, ## forces to initialize
 	WORLD, ## full map with heroes and economy
 	BATTLE, ## single battle only, no economy
 	MAP_EDITOR, ## special mode only for map editing
 }
 
-var game_mode : GameMode = GameMode.WORLD
+var game_mode : GameMode = (GameMode.BATTLE if CFG.DEFAULT_MODE_IS_BATTLE else GameMode.WORLD)
 var world_map : DataWorldMap ## used only in full world mode
 var battle_map : DataBattleMap ## used only in battle mode
 var slots : Array[Slot] ## slot for each player color on the map picked
@@ -148,8 +147,8 @@ static func game_mode_from_str(mode_as_str : String) -> GameMode:
 	for mode in GameMode.keys():
 		if mode.to_lower() == mode_as_str:
 			return GameMode[mode]
-	push_error("Unknown game mode: \"%s\"" % mode_as_str)
-	return GameMode.UNKNOWN
+	assert(false, "Unknown game mode: \"%s\"" % mode_as_str)
+	return GameMode.BATTLE
 
 
 static func occupier_prepare_for_network(occupier, local_username : String):
@@ -195,7 +194,7 @@ func set_battle_map(map : DataBattleMap, map_name : String = ""):
 	battle_map_name_hint = map_name
 
 
-func set_world_map(map: DataWorldMap):
+func set_world_map(map : DataWorldMap) -> void:
 	assert(game_mode == GameMode.WORLD, "setting world map in game mode: " + str(game_mode))
 
 	world_map = map
@@ -227,8 +226,7 @@ func set_world_map(map: DataWorldMap):
 ## Also, this do not refresh UI and broadcast over network itself -- it should
 ## be done elsewhere, when this function is called
 ## preset_name is optional -- only used for auto select at start
-func apply_battle_preset( \
-	preset : PresetBattle, preset_name : String = "") -> void:
+func apply_battle_preset(preset : PresetBattle, preset_name : String = "") -> void:
 	var map_name : String = preset.battle_map.resource_path.get_file()
 	var map_path : String = CFG.BATTLE_MAPS_PATH + "/" + map_name
 	assert(ResourceLoader.exists(map_path), "map with name %s does not exist" % map_name)
