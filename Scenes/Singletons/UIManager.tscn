@@ -12,6 +12,15 @@
 [node name="UIManager" type="Node"]
 script = ExtResource("1_fhfuw")
 
+[node name="BattleUI" parent="." instance=ExtResource("7_wv8i8")]
+visible = false
+
+[node name="WorldUI" parent="." instance=ExtResource("8_4u5hp")]
+visible = false
+
+[node name="UIOverlay" parent="." instance=ExtResource("6_k5455")]
+visible = false
+
 [node name="MainMenu" parent="." instance=ExtResource("2_eu0wa")]
 
 [node name="MapEditor" parent="." instance=ExtResource("3_xglmm")]
@@ -21,13 +30,4 @@ visible = false
 visible = false
 
 [node name="TileEditor" parent="." instance=ExtResource("5_1ubwt")]
-visible = false
-
-[node name="UIOverlay" parent="." instance=ExtResource("6_k5455")]
-visible = false
-
-[node name="BattleUI" parent="." instance=ExtResource("7_wv8i8")]
-visible = false
-
-[node name="WorldUI" parent="." instance=ExtResource("8_4u5hp")]
 visible = false
