@@ -17,8 +17,8 @@ extends Control
 @onready var button_confirm : Button = \
 	$MarginContainer/VBoxContainer/ButtonMargin/ButtonConfirm
 
-@onready var multi_world_setup_scene = load("res://Scenes/UI/Lobby/WorldSetup.tscn")
-@onready var multi_battle_setup_scene = load("res://Scenes/UI/Lobby/BattleSetup.tscn")
+@onready var multi_world_setup_scene : PackedScene = load("res://Scenes/UI/Lobby/WorldSetup.tscn") # Margin Container
+@onready var multi_battle_setup_scene : PackedScene = load("res://Scenes/UI/Lobby/BattleSetup.tscn") # Margin Container
 
 
 var current_player_to_set : String = "" # if empty we select for us

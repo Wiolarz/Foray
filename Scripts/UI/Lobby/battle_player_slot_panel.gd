@@ -23,9 +23,7 @@ var army_paths : Array[String]
 @onready var hero_list : OptionButton = $GeneralVContainer/TopBarHContainer/OptionButtonHero
 @onready var level_up_button : Button = $GeneralVContainer/TopBarHContainer/ButtonLevelUp
 
-@onready var timer_reserve_minutes : SpinBox = $GeneralVContainer/TimerContainer/ReserveTime_Min_Edit
-@onready var timer_reserve_seconds : SpinBox = $GeneralVContainer/TimerContainer/ReserveTime_Sec_Edit
-@onready var timer_increment_seconds : SpinBox = $GeneralVContainer/TimerContainer/IncrementTimeEdit
+
 
 @onready var races_list : OptionButton = $GeneralVContainer/HBoxRacesAndPresets/OptionButtonRace
 @onready var army_preset_list : OptionButton = $GeneralVContainer/HBoxRacesAndPresets/OptionButtonArmy
@@ -235,34 +233,6 @@ func _on_option_button_team_item_selected(index : int):
 #endregion Teams
 
 #endregion Top Bar
-
-
-#region Timer Bar
-
-func set_visible_timers(reserve : int, increment : int):
-	var reserve_minutes := int(reserve / 60)
-	var reserve_seconds := reserve % 60
-	timer_reserve_minutes.value = reserve_minutes
-	timer_reserve_seconds.value = reserve_seconds
-	timer_increment_seconds.value = increment
-
-
-func timer_changed(_value) -> void:
-	if not should_react_to_changes():
-		return
-
-	var slot_index = setup_ui.slot_to_index(self)
-
-	var seconds_reserve = timer_reserve_minutes.value * 60 + timer_reserve_seconds.value
-
-
-	IM.game_setup_info.set_timer(slot_index, seconds_reserve, int(timer_increment_seconds.value))
-	if NET.server:
-		NET.server.broadcast_full_game_setup(IM.game_setup_info) #TODO add multi support
-	if NET.client:
-		NET.client.queue_lobby_set_timer(slot_index, seconds_reserve, int(timer_increment_seconds.value))
-
-#endregion Timer Bar
 
 
 #region Races And Presets Bar

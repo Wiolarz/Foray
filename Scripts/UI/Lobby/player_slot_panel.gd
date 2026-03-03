@@ -150,7 +150,7 @@ func timer_changed(_value) -> void:
 		NET.client.queue_lobby_set_timer(slot_index, seconds_reserve, int(battle_timer_increment_seconds.value))
 
 
-func set_visible_timers(reserve : int, increment : int):
+func set_visible_timers(reserve : int, increment : int) -> void:
 	var reserve_minutes := int(reserve / 60)
 	var reserve_seconds := reserve % 60
 	battle_timer_reserve_minutes.value = reserve_minutes
