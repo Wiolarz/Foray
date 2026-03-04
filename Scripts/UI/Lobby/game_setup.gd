@@ -1,5 +1,7 @@
 class_name GameSetup
 extends Control
+## Main Handler of GameMode Selection
+
 
 # VERY IMPORTANT TODO:
 # move all modifications of IM.game_setup_info to some controller -- it

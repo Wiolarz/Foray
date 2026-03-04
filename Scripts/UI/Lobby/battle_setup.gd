@@ -1,9 +1,7 @@
 class_name BattleSetup
-extends Control
+extends GameModeSetup
 
 const PLAYER_SLOT_PANEL_PATH = "res://Scenes/UI/Lobby/BattlePlayerSlotPanel.tscn"
-
-var game_setup : GameSetup
 
 var client_side_map_label : Label
 
@@ -12,7 +10,6 @@ var client_side_map_label : Label
 @onready var slots : Container = $VBox/Slots
 
 @onready var player_list : Container = slots.get_node("ColorRect/PlayerList")
-@onready var maps_list : OptionButton = map_select.get_node("ColorRect/MapList")
 @onready var presets_list : OptionButton = \
 	preset_select.get_node("ColorRect/PresetList")
 
@@ -20,24 +17,18 @@ var client_side_map_label : Label
 @onready var hero_level_up : Control = $VBoxLevelUp/LevelUpLobbyScreen
 @onready var main_container : VBoxContainer = $VBox
 
-var uninitialized : bool = true
-var settings_are_being_refreshed : bool = false
+
 
 #region Initial Setup
 
 func _ready():
+	maps_list = map_select.get_node("ColorRect/MapList")
+	maps = IM.get_battle_maps_list()
 	fill_maps_list()
 	fill_presets_list()
 	UI.resources_list_changed.connect(refresh_after_resource_list_changed)
 
 	hero_level_up.confirm_button.connect(_on_level_up_confirm_button_pressed)
-
-
-## It is used to know if changes in gui are made by user and should be passed to
-## backend (change setup info and send over network) OR made by refreshing
-## gui to state in backend
-func should_react_to_changes() -> bool:
-	return not settings_are_being_refreshed and not uninitialized
 
 
 func refresh_after_resource_list_changed() -> void:
@@ -46,12 +37,6 @@ func refresh_after_resource_list_changed() -> void:
 		slot.load_unit_buttons()
 	apply_preset_by_name(CFG.LAST_USED_BATTLE_PRESET_NAME)
 
-
-func fill_maps_list() -> void:
-	var maps = IM.get_battle_maps_list()
-	maps_list.clear()
-	for map_name in maps:
-		maps_list.add_item(map_name)
 
 
 func fill_presets_list() -> void:
@@ -78,13 +63,16 @@ func update_maps_list_selection() -> void:
 	if not maps_list:
 		return # on client
 	var target : String = IM.game_setup_info.battle_map_name_hint
-	if target != "":
-		for i in maps_list.item_count:
-			var item : String = maps_list.get_item_text(i)
-			if target == item:
-				maps_list.select(i)
-				return
-	maps_list.select(-1)
+	if target == "":
+		maps_list.select(-1)
+		return
+
+	for i in maps_list.item_count:
+		var item : String = maps_list.get_item_text(i)
+		if target == item:
+			maps_list.select(i)
+			return
+
 
 
 ## Called upon join, applies changes to the UI to make it Client UI not Host UI
@@ -96,8 +84,7 @@ func make_client_side() -> void:
 	client_side_map_label = Label.new()
 	client_side_map_label.text = "some map"
 	map_select.get_node("ColorRect").add_child(client_side_map_label)
-	var presets = preset_select
-	presets.queue_free()
+	preset_select.queue_free()
 
 #endregion Initial Setup
 
@@ -180,8 +167,7 @@ func _refresh_slot(index : int) -> void:
 	ui_slot.set_visible_timers(reserve_seconds, increment_seconds)
 
 
-func slot_to_index(slot : BattlePlayerSlotPanel) -> int:
-	return slot.get_index()
+
 
 
 #region Changing settings
@@ -222,7 +208,7 @@ func apply_preset_by_name(preset_name : String) -> bool:
 	return true
 
 
-func _on_map_list_item_selected(index):
+func _on_map_list_item_selected(index : int) -> void:
 	if not should_react_to_changes():
 		return
 	var map_name : String = maps_list.get_item_text(index)
@@ -264,46 +250,6 @@ func prepare_player_slots() -> void:
 			ui_slot.queue_free()
 		else:
 			ui_slot.init_team_list(logic_slots_count)
-
-
-func try_to_take_slot(slot) -> bool: # true means something changed
-	if not game_setup:
-		return false
-	var index : int = slot_to_index(slot)
-	var changed = game_setup.try_to_take_slot(index)
-	if changed:
-		_refresh_slot(index)
-	return changed
-
-
-func try_to_leave_slot(slot) -> bool:
-	if not game_setup:
-		return false
-	var index : int = slot_to_index(slot)
-	var changed = game_setup.try_to_leave_slot(index)
-	if changed:
-		_refresh_slot(index)
-	return changed
-
-
-func cycle_color_slot(slot : BattlePlayerSlotPanel, backwards : bool) -> bool:
-	if not game_setup:
-		return false
-	var index : int = slot_to_index(slot)
-	var changed = game_setup.try_to_cycle_color_slot(index, backwards)
-	if changed:
-		_refresh_slot(index)
-	return changed
-
-
-func cycle_race_slot(slot : BattlePlayerSlotPanel, backwards : bool) -> bool:
-	if not game_setup:
-		return false
-	var index : int = slot_to_index(slot)
-	var changed = game_setup.try_to_cycle_race_slot(index, backwards)
-	if changed:
-		_refresh_slot(index)
-	return changed
 
 
 func show_hero_level_up(slot_index : int) -> void:
