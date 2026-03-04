@@ -31,7 +31,6 @@ func should_react_to_changes() -> bool:
 
 func _ready():
 	rebuild()
-	# fill_maps_list()
 
 
 func refresh():

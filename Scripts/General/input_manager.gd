@@ -164,6 +164,7 @@ func _start_game_world(world_state : SerializableWorldState = null):
 		UI.set_fullscreen(true)
 
 	if not world_state:
+		assert(map, "no map selected")
 		WM.start_new_world(map)
 	else:
 		WM.start_world_in_state(map, world_state)

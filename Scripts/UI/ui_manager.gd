@@ -18,8 +18,6 @@ signal resources_list_changed()
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
-	IM.init_game_setup() # drut
-
 	_hide_all()
 
 
