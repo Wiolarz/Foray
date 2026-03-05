@@ -199,26 +199,22 @@ func set_world_map(map : DataWorldMap) -> void:
 
 	world_map = map
 
-	var map_slots_size = 2
+	var map_slots_size : int = map.player_slots.keys().size()
+	print("world map slot numbers: ", map_slots_size)
+	set_slots_number(map_slots_size)
 
-	while slots.size() > map_slots_size:
-		slots.pop_back()
+	for slot_idx in slots.size():
+		var race_idx = 0
+		var slot : Slot = slots[slot_idx]
+		if map.player_slots[slot_idx + 1]: # race lock is present # +1 accounts for neutrals at 0
+			slot.race = map.player_slots[slot_idx + 1]
+			slot.race_lock = true
+		else:
+			slot.race_lock = false
+			## assign to each new slot, new race, through nice cycling
+			race_idx = wrap(slot_idx, 0, CFG.RACES_LIST.size())
+			slot.race = CFG.RACES_LIST[race_idx]
 
-	var taken_colors = []
-	for slot in slots:
-		taken_colors.append(slot.color_idx)
-
-	while slots.size() < map_slots_size:
-		var slot = Slot.new()
-		slots.append(slot)
-		var race_idx = wrap(slots.size()-1, 0, CFG.RACES_LIST.size())
-		slot.race = CFG.RACES_LIST[race_idx]
-		slot.color_idx = 0
-
-		while slot.color_idx in taken_colors:
-			slot.color_idx += 1
-
-		taken_colors.append(slot.color_idx)
 
 
 ## used at start with some default preset, also used when preset is chosen

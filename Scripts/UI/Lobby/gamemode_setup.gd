@@ -4,7 +4,7 @@ extends Control
 
 var game_setup : GameSetup
 
-#TODO verify if those variables will ever be used
+
 var uninitialized : bool = true
 var settings_are_being_refreshed : bool = false
 
@@ -74,4 +74,4 @@ func fill_maps_list():
 	for map_name in maps:
 		maps_list.add_item(map_name)
 
-	_on_map_list_item_selected(0) # TODO remember last played map and auto select it
+	#_on_map_list_item_selected(0) # TODO remember last played map and auto select it

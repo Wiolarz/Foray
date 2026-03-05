@@ -78,6 +78,11 @@ func _refresh_slot(index : int) -> void:
 		color = CFG.get_team_color_at(logic_slot.color_idx)
 		ui_slot.apply_bots_from_slot(logic_slot)
 
+		if logic_slot.race_lock:
+			ui_slot.init_race_button(logic_slot.race)
+		else:
+			ui_slot.init_race_button()
+
 	ui_slot.set_visible_color(color.color)
 	ui_slot.set_visible_name(username)
 	ui_slot.set_visible_race(race)
@@ -118,3 +123,6 @@ func _on_map_list_item_selected(_index : int) -> void:
 	# if changed:
 	# 	refresh()
 	print("map select %s %s" % [ map_name, changed ])
+	
+	if not settings_are_being_refreshed:
+		refresh()
