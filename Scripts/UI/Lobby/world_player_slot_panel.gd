@@ -12,15 +12,13 @@ var races_paths : Array[String]
 
 #region Init
 
-func _ready():
+func _pre_ready_init() -> void:
 	button_battle_bot = get_node("GeneralVContainer/TopBarHContainer/OptionButtonBattleBot")
 
 	world_bots_paths = FileSystemHelpers.list_files_in_folder(CFG.WORLD_BOTS_PATH, true, true)
 	init_world_bots_button()
 
 	init_race_button()
-
-	super()
 
 
 func init_world_bots_button():

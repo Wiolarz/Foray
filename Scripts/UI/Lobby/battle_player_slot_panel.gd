@@ -29,7 +29,7 @@ var army_paths : Array[String]
 @onready var army_preset_list : OptionButton = $GeneralVContainer/HBoxRacesAndPresets/OptionButtonArmy
 
 
-func _ready():
+func _pre_ready_init() -> void:
 	hero_paths = FileSystemHelpers.list_files_in_folder(CFG.HEROES_PATH, true, true)
 	init_hero_list(hero_list)
 
@@ -39,84 +39,14 @@ func _ready():
 		init_unit_button(button, index)
 
 	button_battle_bot = get_node("GeneralVContainer/TopBarHContainer/OptionButtonBot")
-	battle_bots_paths = FileSystemHelpers.list_files_in_folder(CFG.BATTLE_BOTS_PATH, true, true)
-	init_bots_button()
 
 	init_race_list()
 
 	army_paths = FileSystemHelpers.list_files_in_folder(CFG.ARMY_PRESETS_PATH, true, true)
 	init_army_list()
 
-	super()
-
-
-## used to know if changes in gui are made by user and should be passed to
-## backend (change setup info and send over network) OR made by refreshing
-## gui to state in backend
-func should_react_to_changes() -> bool:
-	var node := get_parent()
-	while node:
-		if node.has_method("should_react_to_changes"):
-			return node.should_react_to_changes()
-		node = node.get_parent()
-	return false
-
 
 #region Top Bar
-
-#region Taking Slot
-
-func try_to_take():
-	if not setup_ui:
-		return
-	setup_ui.try_to_take_slot(self)
-
-
-func try_to_leave():
-	if not setup_ui:
-		return
-	setup_ui.try_to_leave_slot(self)
-
-
-func _on_button_take_leave_pressed():
-	if not should_react_to_changes():
-		return
-	match button_take_leave_state:
-		TakeLeaveButtonState.FREE:
-			try_to_take()
-		TakeLeaveButtonState.TAKEN_BY_YOU:
-			try_to_leave()
-		TakeLeaveButtonState.TAKEN_BY_OTHER:
-			if IM.is_slot_steal_allowed():
-				try_to_take()
-
-
-func set_visible_take_leave_button_state(state : TakeLeaveButtonState):
-	# maybe better get this from battle setup, but this is simpler
-	button_take_leave_state = state
-	button_battle_bot.visible = false
-	player_info.visible = true
-	match state:
-		TakeLeaveButtonState.FREE:
-			button_take_leave.text = "Take"
-			button_take_leave.disabled = false
-			button_battle_bot.visible = true
-			player_info.visible = false
-		TakeLeaveButtonState.TAKEN_BY_YOU:
-			button_take_leave.text = "Leave"
-			button_take_leave.disabled = false
-		TakeLeaveButtonState.TAKEN_BY_OTHER:
-			if IM.is_slot_steal_allowed():
-				button_take_leave.text = "Steal"
-				button_take_leave.disabled = false
-			else:
-				# ">> TAKEN <<" -- simple "Taken" would be too similar to "Take"
-				button_take_leave.text = ">> TAKEN <<"
-				button_take_leave.disabled = true
-		TakeLeaveButtonState.GHOST:
-			button_take_leave.text = "ghost"
-			button_take_leave.disabled = true
-
 
 func init_unit_button(button : OptionButton, index : int):
 	button.clear()
@@ -125,6 +55,8 @@ func init_unit_button(button : OptionButton, index : int):
 		button.add_item(unit_path.trim_prefix(CFG.UNITS_PATH))
 	button.item_selected.connect(unit_in_army_changed.bind(index))
 
+
+#region Hero list
 
 func init_hero_list(button : OptionButton) -> void:
 	button.clear() #XD
@@ -173,64 +105,6 @@ func _on_button_level_up_pressed():
 	setup_ui.show_hero_level_up(slot_index)
 
 #endregion Hero list
-
-
-#region Bots
-
-func init_bots_button():
-	button_battle_bot.clear()
-	for bot_name in battle_bots_paths:
-		button_battle_bot.add_item(bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
-	button_battle_bot.item_selected.connect(bot_changed)
-
-
-func bot_changed(bot_index):
-	# TODO network code
-	IM.game_setup_info.set_battle_bot(setup_ui.slot_to_index(self), battle_bots_paths[bot_index])
-
-
-func set_bot(new_bot_path: String):
-	var bot_path = new_bot_path if new_bot_path != "" else battle_bots_paths[0]
-	var idx = battle_bots_paths.find(bot_path)
-	assert(idx != -1, "Invalid bot '%s'" % bot_path)
-	button_battle_bot.select(idx)
-	bot_changed(idx)
-
-#endregion Bots
-
-
-#region Teams
-
-func set_visible_team(team : int):
-	team_list.selected = team
-
-
-func init_team_list(max_player_number : int) -> void:
-	team_list.clear()
-	team_list.add_item("No Team")
-	for idx in range(1, max_player_number + 1):
-		team_list.add_item("Team " + str(idx))
-
-
-func fill_team_list(max_player_number : int) -> void:
-	team_list.clear()
-	team_list.add_item("No Team")
-	for idx in range(1, max_player_number + 1):
-		team_list.add_item("Team " + str(idx))
-
-
-func _on_option_button_team_item_selected(index : int):
-	if not should_react_to_changes():
-		return
-	var slot_index = setup_ui.slot_to_index(self) # determine on which slot player is
-
-	IM.game_setup_info.set_team(slot_index, index)
-	if NET.server:
-		NET.server.broadcast_full_game_setup(IM.game_setup_info)
-	if NET.client:
-		NET.client.queue_lobby_set_team(slot_index, index)
-
-#endregion Teams
 
 #endregion Top Bar
 
@@ -353,6 +227,5 @@ func set_unit(unit_button : OptionButton, unit : DataUnit):
 	for idx in unit_button.item_count:
 		if unit.resource_path.ends_with(unit_button.get_item_text(idx)):
 			unit_button.select(idx)
-
 
 #endregion Unit List
