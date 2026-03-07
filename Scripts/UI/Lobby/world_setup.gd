@@ -2,15 +2,12 @@ class_name WorldSetup
 extends GameModeSetup
 
 
-@onready var map_select : VBoxContainer = \
-	$V/MapSelect
-
-
 func _pre_ready_init():
 	player_slot_panel_scene_path = "res://Scenes/UI/Lobby/WorldPlayerSlotPanel.tscn"
 	player_list = get_node("V/Slots/ColorRect/PlayerList")
 	maps_list = get_node("V/MapSelect/ColorRect/MapList")
 	maps = IM.get_world_maps_list()
+	map_select = get_node("V/MapSelect")
 
 
 func _custom_refresh_nodes() -> void:
@@ -30,16 +27,6 @@ func _custom_refresh_slot(index : int) -> void:
 		ui_slot.init_race_button(logic_slot.race)
 	else:
 		ui_slot.init_race_button()
-
-
-func make_client_side():
-	map_select.get_node("Label").text = "Selected map"
-	maps_list.queue_free()
-	maps_list = null
-	client_side_map_label = Label.new()
-	client_side_map_label.text = "some map"
-	map_select.get_node("ColorRect").add_child(client_side_map_label)
-	$V/PresetSelect.queue_free()
 
 
 func _load_map(map_name : String) -> void:

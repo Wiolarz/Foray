@@ -13,7 +13,7 @@ var settings_are_being_refreshed : bool = false
 var maps_list : OptionButton
 var player_list : Container
 var client_side_map_label : Label
-
+var map_select : VBoxContainer
 
 ## assigned either IM.get_battle_maps_list() or IM.get_world_maps_list() on ready
 ## TODO: and when new map gets added
@@ -36,6 +36,7 @@ func _ready_init() -> void:
 	assert(player_list)
 	assert(maps_list)
 	assert(player_slot_panel_scene_path)
+	assert(map_select)
 	Helpers.remove_all_children(player_list) # remove mockup nodes
 
 	UI.resources_list_changed.connect(refresh)
@@ -165,6 +166,17 @@ func prepare_player_slots() -> void:
 			ui_slot.init_team_list(logic_slots_count)
 
 #endregion Refresh
+
+
+## Called upon join, applies changes to the UI to make it Client UI not Host UI
+func make_client_side() -> void:
+	map_select.get_node("Label").text = "Selected map"
+	maps_list.queue_free()
+	maps_list = null
+	UI.resources_list_changed.disconnect(refresh)  #TODO look into compatibility with multiplayer of resource list changes
+	client_side_map_label = Label.new()
+	client_side_map_label.text = "some map"
+	map_select.get_node("ColorRect").add_child(client_side_map_label)
 
 
 #region Common buttons

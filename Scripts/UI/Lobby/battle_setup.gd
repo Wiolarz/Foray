@@ -2,12 +2,8 @@ class_name BattleSetup
 extends GameModeSetup
 
 
-
-
 @onready var preset_select : Container = $VBox/PresetSelect
-@onready var map_select : Container = $VBox/MapSelect
 @onready var slots : Container = $VBox/Slots
-
 
 @onready var presets_list : OptionButton = \
 	preset_select.get_node("ColorRect/PresetList")
@@ -17,12 +13,12 @@ extends GameModeSetup
 @onready var main_container : VBoxContainer = $VBox
 
 
-
 #region Initial Setup
 
 func _pre_ready_init() -> void:
 	player_slot_panel_scene_path = "res://Scenes/UI/Lobby/BattlePlayerSlotPanel.tscn"
 	player_list = slots.get_node("ColorRect/PlayerList")
+	map_select = get_node("VBox/MapSelect")
 	maps_list = map_select.get_node("ColorRect/MapList")
 	maps = IM.get_battle_maps_list()
 	fill_presets_list()
@@ -49,19 +45,12 @@ func update_presets_list_selection() -> void:
 				return
 	presets_list.select(-1)
 
-
-## Called upon join, applies changes to the UI to make it Client UI not Host UI
-func make_client_side() -> void:
-	map_select.get_node("Label").text = "Selected map"
-	maps_list.queue_free()
-	maps_list = null
-	UI.resources_list_changed.disconnect(refresh)  #TODO look into compatibility with multiplayer of resource list changes
-	client_side_map_label = Label.new()
-	client_side_map_label.text = "some map"
-	map_select.get_node("ColorRect").add_child(client_side_map_label)
-	preset_select.queue_free()
-
 #endregion Initial Setup
+
+
+func make_client_side() -> void:
+	super()
+	preset_select.queue_free()
 
 
 func _custom_refresh_nodes() -> void:
@@ -81,7 +70,6 @@ func _custom_refresh_slot(index : int) -> void:
 		ui_slot.set_hero_option_button(null)
 
 
-
 #region Changing settings
 
 ## add missing path and calls apply_preset()
@@ -96,7 +84,6 @@ func select_preset_by_index(index : int):
 	apply_preset_by_name(preset_file)
 	refresh()
 
-	# TODO - verify if its neccesary to imrpove on this simple solution
 	CFG.player_options.last_used_battle_preset_name = preset_file
 	CFG.save_player_options()
 
@@ -123,6 +110,7 @@ func apply_preset_by_name(preset_name : String) -> bool:
 func _load_map(map_name : String) -> void:
 	var map : DataBattleMap = load(CFG.BATTLE_MAPS_PATH + "/" + map_name)
 	IM.game_setup_info.set_battle_map(map, map_name)
+
 
 func show_hero_level_up(slot_index : int) -> void:
 	var slot : Slot = IM.game_setup_info.slots[slot_index]
