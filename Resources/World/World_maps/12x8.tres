@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_7gsxn"]
 [ext_resource type="Script" uid="uid://bc7dlvxt87gdx" path="res://Resources/World/data_world_map.gd" id="2_1qotx"]
+[ext_resource type="Script" uid="uid://xj5cnhe2t57k" path="res://Resources/Races/data_race.gd" id="2_w76ed"]
 
 [sub_resource type="Resource" id="Resource_yk0rd"]
 script = ExtResource("1_7gsxn")
@@ -55,6 +56,10 @@ texture_path = "res://Art/world_map/city_any.png"
 
 [resource]
 script = ExtResource("2_1qotx")
+player_slots = Dictionary[int, ExtResource("2_w76ed")]({
+1: null,
+2: null
+})
 grid_width = 12
 grid_height = 8
 grid_data = [[SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_k8xpj"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_u81ij"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_22nlq"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_otfii"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_dei25"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_f4slv"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_3bpan"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_3bpan"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_f4slv"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_dei25"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_otfii"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_hrytv"), SubResource("Resource_t3c60"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_u81ij"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_t3c60"), SubResource("Resource_k8xpj"), SubResource("Resource_yk0rd")], [SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd"), SubResource("Resource_yk0rd")]]
