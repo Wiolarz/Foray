@@ -13,8 +13,13 @@ enum GameMode {
 }
 
 var game_mode : GameMode = (GameMode.BATTLE if CFG.DEFAULT_MODE_IS_BATTLE else GameMode.WORLD)
-var world_map : DataWorldMap ## used only in full world mode
-var battle_map : DataBattleMap ## used only in battle mode
+var world_map : DataWorldMap :## used only in full world mode :
+	set(value):
+		print("assigned map", value)
+		world_map = value
+var battle_map : DataBattleMap : ## used only in battle mode
+	set(value):
+		battle_map = value
 var slots : Array[Slot] ## slot for each player color on the map picked
 
 ## used in dropdown list in UI of battle setup, due to the problem with loading selected map
@@ -23,7 +28,7 @@ var battle_preset_name_hint : String
 
 ## used in dropdown list in UI of battle setup, due to the problem with loading selected map
 ## with a preset not setting selection properly
-var battle_map_name_hint : String
+var map_name_hint : String
 
 func is_in_mode_world():
 	return game_mode == GameMode.WORLD
@@ -191,13 +196,15 @@ func set_battle_map(map : DataBattleMap, map_name : String = ""):
 		var number_of_unit_slots = map.player_slots[slot_idx + 1] - 1  # -1 space is reserved for hero unit
 		slots[slot_idx].set_units_length(number_of_unit_slots)
 
-	battle_map_name_hint = map_name
+	map_name_hint = map_name
 
 
 func set_world_map(map : DataWorldMap) -> void:
 	assert(game_mode == GameMode.WORLD, "setting world map in game mode: " + str(game_mode))
 
 	world_map = map
+	CFG.player_options.last_used_world_map_path = map.resource_path
+	CFG.save_player_options()
 
 	var map_slots_size : int = map.player_slots.keys().size()
 	print("world map slot numbers: ", map_slots_size)

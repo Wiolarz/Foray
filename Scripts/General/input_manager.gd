@@ -6,7 +6,9 @@ extends Node
 ## notifies when `game_setup_info` is modified
 signal game_setup_info_changed
 
-var game_setup_info : GameSetupInfo
+var game_setup_info : GameSetupInfo :
+	set(value):
+		game_setup_info = value
 
 var players : Array[Player] = []
 
@@ -34,6 +36,16 @@ func init_battle_mode(host : bool):
 	if host:
 		var preset : Dictionary[String, Variant] = get_default_or_last_battle_preset()
 		game_setup_info.apply_battle_preset(preset["data"], preset["name"])
+
+
+func init_world_mode(host : bool):
+	game_setup_info.game_mode = GameSetupInfo.GameMode.WORLD
+
+	if host:
+		var map_path : String = get_default_or_last_world_map()
+
+		game_setup_info.set_world_map(load(map_path))
+
 
 #region Game setup
 
@@ -240,6 +252,15 @@ func get_default_or_last_battle_preset() -> Dictionary[String, Variant]:
 		"data": preset,
 		"name": presets[0].trim_prefix(CFG.BATTLE_PRESETS_PATH)
 	}
+
+
+func get_default_or_last_world_map() -> String:
+	if ResourceLoader.exists(CFG.LAST_USED_WORLD_MAP_PATH):
+		return CFG.LAST_USED_WORLD_MAP_PATH
+
+	var maps_paths : Array[String] = FileSystemHelpers.list_files_in_folder(CFG.WORLD_MAPS_PATH, true)
+	assert(maps_paths.size() != 0)
+	return maps_paths[0]
 
 
 func start_scripted_battle(scripted_battle : ScriptedBattle, battle_bot_path : String = "",

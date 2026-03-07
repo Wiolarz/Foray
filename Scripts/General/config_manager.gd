@@ -569,8 +569,8 @@ var LAST_OPENED_TAB : MainMenuTabs :
 
 var LAST_USED_BATTLE_PRESET_NAME : String :
 	get: return player_options.last_used_battle_preset_name
-var LAST_USED_WORLD_MAP : DataWorldMap : # TODO implement this
-	get: return player_options.last_used_world_map
+var LAST_USED_WORLD_MAP_PATH : String :
+	get: return player_options.last_used_world_map_path
 
 var FULLSCREEN_AUTO_TOGGLE : bool :
 	get: return player_options.keep_main_menu_windowed

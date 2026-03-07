@@ -61,15 +61,6 @@ func refresh_after_connection_change():
 			setup.refresh()
 
 
-""" Unused
-func force_full_rebuild():
-	if container.get_child_count() == 1:
-		var setup = container.get_child(0)
-		if setup is BattleSetup or setup is WorldSetup:
-			setup.rebuild()
-			setup.refresh()
-"""
-
 #region Changing settings
 
 func try_to_take_slot(index : int) -> bool:
@@ -161,7 +152,8 @@ func select_world():
 	CFG.save_player_options()
 
 	button_world.button_pressed = true
-	IM.game_setup_info.game_mode = GameSetupInfo.GameMode.WORLD
+
+	IM.init_world_mode(not NET.client) # selects last used map
 	_select_setup_page(multi_world_setup_scene)
 	if NET.server:
 		NET.server.broadcast_full_game_setup(IM.game_setup_info)
