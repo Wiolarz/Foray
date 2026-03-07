@@ -1,15 +1,14 @@
 class_name BattleSetup
 extends GameModeSetup
 
-const PLAYER_SLOT_PANEL_PATH = "res://Scenes/UI/Lobby/BattlePlayerSlotPanel.tscn"
 
-var client_side_map_label : Label
+
 
 @onready var preset_select : Container = $VBox/PresetSelect
 @onready var map_select : Container = $VBox/MapSelect
 @onready var slots : Container = $VBox/Slots
 
-@onready var player_list : Container = slots.get_node("ColorRect/PlayerList")
+
 @onready var presets_list : OptionButton = \
 	preset_select.get_node("ColorRect/PresetList")
 
@@ -21,22 +20,14 @@ var client_side_map_label : Label
 
 #region Initial Setup
 
-func _ready():
+func _pre_ready_init() -> void:
+	player_slot_panel_scene_path = "res://Scenes/UI/Lobby/BattlePlayerSlotPanel.tscn"
+	player_list = slots.get_node("ColorRect/PlayerList")
 	maps_list = map_select.get_node("ColorRect/MapList")
 	maps = IM.get_battle_maps_list()
-	fill_maps_list()
 	fill_presets_list()
-	UI.resources_list_changed.connect(refresh_after_resource_list_changed)
 
 	hero_level_up.confirm_button.connect(_on_level_up_confirm_button_pressed)
-
-
-func refresh_after_resource_list_changed() -> void:
-	fill_maps_list()
-	for slot : BattlePlayerSlotPanel in player_list.get_children():
-		slot.load_unit_buttons()
-	apply_preset_by_name(CFG.LAST_USED_BATTLE_PRESET_NAME)
-
 
 
 func fill_presets_list() -> void:
@@ -59,28 +50,12 @@ func update_presets_list_selection() -> void:
 	presets_list.select(-1)
 
 
-func update_maps_list_selection() -> void:
-	if not maps_list:
-		return # on client
-	var target : String = IM.game_setup_info.battle_map_name_hint
-	if target == "":
-		maps_list.select(-1)
-		return
-
-	for i in maps_list.item_count:
-		var item : String = maps_list.get_item_text(i)
-		if target == item:
-			maps_list.select(i)
-			return
-
-
-
 ## Called upon join, applies changes to the UI to make it Client UI not Host UI
 func make_client_side() -> void:
 	map_select.get_node("Label").text = "Selected map"
 	maps_list.queue_free()
 	maps_list = null
-	UI.resources_list_changed.disconnect(refresh_after_resource_list_changed)  #TODO look into compatibility with multiplayer of resource list changes
+	UI.resources_list_changed.disconnect(refresh)  #TODO look into compatibility with multiplayer of resource list changes
 	client_side_map_label = Label.new()
 	client_side_map_label.text = "some map"
 	map_select.get_node("ColorRect").add_child(client_side_map_label)
@@ -89,34 +64,15 @@ func make_client_side() -> void:
 #endregion Initial Setup
 
 
-## Updates UI to match GameState in IM
-func refresh() -> void:
-	assert(not settings_are_being_refreshed)
-	settings_are_being_refreshed = true # destructor or finally whould be nice
-
-	prepare_player_slots()
-
+func _custom_refresh_nodes() -> void:
 	update_presets_list_selection()
-	update_maps_list_selection()
-
-	for index in player_list.get_child_count():
-		_refresh_slot(index)
-
-	if client_side_map_label:
-		var map_name = \
-			DataBattleMap.get_network_id(IM.game_setup_info.battle_map)
-		client_side_map_label.text = map_name
-
-	uninitialized = false
-	settings_are_being_refreshed = false
 
 
 ## Updates BattlePlayerSlotPanel to match GameState in IM
 func _refresh_slot(index : int) -> void:
-	if index < 0 or index >= player_list.get_child_count():
-		push_error("no ui slot to refresh on index ", index)
-		return
 	var ui_slot : BattlePlayerSlotPanel = player_list.get_child(index)
+	ui_slot.setup_ui = self
+
 	var logic_slot : Slot = \
 		IM.game_setup_info.slots[index] if IM.game_setup_info.has_slot(index) \
 			else null
@@ -129,7 +85,7 @@ func _refresh_slot(index : int) -> void:
 	var increment_seconds : int = 0
 	var team : int = 0
 
-	ui_slot.setup_ui = self
+
 
 	if logic_slot:
 		ui_slot.set_army(logic_slot.units_list)
@@ -221,35 +177,7 @@ func _on_map_list_item_selected(index : int) -> void:
 	refresh()
 
 
-## in this function we adjust GUI slots number to logical slots number
-func prepare_player_slots() -> void:
 
-	var old_ui_slots = player_list.get_children()
-
-	var logic_slots_count : int = IM.game_setup_info.slots.size()
-	var ui_slots_count : int = old_ui_slots.size()
-
-	# go through all slots which are on either side
-	var slots_count = max(logic_slots_count, ui_slots_count)
-
-	for i in slots_count:
-		var ui_slot : BattlePlayerSlotPanel = null
-
-		# if UI slot does not exist, create it and assign to `ui_slot`
-		if i >= ui_slots_count:
-			ui_slot = load(PLAYER_SLOT_PANEL_PATH).instantiate()
-			ui_slot.setup_ui = self
-			player_list.add_child(ui_slot)
-		else:
-			# we didn't assign `ui_slot`, so use existing UI slot
-			ui_slot = old_ui_slots[i]
-
-		# UI slot is not needed
-		if i >= logic_slots_count:
-			player_list.remove_child(ui_slot)
-			ui_slot.queue_free()
-		else:
-			ui_slot.init_team_list(logic_slots_count)
 
 
 func show_hero_level_up(slot_index : int) -> void:

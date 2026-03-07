@@ -1,55 +1,28 @@
 class_name WorldSetup
 extends GameModeSetup
 
-# used on client side setup instead of option button
-var client_side_map_label : Label
-
-@onready var player_list = \
-	$V/Slots/ColorRect/PlayerList
-
 
 @onready var map_select : VBoxContainer = \
 	$V/MapSelect
 
 
-var player_slot_panels = []
-
-
-func _ready():
+func _pre_ready_init():
+	player_slot_panel_scene_path = "res://Scenes/UI/Lobby/WorldPlayerSlotPanel.tscn"
+	player_list = get_node("V/Slots/ColorRect/PlayerList")
 	maps_list = get_node("V/MapSelect/ColorRect/MapList")
 	maps = IM.get_world_maps_list()
-	rebuild()
 
 
-func refresh():
-	settings_are_being_refreshed = true # destructor or finally whould be nice
-	fill_maps_list()
-	# drut?
-	var world_map = DataWorldMap.get_network_id(IM.game_setup_info.world_map)
-	refresh_map_to(world_map)
-	for index in range(player_slot_panels.size()):
-		_refresh_slot(index)
 
-	uninitialized = false
-	settings_are_being_refreshed = false
+func _custom_refresh_nodes() -> void:
+	pass
 
-
-func refresh_map_to(world_map : String):
-	if maps_list:
-		for index in maps_list.item_count:
-			if world_map == maps_list.get_item_text(index):
-				maps_list.selected = index
-				return
-		maps_list.selected = -1
-	if client_side_map_label:
-		client_side_map_label.text = world_map
 
 
 func _refresh_slot(index : int) -> void:
-	if not index in range(player_slot_panels.size()):
-		return
-	var ui_slot : WorldPlayerSlotPanel = player_slot_panels[index]
+	var ui_slot : WorldPlayerSlotPanel = player_list.get_child(index)
 	ui_slot.setup_ui = self
+
 	var logic_slot : Slot = \
 		IM.game_setup_info.slots[index] if index in \
 				range(IM.game_setup_info.slots.size()) \
@@ -90,17 +63,6 @@ func _refresh_slot(index : int) -> void:
 
 
 
-
-
-
-func rebuild():
-	player_slot_panels = []
-	for slot in player_list.get_children():
-		player_slot_panels.append(slot)
-	# don't want to refresh here -- we want to be able to build this widget
-	# without real data
-
-
 func make_client_side():
 	map_select.get_node("Label").text = "Selected map"
 	maps_list.queue_free()
@@ -123,6 +85,7 @@ func _on_map_list_item_selected(_index : int) -> void:
 	# if changed:
 	# 	refresh()
 	print("map select %s %s" % [ map_name, changed ])
-	
+
+	print("map has been chosen", settings_are_being_refreshed)
 	if not settings_are_being_refreshed:
 		refresh()
