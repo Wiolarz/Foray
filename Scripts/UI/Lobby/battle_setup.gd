@@ -68,61 +68,17 @@ func _custom_refresh_nodes() -> void:
 	update_presets_list_selection()
 
 
-## Updates BattlePlayerSlotPanel to match GameState in IM
-func _refresh_slot(index : int) -> void:
-	var ui_slot : BattlePlayerSlotPanel = player_list.get_child(index)
-	ui_slot.setup_ui = self
-
+func _custom_refresh_slot(index : int) -> void:
+	var ui_slot : PlayerSlotPanel = player_list.get_child(index)
 	var logic_slot : Slot = \
 		IM.game_setup_info.slots[index] if IM.game_setup_info.has_slot(index) \
 			else null
-	var color : DataPlayerColor = CFG.DEFAULT_TEAM_COLOR
-	var username : String = ""
-	var race : DataRace = null
-	var take_leave_button_state : BattlePlayerSlotPanel.TakeLeaveButtonState =\
-		BattlePlayerSlotPanel.TakeLeaveButtonState.GHOST
-	var reserve_seconds : int = 0
-	var increment_seconds : int = 0
-	var team : int = 0
 
-
-
-	if logic_slot:
-		ui_slot.set_army(logic_slot.units_list)
-		if logic_slot.slot_hero:
-			ui_slot.set_hero_option_button(logic_slot.slot_hero.template)
-		else:
-			ui_slot.set_hero_option_button(null)
-		if logic_slot.occupier is String:
-			if logic_slot.occupier == "":
-				username = NET.get_current_login()
-				take_leave_button_state = \
-					BattlePlayerSlotPanel.TakeLeaveButtonState.TAKEN_BY_YOU
-			else:
-				username = logic_slot.occupier
-				take_leave_button_state = \
-					BattlePlayerSlotPanel.TakeLeaveButtonState.TAKEN_BY_OTHER
-		else:
-			username = "Computer\nlevel %d" % logic_slot.occupier
-			take_leave_button_state = \
-				BattlePlayerSlotPanel.TakeLeaveButtonState.FREE
-		race = logic_slot.race
-		color = CFG.get_team_color_at(logic_slot.color_idx)
-		team = logic_slot.team
-		reserve_seconds = logic_slot.timer_reserve_sec
-		increment_seconds = logic_slot.timer_increment_sec
-
-		ui_slot.apply_bots_from_slot(logic_slot)
-
-
-
-	ui_slot.set_visible_color(color.color)
-	ui_slot.set_visible_name(username)
-	ui_slot.set_visible_team(team)
-	ui_slot.set_visible_take_leave_button_state(take_leave_button_state)
-	ui_slot.set_visible_timers(reserve_seconds, increment_seconds)
-
-
+	ui_slot.set_army(logic_slot.units_list)
+	if logic_slot.slot_hero:
+		ui_slot.set_hero_option_button(logic_slot.slot_hero.template)
+	else:
+		ui_slot.set_hero_option_button(null)
 
 
 
@@ -164,21 +120,9 @@ func apply_preset_by_name(preset_name : String) -> bool:
 	return true
 
 
-func _on_map_list_item_selected(index : int) -> void:
-	if not should_react_to_changes():
-		return
-	var map_name : String = maps_list.get_item_text(index)
+func _load_map(map_name : String) -> void:
 	var map : DataBattleMap = load(CFG.BATTLE_MAPS_PATH + "/" + map_name)
 	IM.game_setup_info.set_battle_map(map, map_name)
-
-	if NET.server:
-		NET.server.broadcast_full_game_setup(IM.game_setup_info)
-
-	refresh()
-
-
-
-
 
 func show_hero_level_up(slot_index : int) -> void:
 	var slot : Slot = IM.game_setup_info.slots[slot_index]

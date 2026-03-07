@@ -8,7 +8,7 @@ enum TakeLeaveButtonState {
 	GHOST, # state when we display too much slots
 }
 
-var setup_ui # BattleSetup
+var setup_ui : GameModeSetup
 
 
 var button_take_leave_state : TakeLeaveButtonState = TakeLeaveButtonState.FREE

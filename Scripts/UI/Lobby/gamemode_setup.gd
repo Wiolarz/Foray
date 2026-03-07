@@ -24,13 +24,6 @@ var player_slot_panels : Array[PlayerSlotPanel] = []
 @abstract
 func _custom_refresh_nodes() -> void
 
-@abstract
-func _refresh_slot(index : int) -> void
-
-
-@abstract
-func _on_map_list_item_selected(index : int) -> void
-
 
 #region Setup
 
@@ -67,6 +60,8 @@ func fill_maps_list():
 #endregion Setup
 
 
+#region Refresh
+
 ## Updates UI to match GameState in IM
 func refresh():
 	#if settings_are_being_refreshed:
@@ -85,9 +80,59 @@ func refresh():
 	settings_are_being_refreshed = false
 
 
+@abstract
+func _custom_refresh_slot(index : int) -> void
 
 
-#region Selected Map
+## Updates BattlePlayerSlotPanel to match GameState in IM
+func _refresh_slot(index : int) -> void:
+	var ui_slot : PlayerSlotPanel = player_list.get_child(index)
+	ui_slot.setup_ui = self
+
+	var logic_slot : Slot = \
+		IM.game_setup_info.slots[index] if IM.game_setup_info.has_slot(index) \
+			else null
+	var color : DataPlayerColor = CFG.DEFAULT_TEAM_COLOR
+	var username : String = ""
+	var race : DataRace = null
+	var take_leave_button_state : PlayerSlotPanel.TakeLeaveButtonState =\
+		PlayerSlotPanel.TakeLeaveButtonState.GHOST
+	var reserve_seconds : int = 0
+	var increment_seconds : int = 0
+	var team : int = 0
+
+	assert(logic_slot)
+
+	if logic_slot.occupier is String:
+		if logic_slot.occupier == "":
+			username = NET.get_current_login()
+			take_leave_button_state = \
+				PlayerSlotPanel.TakeLeaveButtonState.TAKEN_BY_YOU
+		else:
+			username = logic_slot.occupier
+			take_leave_button_state = \
+				PlayerSlotPanel.TakeLeaveButtonState.TAKEN_BY_OTHER
+	else:
+		username = "Computer\nlevel %d" % logic_slot.occupier
+		take_leave_button_state = \
+			PlayerSlotPanel.TakeLeaveButtonState.FREE
+	race = logic_slot.race
+	color = CFG.get_team_color_at(logic_slot.color_idx)
+	team = logic_slot.team
+	reserve_seconds = logic_slot.timer_reserve_sec
+	increment_seconds = logic_slot.timer_increment_sec
+
+	ui_slot.apply_bots_from_slot(logic_slot)
+
+	ui_slot.set_visible_color(color.color)
+	ui_slot.set_visible_name(username)
+	ui_slot.set_visible_team(team)
+	ui_slot.set_visible_take_leave_button_state(take_leave_button_state)
+	ui_slot.set_visible_timers(reserve_seconds, increment_seconds)
+
+	_custom_refresh_slot(index) # custom logic for battle/world
+
+
 
 ## in this function we adjust GUI slots number to logical slots number
 func prepare_player_slots() -> void:
@@ -119,10 +164,17 @@ func prepare_player_slots() -> void:
 		else:
 			ui_slot.init_team_list(logic_slots_count)
 
-#endregion Selected Map
+#endregion Refresh
 
 
-#region Resource lists
+#region Common buttons
+
+## It is used to know if changes in gui are made by user and should be passed to
+## backend (change setup info and send over network) OR made by refreshing
+## gui to state in backend
+func should_react_to_changes() -> bool:
+	return not settings_are_being_refreshed and not uninitialized
+
 
 #TODO verify what here is actually useful
 func update_maps_list_selection() -> void:
@@ -143,16 +195,6 @@ func update_maps_list_selection() -> void:
 		if target == item:
 			maps_list.select(index)
 			return
-
-
-
-#endregion Resource lists
-
-## It is used to know if changes in gui are made by user and should be passed to
-## backend (change setup info and send over network) OR made by refreshing
-## gui to state in backend
-func should_react_to_changes() -> bool:
-	return not settings_are_being_refreshed and not uninitialized
 
 
 func slot_to_index(slot) -> int:
@@ -186,6 +228,20 @@ func try_to_leave_slot(slot) -> bool:
 	return changed
 
 
+@abstract
+func _load_map(map_name : String) -> void
 
 
+func _on_map_list_item_selected(index : int) -> void:
+	if not should_react_to_changes():
+		return
+	var map_name : String = maps_list.get_item_text(index)
 
+	_load_map(map_name)
+
+	if NET.server:
+		NET.server.broadcast_full_game_setup(IM.game_setup_info)
+
+	refresh()
+
+#endregion Common buttons
