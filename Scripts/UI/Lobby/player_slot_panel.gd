@@ -5,7 +5,7 @@ enum TakeLeaveButtonState {
 	FREE,
 	TAKEN_BY_YOU,
 	TAKEN_BY_OTHER,
-	GHOST, # state when we display too much slots
+	GHOST, # state when we display too much slots #TODO currently unused STUB awaits refactor changing deleting slots to just hiding them.
 }
 
 var setup_ui : GameModeSetup
