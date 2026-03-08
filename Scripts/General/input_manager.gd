@@ -6,9 +6,7 @@ extends Node
 ## notifies when `game_setup_info` is modified
 signal game_setup_info_changed
 
-var game_setup_info : GameSetupInfo :
-	set(value):
-		game_setup_info = value
+var game_setup_info : GameSetupInfo
 
 var players : Array[Player] = []
 

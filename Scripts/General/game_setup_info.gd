@@ -13,13 +13,10 @@ enum GameMode {
 }
 
 var game_mode : GameMode = (GameMode.BATTLE if CFG.DEFAULT_MODE_IS_BATTLE else GameMode.WORLD)
-var world_map : DataWorldMap :## used only in full world mode :
-	set(value):
-		print("assigned map", value)
-		world_map = value
-var battle_map : DataBattleMap : ## used only in battle mode
-	set(value):
-		battle_map = value
+var world_map : DataWorldMap ## used only in full world mode
+
+var battle_map : DataBattleMap ## used only in battle mode
+
 var slots : Array[Slot] ## slot for each player color on the map picked
 
 ## used in dropdown list in UI of battle setup, due to the problem with loading selected map
@@ -207,7 +204,6 @@ func set_world_map(map : DataWorldMap) -> void:
 	CFG.save_player_options()
 
 	var map_slots_size : int = map.player_slots.keys().size()
-	print("world map slot numbers: ", map_slots_size)
 	set_slots_number(map_slots_size)
 
 	for slot_idx in slots.size():
@@ -222,6 +218,7 @@ func set_world_map(map : DataWorldMap) -> void:
 			race_idx = wrap(slot_idx, 0, CFG.RACES_LIST.size())
 			slot.race = CFG.RACES_LIST[race_idx]
 
+	map_name_hint = map.resource_path.get_file()
 
 
 ## used at start with some default preset, also used when preset is chosen

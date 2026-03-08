@@ -198,9 +198,7 @@ func update_maps_list_selection() -> void:
 			client_side_map_label.text = DataBattleMap.get_network_id(IM.game_setup_info.battle_map)
 		return # on client
 	var target : String = IM.game_setup_info.map_name_hint
-	if target == "":
-		maps_list.select(-1)
-		return
+	assert(target != "")
 
 	for index in maps_list.item_count:
 		var item : String = maps_list.get_item_text(index)
