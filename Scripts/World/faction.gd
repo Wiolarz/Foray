@@ -113,4 +113,35 @@ func get_hero_cost(data_hero : DataHero) -> Goods:
 		return data_hero.revive_cost
 	return data_hero.cost
 
+
+## improves goods tiers
+func hero_leveled_up() -> void:
+	var hero_levels : Array[int] = []
+	for army in hero_armies:
+		var hero : Hero = army.hero
+		hero_levels.append(hero.level)
+	hero_levels.sort()
+	hero_levels.reverse()
+
+	#TODO awaits design for improved tier thresholds
+	# tiers thresholds
+	var tier_threshold : int = 0
+	# 2
+	if hero_levels[0] >= 3:
+		tier_threshold += 1
+
+	if hero_levels.size() >= 2:
+		if hero_levels[0] >= 4 and hero_levels[1] >= 2:
+			tier_threshold += 1
+		if hero_levels[0] >= 5 and hero_levels[1] >= 3:
+			tier_threshold += 1
+
+	if hero_levels.size() == 3:
+		if hero_levels[0] >= 5 and hero_levels[1] >= 4 and hero_levels[2] >= 3:
+			pass#tier_threshold += 1
+
+	goods.unlocked_tier_wood = tier_threshold
+	goods.unlocked_tier_iron = tier_threshold
+	goods.unlocked_tier_ruby = tier_threshold
+
 #endregion Heroes

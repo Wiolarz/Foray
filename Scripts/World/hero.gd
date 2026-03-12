@@ -123,6 +123,7 @@ func _level_up() -> void:
 	var threshold = Hero.level_threshold_at(level)
 	xp -= threshold
 	level += 1
+	WS.player_states[controller_index].hero_leveled_up()
 	print("%s leveled up, now has level %d" % [hero_name, level])
 	var old_max_move = max_movement_points
 	max_army_size = 2 + level

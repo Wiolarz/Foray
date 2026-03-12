@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bpkvpkoi22q8"]
+[gd_scene load_steps=10 format=3 uid="uid://cglcq6x2hrgiq"]
 
 [ext_resource type="Script" uid="uid://bydjfp1rc4rhh" path="res://Scripts/UI/world_ui.gd" id="1_50wj5"]
 [ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="2_yv1kk"]
@@ -55,14 +55,14 @@ layout_mode = 2
 text = "Player2"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-offset_left = 987.0
+offset_left = 644.0
 offset_top = 25.0
-offset_right = 1315.0
-offset_bottom = 80.0
+offset_right = 1446.0
+offset_bottom = 124.0
 
 [node name="GoodsLabel" type="Label" parent="HBoxContainer"]
 layout_mode = 2
-text = "0 🪓| 0 ⛏️| 0 💎"
+text = "[II] 5/6 🪓| [II] 2/5 ⛏️| [I] 1/2 💎"
 
 [node name="HeroesList" type="HBoxContainer" parent="."]
 offset_left = 304.0
@@ -98,6 +98,7 @@ grow_vertical = 0
 [node name="CityUi" parent="." instance=ExtResource("4_r7awa")]
 
 [node name="GameChat" parent="." instance=ExtResource("5_kbxi4")]
+auto_translate_mode = 2
 
 [node name="TradeScreen" parent="." instance=ExtResource("6_qkgtt")]
 visible = false

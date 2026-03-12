@@ -47,7 +47,7 @@ func _ready():
 
 func _process(_delta):
 	if WM.world_game_is_active():
-		good_label.text = WS.get_current_player().goods.to_string()
+		good_label.text = WS.get_current_player().goods.main_player_goods_display()
 
 
 func on_game_started():
