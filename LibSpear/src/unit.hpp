@@ -17,12 +17,12 @@ struct Effect {
 	EffectMask mask = 0;
 	int8_t counter = 0;
 
-	constexpr operator bool() const noexcept { return mask != 0; }
+	constexpr explicit operator bool() const noexcept { return mask != 0; }
 };
 
 static constexpr Effect NO_EFFECT = Effect{.mask = 0, .counter = 0};
 
-static_assert(not NO_EFFECT);
+static_assert(not NO_EFFECT, "NO_EFFECT must always resolve to false");
 
 struct UnitID {
 	int8_t army;

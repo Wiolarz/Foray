@@ -20,11 +20,10 @@ void BattleManagerFast::finish_initialization() {
 
 	_state = BattleState::DEPLOYMENT;
 	for (auto [ i, army ] : _armies.enumerated()) {
-		assert(army);
-		assert(not army.is_defeated());
-		assert(std::addressof(army) == std::addressof(_armies[i]));
-		BM_ASSERT(
-			army.cyclone_timer != Army::CYCLONE_UNINITIALIZED,
+		BM_ASSERT(not army.is_defeated(), "Army is defeated or empty at initialization");
+		BM_ASSERT(std::addressof(army) == std::addressof(_armies[i]),
+      "Army references diverged after enumeration");
+		BM_ASSERT(army.cyclone_timer != Army::CYCLONE_UNINITIALIZED,
 			"Uninitialized cyclone timer in army {}", i);
 		BM_ASSERT(army.team != -1, "Uninitialized team id in army {}", i);
 
@@ -589,9 +588,9 @@ void BattleManagerFast::_update_turn_end() {
 		for (auto [ unit_id, unit ] : army.units.enumerated()) {
 
 			auto uid = UnitID(army_id, unit_id);
-			auto unitref [[ maybe_unused ]] = _get_unit(uid);
+			auto unitref = _get_unit(uid);
 
-			assert(unitref.has_value());
+			BM_ASSERT(unitref.has_value(), "Unit reference empty");
 
 			bool is_a_summon = unit.is_effect_active(Unit::FLAG_EFFECT_SUMMONING_SICKNESS);
 
@@ -680,12 +679,13 @@ void BattleManagerFast::_next_army() {
 #pragma region Mana processing
 
 void BattleManagerFast::_update_mana_target() {
+	BM_ASSERT(not _armies.empty(), "Cannot update mana target when there are no armies");
 	auto [worst_idx, _] = _get_cyclone_worst_and_best_idx();
 	_cyclone_target = worst_idx;
 }
 
 void BattleManagerFast::_update_mana() {
-	assert(not _armies.empty());
+	BM_ASSERT(not _armies.empty(), "Cannot update mana when there are no armies");
 	auto [worst_idx, best_idx] = _get_cyclone_worst_and_best_idx();
 	_cyclone_target = worst_idx;
 
@@ -1319,9 +1319,7 @@ void BattleManagerFast::_check_blood_curse(int8_t army_id) {
 		return;
 	if (_armies.size() <= 1)
 		return;
-	for (auto [ index, unit ] : army.units.all() | std::views::enumerate) {
-		if (unit.status != UnitStatus::ALIVE)
-			continue;
+	for (auto [ index, unit ] : army.units.enumerated()) {
 		if (unit.is_effect_active(Unit::FLAG_EFFECT_BLOOD_CURSE))
 			continue;
 		_kill_unit(UnitID { army.id, static_cast<int8_t>(index) }, NO_UNIT);
@@ -1339,13 +1337,11 @@ bool BattleManagerFast::is_occupied(Position pos, const Army& army, TeamRelation
 			continue;
 		}
 
-		const bool any_unit = std::ranges::any_of(
-			other_army.units.all(),
-			[pos](const Unit& unit) {
-				return unit.status == UnitStatus::ALIVE and unit.pos == pos;
-			});
-		if (any_unit)
-			return true;
+		for(const Unit& unit : other_army.units) {
+			if(unit.pos == pos) {
+				return true;
+			}
+		}
 	}
 	return false;
 }

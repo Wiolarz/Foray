@@ -68,8 +68,7 @@ struct Iterator {
 	}
 
 
-	constexpr std::pair<const std::size_t, T&>
-	dereference_enumerated() const noexcept {
+	constexpr std::pair<const std::size_t, T&> dereference_enumerated() const noexcept {
 		return { _index, dereference() };
 	}
 
@@ -136,11 +135,13 @@ public:
 		arraymap_detail::EnumeratedIterator<const T, N>;
 
 	static_assert(
-		std::is_same_v<typename std::iterator_traits<iterator>::reference, T&>);
+		std::is_same_v<typename std::iterator_traits<iterator>::reference, T&>,
+    "dereferencing ArrayMap iterator must solve to reference of T");
 	static_assert(
 		std::is_same_v<
 			typename std::iterator_traits<const_iterator>::reference,
-			const T&>);
+			const T&>,
+    "dereferencing ArrayMap const_iterator must solve to reference of const T");
 
 	constexpr ArrayMap() = default;
 	constexpr ArrayMap(const std::initializer_list<T>&);
@@ -356,8 +357,7 @@ public:
 
 
 	template <class... Args>
-	iterator
-	try_push_anywhere(Args&&... args) {
+	iterator try_push_anywhere(Args&&... args) {
 		auto it = std::ranges::find_if(
 			_content,
 			[](const T& element) { return not check_element(element); });

@@ -40,7 +40,9 @@ class BattleManagerFast {
 	ArrayMap<BattleSpell, MAX_SPELLS> _spells{};
 	TileGridFast _tiles{};
 
-	std::array<int8_t, 16> _cyclone_counter_values{-1}; // ???
+  /// A lookup table mapping mana difference to initial cyclone counter values, set by GDScript
+	std::array<int8_t, 16> _cyclone_counter_values{-1};
+
 	int8_t _mana_well_power = -1;
 
 	BattleResult _result{};
