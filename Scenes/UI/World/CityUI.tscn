@@ -26,6 +26,7 @@ grow_vertical = 0
 [node name="RecruitHeroLayout" type="VBoxContainer" parent="HeroRecruitment"]
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
+alignment = 2
 
 [node name="HeroImage" type="TextureRect" parent="HeroRecruitment/RecruitHeroLayout"]
 layout_mode = 2
@@ -40,6 +41,7 @@ text = "Buy Hero
 [node name="RecruitHeroLayout2" type="VBoxContainer" parent="HeroRecruitment"]
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
+alignment = 2
 
 [node name="HeroImage" type="TextureRect" parent="HeroRecruitment/RecruitHeroLayout2"]
 layout_mode = 2
@@ -54,6 +56,7 @@ text = "Buy Hero
 [node name="RecruitHeroLayout3" type="VBoxContainer" parent="HeroRecruitment"]
 custom_minimum_size = Vector2(350, 0)
 layout_mode = 2
+alignment = 2
 
 [node name="HeroImage" type="TextureRect" parent="HeroRecruitment/RecruitHeroLayout3"]
 layout_mode = 2
