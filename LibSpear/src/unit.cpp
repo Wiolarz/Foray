@@ -1,6 +1,9 @@
+#include "unit.hpp"
 
 #include <format>
-#include "unit.hpp"
+#include "godot_cpp/variant/string.hpp"
+
+namespace libspear {
 
 Symbol Unit::symbol_when_rotated(int side) const {
     if(flags & FLAG_ON_SWAMP) {
@@ -16,19 +19,15 @@ Symbol Unit::front_symbol() const {
     return sides[0];
 }
 
-bool Unit::try_apply_effect(EffectMask mask, uint8_t duration) {
-    for(Effect& eff : effects) {
-        if(eff.mask == 0) {
-            flags |= mask;
-            eff.mask = mask;
-            eff.counter = duration;
-            return true;
-        }
-    }
-    return false;
+bool Unit::try_apply_effect(EffectMask mask, int8_t duration) {
+	const auto it = effects.try_push_anywhere(Effect {
+		.mask = mask,
+		.counter = duration,
+	});
+	return it != effects.end();
 }
 
-bool Unit::try_apply_martyr(UnitID id, uint8_t duration) {
+bool Unit::try_apply_martyr(UnitID id, int8_t duration) {
     _martyr_id = id;
     return try_apply_effect(FLAG_EFFECT_MARTYR, duration);
 }
@@ -54,7 +53,7 @@ bool Unit::is_effect_active(EffectMask effect_mask) const {
 }
 
 void Unit::on_turn_end() {
-    for(Effect& eff : effects) {
+    for(Effect& eff : effects.all()) {
         if(eff.counter == 0 || eff.mask == 0) {
             continue;
         }
@@ -116,4 +115,6 @@ int Unit::get_effect_duration_counter(EffectMask mask) const {
         }
     }
     return -1;
+}
+
 }

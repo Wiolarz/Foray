@@ -7,12 +7,12 @@
 #include "godot_cpp/variant/vector2i.hpp"
 #include <format>
 
-using godot::Vector2i;
-
+namespace libspear {
 
 class CacheGrid {
+public:
 	std::vector<UnitID> _grid{};
-	Vector2i _dims{};
+	godot::Vector2i _dims{};
 public:
 	CacheGrid() = default;
 	CacheGrid(TileGridFastCpp& tg)
@@ -41,13 +41,8 @@ public:
 		for(UnitID& i: _grid) {
 			i = NO_UNIT;
 		}
-
-		for(unsigned army_id = 0; army_id < armies.size(); army_id++) {
-			Army& army = armies[army_id];
-
-			for(unsigned unit_id = 0; unit_id < army.units.size(); unit_id++) {
-				Unit& unit = army.units[unit_id];
-
+		for (auto [ army_id, army ] : armies.enumerated()) {
+			for (auto [ unit_id, unit ] : army.units.enumerated()) {
 				if(unit.status == UnitStatus::ALIVE) {
 					(*this)[unit.pos] = UnitID(army_id, unit_id);
 				}
@@ -61,7 +56,7 @@ public:
 	}
 
 	bool self_test(ArmyList& armies) {
-		CacheGrid new_cache = *this;
+		CacheGrid new_cache = *this; // TODO do not copy all things, only size
 		new_cache.update_armies(armies);
 		for(unsigned i = 0; i < _grid.size(); i++) {
 			if(new_cache._grid[i] != _grid[i]) {
@@ -71,6 +66,8 @@ public:
 		return true;
 	}
 };
+
+}
 
 #endif // CACHE_GRID_H
 

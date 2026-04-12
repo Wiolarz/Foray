@@ -18,6 +18,7 @@
 	ClassDB::bind_method(D_METHOD("get_" #name), &BattleMCTSManager::get_##name); \
 	ADD_PROPERTY(PropertyInfo(variant, #name), "set_" #name, "get_" #name); 
 
+namespace libspear {
 
 class BattleMCTSManager;
 
@@ -57,8 +58,8 @@ public:
 };
 
 
-class BattleMCTSManager : public Node {
-	GDCLASS(BattleMCTSManager, Node);
+class BattleMCTSManager : public godot::Node {
+	GDCLASS(BattleMCTSManager, godot::Node);
 
 	DEFINE_MCTS_PARAMETER(int, max_sim_iterations, -1);
 	DEFINE_MCTS_PARAMETER(float, heuristic_probability, -1);
@@ -108,6 +109,6 @@ public:
 	}
 };
 
-
+}
 
 #endif

@@ -1,11 +1,15 @@
 #include "battle_manager_fast.hpp"
+#include "data.hpp"
 #include "godot_cpp/core/class_db.hpp"
 #include "godot_cpp/core/error_macros.hpp"
 
+#include <algorithm>
 #include <cstdlib>
 #include <random>
+#include <ranges>
 #include <csignal>
 
+namespace libspear {
 
 #pragma region Initialization
 
@@ -15,21 +19,20 @@ void BattleManagerFast::finish_initialization() {
 	BM_ASSERT(_mana_well_power != -1, "Uninitialized mana well power");
 
 	_state = BattleState::DEPLOYMENT;
-	for(unsigned i = 0; i < _armies.size(); i++) {
-		if(_armies[i].is_defeated()) {
-			continue;
-		}
-		BM_ASSERT(_armies[i].cyclone_timer != Army::CYCLONE_UNINITIALIZED, "Uninitialized cyclone timer in army {}", i);
-		BM_ASSERT(_armies[i].team != -1, "Uninitialized team id in army {}", i);
+	for (auto [ i, army ] : _armies.enumerated()) {
+		BM_ASSERT(not army.is_defeated(), "Army is defeated or empty at initialization");
+		BM_ASSERT(std::addressof(army) == std::addressof(_armies[i]),
+      "Army references diverged after enumeration");
+		BM_ASSERT(army.cyclone_timer != Army::CYCLONE_UNINITIALIZED,
+			"Uninitialized cyclone timer in army {}", i);
+		BM_ASSERT(army.team != -1, "Uninitialized team id in army {}", i);
 
-		_armies[i].id = i;
+		army.id = i;
 
-		for(Unit& unit: _armies[i].units) {
-			if(unit.status != UnitStatus::DEAD) {
-				_result.total_scores[i] += unit.score;
-				_result.max_scores[i]	+= unit.score;
-				_armies[i].mana_points += unit.mana;
-			}
+		for(Unit &unit : army.units) {
+			_result.total_scores[i] += unit.score;
+			_result.max_scores[i] += unit.score;
+			_armies[i].mana_points += unit.mana;
 		}
 	}
 
@@ -89,16 +92,16 @@ void BattleManagerFast::play_move(Move move) {
 
 		_deploy_unit(uid, move.pos);
 
-		int skip_count = 0;
-		_current_army = (_current_army + 1) % _armies.size();
+		std::size_t skip_count = 0;
+		_current_army = (_current_army + 1) % _armies.max_size();
 		bool end_deployment = false;
 		// skip players with nothing to deploy
 		while(_armies[_current_army].find_unit_id_to_deploy() == -1) {
 			_current_army += 1;
-			_current_army %= _armies.size();
+			_current_army %= _armies.max_size();
 			skip_count += 1;
 			// no player has anything to deploy, go to next phase
-			if(skip_count == int(_armies.size())) {
+			if (skip_count == _armies.max_size()) {
 				end_deployment = true;
 				break;
 			}
@@ -115,7 +118,7 @@ void BattleManagerFast::play_move(Move move) {
 			Position old_pos = unit.pos;
 
 			if(_tiles.get_tile(move.pos).is_pit()) {
-				move.pos = move.pos + Vector2i(DIRECTIONS[rot_new].x, DIRECTIONS[rot_new].y);
+				move.pos = move.pos + godot::Vector2i(DIRECTIONS[rot_new].x, DIRECTIONS[rot_new].y);
 			}
 
 			BM_ASSERT(unit.status == UnitStatus::ALIVE, "Trying to move a non-alive unit {} to position {},{}", move.unit, move.pos.x, move.pos.y);
@@ -581,16 +584,14 @@ void BattleManagerFast::_update_turn_end() {
 		return;
 	}
 
-	for(unsigned army_id = 0; army_id < _armies.size(); army_id++) {
-		for(unsigned unit_id = 0; unit_id < _armies[army_id].units.size(); unit_id++) {
+	for (auto [ army_id, army ] : _armies.enumerated()) {
+		for (auto [ unit_id, unit ] : army.units.enumerated()) {
+
 			auto uid = UnitID(army_id, unit_id);
 			auto unitref = _get_unit(uid);
 
-			if(!unitref.has_value() || unitref.value().unit.status == UnitStatus::DEAD) {
-				continue;
-			}
+			BM_ASSERT(unitref.has_value(), "Unit reference empty");
 
-			auto [unit, _army] = unitref.value();
 			bool is_a_summon = unit.is_effect_active(Unit::FLAG_EFFECT_SUMMONING_SICKNESS);
 
 			unit.on_turn_end();
@@ -608,14 +609,9 @@ void BattleManagerFast::_update_move_end() {
 		return;
 	}
 
-	for(unsigned army_id = 0; army_id < _armies.size(); army_id++) {
-		for(unsigned unit_id = 0; unit_id < _armies[army_id].units.size(); unit_id++) {
+	for (auto [ army_id, army ] : _armies.enumerated()) {
+		for (auto [ unit_id, unit ] : army.units.enumerated()) {
 			auto uid = UnitID(army_id, unit_id);
-			auto [unit, _army] = _get_unit(uid).value();
-
-			if(unit.status == UnitStatus::DEAD) {
-				continue;
-			}
 
 			if(unit.is_effect_active(Unit::FLAG_EFFECT_DEATH_MARK)) {
 				_kill_unit(uid, NO_UNIT);
@@ -641,30 +637,31 @@ int BattleManagerFast::get_winner_team() {
 		return -1;
 	}
 
-	int last_team_alive = -2;
-	int teams_alive = MAX_ARMIES;
 	std::array<int, MAX_ARMIES> armies_in_teams_alive = {0,0,0,0};
 
-	for(unsigned i = 0; i < _armies.size(); i++) {
-		if(!_armies[i].is_defeated()) {
-			armies_in_teams_alive[_armies[i].team] += 1;
-		}
+	using namespace std::views;
+	for (auto [ team_index, armies_alive ] : armies_in_teams_alive | enumerate) {
+		armies_alive = std::ranges::count_if(
+			_armies,
+			[team_index](const Army& army) { return army.team == team_index; });
 	}
 
-	for(unsigned i = 0; i < MAX_ARMIES; i++) {
-		if(armies_in_teams_alive[i] == 0) {
-			teams_alive--;
-		}
-		else {
-			last_team_alive = i;
-		}
-	}
+	auto teams_alive_range =
+		armies_in_teams_alive |
+		enumerate |
+		filter(
+			[](const auto& element) {
+				const auto& [ team_index, armies_alive ] = element;
+				return armies_alive > 0;
+			});
 
+	const std::size_t teams_alive = std::ranges::distance(teams_alive_range);
 	BM_ASSERT_V(teams_alive > 0, -2, "No teams alive after battle, should not be possible");
 
 	if(teams_alive == 1) {
+		const auto last_team_alive_index = std::get<0>(*teams_alive_range.begin());
 		_state = BattleState::FINISHED;
-		return last_team_alive;
+		return last_team_alive_index;
 	}
 
 	return -1;
@@ -673,7 +670,7 @@ int BattleManagerFast::get_winner_team() {
 void BattleManagerFast::_next_army() {
 	int limit = _current_army;
 	do {
-		_current_army = (_current_army+1) % _armies.size();
+		_current_army = (_current_army+1) % _armies.max_size();
 	} while(_armies[_current_army].is_defeated() && _current_army != limit);
 }
 
@@ -682,11 +679,13 @@ void BattleManagerFast::_next_army() {
 #pragma region Mana processing
 
 void BattleManagerFast::_update_mana_target() {
+	BM_ASSERT(not _armies.empty(), "Cannot update mana target when there are no armies");
 	auto [worst_idx, _] = _get_cyclone_worst_and_best_idx();
 	_cyclone_target = worst_idx;
 }
 
 void BattleManagerFast::_update_mana() {
+	BM_ASSERT(not _armies.empty(), "Cannot update mana when there are no armies");
 	auto [worst_idx, best_idx] = _get_cyclone_worst_and_best_idx();
 	_cyclone_target = worst_idx;
 
@@ -706,35 +705,21 @@ void BattleManagerFast::_update_mana() {
 }
 
 std::pair<size_t, size_t> BattleManagerFast::_get_cyclone_worst_and_best_idx() const {
-	int best_idx = -1, worst_idx = -1;
+	if (_armies.empty())
+		return { static_cast<size_t>(-1), static_cast<size_t>(-1) };
 
-	for(unsigned i = 0; i < _armies.size(); i++) {
-		if(!_armies[i].is_defeated()) {
-			worst_idx = i;
-			break;
-		}
-	}
+	// TODO check that same order when mana is equal didn't change
+	auto [ worst, best ] =
+		std::minmax_element(
+			_armies.enumerated().begin(),
+			_armies.enumerated().end(),
+			[](const auto &a, const auto &b) {
+				return a.second.mana_points < b.second.mana_points;
+			});
 
-	for(int i = _armies.size()-1; i >= 0; i--) {
-		if(!_armies[i].is_defeated()) {
-			best_idx = i;
-			break;
-		}
-	}
-
-	for(unsigned i = 0; i < _armies.size(); i++) {
-		if(_armies[i].is_defeated()) {
-			continue;
-		}
-
-		if(_armies[i].mana_points > _armies[best_idx].mana_points) {
-			best_idx = i;
-		}
-
-		if(_armies[i].mana_points < _armies[worst_idx].mana_points) {
-			worst_idx = i;
-		}
-	}
+	const size_t best_idx = (*best).first, worst_idx = (*worst).first;
+	assert(best_idx < _armies.max_size());
+	assert(worst_idx < _armies.max_size());
 	return std::make_pair(worst_idx, best_idx);
 }
 
@@ -776,8 +761,8 @@ void BattleManagerFast::_refresh_legal_moves() {
 				continue;
 			}
 
-			for(unsigned i = 0; i < army.units.size(); i++) {
-				if(army.units[i].status != UnitStatus::DEPLOYING) {
+			for (auto [ i, unit ] : army.units.enumerated()) {
+				if (unit.status != UnitStatus::DEPLOYING) {
 					continue;
 				}
 
@@ -789,11 +774,8 @@ void BattleManagerFast::_refresh_legal_moves() {
 	}
 	else if(_state == BattleState::ONGOING) {
 
-		for(unsigned unit_id = 0; unit_id < army.units.size(); unit_id++) {
-			Unit& unit = army.units[unit_id];
-			if(unit.status != UnitStatus::ALIVE) {
-				continue;
-			}
+		for (auto [ unit_id, unit ] : army.units.enumerated()) {
+			assert(unit.status == UnitStatus::ALIVE);
 
 			for(int side = 0; side < 6; side++) {
 				move.unit = unit_id;
@@ -843,7 +825,7 @@ void BattleManagerFast::_refresh_legal_moves() {
 	}
 	else if(_state == BattleState::SACRIFICE) {
 		move.pos = Position();
-		for(unsigned i = 0; i < army.units.size(); i++) {
+		for(unsigned i = 0; i < army.units.max_size(); i++) {
 			if(army.units[i].status == UnitStatus::ALIVE) {
 				move.unit = i;
 				_moves.push_back(move);
@@ -854,7 +836,7 @@ void BattleManagerFast::_refresh_legal_moves() {
 }
 
 void BattleManagerFast::_spells_append_moves() {
-	for(unsigned i = 0; i < _spells.size(); i++) {
+	for(unsigned i = 0; i < _spells.max_size(); i++) {
 		BattleSpell& spell = _spells[i];
 		if(spell.unit.army != _current_army || !_get_unit(spell.unit).has_value()) {
 			continue;
@@ -966,16 +948,17 @@ void BattleManagerFast::_refresh_heuristically_good_deploy_moves() {
 			continue;
 		}
 
-		for(Unit& enemy : enemy_army.units) {
-			if(enemy.status == UnitStatus::DEPLOYING && enemy.front_symbol().get_bow_force(MovePhase::DASH) > 0) {
-				enemy_has_undeployed_bowman = true;
+		for (Unit &enemy : enemy_army.units) {
+			enemy_has_undeployed_bowman |=
+				enemy.status == UnitStatus::DEPLOYING &&
+				enemy.front_symbol().get_bow_force(MovePhase::DASH) > 0;
+			if (enemy_has_undeployed_bowman)
 				break;
-			}
 		}
 	}
 
 	// Avoid enemy bowman/find free bowman kills
-	for(Move m : get_legal_moves()) {
+	for (Move m : get_legal_moves()) {
 		Unit& unit = army.units[m.unit];
 
 		bool is_bowman = unit.front_symbol().get_bow_force(MovePhase::DASH) > 0;
@@ -985,14 +968,14 @@ void BattleManagerFast::_refresh_heuristically_good_deploy_moves() {
 		// Default - empty tile
 		int move_score = (enemy_has_undeployed_bowman || is_bowman) ? 0 : 1;
 
-		for(unsigned enemy_army_id = 0; enemy_army_id < _armies.size(); enemy_army_id++) {
+		for(unsigned enemy_army_id = 0; enemy_army_id < _armies.max_size(); enemy_army_id++) {
 			Army& enemy_army = _armies[enemy_army_id];
 
 			if(enemy_army.team == army.team) {
 				continue;
 			}
 
-			for(Unit& enemy : enemy_army.units) {
+			for (Unit& enemy : enemy_army.units) {
 				bool can_shoot_enemy	  = unit.front_symbol().protects_against(enemy.front_symbol(), MovePhase::DASH);
 				bool enemy_can_shoot_unit = enemy.front_symbol().protects_against(unit.front_symbol(), MovePhase::DASH);
 
@@ -1062,7 +1045,7 @@ void BattleManagerFast::_append_moves_unit(
 			continue;
 		}
 
-		for(unsigned i = 0; i < other_army.units.size(); i++) {
+		for(unsigned i = 0; i < other_army.units.max_size(); i++) {
 			Unit& unit = other_army.units[i];
 			if(unit.status != UnitStatus::ALIVE || (!include_self && int(i) == uid.unit && army.id == uid.army)) {
 				continue;
@@ -1083,7 +1066,7 @@ void BattleManagerFast::_append_curse_moves_unit(UnitID uid, int8_t spell_id, Te
 			continue;
 		}
 
-		for(unsigned i = 0; i < other_army.units.size(); i++) {
+		for(unsigned i = 0; i < other_army.units.max_size(); i++) {
 			auto& unit = other_army.units[i];
 			if(unit.status != UnitStatus::ALIVE || (!include_self && int(i) == uid.unit && army.id == uid.army)) {
 				continue;
@@ -1099,7 +1082,7 @@ void BattleManagerFast::_append_moves_all_tiles(
 		int8_t spell_id,
 		IncludeImpassable include_impassable) {
 
-	Vector2i dims = _tiles.get_dims();
+	godot::Vector2i dims = _tiles.get_dims();
 	for(int y = 0; y < dims.y; y++) {
 		for(int x = 0; x < dims.x; x++) {
 			auto pos = Position(x,y);
@@ -1118,7 +1101,7 @@ void BattleManagerFast::_append_moves_in_axial_distance(
 		TargetUnitType target_unit_type) {
 
 	Position caster_pos = _get_unit(uid).value().unit.pos;
-	Vector2i dims = _tiles.get_dims();
+	godot::Vector2i dims = _tiles.get_dims();
 	for(int y = 0; y < dims.y; y++) {
 		for(int x = 0; x < dims.x; x++) {
 			auto pos = Position(x,y);
@@ -1252,7 +1235,7 @@ void BattleManagerFast::_move_unit(UnitID id, Position pos) {
 			return;
 		}
 
-		if(size_t(old_army_id) < _armies.size()) {
+		if(size_t(old_army_id) < _armies.max_size()) {
 			_armies[old_army_id].mana_points -= _mana_well_power;
 		}
 
@@ -1293,9 +1276,10 @@ void BattleManagerFast::_kill_unit(UnitID id, UnitID killer_id) {
 
 	_unit_cache[unit.pos] = NO_UNIT;
 	unit.status = UnitStatus::DEAD;
+	assert(not _armies.empty());
 
-	for(unsigned i = 0; i < MAX_ARMIES; i++) {
-		if(_armies[i].team == victim_team) {
+	for (auto [ i, army ] : _armies.enumerated()) {
+		if(army.team == victim_team) {
 			_result.score_lost[i] -= unit.score;
 			_result.total_scores[i] -= unit.score;
 
@@ -1330,14 +1314,16 @@ void BattleManagerFast::_kill_unit(UnitID id, UnitID killer_id) {
 /// to be used only within _kill_unit()
 void BattleManagerFast::_check_blood_curse(int8_t army_id) {
 	Army& army = _armies[army_id];
-	if(army.count_alive_units() == 1) {
-		int8_t idx = -1;
-		for(Unit& unit : army.units) {
-			idx += 1;
-			if (unit.status == UnitStatus::ALIVE && unit.is_effect_active(Unit::FLAG_EFFECT_BLOOD_CURSE)) {
-				_kill_unit(UnitID{army.id, idx}, NO_UNIT);
-			}
-		}
+	assert(army_id == army.id);
+	if (army.count_alive_units() != 1)
+		return;
+	if (_armies.size() <= 1)
+		return;
+	for (auto [ index, unit ] : army.units.enumerated()) {
+		if (unit.is_effect_active(Unit::FLAG_EFFECT_BLOOD_CURSE))
+			continue;
+		_kill_unit(UnitID { army.id, static_cast<int8_t>(index) }, NO_UNIT);
+		return;
 	}
 }
 
@@ -1352,7 +1338,7 @@ bool BattleManagerFast::is_occupied(Position pos, const Army& army, TeamRelation
 		}
 
 		for(const Unit& unit : other_army.units) {
-			if(unit.status == UnitStatus::ALIVE && unit.pos == pos) {
+			if(unit.pos == pos) {
 				return true;
 			}
 		}
@@ -1370,7 +1356,7 @@ void BattleManagerFast::_print_assert(const char* str) {
 
 #pragma region Godot integration
 
-void BattleManagerFastCpp::insert_unit(int army, int idx, Vector2i pos, int rotation, bool is_deploying) {
+void BattleManagerFastCpp::insert_unit(int army, int idx, godot::Vector2i pos, int rotation, bool is_deploying) {
 	CHECK_UNIT(idx,);
 	CHECK_ARMY(army,);
 	bm._armies[army].units[idx].pos = pos;
@@ -1477,7 +1463,7 @@ void BattleManagerFastCpp::force_battle_sacrifice() {
 }
 
 
-godot::Array BattleManagerFastCpp::get_unit_id_on_position(Vector2i pos) const {
+godot::Array BattleManagerFastCpp::get_unit_id_on_position(godot::Vector2i pos) const {
 	godot::Array ret{};
 	auto [army_id, unit_id] = bm._unit_cache.get(pos);
 	ret.push_back(army_id);
@@ -1543,16 +1529,7 @@ inline int BattleManagerFastCpp::get_unit_effect_count(int army, int idx) {
 
 int BattleManagerFastCpp::get_army_passive_count(int army) {
 	CHECK_ARMY(army, 0);
-
-	int i = 0;
-	for(const BattlePassive& passive : bm._armies[army].passives) {
-		if(passive.type != BattlePassive::Type::NONE
-		   && passive.type != BattlePassive::Type::SENTINEL
-		) {
-			i++;
-		}
-	}
-	return i;
+	return bm._armies[army].passives.size();
 }
 
 
@@ -1585,6 +1562,7 @@ void BattleManagerFastCpp::set_cyclone_constants(godot::PackedInt32Array cyclone
 }
 
 void BattleManagerFastCpp::_bind_methods() {
+	using namespace godot;
 	ClassDB::bind_method(D_METHOD("insert_unit", "army", "index", "position", "rotation", "is_deploying"), &BattleManagerFastCpp::insert_unit);
 	ClassDB::bind_method(D_METHOD(
 		"set_unit_symbol_cpp", "army", "unit", "side",
@@ -1642,3 +1620,4 @@ void BattleManagerFastCpp::_bind_methods() {
 
 #pragma endregion Godot integration
 
+}

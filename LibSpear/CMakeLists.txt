@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(libspear CXX C)
 
-set (CMAKE_CXX_STANDARD 20)
+set (CMAKE_CXX_STANDARD 23)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_CXX_EXTENSIONS OFF)
 
@@ -35,6 +35,7 @@ if (NICE_COMPILER)
     "-Werror=cast-qual"
     "-Werror=cast-align"
     "-Werror=return-local-addr"
+    "-Werror=dangling-pointer"
     "-Werror=date-time"
     "-Wno-type-limits"
     "-Wno-unused-parameter"
@@ -53,10 +54,13 @@ if (NICE_COMPILER)
   endif ()
 endif ()
 
-add_subdirectory(godot-cpp        godot-cpp    EXCLUDE_FROM_ALL)
 
-include_directories("${GODOT_GDEXTENSION_DIR}")
-include_directories("src")
+# Godot has lower -Werror settings, so it is necessary
+set(GODOTCPP_SYSTEM_HEADERS ON)
+
+include_directories("godot-cpp/${GODOTCPP_GDEXTENSION_DIR}")
+# include_directories("local-include")
+add_subdirectory(godot-cpp        godot-cpp    EXCLUDE_FROM_ALL)
 
 add_library(libspear SHARED
   src/army.cpp
@@ -68,6 +72,20 @@ add_library(libspear SHARED
   src/unit.cpp
 )
 
+target_include_directories(
+  libspear
+  PUBLIC
+  "src"
+)
+
+target_include_directories(
+  libspear
+  SYSTEM # Godot has lower -Werror settings, so SYSTEM is necessary
+  PUBLIC
+  "${CMAKE_BINARY_DIR}/godot-cpp/gen/include"
+  "godot-cpp/include"
+)
+
 find_package(OpenMP)
 if (OpenMP_CXX_FOUND)
   target_link_libraries(libspear OpenMP::OpenMP_CXX)
@@ -76,9 +94,12 @@ else ()
 endif ()
 
 target_link_libraries(libspear
-  godot::cpp
+  godot-cpp
 )
 
+add_dependencies(libspear
+  generate_bindings
+)
 
 target_compile_options(libspear PUBLIC
   ${SPEAR_COMPILE_OPTIONS}

@@ -4,9 +4,11 @@
 #include <cstdint>
 #include <array>
 
+#include "arraymap.hpp"
 #include "data.hpp"
 #include "constants.hpp"
 
+namespace libspear {
 
 using EffectMask = uint16_t;
 
@@ -14,23 +16,26 @@ struct Effect {
     // A mask of just a single effect
 	EffectMask mask = 0;
 	int8_t counter = 0;
+
+	constexpr explicit operator bool() const noexcept { return mask != 0; }
 };
 
-static const Effect NO_EFFECT = Effect{.mask = 0, .counter = 0};
+static constexpr Effect NO_EFFECT = Effect{.mask = 0, .counter = 0};
 
+static_assert(not NO_EFFECT, "NO_EFFECT must always resolve to false");
 
 struct UnitID {
 	int8_t army;
 	int8_t unit;
 
-	UnitID() : army(-1), unit(-1) {}
-	UnitID(int8_t _army, int8_t _unit) : army(_army), unit(_unit) {}
-	inline bool operator==(const UnitID& other) const {
+	constexpr UnitID() noexcept : army(-1), unit(-1) {}
+	constexpr UnitID(int8_t _army, int8_t _unit) noexcept : army(_army), unit(_unit) {}
+	constexpr bool operator==(const UnitID& other) const noexcept {
 		return army == other.army && unit == other.unit;
 	}
 };
 
-static const UnitID NO_UNIT = UnitID(-1,-1);
+static constexpr UnitID NO_UNIT = UnitID(-1,-1);
 static UnitID _err_return_dummy_uid = UnitID(-1,-1);
 
 
@@ -42,7 +47,11 @@ struct Unit {
 	uint8_t mana = 0;
 	uint16_t flags = 0;
 	std::array<Symbol, 6> sides{};
-	std::array<Effect, MAX_EFFECTS_PER_UNIT> effects{};
+	ArrayMap<Effect, MAX_EFFECTS_PER_UNIT> effects{};
+
+	constexpr operator bool() const noexcept {
+		return status != UnitStatus::DEAD;
+	}
 
 private:
 	UnitID _martyr_id = NO_UNIT;
@@ -64,8 +73,8 @@ public:
     Symbol symbol_when_rotated(int side) const;
     Symbol front_symbol() const;
 
-    bool try_apply_effect(EffectMask mask, uint8_t duration = DEFAULT_EFFECT_DURATION);
-    bool try_apply_martyr(UnitID id, uint8_t duration = DEFAULT_EFFECT_DURATION);
+    bool try_apply_effect(EffectMask mask, int8_t duration = DEFAULT_EFFECT_DURATION);
+    bool try_apply_martyr(UnitID id, int8_t duration = DEFAULT_EFFECT_DURATION);
     void remove_martyr();
     void remove_effects(EffectMask mask);
 
@@ -79,5 +88,6 @@ public:
     int get_effect_duration_counter(EffectMask mask) const;
 };
 
+}
 
 #endif // UNIT_H

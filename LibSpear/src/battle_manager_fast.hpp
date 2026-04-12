@@ -28,9 +28,7 @@
 #define CHECK_UNIT(idx, ret) BM_ASSERT_V(unsigned(idx) < MAX_UNITS_IN_ARMY, ret, "Invalid unit id {}", idx)
 #define CHECK_ARMY(idx, ret) BM_ASSERT_V(unsigned(idx) < MAX_ARMIES, ret, "Invalid army id {}", idx)
 
-
-using godot::Node;
-using godot::Vector2i;
+namespace libspear {
 
 // Internal battle manager class, generally owned by eg. MCTS nodes
 class BattleManagerFast {
@@ -39,10 +37,12 @@ class BattleManagerFast {
 	int8_t _cyclone_target = -1;
 	BattleState _state = BattleState::INITIALIZING;
 	ArmyList _armies{};
-	std::array<BattleSpell, MAX_SPELLS> _spells{};
+	ArrayMap<BattleSpell, MAX_SPELLS> _spells{};
 	TileGridFast _tiles{};
 
+  /// A lookup table mapping mana difference to initial cyclone counter values, set by GDScript
 	std::array<int8_t, 16> _cyclone_counter_values{-1};
+
 	int8_t _mana_well_power = -1;
 
 	BattleResult _result{};
@@ -160,8 +160,8 @@ private:
 			return {};
 		}
 
-		BM_ASSERT_V(unsigned(id.army) < _armies.size(), {}, "Invalid army id {}", id.army);
-		BM_ASSERT_V(unsigned(id.unit) < _armies[id.army].units.size(), {}, "Invalid unit id {}/{}", id.army, id.unit);
+		BM_ASSERT_V(unsigned(id.army) < _armies.max_size(), {}, "Invalid army id {}", id.army);
+		BM_ASSERT_V(unsigned(id.unit) < _armies[id.army].units.max_size(), {}, "Invalid unit id {}/{}", id.army, id.unit);
 
 		return UnitRef{_armies[id.army].units[id.unit], _armies[id.army]};
 	}
@@ -177,8 +177,8 @@ private:
 };
 
 /// Main GDScript-side wrapper class for BattleManagerFast
-class BattleManagerFastCpp : public Node {
-	GDCLASS(BattleManagerFastCpp, Node);
+class BattleManagerFastCpp : public godot::Node {
+	GDCLASS(BattleManagerFastCpp, godot::Node);
 
 	BattleManagerFast bm;
 
@@ -193,7 +193,7 @@ public:
 	int play_move(godot::Array libspear_tuple);
 	int play_moves(godot::Array libspear_tuple_array);
 
-	void insert_unit(int army, int idx, Vector2i pos, int rotation, bool is_deploying);
+	void insert_unit(int army, int idx, godot::Vector2i pos, int rotation, bool is_deploying);
 	void set_army_team(int army, int team);
 	void set_unit_symbol(
 		int army, int unit, int side,
@@ -226,7 +226,7 @@ public:
 	/// Get legal moves in an array of arrays [[unit, position], ...]
 	godot::Array get_legal_moves_gd();
 
-	godot::Array get_unit_id_on_position(Vector2i pos) const;
+	godot::Array get_unit_id_on_position(godot::Vector2i pos) const;
 
 	// Getters, primarily for testing correctness with regular BattleManager
 
@@ -244,9 +244,9 @@ public:
 	int get_army_passive_count(int army);
 	bool is_passive_in_army(int army, godot::String name);
 
-	Vector2i get_unit_position(int army, int unit) const {
+	godot::Vector2i get_unit_position(int army, int unit) const {
 		Position p = bm._armies[army].units[unit].pos;
-		return Vector2i(p.x, p.y);
+		return godot::Vector2i(p.x, p.y);
 	}
 
 	int get_unit_rotation(int army, int unit) const {
@@ -320,5 +320,7 @@ public:
 		bm._print_assert(str);
 	}
 };
+
+}
 
 #endif

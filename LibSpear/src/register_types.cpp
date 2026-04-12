@@ -9,6 +9,9 @@
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
 
+using namespace godot;
+using namespace libspear;
+
 void libspear_initialize(ModuleInitializationLevel level) {
 	if(level != godot::MODULE_INITIALIZATION_LEVEL_SCENE)
 		return;
