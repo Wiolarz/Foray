@@ -1059,7 +1059,10 @@ func is_spell_target_valid(caster : Unit, coord : Vector2i, spell : BattleSpell)
 				BattleSpell.TargetUnitType.ENEMY:
 					if target.army_in_battle.team == caster.army_in_battle.team:
 						return false
-
+			if spell.needs_empty_front_tile:
+				var coord_in_front : Vector2i = GenericHexGrid.adjacent_coord(target.coord, target.unit_rotation)
+				if get_unit(coord_in_front) or not get_hex(coord_in_front).can_be_moved_to:
+					return false
 
 	match spell.name:
 		"Blood Ritual":  # when enemy has more than 1 unit
