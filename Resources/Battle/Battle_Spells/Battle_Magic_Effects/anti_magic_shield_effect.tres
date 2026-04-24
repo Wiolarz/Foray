@@ -1,9 +1,9 @@
-[gd_resource type="Resource" script_class="DataMagicEffect" load_steps=2 format=3 uid="uid://btfc6a86iagel"]
+[gd_resource type="Resource" script_class="DataMagicEffect" format=3 uid="uid://c8t6h3sw3qbrf"]
 
 [ext_resource type="Script" uid="uid://lgbukttoatcv" path="res://Scripts/Battle/data_magic_effect.gd" id="1_8ywxr"]
 
 [resource]
 script = ExtResource("1_8ywxr")
 name = "Anti-Magic Shield"
-icon_path = "uid://c6a8ccgtsa1vy"
+icon_path = "uid://0x4q8xhoscxu"
 passive_effect = true

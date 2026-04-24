@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="BattleSpell" load_steps=3 format=3 uid="uid://bufbdtdw30ux"]
+[gd_resource type="Resource" script_class="BattleSpell" format=3 uid="uid://bl1btmy1hail1"]
 
 [ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="1_fb1sq"]
 [ext_resource type="Script" uid="uid://lgbukttoatcv" path="res://Scripts/Battle/data_magic_effect.gd" id="2_rmrr3"]
@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("1_fb1sq")
 name = "Frenzy"
-icon_path = "uid://brq6uen2d5oi7"
+icon_path = "uid://by0ne8ymseykp"
 description = "Target enemy unit in straight line from the caster is pushed one tile ahead, then perfomrs attacks on both enemy and allies."
 cast_range = 3
 direction_cast = 2
@@ -14,3 +14,4 @@ target_type = 1
 needs_movable_tile = false
 target_unit_type = 2
 not_self = false
+needs_empty_front_tile = false
