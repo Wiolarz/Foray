@@ -6,6 +6,7 @@ extends GenericHexGrid
 
 ## emitted when tile transforms into new one.
 signal tile_changed(coord : Vector2i)
+signal just_summoned_a_unit(coord : Vector2i)
 
 enum MoveConsequences {
 	NONE,
@@ -104,8 +105,10 @@ func move_info_execute(move_info : MoveInfo) -> void:
 	currently_processed_move_info = move_info
 
 	# BMFast integrity check - live testing purposes only
-	var bmfast = BattleManagerFast.from(self)
-	bmfast.check_integrity_before_move(self, move_info)
+	var bmfast : BattleManagerFast = null
+	if CFG.player_options.bmfast_integrity_check_mode != CFG.BMFastIntegrityCheckMode.DISABLE:
+		bmfast = BattleManagerFast.from(self)
+		bmfast.check_integrity_before_move(self, move_info)
 
 	var source_tile_coord := move_info.move_source
 
@@ -147,7 +150,8 @@ func move_info_execute(move_info : MoveInfo) -> void:
 	currently_processed_move_info = null
 
 	# BMFast integrity check contd. - live testing purposes only
-	bmfast.check_integrity_after_move(self)
+	if CFG.player_options.bmfast_integrity_check_mode != CFG.BMFastIntegrityCheckMode.DISABLE:
+		bmfast.check_integrity_after_move(self)
 
 #endregion move_info support
 
@@ -786,16 +790,18 @@ func _perform_dash(unit : Unit, target_tile_coord : Vector2i, power : int = 3) -
 		_kill_unit(unit)
 
 
+## Visible Unit has to be manually added within BM _perform_move_info
 func _summon_a_unit(caster : Unit, summoned_unit : DataUnit, target_tile_coord : Vector2i) -> void:
 	var direction : int = GenericHexGrid.direction_to_adjacent(caster.coord, target_tile_coord)
 	var unit : Unit = caster.army_in_battle.summon_unit(summoned_unit, target_tile_coord, direction)
-
 
 	# Apply summon sickness
 	var success : bool = unit.try_adding_magic_effect(load(CFG.SUMMONING_SICKNESS_PATH))
 	assert(success, "failure to apply summoning sickness effect")
 
 	_put_unit_on_grid(unit, target_tile_coord)
+	## Unit has to be placed on the grid before it can be visually created
+	just_summoned_a_unit.emit(target_tile_coord)  # VISUALS creates UnitForm
 
 
 ## changes coordinates of the unit ONLY (doesn't activate attack or anything like that)
@@ -870,7 +876,10 @@ func _kill_unit(target : Unit, killer_army : ArmyInBattleState = null) -> void:
 		killer_army.killed_units.append(target.level)
 
 		#TODO move this elsewhere so that durability gets lowered by 1 each killing turn regardless of number of killed units
-		for effect in currently_active_unit.effects:
+		var effects = [] # TEMP fix to a bug that prevented using cheats
+		if currently_active_unit:
+			effects = currently_active_unit.effects
+		for effect in effects:
 			if effect.name == "Magic Weapon":
 				effect.magic_weapon_durability -= 1
 				if effect.magic_weapon_durability < 1:
@@ -1050,18 +1059,27 @@ func is_spell_target_valid(caster : Unit, coord : Vector2i, spell : BattleSpell)
 				BattleSpell.TargetUnitType.ENEMY:
 					if target.army_in_battle.team == caster.army_in_battle.team:
 						return false
-
+			if spell.needs_empty_front_tile:
+				var coord_in_front : Vector2i = GenericHexGrid.adjacent_coord(target.coord, target.unit_rotation)
+				if get_unit(coord_in_front) or not get_hex(coord_in_front).can_be_moved_to:
+					return false
 
 	match spell.name:
 		"Blood Ritual":  # when enemy has more than 1 unit
 			var target = get_unit(coord)
 			if target.army_in_battle.alive_not_summoned_units_number() == 1:
 				return false
-	return true
+		"Mirror Image":
+			var copied_unit : Unit = get_unit(coord)
+			var spawn_coord : Vector2i = adjacent_coord(coord, copied_unit.unit_rotation)
+			if get_unit(spawn_coord) or not _get_battle_hex(spawn_coord).can_be_moved_to:
+				return false
+	return true  # All checks have passed
 
 
 ## spell takes an effect
 func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpell) -> void:
+	unit.spells.erase(spell)
 
 	match spell.name:
 		"Vengeance", "Blood Ritual", "Anchor":
@@ -1134,11 +1152,66 @@ func _perform_magic(unit : Unit, target_tile_coord : Vector2i, spell : BattleSpe
 				var target : Unit = get_unit(tile_coord)
 				if target:
 					target.try_adding_magic_effect(load(CFG.BURNING_PATH))
+		"Mirror Image":
+			var copied_unit : Unit = get_unit(target_tile_coord)
+			var spawn_coord : Vector2i = adjacent_coord(target_tile_coord, unit.unit_rotation)
+			_summon_a_unit(copied_unit, copied_unit.template, spawn_coord)  # TODO check why passing not adjacent unit, causes errors which aren't printed
+			var summoned_unit : Unit = get_unit(spawn_coord)
+			summoned_unit.spells = copied_unit.spells.duplicate()
+			summoned_unit.effects.append_array(copied_unit.effects.duplicate())
+
+			for i : int in range(summoned_unit.effects.size() - Unit.MAX_EFFECTS_PER_UNIT):
+				summoned_unit.effects.pop_back()
+
+			var skip_summoning_sickness : bool = true
+			for effect : MagicEffect in summoned_unit.effects:
+				if skip_summoning_sickness:
+					skip_summoning_sickness = false
+					continue
+				summoned_unit.unit_magic_effect.emit(effect)
+		"Stone Pillar":
+			var enemy_targets : Array[Unit] = []
+			var ally_targets : Array[Unit] = []
+			for direction in DIRECTION_TO_OFFSET:
+				var target := get_unit(target_tile_coord + direction)
+				if target and target.army_in_battle.team == unit.army_in_battle.team:
+					ally_targets.append(target)
+				elif target:
+					enemy_targets.append(target)
+
+			for enemy_unit in enemy_targets: # kill enemy units first
+				_push_enemy(enemy_unit, GenericHexGrid.direction_to_adjacent(target_tile_coord, enemy_unit.coord), 3)
+
+			# we only start killing ally units after we are sure battle didn't end yet
+			if not battle_is_ongoing():
+				return
+
+			var priority_enemy_army : ArmyInBattleState = _find_proper_exp_winner(unit.army_in_battle.team)
+
+			for ally_unit in ally_targets: # kill rest
+				_push_enemy(ally_unit, GenericHexGrid.direction_to_adjacent(target_tile_coord, ally_unit.coord), 3)
+		"Frenzy":
+			var enemy : Unit = get_unit(target_tile_coord)
+			_push_enemy(enemy, enemy.unit_rotation, 1) # would die to our spears here
+
+			## TODO refactor swift attacks check for special cases, replace bool with enum
+			_process_offensive_symbols(enemy, E.MoveType.SPECIAL, false)
+			_process_offensive_symbols(enemy, E.MoveType.SPECIAL, true)
+			var enemy_army : ArmyInBattleState = enemy.army_in_battle
+			enemy.army_in_battle = unit.army_in_battle
+			_process_offensive_symbols(enemy, E.MoveType.SPECIAL, true)
+			_process_offensive_symbols(enemy, E.MoveType.SPECIAL, false)
+			enemy.army_in_battle = enemy_army
+		"Anti-Magic Shield":
+			var target : Unit = get_unit(target_tile_coord)
+			target.effects = []
+			spell.cast_effect(target, "casting")
+			spell.cast_effect(target, "secondary_casting") # TEMP 2x cast to mocup effect of blocking addition of new spells
 		_:
 			printerr("Spell perform not supported: ", spell.name)
 			return
 
-	unit.spells.erase(spell) # Remove to test casting multiple times
+
 
 
 ## spell effects that occur after allmove related event already took place [br]

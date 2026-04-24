@@ -106,6 +106,10 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 			player.bot_engine.battle_id = _replay_battle_id
 
 	# GRAPHICS GRID:
+	_battle_grid_state.just_summoned_a_unit.connect(func(spawn_coord : Vector2i):
+		_on_unit_deployment(_battle_grid_state.get_unit(spawn_coord))
+		)
+
 	_battle_grid_state.tile_changed.connect(change_tile_sprite)
 	_grid_tiles_node.position.x = x_offset
 	horizontal_offset = x_offset
@@ -727,12 +731,6 @@ func _perform_move_info(move_info : MoveInfo) -> void:
 	match move_info.move_type:
 		MoveInfo.TYPE_MOVE, MoveInfo.TYPE_SACRIFICE, MoveInfo.TYPE_MAGIC:
 			_battle_grid_state.move_info_execute(move_info)
-
-			# TODO verify if it's a good enough solution for summoning units
-			# as it's hard to create new visible units within battle grid state
-			if move_info.move_type == MoveInfo.TYPE_MAGIC and move_info.spell.name in ["Summon Dryad"]:
-				_on_unit_deployment(_battle_grid_state.get_unit(move_info.target_tile_coord))
-
 
 		MoveInfo.TYPE_DEPLOY:
 			var unit : Unit = _battle_grid_state.move_info_deploy_unit(move_info)

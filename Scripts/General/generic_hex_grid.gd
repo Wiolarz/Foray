@@ -17,7 +17,7 @@ const DIRECTION_FRONT = GridDirections.LEFT
 const TILES_NOT_ADJACENT = -1
 const COORD_NOT_EXIST := Vector2i(INT_MIN, INT_MIN)
 
-## see E.GridDirections
+## see GridDirections
 const DIRECTION_TO_OFFSET = [ \
 	Vector2i(-1, 0),
 	Vector2i(0, -1),
@@ -101,6 +101,7 @@ static func direction_to_adjacent(coord1 : Vector2i, coord2 : Vector2i) -> int:
 	return DIRECTION_TO_OFFSET.find(coord2 - coord1)
 
 
+## DIRECTION_TO_OFFSET uses E.GridDirections
 static func adjacent_coord(coord : Vector2i, side : int) -> Vector2i:
 	return coord + DIRECTION_TO_OFFSET[side]
 

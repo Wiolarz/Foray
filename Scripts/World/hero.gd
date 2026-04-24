@@ -110,6 +110,7 @@ func move(target : TileForm):
 
 
 func add_xp(gained_xp : int) -> void:
+	## when using cheat force win before units are placed no EXP will be awarded
 	if gained_xp <= 0:
 		return
 	xp += gained_xp

@@ -72,7 +72,8 @@ func does_it_shoot() -> bool:
 ## does activate at this action type and does it deal damage or pushes
 func is_offensive(action_type : E.MoveType) -> bool:
 	if (action_type == E.MoveType.TURN and activate_turn) or \
-	   (action_type == E.MoveType.MOVE and activate_move):
+	   (action_type == E.MoveType.MOVE and activate_move) or \
+	   (action_type == E.MoveType.SPECIAL):
 		return attack_power > 0 or push_power > 0
 	else:
 		return false

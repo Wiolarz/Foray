@@ -43,6 +43,7 @@ var needs_movable_tile : bool = false
 
 var target_unit_type := TargetUnitType.ANY
 var not_self : bool = false
+var needs_empty_front_tile : bool = false
 
 
 ## Dic[String, Variant]
@@ -52,9 +53,12 @@ func _get_property_list() -> Array[Dictionary]:
 	var not_self_property = PROPERTY_USAGE_NO_EDITOR
 	var tile_properties = PROPERTY_USAGE_NO_EDITOR
 	var unit_properties = PROPERTY_USAGE_NO_EDITOR
+	var needs_empty_front_tile_property = PROPERTY_USAGE_NO_EDITOR
 
+	## Define when hidden entires are revealed
 	if target_type == TargetType.UNIT:
 		unit_properties = PROPERTY_USAGE_DEFAULT
+		needs_empty_front_tile_property = PROPERTY_USAGE_DEFAULT
 
 	if target_type == TargetType.EMPTY_TILE:
 		tile_properties = PROPERTY_USAGE_DEFAULT
@@ -78,6 +82,7 @@ func _get_property_list() -> Array[Dictionary]:
 	target_unit_types_string = target_unit_types_string.trim_suffix(",")
 	#print(target_unit_types_string)
 
+	## Generate export entires
 	properties.append({
 		"name": "target_unit_type",
 		"type": TYPE_INT,
@@ -85,12 +90,15 @@ func _get_property_list() -> Array[Dictionary]:
 		"hint": PROPERTY_HINT_ENUM,
 		"hint_string": target_unit_types_string,
 	})
-
-
 	properties.append({
 		"name": "not_self",
 		"type": TYPE_BOOL,
-		"usage": not_self_property, # See above assignment.
+		"usage": not_self_property,
+	})
+	properties.append({
+		"name": "needs_empty_front_tile",
+		"type": TYPE_BOOL,
+		"usage": needs_empty_front_tile_property,
 	})
 
 	return properties
@@ -137,6 +145,8 @@ func generate_description() -> String:
 					result += "Target has to be a unit\n"
 					if not_self:
 						result += "Caster cannot target himself\n"
+			if needs_empty_front_tile:
+				result += "Target Unit needs a free tile in front of it\n"
 
 	return result
 
@@ -157,9 +167,12 @@ func enchanted_unit_dies() -> void:
 ## each new effects needs to be addded here
 func cast_effect(target : Unit, event_type : String) -> void:
 	match name:
-		"Vengeance", "Blood Ritual", "Martyr", "Anchor":
+		"Vengeance", "Blood Ritual", "Martyr", "Anchor", "Anti-Magic Shield":
 			if event_type == "casting":
 				target.try_adding_magic_effect(spell_effects[0])
+			elif event_type == "secondary_casting":
+				target.try_adding_magic_effect(spell_effects[1])
+
 
 
 static func get_network_id(spell : BattleSpell) -> String:

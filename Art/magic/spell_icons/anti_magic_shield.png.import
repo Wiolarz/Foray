@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dlmo40btjli6q"
-path="res://.godot/imported/foray_battle_screenshot.png-01116dd55e428aecd6b9a5b78439439e.ctex"
+uid="uid://0x4q8xhoscxu"
+path="res://.godot/imported/anti_magic_shield.png-8bc3642facb029b1ca6e18dae13e0224.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Documentation/Documentation_Images/foray_battle_screenshot.png"
-dest_files=["res://.godot/imported/foray_battle_screenshot.png-01116dd55e428aecd6b9a5b78439439e.ctex"]
+source_file="res://Art/magic/spell_icons/anti_magic_shield.png"
+dest_files=["res://.godot/imported/anti_magic_shield.png-8bc3642facb029b1ca6e18dae13e0224.ctex"]
 
 [params]
 
@@ -22,8 +22,8 @@ compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
-compress/channel_pack=1
-mipmaps/generate=false
+compress/channel_pack=0
+mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="BattleSpell" format=3 uid="uid://bwlhgfsg2uq37"]
+
+[ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="1_ht5vn"]
+[ext_resource type="Script" uid="uid://lgbukttoatcv" path="res://Scripts/Battle/data_magic_effect.gd" id="2_40shf"]
+
+[resource]
+script = ExtResource("1_ht5vn")
+name = "Mirror Image"
+icon_path = "uid://cqjfk005jkgko"
+description = "Choose an ally unit with an empty spot in front of it.
+Creates an exact copy of that unit in front of it which will dissapear in 6 turns."
+target_type = 1
+needs_movable_tile = false
+target_unit_type = 1
+not_self = false
+needs_empty_front_tile = true
