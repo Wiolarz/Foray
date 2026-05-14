@@ -358,6 +358,10 @@ const CHESS_CLOCK_BATTLE_TURN_INCREMENT_MS = 2 * 1000
 
 #region Debugging & tests
 
+## RES singleton ready, loads all art assets upon game start, to make gameplay experience smoother
+## but its problematic for testing
+const LOAD_ART_ASSETS_ON_GAME_STARTUP : bool = true
+
 enum BMFastIntegrityCheckMode {
 	ASSERT = 1,
 	NOTIFY_ON_CHAT = 2,
