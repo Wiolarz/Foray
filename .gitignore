@@ -18,6 +18,7 @@ mono_crash.*.json
 /.vscode
 
 #GDExtension
+LibSpear/godot-cpp
 LibSpear/.sconsign.dblite
 LibSpear/compile_commands.json
 LibSpear/src/**.os
