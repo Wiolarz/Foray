@@ -1,14 +1,14 @@
-class_name PlayerSlotPanel
+@abstract class_name PlayerSlotPanel
 extends PanelContainer
 
 enum TakeLeaveButtonState {
 	FREE,
 	TAKEN_BY_YOU,
 	TAKEN_BY_OTHER,
-	GHOST, # state when we display too much slots
+	GHOST, # state when we display too much slots #TODO currently unused STUB awaits refactor changing deleting slots to just hiding them.
 }
 
-var setup_ui # BattleSetup
+var setup_ui : GameModeSetup
 
 
 var button_take_leave_state : TakeLeaveButtonState = TakeLeaveButtonState.FREE
@@ -35,6 +35,15 @@ var battle_bots_paths : Array[String]
 #region Init
 
 func _ready() -> void:
+	_pre_ready_init()
+	_ready_init()
+
+
+@abstract func _pre_ready_init() -> void
+
+
+func _ready_init() -> void:
+	assert(button_battle_bot)
 	battle_bots_paths = FileSystemHelpers.list_files_in_folder(CFG.BATTLE_BOTS_PATH, true, true)
 	init_battle_bots_button()
 
@@ -44,6 +53,13 @@ func init_battle_bots_button():
 	for battle_bot_name in battle_bots_paths:
 		button_battle_bot.add_item(battle_bot_name.trim_prefix(CFG.BATTLE_BOTS_PATH))
 	button_battle_bot.item_selected.connect(battle_bot_changed)
+
+
+func init_team_list(max_player_number : int) -> void:
+	team_list.clear()
+	team_list.add_item("No Team")
+	for idx in range(1, max_player_number + 1):
+		team_list.add_item("Team " + str(idx))
 
 
 func fill_team_list(max_player_number : int) -> void:
@@ -150,7 +166,7 @@ func timer_changed(_value) -> void:
 		NET.client.queue_lobby_set_timer(slot_index, seconds_reserve, int(battle_timer_increment_seconds.value))
 
 
-func set_visible_timers(reserve : int, increment : int):
+func set_visible_timers(reserve : int, increment : int) -> void:
 	var reserve_minutes := int(reserve / 60)
 	var reserve_seconds := reserve % 60
 	battle_timer_reserve_minutes.value = reserve_minutes

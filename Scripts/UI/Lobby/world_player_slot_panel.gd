@@ -12,15 +12,13 @@ var races_paths : Array[String]
 
 #region Init
 
-func _ready():
+func _pre_ready_init() -> void:
 	button_battle_bot = get_node("GeneralVContainer/TopBarHContainer/OptionButtonBattleBot")
 
 	world_bots_paths = FileSystemHelpers.list_files_in_folder(CFG.WORLD_BOTS_PATH, true, true)
 	init_world_bots_button()
 
 	init_race_button()
-
-	super()
 
 
 func init_world_bots_button():
@@ -30,11 +28,16 @@ func init_world_bots_button():
 	button_world_bot.item_selected.connect(world_bot_changed)
 
 
-func init_race_button():
+func init_race_button(race_lock : DataRace = null):
 	button_race.clear()
-	for race in CFG.RACES_LIST:
-		button_race.add_item(race.race_name)
-	button_race.item_selected.connect(race_changed)
+	if not race_lock:
+		for race in CFG.RACES_LIST:
+			button_race.add_item(race.race_name)
+		if not button_race.item_selected.is_connected(race_changed):
+			button_race.item_selected.connect(race_changed)
+	else:
+		button_race.add_item(race_lock.race_name)
+		race_changed(CFG.RACES_LIST.find(race_lock))
 
 #endregion Init
 

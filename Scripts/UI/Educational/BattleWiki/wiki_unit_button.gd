@@ -14,4 +14,4 @@ func load_unit(unit_ : DataUnit) -> void:
 
 		get_node("Label").text = unit.unit_name.capitalize()
 
-		texture_normal = load(unit.texture_path)
+		texture_normal = RES.load(unit.texture_path)

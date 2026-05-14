@@ -1,13 +1,13 @@
 # Singleton - UI
 extends Node
 
-var main_menu
-var ui_overlay
-var map_editor
-var unit_editor
-var tile_editor
-var host_lobby
-var client_lobby
+@onready var main_menu   : CanvasLayer = $MainMenu	 # Scripts\UI\main_menu.gd
+@onready var ui_overlay  : CanvasLayer = $UIOverlay	 # Scripts\UI\ui_overlay.gd
+@onready var map_editor  : CanvasLayer = $MapEditor 	 # Scripts\Development\map_editor.gd
+@onready var unit_editor : ResourceEditor = $UnitEditor # Scripts\Development\unit_editor.gd
+@onready var tile_editor : ResourceEditor = $TileEditor # Scripts\Development\tile_editor.gd
+@onready var battle_ui	: BattleUI = $BattleUI		 # Scripts\UI\battle_ui.gd
+@onready var world_ui	: WorldUI = $WorldUI		 # Scripts\UI\world_ui.gd
 
 var camera : PolyCamera
 var current_camera_position = E.CameraPosition.WORLD
@@ -18,29 +18,7 @@ signal resources_list_changed()
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
-	IM.init_game_setup() # drut
-
-	main_menu    = load("res://Scenes/UI/MainMenu.tscn").instantiate()
-	ui_overlay   = load("res://Scenes/UI/UIOverlay.tscn").instantiate()
-	map_editor   = load("res://Scenes/UI/Editors/MapEditor.tscn").instantiate()
-	unit_editor  = load("res://Scenes/UI/Editors/UnitEditor.tscn").instantiate()
-	tile_editor  = load("res://Scenes/UI/Editors/TileEditor.tscn").instantiate()
-
-	add_child(main_menu)
-	add_child(map_editor)
-	add_child(unit_editor)
-	add_child(tile_editor)
-	add_child(ui_overlay)
-
 	_hide_all()
-
-
-func add_custom_screen(custom_ui : CanvasLayer):
-	add_child(custom_ui)
-	custom_ui.hide()
-	# we need them always at the top
-	if ui_overlay:
-		move_child(ui_overlay, -1)
 
 
 func go_to_custom_ui(custom_ui : CanvasLayer):

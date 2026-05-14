@@ -24,13 +24,13 @@ buses/default_bus_layout="res://Audio/default_bus_layout.tres"
 
 AUDIO="*res://Scenes/AudioManager.tscn"
 CFG="*res://Scripts/General/config_manager.gd"
+IM="*res://Scripts/General/input_manager.gd"
 BG="*res://Scripts/UI/background.gd"
 WS="*res://Scripts/World/world_state.gd"
-WM="*res://Scripts/World/world_manager.gd"
-BM="*res://Scripts/Battle/battle_manager.gd"
-IM="*res://Scripts/General/input_manager.gd"
+WM="*res://Scenes/Singletons/WorldManager.tscn"
+BM="*res://Scenes/Singletons/BattleManager.tscn"
 NET="*res://Scripts/Multiplayer/NET_manager.gd"
-UI="*res://Scripts/UI/ui_manager.gd"
+UI="*res://Scenes/Singletons/UIManager.tscn"
 ANIM="*res://Scripts/General/animation_manager.gd"
 DISCORD="*res://Scripts/General/discord_manager.gd"
 RES="*res://Scripts/General/resource_manager.gd"
@@ -56,7 +56,7 @@ export/convert_text_resources_to_binary=false
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/discord-rpc-gd/plugin.cfg", "res://addons/gut/plugin.cfg")
+enabled=PackedStringArray("res://addons/discord-rpc-gd/plugin.cfg")
 
 [file_customization]
 

@@ -1,4 +1,4 @@
-class_name CityUi
+class_name CityUI
 extends Control
 
 signal purchased_hero  # Hero list UI Update

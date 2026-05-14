@@ -4,6 +4,9 @@ extends Control
 """
 Manager scripts that displays specific UI
 """
+#TODO verify if current architecture is viable for extension of lobby features
+## IF NOT - complete redesign of this part
+## IF IT IS - create a parent class for HostMenu and ClientMenu
 
 var server_creator_scene : PackedScene = load("res://Scenes/UI/Lobby/Network/ServerCreator.tscn")
 

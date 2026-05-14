@@ -10,7 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://ebi38vgpupvv" path="res://Art/magic/spell_icons/blood_curse.png" id="10_wc1uh"]
 [ext_resource type="Texture2D" uid="uid://bb4666jfdo51l" path="res://Art/magic/spell_icons/fireball.png" id="11_f0tx3"]
 
-[node name="WorldUi" type="CanvasLayer"]
+[node name="WorldUI" type="CanvasLayer"]
 script = ExtResource("1_50wj5")
 
 [node name="Menu" type="Button" parent="."]
@@ -95,7 +95,7 @@ offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="CityUi" parent="." instance=ExtResource("4_r7awa")]
+[node name="CityUI" parent="." instance=ExtResource("4_r7awa")]
 
 [node name="GameChat" parent="." instance=ExtResource("5_kbxi4")]
 

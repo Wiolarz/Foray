@@ -1853,8 +1853,8 @@ class ArmyInBattleState:
 	## time to add when turn ends
 	var turn_increment_ms = CFG.CHESS_CLOCK_BATTLE_TURN_INCREMENT_MS
 
-	static func _apply_hero_passives(hero_unit : Unit, hero : Hero) -> void:
-		for passive_effect in hero.passive_effects:
+	static func _apply_hero_passives(hero_unit : Unit, new_hero : Hero) -> void:
+		for passive_effect in new_hero.passive_effects:
 			if not passive_effect:  # TEMP null check until all pasives in level_up_screen are present
 				continue
 			match passive_effect.passive_name:
@@ -2009,9 +2009,7 @@ class ArmyInBattleState:
 
 
 	func deploy_unit(unit_idx : int, coord : Vector2i, rotation : int) -> Unit:
-		var player = IM.get_player_by_index(army_reference.controller_index)
-
-		var result = units_to_deploy[unit_idx]
+		var result : Unit = units_to_deploy[unit_idx]
 		result.coord = coord
 		result.unit_rotation = rotation
 		units_to_deploy.erase(result)

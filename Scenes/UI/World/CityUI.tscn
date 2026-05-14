@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://o6bqg4cakk2b" path="res://Scripts/UI/city_ui.gd" id="1_f0888"]
 
-[node name="CityUi" type="Control"]
+[node name="CityUI" type="Control"]
 layout_mode = 3
 anchors_preset = 2
 anchor_top = 1.0
@@ -203,10 +203,10 @@ text = "Recruit Heroes"
 layout_mode = 2
 text = "Recruit Units"
 
-[node name="ShowBuildUi" type="Button" parent="OpenButtons"]
+[node name="ShowBuildUI" type="Button" parent="OpenButtons"]
 layout_mode = 2
 text = "Buildings"
 
 [connection signal="pressed" from="OpenButtons/ShowRecruitHeroesUI" to="." method="_on_show_recruit_heroes_ui_pressed"]
 [connection signal="pressed" from="OpenButtons/ShowRecruitUnitsUI" to="." method="_on_show_recruit_units_ui_pressed"]
-[connection signal="pressed" from="OpenButtons/ShowBuildUi" to="." method="_on_show_build_ui_pressed"]
+[connection signal="pressed" from="OpenButtons/ShowBuildUI" to="." method="_on_show_build_ui_pressed"]

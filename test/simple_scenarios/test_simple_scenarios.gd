@@ -6,9 +6,9 @@ const WORLD_MODE_BUTTON_PATH = "/root/UI/MainMenu/MainContainer/HostLobby/HostMe
 const START_GAME_BUTTON_PATH = "/root/UI/MainMenu/MainContainer/HostLobby/HostMenu/" + \
 		"PanelContainer/GameSetup/MarginContainer/VBoxContainer/ButtonConfirm"
 
-const WORLD_UI_PATH = "/root/UI/WorldUi"
+const WORLD_UI_PATH = "/root/UI/WorldUI"
 const DEFAULT_MAP_TILES_COUNT = 12*8
-const OPEN_IN_GAME_MENU_PATH = "/root/UI/WorldUi/Menu"
+const OPEN_IN_GAME_MENU_PATH = "/root/UI/WorldUI/Menu"
 const IN_GAME_MENU_PATH = "/root/UI/InGameMenu"
 const IN_GAME_MENU_BACK_TO_MAIN_MENU_PATH = "/root/UI/InGameMenu/MenuContainer/ReturnToMainMenu"
 

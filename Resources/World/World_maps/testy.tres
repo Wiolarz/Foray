@@ -1,0 +1,74 @@
+[gd_resource type="Resource" script_class="DataWorldMap" load_steps=17 format=3]
+
+[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_jw4ol"]
+[ext_resource type="Script" path="res://Resources/Races/data_race.gd" id="2_i0tlq"]
+[ext_resource type="Resource" path="res://Resources/Races/cyclops.tres" id="3_py1jq"]
+[ext_resource type="Resource" path="res://Resources/Races/dwarves.tres" id="4_a6o5c"]
+[ext_resource type="Script" path="res://Resources/World/data_world_map.gd" id="5_vbcd0"]
+
+[sub_resource type="Resource" id="Resource_51g16"]
+script = ExtResource("1_jw4ol")
+type = "WALL"
+texture_path = "res://Art/world_map/mountains.png"
+
+[sub_resource type="Resource" id="Resource_xqjrr"]
+script = ExtResource("1_jw4ol")
+type = "outpost wood"
+texture_path = "res://Art/world_map/outpost_wood.png"
+
+[sub_resource type="Resource" id="Resource_w5dor"]
+script = ExtResource("1_jw4ol")
+type = "EMPTY"
+texture_path = "res://Art/world_map/world_grass_hill.png"
+
+[sub_resource type="Resource" id="Resource_oh67k"]
+script = ExtResource("1_jw4ol")
+type = "outpost iron"
+texture_path = "res://Art/world_map/outpost_iron.png"
+
+[sub_resource type="Resource" id="Resource_7fn5d"]
+script = ExtResource("1_jw4ol")
+type = "city 1 4"
+texture_path = "res://Art/world_map/city_any.png"
+
+[sub_resource type="Resource" id="Resource_si7aw"]
+script = ExtResource("1_jw4ol")
+type = "hunt_spot iron"
+texture_path = "res://Art/world_map/hunt_iron.png"
+
+[sub_resource type="Resource" id="Resource_gaad5"]
+script = ExtResource("1_jw4ol")
+type = "hunt_spot wood"
+texture_path = "res://Art/world_map/hunt_wood.png"
+
+[sub_resource type="Resource" id="Resource_b5r60"]
+script = ExtResource("1_jw4ol")
+type = "hunt_spot ruby"
+texture_path = "res://Art/world_map/hunt_ruby.png"
+
+[sub_resource type="Resource" id="Resource_3vu3n"]
+script = ExtResource("1_jw4ol")
+type = "outpost ruby"
+texture_path = "res://Art/world_map/outpost_ruby.png"
+
+[sub_resource type="Resource" id="Resource_adlhl"]
+script = ExtResource("1_jw4ol")
+type = "city 3 5"
+texture_path = "res://Art/world_map/city_any.png"
+
+[sub_resource type="Resource" id="Resource_6i6d5"]
+script = ExtResource("1_jw4ol")
+type = "city 2 0"
+texture_path = "res://Art/world_map/city_any.png"
+
+[resource]
+script = ExtResource("5_vbcd0")
+player_slots = Dictionary[int, ExtResource("2_i0tlq")]({
+1: ExtResource("3_py1jq"),
+2: null,
+3: ExtResource("4_a6o5c")
+})
+max_player_number = 3
+grid_width = 12
+grid_height = 8
+grid_data = [[SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16")], [SubResource("Resource_51g16"), SubResource("Resource_xqjrr"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_oh67k"), SubResource("Resource_51g16")], [SubResource("Resource_51g16"), SubResource("Resource_w5dor"), SubResource("Resource_7fn5d"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_51g16"), SubResource("Resource_w5dor"), SubResource("Resource_51g16")], [SubResource("Resource_51g16"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_si7aw"), SubResource("Resource_w5dor"), SubResource("Resource_51g16"), SubResource("Resource_51g16")], [SubResource("Resource_51g16"), SubResource("Resource_gaad5"), SubResource("Resource_w5dor"), SubResource("Resource_51g16"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_51g16")], [SubResource("Resource_51g16"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_b5r60"), SubResource("Resource_51g16"), SubResource("Resource_w5dor"), SubResource("Resource_3vu3n"), SubResource("Resource_51g16")], [SubResource("Resource_51g16"), SubResource("Resource_3vu3n"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_b5r60"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_51g16")], [SubResource("Resource_51g16"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_51g16"), SubResource("Resource_w5dor"), SubResource("Resource_gaad5"), SubResource("Resource_51g16")], [SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_w5dor"), SubResource("Resource_si7aw"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_51g16")], [SubResource("Resource_51g16"), SubResource("Resource_adlhl"), SubResource("Resource_51g16"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_6i6d5"), SubResource("Resource_w5dor"), SubResource("Resource_51g16")], [SubResource("Resource_51g16"), SubResource("Resource_oh67k"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_w5dor"), SubResource("Resource_xqjrr"), SubResource("Resource_51g16")], [SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16"), SubResource("Resource_51g16")]]

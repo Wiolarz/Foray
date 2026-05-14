@@ -7,6 +7,15 @@ extends Node
 var _cache := {}
 
 
+func _ready():
+	if not CFG.LOAD_ART_ASSETS_ON_GAME_STARTUP:
+		return
+	var all_art_files = FileSystemHelpers.list_files_in_folder("res://Art/", true, true)
+	for art_asset_path in all_art_files:
+		if art_asset_path.ends_with(".png"):
+			RES.load(art_asset_path)
+
+
 ## Load a resource (eg. texture) and manage it here (prefer RES.load() over plain load())
 func load(path: String):
 	# Even when there's already a resource in _cache, we don't need to fetch them from there -
@@ -15,5 +24,5 @@ func load(path: String):
 	return _cache[path]
 
 ## Load a resource in background so that it's ready for the next [RES.] load()
-func prepare_load(path: String):
-	assert(false, "TODO")
+func prepare_load(_path: String):
+	assert(false, "feature not done yet") # TODO

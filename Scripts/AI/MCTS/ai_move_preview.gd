@@ -12,7 +12,8 @@ var mutex := Mutex.new()
 var update_markers := false
 var run_mcts := false
 
-var move_scores_raw : Dictionary[MoveInfo, float]
+##[MoveInfo, float]
+var move_scores_raw : Dictionary
 var min_score := 0.0
 var max_score := 1.0
 

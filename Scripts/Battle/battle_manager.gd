@@ -12,7 +12,6 @@ var _unit_forms_node : Node2D # parent for units VISUAL
 var _border_node : Node2D # parent for border tiles VISUAL
 var _move_highlights_node : Node2D
 
-var _battle_ui : BattleUI
 var latest_ai_cancel_token : CancellationToken
 
 var _current_summary : DataBattleSummary = null
@@ -40,8 +39,6 @@ signal move_animation_done()
 
 func _ready():
 	## Order of nodes determines their visibility, lower ones are on top of the previous ones.
-	_battle_ui = load("res://Scenes/UI/BattleUi.tscn").instantiate()
-
 	_grid_tiles_node = Node2D.new()
 	_grid_tiles_node.name = "GRID"
 	add_child(_grid_tiles_node)
@@ -56,8 +53,6 @@ func _ready():
 	_move_highlights_node = Node2D.new()
 	_move_highlights_node.name = "MOVE_HIGHLIGHTS"
 	add_child(_move_highlights_node)
-
-	UI.add_custom_screen(_battle_ui)
 
 
 func _process(_delta):
@@ -89,7 +84,7 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 		_replay_data.save()
 
 	UI.ensure_camera_is_spawned()
-	UI.go_to_custom_ui(_battle_ui)
+	UI.go_to_custom_ui(UI.battle_ui)
 
 	_battle_is_ongoing = true
 
@@ -114,7 +109,7 @@ func start_battle(new_armies : Array[Army], battle_map : DataBattleMap, \
 	_grid_tiles_node.position.x = x_offset
 	horizontal_offset = x_offset
 	_load_map(battle_map)
-	_battle_ui.load_armies(_battle_grid_state.armies_in_battle_state)
+	UI.battle_ui.load_armies(_battle_grid_state.armies_in_battle_state)
 
 	if battle_state: # recreate state if present
 		_batch_mode = true
@@ -249,9 +244,9 @@ func _on_turn_started(player : Player) -> void:
 		var current_event := BattleEventDescription.generate_current_battle_event(_battle_grid_state)
 		_scripted_battle.show_text_bubbles(current_event)
 
-	_battle_ui.start_player_turn(_battle_grid_state.current_army_index)
+	UI.battle_ui.start_player_turn(_battle_grid_state.current_army_index)
 	if _replay_is_playing:
-		_battle_ui.update_replay_controls(_replay_move_counter, _replay_number_of_moves)
+		UI.battle_ui.update_replay_controls(_replay_move_counter, _replay_number_of_moves)
 
 	if not player:
 		print("uncontrolled army's turn")
@@ -271,7 +266,9 @@ func _on_turn_started(player : Player) -> void:
 		var battle_id = bot.battle_id
 
 		var thinking_begin_s = Time.get_ticks_msec() / 1000.0
+		@warning_ignore_start("redundant_await") # GODOT MOMENT
 		var move = await bot.choose_move(_battle_grid_state)
+		@warning_ignore_restore("redundant_await")
 		await _ai_thinking_delay(thinking_begin_s) # moving too fast feels weird
 
 		if is_instance_valid(bot): # it may have been destroyed after thinking delay
@@ -312,7 +309,7 @@ func undo() -> void:
 	# VISUALS
 	for unit in revived_units:
 		_on_unit_deployment(unit)  # revive
-	_battle_ui.refresh_after_undo(_battle_grid_state.is_during_deployment_phase())
+	UI.battle_ui.refresh_after_undo(_battle_grid_state.is_during_deployment_phase())
 	_end_move()
 	ANIM.fast_forward()
 
@@ -352,7 +349,7 @@ func grid_input(coord : Vector2i) -> void:
 		BattleGridState.STATE_DEPLOYMENT:
 			move_info = _grid_input_deployment(coord)
 		BattleGridState.STATE_FIGHTING:
-			if _battle_ui.selected_spell == null:
+			if UI.battle_ui.selected_spell == null:
 				move_info = _grid_input_fighting(coord)
 			else:
 				move_info = _grid_input_magic(coord)
@@ -403,7 +400,7 @@ func _end_move() -> void:
 		if _ai_move_preview:
 			_ai_move_preview.update(_battle_grid_state)
 
-		_battle_ui.update_mana() # TEMP placement here
+		UI.battle_ui.update_mana() # TEMP placement here
 		_on_turn_started(_battle_grid_state.get_current_player())
 	else:
 		_on_battle_ended()
@@ -458,7 +455,7 @@ func _on_unit_deployment(unit : Unit) -> void:
 	form.global_position = get_tile_global_position(unit.coord)
 
 	var is_deployment_phase_over : bool = not _battle_grid_state.is_during_deployment_phase()
-	_battle_ui.unit_deployed(is_deployment_phase_over)
+	UI.battle_ui.unit_deployed(is_deployment_phase_over)
 	if is_deployment_phase_over:
 		for row : Array in _tile_grid.hexes:
 			for tile : TileForm in row:
@@ -496,7 +493,7 @@ func _grid_input_deployment(coord : Vector2i) -> MoveInfo:
 	assert(_battle_grid_state.state == _battle_grid_state.STATE_DEPLOYMENT, \
 			"_grid_input_deployment called in an incorrect state")
 
-	if _battle_ui._selected_unit_pointer == null:
+	if UI.battle_ui._selected_unit_pointer == null:
 		return null # no unit selected to deploy on ui
 
 	if not _battle_grid_state.current_player_can_deploy_on(coord):
@@ -507,7 +504,7 @@ func _grid_input_deployment(coord : Vector2i) -> MoveInfo:
 	 _battle_grid_state.armies_in_battle_state[_battle_grid_state.current_army_index]
 
 	## TODO refactor deploy phase
-	var unit_idx : int = army.units_to_deploy.find(_battle_ui._selected_unit_pointer)
+	var unit_idx : int = army.units_to_deploy.find(UI.battle_ui._selected_unit_pointer)
 
 	return MoveInfo.make_deploy(unit_idx, coord)
 
@@ -569,13 +566,13 @@ func _grid_input_magic(coord : Vector2i) -> MoveInfo:
 	assert(_battle_grid_state.state == _battle_grid_state.STATE_FIGHTING, \
 			"_grid_input_magic called in an incorrect state")
 
-	if _battle_ui.selected_spell == null:
+	if UI.battle_ui.selected_spell == null:
 		return null # no spell selected to cast on ui
 
-	if not _battle_grid_state.is_spell_target_valid(_selected_unit, coord, _battle_ui.selected_spell):
+	if not _battle_grid_state.is_spell_target_valid(_selected_unit, coord, UI.battle_ui.selected_spell):
 		return null
 
-	var move_info = MoveInfo.make_magic(_selected_unit.coord, coord, _battle_ui.selected_spell)
+	var move_info = MoveInfo.make_magic(_selected_unit.coord, coord, UI.battle_ui.selected_spell)
 	deselect_unit()
 
 	return move_info
@@ -644,8 +641,8 @@ func deselect_unit() -> void:
 	if _selected_unit and _selected_unit in _unit_to_unit_form:
 		_unit_to_unit_form[_selected_unit].set_selected(false)
 	_selected_unit = null
-	_battle_ui.selected_spell = null
-	_battle_ui.reset_spells()
+	UI.battle_ui.selected_spell = null
+	UI.battle_ui.reset_spells()
 	update_move_highlights()
 
 
@@ -655,11 +652,11 @@ func update_move_highlights():
 		return
 
 	# Process spell moves if spell selected, TODO magic consequences, check if BGS cloning is viable
-	if _battle_ui and _battle_ui.selected_spell != null:
+	if UI.battle_ui and UI.battle_ui.selected_spell != null:
 
 		var magic_moves = _battle_grid_state._get_magic_moves(
 			_selected_unit,
-			_battle_ui.selected_spell
+			UI.battle_ui.selected_spell
 		)
 
 		for move in magic_moves:
@@ -703,7 +700,7 @@ func _show_spells(unit : Unit) -> void:
 		return
 
 	#TODO? check here if selected unit is preview mode only (controlled by another player)
-	_battle_ui.load_spells(_battle_grid_state.current_army_index , unit.spells)
+	UI.battle_ui.load_spells(_battle_grid_state.current_army_index , unit.spells)
 
 
 ## Executes given move_info [br]
@@ -769,7 +766,7 @@ func change_tile_sprite(coord : Vector2i) -> void:
 
 func close_when_quitting_game() -> void:
 	deselect_unit()
-	_battle_ui.hide_replay_controls()
+	UI.battle_ui.hide_replay_controls()
 	_turn_off_battle_ui()
 	_reset_grid_and_unit_forms()
 	_disable_ai_preview()
@@ -788,7 +785,7 @@ func _on_battle_ended() -> void:
 	deselect_unit()
 
 	_disable_ai_preview()
-	_battle_ui.update_mana()
+	UI.battle_ui.update_mana()
 
 	if CFG.player_options.enable_fuzzing_mode:
 		_fuzzing_iterations += 1
@@ -821,7 +818,7 @@ func _on_battle_ended() -> void:
 	elif IM.is_city_defense_active:
 		_end_city_battle()
 	elif _replay_is_playing:
-		_battle_ui.update_replay_controls(_replay_number_of_moves, _replay_number_of_moves, _current_summary)
+		UI.battle_ui.update_replay_controls(_replay_number_of_moves, _replay_number_of_moves, _current_summary)
 		# do not exit immediately
 	else:
 		AUDIO.play_music("victory")
@@ -852,7 +849,7 @@ func _close_custom_battle() -> void:
 
 func _turn_off_battle_ui() -> void:
 	_painter_node.erase()
-	_battle_ui.hide()
+	UI.battle_ui.hide()
 
 
 func _reset_grid_and_unit_forms() -> void:
@@ -938,7 +935,7 @@ func _create_summary() -> DataBattleSummary:
 func perform_replay(replay : BattleReplay) -> void:
 	_replay_is_playing = true # _replay_is_playing is reset in close_when_quitting_game
 	var current_replay_battle_id := _replay_battle_id
-	_battle_ui.show_replay_controls()
+	UI.battle_ui.show_replay_controls()
 	_battle_grid_state.set_clock_enabled(false)
 	_replay_number_of_moves = replay.moves.size()
 

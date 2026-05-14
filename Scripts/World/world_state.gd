@@ -474,7 +474,7 @@ func do_recruit_unit(data_unit : DataUnit, city_coord : Vector2i,
 	city.on_purchase(data_unit.required_building)
 	army.units_data.append(data_unit)
 	army.leader_unit_changed.emit()
-	WM.world_ui.refresh_army_panel()
+	UI.world_ui.refresh_army_panel()
 	return true
 
 
@@ -518,8 +518,8 @@ func do_recruit_hero(data_hero : DataHero,
 	# Absorbs city garrison
 	army.units_data.append_array(city.garrison_reserve.units_data)
 	city.garrison_reserve.units_data = []
-	WM.world_ui.load_army_to_panel(army)
-	WM.world_ui.refresh_army_panel()
+	UI.world_ui.load_army_to_panel(army)
+	UI.world_ui.refresh_army_panel()
 
 	city.move_to_reserve()
 
@@ -626,7 +626,7 @@ func do_army_travel(source : Vector2i, target : Vector2i) -> bool:
 	if problem != "":
 		push_error(problem)
 		return false
-	WM.world_ui.try_to_close_context_menu() # TODO awaits server authorative to properly block players from still trading while being away
+	UI.world_ui.try_to_close_context_menu() # TODO awaits server authorative to properly block players from still trading while being away
 
 	var army : Army = get_army_at(source)
 
@@ -673,7 +673,7 @@ func change_army_position(army : Army, target_coord : Vector2i) -> void:
 			source_hex.place.garrison_reserve.units_data.append(army.units_data[-1])
 			army.units_data.pop_back()
 
-		WM.world_ui.refresh_army_panel()
+		UI.world_ui.refresh_army_panel()
 		source_hex.place.move_out_of_reserve()
 	target_hex.army = army
 	army.coord = target_coord
@@ -840,7 +840,7 @@ func spawn_army_from_preset(army_preset : PresetArmy, coord : Vector2i, \
 
 
 #STUB
-func _end_of_turn_callbacks(player_index : int) -> void:
+func _end_of_turn_callbacks(_player_index : int) -> void:
 	pass
 
 

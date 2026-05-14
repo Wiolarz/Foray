@@ -9,7 +9,7 @@ Complete world map data:
 	2 Info about assignment of every city
 """
 ## player_idx : Race (can be null for any race)
-var player_slots : Dictionary[int, DataRace] = {}
+@export var player_slots : Dictionary[int, DataRace] = {}
 
 static func get_network_id(world_map : DataWorldMap) -> String:
 	return world_map.resource_path.get_file() if world_map else ""

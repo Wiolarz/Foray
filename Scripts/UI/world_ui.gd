@@ -2,7 +2,7 @@ class_name WorldUI
 extends CanvasLayer
 
 @onready var good_label : Label = $HBoxContainer/GoodsLabel
-@onready var city_ui : CityUi = $CityUi
+@onready var city_ui : CityUI = $CityUI
 @onready var heroes_list : BoxContainer = $HeroesList
 @onready var trade_screen : Control = $TradeScreen
 @onready var army_panel : BoxContainer = $Army_Panel

@@ -72,12 +72,12 @@ func _army_swap() -> void:
 		if second_army.units_data.size() > 0:  # merging city garrison into hero's army
 			first_army.units_data.append_array(second_army.units_data)
 			second_army.units_data = []
-			WM.world_ui.refresh_army_panel()
+			UI.world_ui.refresh_army_panel()
 		end_trade()  # UX: entering city closes trade screen
 
 
 func end_trade() -> void:
-	WM.world_ui.try_to_close_context_menu()
+	UI.world_ui.try_to_close_context_menu()
 
 
 func _on_close_button_pressed():

@@ -4,7 +4,7 @@ extends LevelUpScreen
 # override
 func _assign_tier_panels() -> void:
 	description = $RichTextLabel
-	
+
 	tier_talent_panels = []
 	tier_talent_panels.append($TierPanels/TierTalentPanel)
 	tier_talent_panels.append($TierPanels/TierTalentPanel2)
@@ -31,4 +31,4 @@ func load_selected_hero_level_up_screen(hero : Hero) -> void:
 
 func _on_button_confirm_pressed():
 	apply_talents_and_abilities()
-	WM.world_ui.try_to_close_context_menu()
+	UI.world_ui.try_to_close_context_menu()

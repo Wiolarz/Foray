@@ -59,7 +59,7 @@ extends Resource
 @export var last_used_battle_preset_name : String
 
 ## Default first option after opening the game should be last selected one
-@export var last_used_world_map : DataWorldMap
+@export var last_used_world_map_path : String
 
 
 # Editor settings that remember last selected options

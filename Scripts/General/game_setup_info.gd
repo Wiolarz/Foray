@@ -7,15 +7,16 @@ extends RefCounted
 ## and other temporary objects that should not be saved
 
 enum GameMode {
-	UNKNOWN, ## forces to initialize
 	WORLD, ## full map with heroes and economy
 	BATTLE, ## single battle only, no economy
 	MAP_EDITOR, ## special mode only for map editing
 }
 
-var game_mode : GameMode = GameMode.WORLD
+var game_mode : GameMode = (GameMode.BATTLE if CFG.DEFAULT_MODE_IS_BATTLE else GameMode.WORLD)
 var world_map : DataWorldMap ## used only in full world mode
+
 var battle_map : DataBattleMap ## used only in battle mode
+
 var slots : Array[Slot] ## slot for each player color on the map picked
 
 ## used in dropdown list in UI of battle setup, due to the problem with loading selected map
@@ -24,7 +25,7 @@ var battle_preset_name_hint : String
 
 ## used in dropdown list in UI of battle setup, due to the problem with loading selected map
 ## with a preset not setting selection properly
-var battle_map_name_hint : String
+var map_name_hint : String
 
 func is_in_mode_world():
 	return game_mode == GameMode.WORLD
@@ -102,7 +103,7 @@ func to_dictionary(local_username : String = "") -> Dictionary[String, Variant]:
 	return result
 
 
-static func from_dictionary(dict : Dictionary[String, Variant], \
+static func from_dictionary(dict : Dictionary, \
 		local_username : String = "") -> GameSetupInfo:
 	var result = GameSetupInfo.new()
 	if "game_mode" in dict and dict["game_mode"] is String:
@@ -113,7 +114,7 @@ static func from_dictionary(dict : Dictionary[String, Variant], \
 		result.battle_map = DataBattleMap.from_network_id(dict["battle_map"])
 	if "slots" in dict and dict["slots"] is Array:
 		for i in dict["slots"].size():
-			var read_slot : Dictionary[String, Variant] = dict["slots"][i]
+			var read_slot : Dictionary = dict["slots"][i]
 			var new_slot : Slot = Slot.new()
 			new_slot.index = i
 			if "occupier" in read_slot:
@@ -148,8 +149,8 @@ static func game_mode_from_str(mode_as_str : String) -> GameMode:
 	for mode in GameMode.keys():
 		if mode.to_lower() == mode_as_str:
 			return GameMode[mode]
-	push_error("Unknown game mode: \"%s\"" % mode_as_str)
-	return GameMode.UNKNOWN
+	assert(false, "Unknown game mode: \"%s\"" % mode_as_str)
+	return GameMode.BATTLE
 
 
 static func occupier_prepare_for_network(occupier, local_username : String):
@@ -192,34 +193,32 @@ func set_battle_map(map : DataBattleMap, map_name : String = ""):
 		var number_of_unit_slots = map.player_slots[slot_idx + 1] - 1  # -1 space is reserved for hero unit
 		slots[slot_idx].set_units_length(number_of_unit_slots)
 
-	battle_map_name_hint = map_name
+	map_name_hint = map_name
 
 
-func set_world_map(map: DataWorldMap):
+func set_world_map(map : DataWorldMap) -> void:
 	assert(game_mode == GameMode.WORLD, "setting world map in game mode: " + str(game_mode))
 
 	world_map = map
+	CFG.player_options.last_used_world_map_path = map.resource_path
+	CFG.save_player_options()
 
-	var map_slots_size = 2
+	var map_slots_size : int = map.player_slots.keys().size()
+	set_slots_number(map_slots_size)
 
-	while slots.size() > map_slots_size:
-		slots.pop_back()
+	for slot_idx in slots.size():
+		var race_idx = 0
+		var slot : Slot = slots[slot_idx]
+		if map.player_slots[slot_idx + 1]: # is there a race lock present?
+			slot.race_lock = true
+			slot.race = map.player_slots[slot_idx + 1]  # +1 accounts for neutrals at 0 index
+		else:
+			slot.race_lock = false
+			## assign to each new slot, new race, through nice cycling #TODO small QOL add checking for race locked races, to avoid repetition
+			race_idx = wrap(slot_idx, 0, CFG.RACES_LIST.size())
+			slot.race = CFG.RACES_LIST[race_idx]
 
-	var taken_colors = []
-	for slot in slots:
-		taken_colors.append(slot.color_idx)
-
-	while slots.size() < map_slots_size:
-		var slot = Slot.new()
-		slots.append(slot)
-		var race_idx = wrap(slots.size()-1, 0, CFG.RACES_LIST.size())
-		slot.race = CFG.RACES_LIST[race_idx]
-		slot.color_idx = 0
-
-		while slot.color_idx in taken_colors:
-			slot.color_idx += 1
-
-		taken_colors.append(slot.color_idx)
+	map_name_hint = map.resource_path.get_file()
 
 
 ## used at start with some default preset, also used when preset is chosen
@@ -227,8 +226,7 @@ func set_world_map(map: DataWorldMap):
 ## Also, this do not refresh UI and broadcast over network itself -- it should
 ## be done elsewhere, when this function is called
 ## preset_name is optional -- only used for auto select at start
-func apply_battle_preset( \
-	preset : PresetBattle, preset_name : String = "") -> void:
+func apply_battle_preset(preset : PresetBattle, preset_name : String = "") -> void:
 	var map_name : String = preset.battle_map.resource_path.get_file()
 	var map_path : String = CFG.BATTLE_MAPS_PATH + "/" + map_name
 	assert(ResourceLoader.exists(map_path), "map with name %s does not exist" % map_name)

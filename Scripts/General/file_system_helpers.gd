@@ -13,6 +13,8 @@ static func list_files_in_folder(
 		var name_to_add = file
 		if return_full_path:
 			name_to_add = dir.get_current_dir() + "/" + name_to_add
+		if name_to_add.ends_with("uid"):
+			continue
 		result.append(name_to_add)
 	if scan_subfolders:
 		for subdir in dir.get_directories():
@@ -21,7 +23,10 @@ static func list_files_in_folder(
 			if not return_full_path:
 				for i in range(subdir_files.size()):
 					subdir_files[i] = subdir + "/" + subdir_files[i]
-			result.append_array(subdir_files)
+			for file in subdir_files:
+				if file.ends_with("uid"):
+					continue
+				result.append(file)
 	return result
 
 

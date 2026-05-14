@@ -17,19 +17,32 @@ var in_map_editor : bool = false
 var is_city_defense_active : bool = false
 
 
-func init_game_setup():
+func _ready() -> void:
+	init_game_setup()
+
+
+func init_game_setup() -> void:
 	game_setup_info = GameSetupInfo.create_empty()
 
 
 ## called:
 ## * by UI when button is clicked or game starts (host is true)
 ## * by client when server orders, then host is false
-func init_battle_mode(host : bool):
+func init_battle_mode(host : bool) -> void:
 	game_setup_info.game_mode = GameSetupInfo.GameMode.BATTLE
 
 	if host:
 		var preset : Dictionary[String, Variant] = get_default_or_last_battle_preset()
 		game_setup_info.apply_battle_preset(preset["data"], preset["name"])
+
+
+func init_world_mode(host : bool) -> void:
+	game_setup_info.game_mode = GameSetupInfo.GameMode.WORLD
+
+	if host:
+		var map_path : String = get_default_or_last_world_map()
+		game_setup_info.set_world_map(load(map_path))
+
 
 #region Game setup
 
@@ -114,7 +127,7 @@ func start_game(world_state : SerializableWorldState = null,
 		NET.server.broadcast_start_game()
 
 
-func perform_replay(path):
+func perform_replay(path) -> void:
 	var replay = load(path) as BattleReplay
 	assert(replay != null)
 
@@ -144,7 +157,7 @@ func perform_replay(path):
 	game_setup_info = old_info
 
 
-func go_to_map_editor():
+func go_to_map_editor() -> void:
 	UI.ensure_camera_is_spawned()
 	in_map_editor = true
 	UI.go_to_map_editor()
@@ -152,7 +165,7 @@ func go_to_map_editor():
 
 ## Full game - World game mode
 ## new game <=> world_state == null
-func _start_game_world(world_state : SerializableWorldState = null):
+func _start_game_world(world_state : SerializableWorldState = null) -> void:
 	UI.go_to_main_menu()
 	var map : DataWorldMap = game_setup_info.world_map
 
@@ -160,6 +173,7 @@ func _start_game_world(world_state : SerializableWorldState = null):
 		UI.set_fullscreen(true)
 
 	if not world_state:
+		assert(map, "no map selected")
 		WM.start_new_world(map)
 	else:
 		WM.start_world_in_state(map, world_state)
@@ -168,7 +182,7 @@ func _start_game_world(world_state : SerializableWorldState = null):
 ## Single Battle - game mode
 ## new game <=> battle_state == null
 func _start_game_battle(battle_state : SerializableBattleState = null,
-		replay_template : BattleReplay = null):
+		replay_template : BattleReplay = null) -> void:
 	var map_data = game_setup_info.battle_map
 	var armies : Array[Army]  = []
 
@@ -237,6 +251,15 @@ func get_default_or_last_battle_preset() -> Dictionary[String, Variant]:
 	}
 
 
+func get_default_or_last_world_map() -> String:
+	if ResourceLoader.exists(CFG.LAST_USED_WORLD_MAP_PATH):
+		return CFG.LAST_USED_WORLD_MAP_PATH
+
+	var maps_paths : Array[String] = FileSystemHelpers.list_files_in_folder(CFG.WORLD_MAPS_PATH, true)
+	assert(maps_paths.size() != 0)
+	return maps_paths[0]  # first alphabetical map as a default is an industry standard
+
+
 func start_scripted_battle(scripted_battle : ScriptedBattle, battle_bot_path : String = "",
 							player_controlled_side : int = 0) -> void:
 	print("started scripted battle: ", scripted_battle.scenario_name)
@@ -277,7 +300,7 @@ func _clear_players() -> void:
 #region Gameplay UI
 
 # MAJOR function that exits gamemodes
-func go_to_main_menu():
+func go_to_main_menu() -> void:
 	if CFG.FULLSCREEN_AUTO_TOGGLE:
 		UI.set_fullscreen(false)
 
@@ -293,16 +316,16 @@ func go_to_main_menu():
 #region Technical
 # not gameplay
 
-func is_game_paused():
+func is_game_paused() -> bool:
 	return get_tree().paused
 
 
-func set_game_paused(is_paused : bool):
+func set_game_paused(is_paused : bool) -> void:
 	print("pause = ",is_paused)
 	get_tree().paused = is_paused
 
 
-func quit_game():
+func quit_game() -> void:
 	get_tree().quit()
 
 
@@ -317,7 +340,6 @@ func get_index_of_player(player : Player) -> int:
 		if players[i] == player:
 			return i
 	return -1
-
 
 #endregion Technical
 

@@ -1,5 +1,7 @@
 class_name GameSetup
 extends Control
+## Main Handler of GameMode Selection
+
 
 # VERY IMPORTANT TODO:
 # move all modifications of IM.game_setup_info to some controller -- it
@@ -17,8 +19,8 @@ extends Control
 @onready var button_confirm : Button = \
 	$MarginContainer/VBoxContainer/ButtonMargin/ButtonConfirm
 
-@onready var multi_world_setup_scene = load("res://Scenes/UI/Lobby/WorldSetup.tscn")
-@onready var multi_battle_setup_scene = load("res://Scenes/UI/Lobby/BattleSetup.tscn")
+@onready var multi_world_setup_scene : PackedScene = load("res://Scenes/UI/Lobby/WorldSetup.tscn") # Margin Container
+@onready var multi_battle_setup_scene : PackedScene = load("res://Scenes/UI/Lobby/BattleSetup.tscn") # Margin Container
 
 
 var current_player_to_set : String = "" # if empty we select for us
@@ -58,15 +60,6 @@ func refresh_after_connection_change():
 		if setup is BattleSetup or setup is WorldSetup:
 			setup.refresh()
 
-
-""" Unused
-func force_full_rebuild():
-	if container.get_child_count() == 1:
-		var setup = container.get_child(0)
-		if setup is BattleSetup or setup is WorldSetup:
-			setup.rebuild()
-			setup.refresh()
-"""
 
 #region Changing settings
 
@@ -128,6 +121,7 @@ func try_to_cycle_color_slot(index : int, backwards : bool) -> bool:
 func try_to_set_world_map_name(map_name : String) -> bool:
 	# drut
 	IM.game_setup_info.set_world_map(load("%s/%s" % [ CFG.WORLD_MAPS_PATH, map_name ]))
+	assert(IM.game_setup_info.world_map, "world map did not load properly")
 	if NET.server:
 		NET.server.broadcast_full_game_setup(IM.game_setup_info)
 	# TODO here load this map and adjust slot number
@@ -158,7 +152,8 @@ func select_world():
 	CFG.save_player_options()
 
 	button_world.button_pressed = true
-	IM.game_setup_info.game_mode = GameSetupInfo.GameMode.WORLD
+
+	IM.init_world_mode(not NET.client) # selects last used map
 	_select_setup_page(multi_world_setup_scene)
 	if NET.server:
 		NET.server.broadcast_full_game_setup(IM.game_setup_info)
@@ -169,8 +164,8 @@ func select_battle():
 	CFG.save_player_options()
 
 	button_battle.button_pressed = true
-	if not IM.game_setup_info.is_in_mode_battle():
-		IM.init_battle_mode(not NET.client)
+
+	IM.init_battle_mode(not NET.client) # applies preset settings
 	_select_setup_page(multi_battle_setup_scene)
 	if NET.server:
 		NET.server.broadcast_full_game_setup(IM.game_setup_info)

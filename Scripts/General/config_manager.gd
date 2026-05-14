@@ -358,6 +358,10 @@ const CHESS_CLOCK_BATTLE_TURN_INCREMENT_MS = 2 * 1000
 
 #region Debugging & tests
 
+## RES singleton ready, loads all art assets upon game start, to make gameplay experience smoother
+## but its problematic for testing
+const LOAD_ART_ASSETS_ON_GAME_STARTUP : bool = false
+
 enum BMFastIntegrityCheckMode {
 	ASSERT = 1,
 	NOTIFY_ON_CHAT = 2,
@@ -569,8 +573,8 @@ var LAST_OPENED_TAB : MainMenuTabs :
 
 var LAST_USED_BATTLE_PRESET_NAME : String :
 	get: return player_options.last_used_battle_preset_name
-var LAST_USED_WORLD_MAP : DataWorldMap : # TODO implement this
-	get: return player_options.last_used_world_map
+var LAST_USED_WORLD_MAP_PATH : String :
+	get: return player_options.last_used_world_map_path
 
 var FULLSCREEN_AUTO_TOGGLE : bool :
 	get: return player_options.keep_main_menu_windowed
