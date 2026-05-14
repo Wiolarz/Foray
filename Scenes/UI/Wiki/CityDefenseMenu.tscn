@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b8xrjsl8gmups"]
+[gd_scene format=3 uid="uid://b8xrjsl8gmups"]
 
 [ext_resource type="Script" uid="uid://dviqs2ag5ygcj" path="res://Scripts/UI/Educational/city_defense.gd" id="1_7lrr4"]
 [ext_resource type="PackedScene" uid="uid://ciyo87ovmkwqh" path="res://Scenes/UI/World/ArmyPanel.tscn" id="2_016xn"]

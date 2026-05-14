@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bawliiem6bw0u"]
+[gd_scene format=3 uid="uid://c0uarojerf8w4"]
 
 [ext_resource type="Script" uid="uid://nt032ysmkquw" path="res://Scripts/UI/battle_ui.gd" id="1_0rgae"]
 [ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="2_hku4e"]

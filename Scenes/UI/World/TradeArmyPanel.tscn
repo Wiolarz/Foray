@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cyu8o32kcgtcv"]
+[gd_scene format=3 uid="uid://cyu8o32kcgtcv"]
 
 [ext_resource type="Script" uid="uid://cvq1clth75cth" path="res://Scripts/UI/World/trade_army_panel.gd" id="1_2sslo"]
 [ext_resource type="Texture2D" uid="uid://blfh6o1h3tybx" path="res://Art/units/elf/elf_hero_druid.png" id="2_s4aeh"]

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataBattleMap" load_steps=11 format=3 uid="uid://bixwhg5fsfl8j"]
+[gd_resource type="Resource" script_class="DataBattleMap" format=3 uid="uid://bixwhg5fsfl8j"]
 
 [ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_2a38x"]
 [ext_resource type="Script" uid="uid://07v64r170uow" path="res://Resources/Battle/data_battle_map.gd" id="2_rpg8i"]
@@ -45,10 +45,10 @@ texture_path = "res://Art/battle_map/deploy_yellow.png"
 
 [resource]
 script = ExtResource("2_rpg8i")
-player_slots = {
+player_slots = Dictionary[int, int]({
 1: 7,
 2: 7
-}
+})
 grid_width = 8
 grid_height = 7
 grid_data = [[SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv"), SubResource("Resource_hwug0"), SubResource("Resource_hwug0")], [SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv"), SubResource("Resource_hwug0"), SubResource("Resource_hwug0"), SubResource("Resource_26jm2"), SubResource("Resource_cqx3l")], [SubResource("Resource_5jpsv"), SubResource("Resource_hwug0"), SubResource("Resource_hwug0"), SubResource("Resource_26jm2"), SubResource("Resource_n23mv"), SubResource("Resource_26jm2"), SubResource("Resource_26jm2")], [SubResource("Resource_hwug0"), SubResource("Resource_26jm2"), SubResource("Resource_26jm2"), SubResource("Resource_26jm2"), SubResource("Resource_26jm2"), SubResource("Resource_26jm2"), SubResource("Resource_26jm2")], [SubResource("Resource_26jm2"), SubResource("Resource_26jm2"), SubResource("Resource_fswdv"), SubResource("Resource_rfmin"), SubResource("Resource_26jm2"), SubResource("Resource_n23mv"), SubResource("Resource_syr0n")], [SubResource("Resource_cqx3l"), SubResource("Resource_26jm2"), SubResource("Resource_26jm2"), SubResource("Resource_26jm2"), SubResource("Resource_syr0n"), SubResource("Resource_syr0n"), SubResource("Resource_5jpsv")], [SubResource("Resource_26jm2"), SubResource("Resource_26jm2"), SubResource("Resource_syr0n"), SubResource("Resource_syr0n"), SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv")], [SubResource("Resource_syr0n"), SubResource("Resource_syr0n"), SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv"), SubResource("Resource_5jpsv")]]

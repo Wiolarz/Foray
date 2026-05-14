@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="PresetBattle" load_steps=14 format=3 uid="uid://s0fqvox6472r"]
+[gd_resource type="Resource" script_class="PresetBattle" format=3 uid="uid://s0fqvox6472r"]
 
 [ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_ibm16"]
 [ext_resource type="Resource" uid="uid://srlb5creu8ly" path="res://Resources/Battle/Units/Orcs/orc_unit_hero_chaplain.tres" id="2_0dyn2"]

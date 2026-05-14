@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://dod20gyt25wye"]
+[gd_scene format=3 uid="uid://dod20gyt25wye"]
 
 [ext_resource type="Script" uid="uid://tofjd0xvprsf" path="res://Scripts/Battle/battle_manager.gd" id="1_m65do"]
 

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="PresetBattle" load_steps=13 format=3 uid="uid://ric4ls3qb7r1"]
+[gd_resource type="Resource" script_class="PresetBattle" format=3 uid="uid://ric4ls3qb7r1"]
 
 [ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_7htvr"]
 [ext_resource type="Resource" uid="uid://tdyeebj1ogsl" path="res://Resources/Battle/Units/Classic/elf1.tres" id="2_l0c82"]

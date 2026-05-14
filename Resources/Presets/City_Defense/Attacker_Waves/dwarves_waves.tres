@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="PresetWaves" load_steps=19 format=3 uid="uid://wdw2n75glkqw"]
+[gd_resource type="Resource" script_class="PresetWaves" format=3 uid="uid://wdw2n75glkqw"]
 
 [ext_resource type="Resource" uid="uid://cbe6krcal4i36" path="res://Resources/Races/dwarves.tres" id="1_00l67"]
 [ext_resource type="Script" uid="uid://pkro2nylrsgo" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="1_pxmcr"]

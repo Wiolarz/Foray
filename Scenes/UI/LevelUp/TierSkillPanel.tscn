@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://m7kfrja5xmn4"]
+[gd_scene format=3 uid="uid://m7kfrja5xmn4"]
 
 [ext_resource type="Script" uid="uid://bs2cqwaj4j2lh" path="res://Scripts/UI/LevelUp/tier_skill_panel.gd" id="1_qxpb3"]
 [ext_resource type="PackedScene" uid="uid://d030cg7m2orr1" path="res://Scenes/UI/LevelUp/PassiveButton.tscn" id="2_8s3ra"]

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="PresetArmy" load_steps=8 format=3 uid="uid://cqptha5n3agx0"]
+[gd_resource type="Resource" script_class="PresetArmy" format=3 uid="uid://cqptha5n3agx0"]
 
 [ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_4cth0"]
 [ext_resource type="Resource" uid="uid://3x0qi3t8cq" path="res://Resources/Battle/Units/Undead/undead_1_skelly.tres" id="2_18ne8"]

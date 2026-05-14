@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=8 format=3 uid="uid://cdlvyh2fl2ii1"]
+[gd_resource type="Resource" script_class="DataHero" format=3 uid="uid://cdlvyh2fl2ii1"]
 
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_2xdw8"]
 [ext_resource type="Resource" uid="uid://srlb5creu8ly" path="res://Resources/Battle/Units/Orcs/orc_unit_hero_chaplain.tres" id="2_gkaxc"]

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataBuilding" load_steps=7 format=3 uid="uid://4to52cd5bq7w"]
+[gd_resource type="Resource" script_class="DataBuilding" format=3 uid="uid://4to52cd5bq7w"]
 
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_feg68"]
 [ext_resource type="Script" uid="uid://b86ur2c8mgwcl" path="res://Resources/Races/data_building.gd" id="2_cbv6a"]

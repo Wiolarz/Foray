@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://cxjg8d4dsvmvu"]
+[gd_scene format=3 uid="uid://cxjg8d4dsvmvu"]
 
 [ext_resource type="Script" uid="uid://b3a6viavfapqt" path="res://Scripts/UI/battle_plan_painter.gd" id="1_u7aie"]
 

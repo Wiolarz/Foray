@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="PresetArmy" load_steps=6 format=3 uid="uid://3dxr8yq4ba0f"]
+[gd_resource type="Resource" script_class="PresetArmy" format=3 uid="uid://3dxr8yq4ba0f"]
 
 [ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_8v6g0"]
 [ext_resource type="Resource" uid="uid://ckctq24fgxtb6" path="res://Resources/Battle/Units/Dwarves/dwarf_2_guard.tres" id="2_1j2h0"]

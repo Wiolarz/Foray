@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ScriptedBattle" load_steps=10 format=3 uid="uid://df8h3kvp2gu4j"]
+[gd_resource type="Resource" script_class="ScriptedBattle" format=3 uid="uid://df8h3kvp2gu4j"]
 
 [ext_resource type="Script" uid="uid://cmo0n6c34e7as" path="res://Resources/Campaign/scripted_battle.gd" id="1_luqo0"]
 [ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_nx2o0"]

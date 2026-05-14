@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://blx0kj8gah080"]
+[gd_scene format=3 uid="uid://blx0kj8gah080"]
 
 [ext_resource type="Script" uid="uid://cbeihqtfvlbyr" path="res://Scripts/UI/Lobby/battle_setup.gd" id="1_dfdeh"]
 [ext_resource type="StyleBox" uid="uid://c2e7veyqebiaa" path="res://Art/UI/background_frames/pale_green.tres" id="2_1dtuq"]

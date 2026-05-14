@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://bp747guikipcb"]
+[gd_resource type="Resource" script_class="DataSymbol" format=3 uid="uid://bp747guikipcb"]
 
 [ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="1_rdbby"]
 [ext_resource type="SpriteFrames" uid="uid://c74utw2dcipbg" path="res://Art/animations/spear.tres" id="2_akrjp"]

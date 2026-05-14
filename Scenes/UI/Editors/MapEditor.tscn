@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://l0kojvcxbfky"]
+[gd_scene format=3 uid="uid://l0kojvcxbfky"]
 
 [ext_resource type="Script" uid="uid://ct6tkivdtmuik" path="res://Scripts/Development/map_editor.gd" id="1_y7q6u"]
 [ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="3_a1hl2"]

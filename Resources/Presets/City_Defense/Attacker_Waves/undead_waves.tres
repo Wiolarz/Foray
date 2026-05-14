@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="PresetWaves" load_steps=18 format=3 uid="uid://cbygxejdljvke"]
+[gd_resource type="Resource" script_class="PresetWaves" format=3 uid="uid://cbygxejdljvke"]
 
 [ext_resource type="Script" uid="uid://pkro2nylrsgo" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="1_p70r8"]
 [ext_resource type="Resource" uid="uid://dx1c0jp2spa4i" path="res://Resources/Races/undead.tres" id="1_yp5pf"]

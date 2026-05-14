@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://choi7p83wrgne"]
+[gd_scene format=3 uid="uid://choi7p83wrgne"]
 
 [ext_resource type="Script" uid="uid://conms6t6nu1yq" path="res://Scripts/UI/ui_manager.gd" id="1_fhfuw"]
 [ext_resource type="PackedScene" uid="uid://b4ndp6v0ts1on" path="res://Scenes/UI/MainMenu.tscn" id="2_eu0wa"]
@@ -6,8 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://dy1m42bfkq2wv" path="res://Scenes/UI/Editors/UnitEditor.tscn" id="4_0jri5"]
 [ext_resource type="PackedScene" uid="uid://cwv8isdmpg34u" path="res://Scenes/UI/Editors/TileEditor.tscn" id="5_1ubwt"]
 [ext_resource type="PackedScene" uid="uid://k6nqj736t85k" path="res://Scenes/UI/UIOverlay.tscn" id="6_k5455"]
-[ext_resource type="PackedScene" uid="uid://bawliiem6bw0u" path="res://Scenes/UI/BattleUI.tscn" id="7_wv8i8"]
-[ext_resource type="PackedScene" uid="uid://bpkvpkoi22q8" path="res://Scenes/UI/World/WorldUI.tscn" id="8_4u5hp"]
+[ext_resource type="PackedScene" uid="uid://c0uarojerf8w4" path="res://Scenes/UI/BattleUI.tscn" id="7_wv8i8"]
+[ext_resource type="PackedScene" uid="uid://kq4bnxy8h5xx" path="res://Scenes/UI/World/WorldUI.tscn" id="8_4u5hp"]
 
 [node name="UIManager" type="Node"]
 script = ExtResource("1_fhfuw")

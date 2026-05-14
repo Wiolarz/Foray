@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="BattleSpell" format=3 uid="uid://blr1v458308kd"]
+[gd_resource type="Resource" script_class="BattleSpell" format=3 uid="uid://b0xtjvuw615j2"]
 
 [ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="1_wxf88"]
 [ext_resource type="Script" uid="uid://lgbukttoatcv" path="res://Scripts/Battle/data_magic_effect.gd" id="2_njl21"]
-[ext_resource type="Resource" uid="uid://c8t6h3sw3qbrf" path="res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/anti_magic_shield_effect.tres" id="3_njl21"]
+[ext_resource type="Resource" path="res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/anti_magic_shield_effect.tres" id="3_njl21"]
 [ext_resource type="Resource" path="res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/anti_magic_shield_hidden_effect.tres" id="4_2jf4m"]
 
 [resource]

@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="DataWorldMap" load_steps=17 format=3]
+[gd_resource type="Resource" script_class="DataWorldMap" format=3 uid="uid://mbu7xstprf4"]
 
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_jw4ol"]
-[ext_resource type="Script" path="res://Resources/Races/data_race.gd" id="2_i0tlq"]
-[ext_resource type="Resource" path="res://Resources/Races/cyclops.tres" id="3_py1jq"]
-[ext_resource type="Resource" path="res://Resources/Races/dwarves.tres" id="4_a6o5c"]
-[ext_resource type="Script" path="res://Resources/World/data_world_map.gd" id="5_vbcd0"]
+[ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_jw4ol"]
+[ext_resource type="Script" uid="uid://xj5cnhe2t57k" path="res://Resources/Races/data_race.gd" id="2_i0tlq"]
+[ext_resource type="Resource" uid="uid://cxfflypli72u5" path="res://Resources/Races/cyclops.tres" id="3_py1jq"]
+[ext_resource type="Resource" uid="uid://cbe6krcal4i36" path="res://Resources/Races/dwarves.tres" id="4_a6o5c"]
+[ext_resource type="Script" uid="uid://bc7dlvxt87gdx" path="res://Resources/World/data_world_map.gd" id="5_vbcd0"]
 
 [sub_resource type="Resource" id="Resource_51g16"]
 script = ExtResource("1_jw4ol")

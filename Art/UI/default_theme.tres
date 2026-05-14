@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=11 format=3 uid="uid://dmv43h86d07fy"]
+[gd_resource type="Theme" format=3 uid="uid://dmv43h86d07fy"]
 
 [ext_resource type="StyleBox" uid="uid://bsh0ggg3l5fvh" path="res://Art/UI/focus.tres" id="1_2dd0h"]
 [ext_resource type="FontFile" uid="uid://da2ubx3hyhcma" path="res://Art/UI/fonts/kurland/Kurland.ttf" id="1_8bjnq"]

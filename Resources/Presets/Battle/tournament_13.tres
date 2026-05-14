@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="PresetBattle" load_steps=6 format=3 uid="uid://krus7v3jobdg"]
+[gd_resource type="Resource" script_class="PresetBattle" format=3 uid="uid://krus7v3jobdg"]
 
 [ext_resource type="Script" uid="uid://b4slskcsa0n83" path="res://Resources/Presets/preset_battle.gd" id="1_8y5es"]
 [ext_resource type="Resource" uid="uid://ci7gmtn4w3cpr" path="res://Resources/Presets/Custom_Armies/cyclops.tres" id="1_ir7ou"]

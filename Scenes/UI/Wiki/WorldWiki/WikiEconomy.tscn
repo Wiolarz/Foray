@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://chbkr4ic76rs"]
+[gd_scene format=3 uid="uid://chbkr4ic76rs"]
 
 [ext_resource type="Texture2D" uid="uid://bdrm8rwd0g30n" path="res://Art/world_map/outpost_wood.png" id="1_i3qhh"]
 [ext_resource type="Texture2D" uid="uid://2y8cd2mfkd36" path="res://Art/world_map/outpost_iron.png" id="2_d1rc7"]

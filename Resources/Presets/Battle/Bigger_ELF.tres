@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="PresetBattle" load_steps=14 format=3 uid="uid://b11t4fdtracdy"]
+[gd_resource type="Resource" script_class="PresetBattle" format=3 uid="uid://b11t4fdtracdy"]
 
 [ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_wyayb"]
 [ext_resource type="Resource" uid="uid://1yy1fjfn2n8k" path="res://Resources/Battle/Units/Elves/elf_unit_hero_stalker.tres" id="2_s548k"]

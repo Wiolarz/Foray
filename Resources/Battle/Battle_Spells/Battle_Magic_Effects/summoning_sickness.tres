@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataMagicEffect" load_steps=3 format=3 uid="uid://bwcl7n1wyv8um"]
+[gd_resource type="Resource" script_class="DataMagicEffect" format=3 uid="uid://bwcl7n1wyv8um"]
 
 [ext_resource type="Script" uid="uid://lgbukttoatcv" path="res://Scripts/Battle/data_magic_effect.gd" id="1_skuml"]
 [ext_resource type="Resource" uid="uid://dx6lffk7q0vf8" path="res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/vengeance_death.tres" id="2_qcan4"]

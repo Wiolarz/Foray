@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" script_class="SymbolAnimation" load_steps=31 format=3 uid="uid://cllk0gaalq3a4"]
+[gd_resource type="SpriteFrames" script_class="SymbolAnimation" format=3 uid="uid://cllk0gaalq3a4"]
 
 [ext_resource type="Texture2D" uid="uid://doskv82n8btte" path="res://Art/animations/empty_texture.tres" id="1_eqf8p"]
 [ext_resource type="Texture2D" uid="uid://c5bdq2x2ssgjk" path="res://Art/animations/javelin_throw.png" id="1_j7p2w"]

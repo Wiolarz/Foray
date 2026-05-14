@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://mp2ftndlivvp"]
+[gd_resource type="Resource" script_class="DataSymbol" format=3 uid="uid://mp2ftndlivvp"]
 
 [ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="1_yoceg"]
 [ext_resource type="SpriteFrames" uid="uid://d0cc3nmwaam1c" path="res://Art/animations/bow.tres" id="2_xiyk1"]

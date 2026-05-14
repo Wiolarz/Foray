@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataBattleMap" load_steps=10 format=3 uid="uid://b8eh3j4qj8iwm"]
+[gd_resource type="Resource" script_class="DataBattleMap" format=3 uid="uid://b8eh3j4qj8iwm"]
 
 [ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_bku71"]
 [ext_resource type="Script" uid="uid://07v64r170uow" path="res://Resources/Battle/data_battle_map.gd" id="2_hxspy"]
@@ -40,10 +40,10 @@ texture_path = "res://Art/battle_map/deploy_yellow.png"
 
 [resource]
 script = ExtResource("2_hxspy")
-player_slots = {
+player_slots = Dictionary[int, int]({
 1: 10,
 2: 10
-}
+})
 grid_width = 10
 grid_height = 7
 grid_data = [[SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq")], [SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq"), SubResource("Resource_3djw8")], [SubResource("Resource_we60h"), SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_73tby")], [SubResource("Resource_4jmhq"), SubResource("Resource_4jmhq"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_ms550")], [SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_73tby"), SubResource("Resource_3djw8"), SubResource("Resource_bglad"), SubResource("Resource_73tby")], [SubResource("Resource_73tby"), SubResource("Resource_bglad"), SubResource("Resource_3djw8"), SubResource("Resource_73tby"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8")], [SubResource("Resource_ms550"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_hfin0"), SubResource("Resource_hfin0")], [SubResource("Resource_73tby"), SubResource("Resource_3djw8"), SubResource("Resource_3djw8"), SubResource("Resource_hfin0"), SubResource("Resource_hfin0"), SubResource("Resource_hfin0"), SubResource("Resource_we60h")], [SubResource("Resource_3djw8"), SubResource("Resource_hfin0"), SubResource("Resource_hfin0"), SubResource("Resource_hfin0"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h")], [SubResource("Resource_hfin0"), SubResource("Resource_hfin0"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h"), SubResource("Resource_we60h")]]

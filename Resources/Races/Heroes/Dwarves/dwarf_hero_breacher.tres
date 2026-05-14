@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=8 format=3 uid="uid://by5i1rhxyug0d"]
+[gd_resource type="Resource" script_class="DataHero" format=3 uid="uid://by5i1rhxyug0d"]
 
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_rcgsw"]
 [ext_resource type="Resource" uid="uid://b6exiq5t4mtn5" path="res://Resources/Battle/Units/Dwarves/dwarf_hero_breacher.tres" id="2_h21hr"]

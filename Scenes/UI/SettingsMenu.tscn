@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://b6eoph2qpu0d"]
+[gd_scene format=3 uid="uid://b6eoph2qpu0d"]
 
 [ext_resource type="Script" uid="uid://ce17a4n0fr0r4" path="res://Scripts/UI/settings_menu.gd" id="1_88deh"]
 [ext_resource type="PackedScene" uid="uid://b7jfsxfq2gkxs" path="res://Scenes/UI/VolumeSlider.tscn" id="2_brx2j"]

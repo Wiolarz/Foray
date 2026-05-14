@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="PresetArmy" load_steps=7 format=3 uid="uid://cv6twyxg7lf6h"]
+[gd_resource type="Resource" script_class="PresetArmy" format=3 uid="uid://cv6twyxg7lf6h"]
 
 [ext_resource type="Script" uid="uid://c16b4cooyllda" path="res://Resources/Presets/preset_army.gd" id="1_20mmm"]
 [ext_resource type="Resource" uid="uid://b44kr1rcexp3v" path="res://Resources/Battle/Units/Elves/elf_unit_hero_noble.tres" id="2_8ud8o"]

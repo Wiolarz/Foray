@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ciyo87ovmkwqh"]
+[gd_scene format=3 uid="uid://ciyo87ovmkwqh"]
 
 [ext_resource type="Script" uid="uid://2jvlpnbtlckg" path="res://Scripts/UI/World/army_panel.gd" id="1_07qff"]
 [ext_resource type="Texture2D" uid="uid://dg8rndjmxmih1" path="res://Art/units/elf/elf_hero_noble.png" id="2_fjiwl"]

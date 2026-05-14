@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://nnt62jra4vmv"]
+[gd_scene format=3 uid="uid://nnt62jra4vmv"]
 
 [ext_resource type="Script" uid="uid://bqt2ipplg17kk" path="res://Scripts/UI/Educational/BattleWiki/wiki_battle_terrain.gd" id="1_06hkl"]
 [ext_resource type="PackedScene" uid="uid://b6xtjog47hpwu" path="res://Scenes/UI/Wiki/BattleWiki/WikiBattleTileButton.tscn" id="2_2oobg"]

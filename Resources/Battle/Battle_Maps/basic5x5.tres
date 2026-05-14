@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataBattleMap" load_steps=9 format=3 uid="uid://klcvdl4qaq05"]
+[gd_resource type="Resource" script_class="DataBattleMap" format=3 uid="uid://klcvdl4qaq05"]
 
 [ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_n4sad"]
 [ext_resource type="Script" uid="uid://07v64r170uow" path="res://Resources/Battle/data_battle_map.gd" id="2_46q6y"]
@@ -35,9 +35,9 @@ texture_path = "res://Art/battle_map/deploy_yellow.png"
 
 [resource]
 script = ExtResource("2_46q6y")
-player_slots = {
+player_slots = Dictionary[int, int]({
 1: 5,
 2: 5
-}
+})
 grid_width = 7
 grid_data = [[SubResource("Resource_46d6s"), SubResource("Resource_46d6s"), SubResource("Resource_46d6s"), SubResource("Resource_46d6s"), SubResource("Resource_byg8b")], [SubResource("Resource_46d6s"), SubResource("Resource_46d6s"), SubResource("Resource_byg8b"), SubResource("Resource_byg8b"), SubResource("Resource_np2vw")], [SubResource("Resource_byg8b"), SubResource("Resource_byg8b"), SubResource("Resource_bxkt6"), SubResource("Resource_bxkt6"), SubResource("Resource_bxkt6")], [SubResource("Resource_np2vw"), SubResource("Resource_bxkt6"), SubResource("Resource_yyku0"), SubResource("Resource_np2vw"), SubResource("Resource_np2vw")], [SubResource("Resource_bxkt6"), SubResource("Resource_bxkt6"), SubResource("Resource_bxkt6"), SubResource("Resource_nlk2h"), SubResource("Resource_nlk2h")], [SubResource("Resource_np2vw"), SubResource("Resource_nlk2h"), SubResource("Resource_nlk2h"), SubResource("Resource_46d6s"), SubResource("Resource_46d6s")], [SubResource("Resource_nlk2h"), SubResource("Resource_46d6s"), SubResource("Resource_46d6s"), SubResource("Resource_46d6s"), SubResource("Resource_46d6s")]]

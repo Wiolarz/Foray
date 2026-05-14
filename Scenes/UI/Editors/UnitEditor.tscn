@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dy1m42bfkq2wv"]
+[gd_scene format=3 uid="uid://dy1m42bfkq2wv"]
 
 [ext_resource type="Script" uid="uid://c4r64siv6ioox" path="res://Scripts/Development/unit_editor.gd" id="1_77kxj"]
 [ext_resource type="StyleBox" uid="uid://cr3cpjlxxfm4r" path="res://Art/UI/marble_box.tres" id="2_bfpmc"]

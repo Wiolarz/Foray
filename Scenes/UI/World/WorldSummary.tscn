@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bwnrsn5ybvk8e"]
+[gd_scene format=3 uid="uid://bwnrsn5ybvk8e"]
 
 [ext_resource type="Script" uid="uid://cp4k3epk4l6og" path="res://Scripts/UI/World/world_summary.gd" id="1_cr40k"]
 [ext_resource type="Shader" uid="uid://cbulj12ojwuef" path="res://Art/UI/player_slot_panel.gdshader" id="2_i1ick"]

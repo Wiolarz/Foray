@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=8 format=3 uid="uid://dgnjky4w720c1"]
+[gd_resource type="Resource" script_class="DataHero" format=3 uid="uid://dgnjky4w720c1"]
 
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_bujg7"]
 [ext_resource type="Resource" uid="uid://tb8mbcolcm4n" path="res://Resources/Battle/Units/Fiends/fiend_hero_rigid.tres" id="2_nknfk"]

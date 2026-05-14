@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://c3fbauwsnspmh"]
+[gd_scene format=3 uid="uid://c3fbauwsnspmh"]
 
 [ext_resource type="Script" uid="uid://d1hknjxveh671" path="res://Scripts/UI/battle_summary_player_stats.gd" id="1_6rqn7"]
 
