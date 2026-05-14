@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cyp43rqdf2pth"]
+[gd_scene load_steps=7 format=3 uid="uid://cyp43rqdf2pth"]
 
 [ext_resource type="Script" uid="uid://b2aogxfep8i6q" path="res://Scripts/UI/Lobby/world_setup.gd" id="1_5qw0q"]
 [ext_resource type="PackedScene" uid="uid://dql37o7nhkxj6" path="res://Scenes/UI/Lobby/WorldPlayerSlotPanel.tscn" id="2_hpvug"]
@@ -30,22 +30,6 @@ content_margin_bottom = 0.0
 bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_21lvi"]
-resource_local_to_scene = true
-content_margin_left = 10.0
-content_margin_top = 0.0
-content_margin_right = 10.0
-content_margin_bottom = 0.0
-bg_color = Color(1, 1, 1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ajriv"]
-resource_local_to_scene = true
-content_margin_left = 10.0
-content_margin_top = 0.0
-content_margin_right = 10.0
-content_margin_bottom = 0.0
-bg_color = Color(1, 1, 1, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8tc31"]
 resource_local_to_scene = true
 content_margin_left = 10.0
 content_margin_top = 0.0
@@ -100,6 +84,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ybc2s")
 
 [node name="MapList" type="OptionButton" parent="V/MapSelect/ColorRect"]
 layout_mode = 2
+item_count = 1
+popup/item_0/id = 0
 
 [node name="Slots" type="VBoxContainer" parent="V"]
 layout_mode = 2
@@ -124,13 +110,5 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_imdx5")
 [node name="PlayerSlotPanel2" parent="V/Slots/ColorRect/PlayerList" instance=ExtResource("2_hpvug")]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_21lvi")
-
-[node name="PlayerSlotPanel3" parent="V/Slots/ColorRect/PlayerList" instance=ExtResource("2_hpvug")]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_ajriv")
-
-[node name="PlayerSlotPanel4" parent="V/Slots/ColorRect/PlayerList" instance=ExtResource("2_hpvug")]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8tc31")
 
 [connection signal="item_selected" from="V/MapSelect/ColorRect/MapList" to="." method="_on_map_list_item_selected"]

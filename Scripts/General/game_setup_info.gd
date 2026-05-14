@@ -209,12 +209,12 @@ func set_world_map(map : DataWorldMap) -> void:
 	for slot_idx in slots.size():
 		var race_idx = 0
 		var slot : Slot = slots[slot_idx]
-		if map.player_slots[slot_idx + 1]: # race lock is present # +1 accounts for neutrals at 0
-			slot.race = map.player_slots[slot_idx + 1]
+		if map.player_slots[slot_idx + 1]: # is there a race lock present?
 			slot.race_lock = true
+			slot.race = map.player_slots[slot_idx + 1]  # +1 accounts for neutrals at 0 index
 		else:
 			slot.race_lock = false
-			## assign to each new slot, new race, through nice cycling
+			## assign to each new slot, new race, through nice cycling #TODO small QOL add checking for race locked races, to avoid repetition
 			race_idx = wrap(slot_idx, 0, CFG.RACES_LIST.size())
 			slot.race = CFG.RACES_LIST[race_idx]
 

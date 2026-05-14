@@ -34,20 +34,18 @@ var battle_bots_paths : Array[String]
 
 #region Init
 
+func _ready() -> void:
+	_pre_ready_init()
+	_ready_init()
 
-@abstract
-func _pre_ready_init() -> void
+
+@abstract func _pre_ready_init() -> void
 
 
 func _ready_init() -> void:
 	assert(button_battle_bot)
 	battle_bots_paths = FileSystemHelpers.list_files_in_folder(CFG.BATTLE_BOTS_PATH, true, true)
 	init_battle_bots_button()
-
-
-func _ready() -> void:
-	_pre_ready_init()
-	_ready_init()
 
 
 func init_battle_bots_button():

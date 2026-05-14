@@ -4,12 +4,11 @@ extends Control
 
 var game_setup : GameSetup
 
-
-
+#TODO verify architecture related to those two technical helper variables
 var uninitialized : bool = true
 var settings_are_being_refreshed : bool = false
 
-
+# Generic Nodes for Game Setup settings
 var maps_list : OptionButton
 var player_list : Container
 var client_side_map_label : Label
@@ -21,17 +20,21 @@ var maps : Array[String]
 var player_slot_panel_scene_path : String
 var player_slot_panels : Array[PlayerSlotPanel] = []
 
-@abstract
-func _custom_refresh_nodes() -> void
-
 
 #region Setup
 
+func _ready() -> void:
+	_pre_ready_init()
+	_ready_init()
+
+
+## loads all unique node paths
 @abstract
 func _pre_ready_init() -> void
 
 
 func _ready_init() -> void:
+	# Verifies that all unique node paths were loaded through _pre_ready_init
 	assert(maps)
 	assert(player_list)
 	assert(maps_list)
@@ -41,11 +44,6 @@ func _ready_init() -> void:
 
 	UI.resources_list_changed.connect(refresh)
 	fill_maps_list()
-
-
-func _ready() -> void:
-	_pre_ready_init()
-	_ready_init()
 
 
 func fill_maps_list():
@@ -63,12 +61,20 @@ func fill_maps_list():
 
 #region Refresh
 
+@abstract
+func _custom_refresh_nodes() -> void
+
+
+@abstract
+func _custom_refresh_slot(index : int) -> void
+
+
 ## Updates UI to match GameState in IM
 func refresh():
 	#if settings_are_being_refreshed:
 	#	return
-	assert(not settings_are_being_refreshed) # todo, write down documenation of how its supposed to be used, or refactor it
-	settings_are_being_refreshed = true # destructor or finally whould be nice
+	assert(not settings_are_being_refreshed) # todo, write down documentation of how its supposed to be used, or refactor it
+	settings_are_being_refreshed = true # destructor or finally would be nice
 	prepare_player_slots()
 
 	update_maps_list_selection()
@@ -81,10 +87,6 @@ func refresh():
 	settings_are_being_refreshed = false
 
 
-@abstract
-func _custom_refresh_slot(index : int) -> void
-
-
 ## Updates BattlePlayerSlotPanel to match GameState in IM
 func _refresh_slot(index : int) -> void:
 	var ui_slot : PlayerSlotPanel = player_list.get_child(index)
@@ -93,35 +95,27 @@ func _refresh_slot(index : int) -> void:
 	var logic_slot : Slot = \
 		IM.game_setup_info.slots[index] if IM.game_setup_info.has_slot(index) \
 			else null
-	var color : DataPlayerColor = CFG.DEFAULT_TEAM_COLOR
-	var username : String = ""
-	var race : DataRace = null
-	var take_leave_button_state : PlayerSlotPanel.TakeLeaveButtonState =\
-		PlayerSlotPanel.TakeLeaveButtonState.GHOST
-	var reserve_seconds : int = 0
-	var increment_seconds : int = 0
-	var team : int = 0
-
 	assert(logic_slot)
+
+	var color : DataPlayerColor = CFG.get_team_color_at(logic_slot.color_idx)
+	var username : String = ""
+	#var race : DataRace = logic_slot.race #STUB
+	var take_leave_button_state := PlayerSlotPanel.TakeLeaveButtonState.GHOST
+	var reserve_seconds : int = logic_slot.timer_reserve_sec
+	var increment_seconds : int = logic_slot.timer_increment_sec
+	var team : int = logic_slot.team
 
 	if logic_slot.occupier is String:
 		if logic_slot.occupier == "":
 			username = NET.get_current_login()
-			take_leave_button_state = \
-				PlayerSlotPanel.TakeLeaveButtonState.TAKEN_BY_YOU
+			take_leave_button_state = PlayerSlotPanel.TakeLeaveButtonState.TAKEN_BY_YOU
 		else:
 			username = logic_slot.occupier
-			take_leave_button_state = \
-				PlayerSlotPanel.TakeLeaveButtonState.TAKEN_BY_OTHER
+			take_leave_button_state = PlayerSlotPanel.TakeLeaveButtonState.TAKEN_BY_OTHER
 	else:
 		username = "Computer\nlevel %d" % logic_slot.occupier
-		take_leave_button_state = \
-			PlayerSlotPanel.TakeLeaveButtonState.FREE
-	race = logic_slot.race
-	color = CFG.get_team_color_at(logic_slot.color_idx)
-	team = logic_slot.team
-	reserve_seconds = logic_slot.timer_reserve_sec
-	increment_seconds = logic_slot.timer_increment_sec
+		take_leave_button_state = PlayerSlotPanel.TakeLeaveButtonState.FREE
+
 
 	ui_slot.apply_bots_from_slot(logic_slot)
 
@@ -134,10 +128,8 @@ func _refresh_slot(index : int) -> void:
 	_custom_refresh_slot(index) # custom logic for battle/world
 
 
-
 ## in this function we adjust GUI slots number to logical slots number
 func prepare_player_slots() -> void:
-
 	var old_ui_slots : Array[Node] = player_list.get_children()
 
 	var logic_slots_count : int = IM.game_setup_info.slots.size()
@@ -188,7 +180,6 @@ func should_react_to_changes() -> bool:
 	return not settings_are_being_refreshed and not uninitialized
 
 
-#TODO verify what here is actually useful
 func update_maps_list_selection() -> void:
 	if not maps_list:
 		assert(client_side_map_label)
@@ -207,7 +198,7 @@ func update_maps_list_selection() -> void:
 			return
 
 
-func slot_to_index(slot) -> int:
+func slot_to_index(slot : PlayerSlotPanel) -> int:
 	return slot.get_index()
 
 
