@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=8 format=3 uid="uid://bi7fwl6i8o6a3"]
+[gd_resource type="Resource" script_class="DataHero" format=3 uid="uid://bi7fwl6i8o6a3"]
 
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_ae8ie"]
 [ext_resource type="Resource" uid="uid://cy0eh6aop7ce7" path="res://Resources/Battle/Units/Elves/elf_unit_hero_druid.tres" id="2_s2ujb"]

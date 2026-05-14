@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://b5f677a5bdad"]
+[gd_scene format=3 uid="uid://b5f677a5bdad"]
 
 [ext_resource type="Script" uid="uid://cf68h3cqrb85p" path="res://Scripts/UI/Educational/Practice/puzzle_menu.gd" id="1_3xydp"]
 

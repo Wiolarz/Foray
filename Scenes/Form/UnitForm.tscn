@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://sh62rfw7ulr8"]
+[gd_scene format=3 uid="uid://sh62rfw7ulr8"]
 
 [ext_resource type="Shader" uid="uid://dvvhpegfb4n64" path="res://Art/tile_overall_shader.gdshader" id="1_5p8y7"]
 [ext_resource type="Script" uid="uid://ihwqc1n6lvpn" path="res://Scripts/Battle/unit_form.gd" id="1_ep020"]

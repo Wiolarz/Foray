@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://cocrlvr5b31ff"]
+[gd_scene format=3 uid="uid://cocrlvr5b31ff"]
 
 [ext_resource type="Script" uid="uid://dhi6u4d8off0u" path="res://Scripts/AI/example_bot.gd" id="1_vi3vs"]
 

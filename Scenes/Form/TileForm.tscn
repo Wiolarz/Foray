@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ceurpxmgmn5c1"]
+[gd_scene format=3 uid="uid://ceurpxmgmn5c1"]
 
 [ext_resource type="Shader" uid="uid://dvvhpegfb4n64" path="res://Art/tile_overall_shader.gdshader" id="1_egcue"]
 [ext_resource type="Script" uid="uid://c2irlhl8snyny" path="res://Scripts/General/tile_form.gd" id="1_uelmv"]

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="BattleSpell" load_steps=4 format=3 uid="uid://oq31g85fljuf"]
+[gd_resource type="Resource" script_class="BattleSpell" format=3 uid="uid://oq31g85fljuf"]
 
 [ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="1_oxtud"]
 [ext_resource type="Resource" uid="uid://dh1qm8s82lxmd" path="res://Resources/Battle/Battle_Spells/Battle_Magic_Effects/vengeance_effect.tres" id="2_gmkfr"]
@@ -17,3 +17,4 @@ target_type = 1
 needs_movable_tile = false
 target_unit_type = 1
 not_self = false
+needs_empty_front_tile = false

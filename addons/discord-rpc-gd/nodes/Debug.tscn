@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c1slhdnlsv2qt"]
+[gd_scene format=3 uid="uid://c1slhdnlsv2qt"]
 
 [ext_resource type="Texture2D" uid="uid://dnfq6kug4x6o2" path="res://addons/discord-rpc-gd/nodes/assets/Checked.svg" id="2_q6tao"]
 [ext_resource type="Texture2D" uid="uid://compmm3kviqqe" path="res://addons/discord-rpc-gd/nodes/assets/Unchecked.svg" id="3_5cyem"]

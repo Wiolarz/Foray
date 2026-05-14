@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataSymbol" load_steps=2 format=3 uid="uid://o4rlmfc33rsh"]
+[gd_resource type="Resource" script_class="DataSymbol" format=3 uid="uid://o4rlmfc33rsh"]
 
 [ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="1_cblen"]
 

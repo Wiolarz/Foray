@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="DataBattleMap" load_steps=12 format=3]
+[gd_resource type="Resource" script_class="DataBattleMap" format=3 uid="uid://cl635lw1csgs3"]
 
-[ext_resource type="Script" path="res://Resources/data_tile.gd" id="1_46kh1"]
-[ext_resource type="Script" path="res://Resources/Battle/data_battle_map.gd" id="2_qy1hi"]
+[ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_46kh1"]
+[ext_resource type="Script" uid="uid://07v64r170uow" path="res://Resources/Battle/data_battle_map.gd" id="2_qy1hi"]
 
 [sub_resource type="Resource" id="Resource_75y67"]
 script = ExtResource("1_46kh1")
@@ -50,10 +50,10 @@ texture_path = "res://Art/battle_map/deploy_yellow.png"
 
 [resource]
 script = ExtResource("2_qy1hi")
-player_slots = {
+player_slots = Dictionary[int, int]({
 1: 6,
 2: 8
-}
+})
 grid_width = 9
 grid_height = 7
 grid_data = [[SubResource("Resource_75y67"), SubResource("Resource_75y67"), SubResource("Resource_75y67"), SubResource("Resource_75y67"), SubResource("Resource_75y67"), SubResource("Resource_moljv"), SubResource("Resource_moljv")], [SubResource("Resource_75y67"), SubResource("Resource_75y67"), SubResource("Resource_75y67"), SubResource("Resource_8b4j7"), SubResource("Resource_moljv"), SubResource("Resource_8b4j7"), SubResource("Resource_8b4j7")], [SubResource("Resource_75y67"), SubResource("Resource_moljv"), SubResource("Resource_moljv"), SubResource("Resource_ornu1"), SubResource("Resource_kpy30"), SubResource("Resource_8b4j7"), SubResource("Resource_0cnyq")], [SubResource("Resource_moljv"), SubResource("Resource_8b4j7"), SubResource("Resource_8b4j7"), SubResource("Resource_8b4j7"), SubResource("Resource_r7d5t"), SubResource("Resource_8b4j7"), SubResource("Resource_8b4j7")], [SubResource("Resource_0cnyq"), SubResource("Resource_uu46y"), SubResource("Resource_8b4j7"), SubResource("Resource_8b4j7"), SubResource("Resource_uu46y"), SubResource("Resource_ornu1"), SubResource("Resource_8b4j7")], [SubResource("Resource_8b4j7"), SubResource("Resource_ornu1"), SubResource("Resource_kpy30"), SubResource("Resource_8b4j7"), SubResource("Resource_8b4j7"), SubResource("Resource_8b4j7"), SubResource("Resource_cgp53")], [SubResource("Resource_8b4j7"), SubResource("Resource_8b4j7"), SubResource("Resource_8b4j7"), SubResource("Resource_cgp53"), SubResource("Resource_cgp53"), SubResource("Resource_cgp53"), SubResource("Resource_75y67")], [SubResource("Resource_8b4j7"), SubResource("Resource_8b4j7"), SubResource("Resource_cgp53"), SubResource("Resource_cgp53"), SubResource("Resource_75y67"), SubResource("Resource_75y67"), SubResource("Resource_75y67")], [SubResource("Resource_cgp53"), SubResource("Resource_cgp53"), SubResource("Resource_75y67"), SubResource("Resource_75y67"), SubResource("Resource_75y67"), SubResource("Resource_75y67"), SubResource("Resource_75y67")]]

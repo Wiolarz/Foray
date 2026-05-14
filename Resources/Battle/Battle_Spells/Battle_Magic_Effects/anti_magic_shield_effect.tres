@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataMagicEffect" format=3 uid="uid://c8t6h3sw3qbrf"]
+[gd_resource type="Resource" script_class="DataMagicEffect" format=3 uid="uid://bq1dfnfljpl62"]
 
 [ext_resource type="Script" uid="uid://lgbukttoatcv" path="res://Scripts/Battle/data_magic_effect.gd" id="1_8ywxr"]
 

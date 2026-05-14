@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://cpi6ju6v0jr8k"]
+[gd_scene format=3 uid="uid://cpi6ju6v0jr8k"]
 
 [sub_resource type="GDScript" id="GDScript_6tss0"]
 resource_name = "main_scene"
@@ -8,5 +8,5 @@ func _ready():
 	IM.go_to_main_menu()
 "
 
-[node name="MainScene" type="Node2D"]
+[node name="MainScene" type="Node2D" unique_id=2009907389]
 script = SubResource("GDScript_6tss0")

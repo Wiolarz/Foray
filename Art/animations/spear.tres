@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" script_class="SymbolAnimation" load_steps=59 format=3 uid="uid://c74utw2dcipbg"]
+[gd_resource type="SpriteFrames" script_class="SymbolAnimation" format=3 uid="uid://c74utw2dcipbg"]
 
 [ext_resource type="Texture2D" uid="uid://dh1bgmrra1url" path="res://Art/animations/Stab.png" id="1_brplm"]
 [ext_resource type="Script" uid="uid://xmxwn8o7es5d" path="res://Resources/Battle/symbol_animation.gd" id="2_g4krp"]

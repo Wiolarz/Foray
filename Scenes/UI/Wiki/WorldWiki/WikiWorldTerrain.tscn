@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://cmi3w4brn1nc7"]
+[gd_scene format=3 uid="uid://cmi3w4brn1nc7"]
 
 [ext_resource type="Script" uid="uid://s5pgrnwsfcb6" path="res://Scripts/UI/Educational/WorldWiki/wiki_world_terrain.gd" id="1_fqcm8"]
 [ext_resource type="PackedScene" uid="uid://bmu8u1j2leqdl" path="res://Scenes/UI/Wiki/WorldWiki/WikiWorldTileButton.tscn" id="2_bn6y4"]

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=8 format=3 uid="uid://c38l6fj56u5fp"]
+[gd_resource type="Resource" script_class="DataHero" format=3 uid="uid://c38l6fj56u5fp"]
 
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_p2dpe"]
 [ext_resource type="Resource" uid="uid://dbj11lf21vekh" path="res://Resources/Battle/Units/Orcs/orc_unit_hero_crusader.tres" id="2_ov8fl"]

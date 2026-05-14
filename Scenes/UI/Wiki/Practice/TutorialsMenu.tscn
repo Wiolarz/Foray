@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://baltedrhixfl7"]
+[gd_scene format=3 uid="uid://baltedrhixfl7"]
 
 [ext_resource type="Script" uid="uid://dichqjknkkx1f" path="res://Scripts/UI/Educational/Practice/tutorial_menu.gd" id="1_gtpmc"]
 

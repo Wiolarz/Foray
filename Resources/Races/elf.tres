@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataRace" load_steps=18 format=3 uid="uid://dw5h2qrh35374"]
+[gd_resource type="Resource" script_class="DataRace" format=3 uid="uid://dw5h2qrh35374"]
 
 [ext_resource type="Script" uid="uid://xj5cnhe2t57k" path="res://Resources/Races/data_race.gd" id="1_2lh8d"]
 [ext_resource type="Resource" uid="uid://c8pklu2lld3er" path="res://Resources/Races/Buildings/Barracks_1.tres" id="1_ivls3"]

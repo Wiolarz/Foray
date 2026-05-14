@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="AiWorldBotAfk" load_steps=2 format=3 uid="uid://bk5e76nowfg8a"]
+[gd_resource type="Resource" script_class="AiWorldBotAfk" format=3 uid="uid://bk5e76nowfg8a"]
 
 [ext_resource type="Script" uid="uid://744bcrcj5kps" path="res://Scripts/AI/World_AI/afk_world_bot.gd" id="1_ng5qm"]
 

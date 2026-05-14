@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bc4yv21yc35fw"]
+[gd_scene format=3 uid="uid://bc4yv21yc35fw"]
 
 [ext_resource type="Texture2D" uid="uid://cxxylsg7lychq" path="res://Art/items/blue_axe.png" id="1_pef6c"]
 [ext_resource type="Script" uid="uid://dfyhc7bur2q2g" path="res://Scripts/Battle/symbol_form.gd" id="1_qtp2l"]

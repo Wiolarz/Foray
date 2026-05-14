@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://ppjha2gmeypa"]
+[gd_scene format=3 uid="uid://ppjha2gmeypa"]
 
 [ext_resource type="Script" uid="uid://b8qcu4c2bvxaw" path="res://Scripts/World/army_form.gd" id="1_t5y27"]
 [ext_resource type="Texture2D" uid="uid://dl83iemcau32g" path="res://Art/player_colors/blue_color.png" id="2_ntsq3"]

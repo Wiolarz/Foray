@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c2nbsmfpf5nbk"]
+[gd_scene format=3 uid="uid://c2nbsmfpf5nbk"]
 
 [ext_resource type="Script" uid="uid://dc3mvmbnwmlw8" path="res://Scripts/UI/battle_summary.gd" id="1_5cr4m"]
 [ext_resource type="Shader" uid="uid://cbulj12ojwuef" path="res://Art/UI/player_slot_panel.gdshader" id="1_5w0ft"]

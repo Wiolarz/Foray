@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="HeroPassive" load_steps=2 format=3 uid="uid://cfm5gnll7opbh"]
+[gd_resource type="Resource" script_class="HeroPassive" format=3 uid="uid://cfm5gnll7opbh"]
 
 [ext_resource type="Script" uid="uid://b41h5o8sjhdsk" path="res://Resources/Battle/hero_passive.gd" id="1_m47jw"]
 

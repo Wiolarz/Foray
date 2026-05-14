@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=10 format=3 uid="uid://b2y53doccjmg8"]
+[gd_resource type="Resource" script_class="DataHero" format=3 uid="uid://b2y53doccjmg8"]
 
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_8ohtj"]
 [ext_resource type="Resource" uid="uid://1yy1fjfn2n8k" path="res://Resources/Battle/Units/Elves/elf_unit_hero_stalker.tres" id="2_hf5ab"]

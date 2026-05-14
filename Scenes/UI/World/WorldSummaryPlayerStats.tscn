@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://hl5te0kpi734"]
+[gd_scene format=3 uid="uid://hl5te0kpi734"]
 
 [ext_resource type="Script" uid="uid://of32y4pb8o3k" path="res://Scripts/UI/World/world_summary_player_stats.gd" id="1_2oyyj"]
 

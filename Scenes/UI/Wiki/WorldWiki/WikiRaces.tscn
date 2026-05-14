@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://d4jfwmwytwjsc"]
+[gd_scene format=3 uid="uid://d4jfwmwytwjsc"]
 
 [ext_resource type="Script" uid="uid://bn5podchwkvds" path="res://Scripts/UI/Educational/WorldWiki/wiki_races.gd" id="1_xg12o"]
 [ext_resource type="PackedScene" uid="uid://j7u7m68we3um" path="res://Scenes/UI/Wiki/WorldWiki/WikiRaceButton.tscn" id="2_3a22u"]

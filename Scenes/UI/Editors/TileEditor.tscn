@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cwv8isdmpg34u"]
+[gd_scene format=3 uid="uid://cwv8isdmpg34u"]
 
 [ext_resource type="Script" uid="uid://bef0trj6ig5k4" path="res://Scripts/Development/tile_editor.gd" id="1_x074o"]
 [ext_resource type="Shader" uid="uid://dx17bf7srxnxf" path="res://Art/UI/background.gdshader" id="2_812di"]

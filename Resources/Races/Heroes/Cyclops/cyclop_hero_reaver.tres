@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=8 format=3 uid="uid://wb8b0k7j4fdq"]
+[gd_resource type="Resource" script_class="DataHero" format=3 uid="uid://wb8b0k7j4fdq"]
 
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_ipgi6"]
 [ext_resource type="Resource" uid="uid://tpkjdhqhnom4" path="res://Resources/Battle/Units/Cyclops/cyclops_hero_reaver.tres" id="2_kgfm7"]

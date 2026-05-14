@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataBattleMap" load_steps=11 format=3 uid="uid://t1equnls77c"]
+[gd_resource type="Resource" script_class="DataBattleMap" format=3 uid="uid://t1equnls77c"]
 
 [ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_m4hiv"]
 [ext_resource type="Script" uid="uid://07v64r170uow" path="res://Resources/Battle/data_battle_map.gd" id="2_qd1a8"]
@@ -45,10 +45,10 @@ texture_path = "res://Art/battle_map/deploy_yellow.png"
 
 [resource]
 script = ExtResource("2_qd1a8")
-player_slots = {
+player_slots = Dictionary[int, int]({
 1: 1,
 2: 3
-}
+})
 grid_width = 8
 grid_height = 6
 grid_data = [[SubResource("Resource_ualql"), SubResource("Resource_vyd1q"), SubResource("Resource_uoy02"), SubResource("Resource_uoy02"), SubResource("Resource_uoy02"), SubResource("Resource_q872o")], [SubResource("Resource_uoy02"), SubResource("Resource_g6cjo"), SubResource("Resource_g6cjo"), SubResource("Resource_g6cjo"), SubResource("Resource_uoy02"), SubResource("Resource_o5iyj")], [SubResource("Resource_uoy02"), SubResource("Resource_uoy02"), SubResource("Resource_uoy02"), SubResource("Resource_vyd1q"), SubResource("Resource_g6cjo"), SubResource("Resource_ualql")], [SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_ualql")], [SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_q6n58"), SubResource("Resource_ualql")], [SubResource("Resource_uoy02"), SubResource("Resource_uoy02"), SubResource("Resource_q6n58"), SubResource("Resource_uoy02"), SubResource("Resource_ualql"), SubResource("Resource_ualql")], [SubResource("Resource_p1t2u"), SubResource("Resource_p1t2u"), SubResource("Resource_q6n58"), SubResource("Resource_uoy02"), SubResource("Resource_ualql"), SubResource("Resource_ualql")], [SubResource("Resource_ualql"), SubResource("Resource_ualql"), SubResource("Resource_ualql"), SubResource("Resource_p1t2u"), SubResource("Resource_ualql"), SubResource("Resource_ualql")]]

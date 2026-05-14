@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataTile" load_steps=2 format=3 uid="uid://dr51l6yyu5epf"]
+[gd_resource type="Resource" script_class="DataTile" format=3 uid="uid://dr51l6yyu5epf"]
 
 [ext_resource type="Script" uid="uid://chbwrub014a7s" path="res://Resources/data_tile.gd" id="1_7nhkj"]
 

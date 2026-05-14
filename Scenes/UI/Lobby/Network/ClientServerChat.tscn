@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://cvcqwnm864s0g"]
+[gd_scene format=3 uid="uid://cvcqwnm864s0g"]
 
 [ext_resource type="Script" uid="uid://x0ntsj4vvlr" path="res://Scripts/UI/Lobby/Network/client_server_chat.gd" id="1_b8j0j"]
 [ext_resource type="Shortcut" uid="uid://fuvss5hfg4q2" path="res://Resources/Shortcuts/go_back.tres" id="2_1if57"]

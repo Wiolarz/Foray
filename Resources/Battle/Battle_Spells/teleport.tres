@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="BattleSpell" load_steps=3 format=3 uid="uid://bmrgon7ovm2hl"]
+[gd_resource type="Resource" script_class="BattleSpell" format=3 uid="uid://bmrgon7ovm2hl"]
 
 [ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="1_0306o"]
 [ext_resource type="Script" uid="uid://lgbukttoatcv" path="res://Scripts/Battle/data_magic_effect.gd" id="2_o1nj3"]
@@ -14,3 +14,4 @@ target_type = 2
 needs_movable_tile = true
 target_unit_type = 0
 not_self = false
+needs_empty_front_tile = false

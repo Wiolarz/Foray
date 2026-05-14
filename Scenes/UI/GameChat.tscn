@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://c2tjldwjynnry"]
+[gd_scene format=3 uid="uid://c2tjldwjynnry"]
 
 [ext_resource type="Script" uid="uid://tou53uqr2sir" path="res://Scripts/UI/game_chat.gd" id="1_3ps2f"]
 [ext_resource type="Theme" uid="uid://cxft16v20dg2s" path="res://Art/UI/chat_theme.tres" id="1_r6xwp"]

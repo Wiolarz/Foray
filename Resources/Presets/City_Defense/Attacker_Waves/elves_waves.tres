@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="PresetWaves" load_steps=19 format=3 uid="uid://dmqm4fluw07ne"]
+[gd_resource type="Resource" script_class="PresetWaves" format=3 uid="uid://dmqm4fluw07ne"]
 
 [ext_resource type="Resource" uid="uid://dw5h2qrh35374" path="res://Resources/Races/elf.tres" id="1_7h3fr"]
 [ext_resource type="Script" uid="uid://pkro2nylrsgo" path="res://Resources/Presets/City_Defense/preset_waves.gd" id="1_dtw3h"]

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataHero" load_steps=8 format=3 uid="uid://cglulnc0lgfjw"]
+[gd_resource type="Resource" script_class="DataHero" format=3 uid="uid://cglulnc0lgfjw"]
 
 [ext_resource type="Script" uid="uid://c5wg42c04n0wx" path="res://Resources/Races/data_hero.gd" id="1_q5lvc"]
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_v83s4"]

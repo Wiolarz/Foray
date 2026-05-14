@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cyp43rqdf2pth"]
+[gd_scene format=3 uid="uid://cyp43rqdf2pth"]
 
 [ext_resource type="Script" uid="uid://b2aogxfep8i6q" path="res://Scripts/UI/Lobby/world_setup.gd" id="1_5qw0q"]
 [ext_resource type="PackedScene" uid="uid://dql37o7nhkxj6" path="res://Scenes/UI/Lobby/WorldPlayerSlotPanel.tscn" id="2_hpvug"]

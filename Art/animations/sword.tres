@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" script_class="SymbolAnimation" load_steps=52 format=3 uid="uid://cm0qgci26d65b"]
+[gd_resource type="SpriteFrames" script_class="SymbolAnimation" format=3 uid="uid://cm0qgci26d65b"]
 
 [ext_resource type="Texture2D" uid="uid://cqd3f6vca8j4b" path="res://Art/animations/big_sword_parry.png" id="1_vnp8n"]
 [ext_resource type="Texture2D" uid="uid://l7uo16w0yxq2" path="res://Art/animations/Slash.png" id="2_ghp7p"]

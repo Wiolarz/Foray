@@ -1,11 +1,11 @@
-[gd_resource type="Resource" script_class="DataUnit" load_steps=10 format=3 uid="uid://clg7erwyf3dec"]
+[gd_resource type="Resource" script_class="DataUnit" format=3 uid="uid://clg7erwyf3dec"]
 
 [ext_resource type="Script" uid="uid://dqn1jylfd36ei" path="res://Scripts/World/Economy/goods.gd" id="1_ff7m1"]
 [ext_resource type="Script" uid="uid://owndl51mg2er" path="res://Resources/Battle/data_unit.gd" id="2_aebfv"]
 [ext_resource type="Resource" uid="uid://0fkofgfvnjtq" path="res://Resources/Battle/Symbols/flail.tres" id="3_3l3xx"]
 [ext_resource type="Script" uid="uid://be42dtlude8lf" path="res://Scripts/Battle/battle_spell.gd" id="3_x1lta"]
 [ext_resource type="Resource" uid="uid://bhtwkhydnmjg6" path="res://Resources/Battle/Battle_Spells/wind_dash.tres" id="4_x1lta"]
-[ext_resource type="Resource" uid="uid://bf4qocy5xy3qc" path="res://Resources/Battle/Battle_Spells/anti_magic_shield.tres" id="5_ekous"]
+[ext_resource type="Resource" uid="uid://b0xtjvuw615j2" path="res://Resources/Battle/Battle_Spells/anti_magic_shield.tres" id="5_ekous"]
 [ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="5_jyckd"]
 [ext_resource type="Resource" uid="uid://o4rlmfc33rsh" path="res://Resources/Battle/Symbols/empty.tres" id="5_vmv8p"]
 

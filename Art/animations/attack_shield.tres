@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" script_class="SymbolAnimation" load_steps=52 format=3 uid="uid://bdi10bbb15c3x"]
+[gd_resource type="SpriteFrames" script_class="SymbolAnimation" format=3 uid="uid://bdi10bbb15c3x"]
 
 [ext_resource type="Texture2D" uid="uid://ld1futoje86i" path="res://Art/animations/attack_shield_block.png" id="1_grtcn"]
 [ext_resource type="Script" uid="uid://xmxwn8o7es5d" path="res://Resources/Battle/symbol_animation.gd" id="1_xurhu"]

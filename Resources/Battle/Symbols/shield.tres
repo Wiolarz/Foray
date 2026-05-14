@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DataSymbol" load_steps=3 format=3 uid="uid://sr1570kq7sm8"]
+[gd_resource type="Resource" script_class="DataSymbol" format=3 uid="uid://sr1570kq7sm8"]
 
 [ext_resource type="Script" uid="uid://mfvqilcwc0cy" path="res://Resources/Battle/data_symbol.gd" id="1_5wrht"]
 [ext_resource type="SpriteFrames" uid="uid://cgm614vjrppqs" path="res://Art/animations/shield.tres" id="2_g88pr"]

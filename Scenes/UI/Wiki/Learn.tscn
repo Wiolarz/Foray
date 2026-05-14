@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://hxaial4lcwu7"]
+[gd_scene format=3 uid="uid://hxaial4lcwu7"]
 
 [ext_resource type="Script" uid="uid://dxvxs3dysw8k2" path="res://Scripts/UI/Educational/learn_tab.gd" id="1_6475f"]
 [ext_resource type="PackedScene" uid="uid://dffua4js758nx" path="res://Scenes/UI/Wiki/Practice/WikiIntroduction.tscn" id="2_230xd"]

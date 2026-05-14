@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ScriptedBattle" load_steps=10 format=3 uid="uid://0l4pxlo5wi02"]
+[gd_resource type="Resource" script_class="ScriptedBattle" format=3 uid="uid://0l4pxlo5wi02"]
 
 [ext_resource type="Script" uid="uid://cmo0n6c34e7as" path="res://Resources/Campaign/scripted_battle.gd" id="1_grfgo"]
 [ext_resource type="Resource" uid="uid://bi7fwl6i8o6a3" path="res://Resources/Races/Heroes/Elves/elf_hero_druid.tres" id="1_l22ta"]

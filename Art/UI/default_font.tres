@@ -1,4 +1,4 @@
-[gd_resource type="FontVariation" load_steps=3 format=3 uid="uid://cwve433e1tc2u"]
+[gd_resource type="FontVariation" format=3 uid="uid://cwve433e1tc2u"]
 
 [ext_resource type="FontFile" uid="uid://da2ubx3hyhcma" path="res://Art/UI/fonts/kurland/Kurland.ttf" id="1_fy0bn"]
 [ext_resource type="FontFile" uid="uid://byj2op7f2i4p8" path="res://Art/UI/fonts/noto_color_emoji/NotoColorEmoji-Regular.ttf" id="1_ixlwc"]
