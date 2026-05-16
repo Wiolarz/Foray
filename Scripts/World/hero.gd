@@ -149,13 +149,11 @@ func _level_up() -> void:
 		add_ritual(load("res://Resources/World/Rituals/town_portal.tres"))
 
 
+## force_apply - for special events to skip level requirements like cheats
 func add_passive(passive : HeroPassive, force_apply : bool = false) -> void:
-	if force_apply:
-		passive_effects.append(passive)
+	if not force_apply and passive in passive_effects:
 		return
-
-
-
+	passive_effects.append(passive)
 
 #endregion Level Up
 
