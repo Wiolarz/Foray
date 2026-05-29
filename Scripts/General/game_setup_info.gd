@@ -23,9 +23,6 @@ var slots : Array[Slot] ## slot for each player color on the map picked
 ## with a preset not setting selection properly
 var battle_preset_name_hint : String
 
-## used in dropdown list in UI of battle setup, due to the problem with loading selected map
-## with a preset not setting selection properly
-var map_name_hint : String
 
 func is_in_mode_world():
 	return game_mode == GameMode.WORLD
@@ -182,7 +179,7 @@ static func units_list_receive_from_network(serialized: Array) -> Array[DataUnit
 
 
 ## also gets optional map name (for UI)
-func set_battle_map(map : DataBattleMap, map_name : String = ""):
+func set_battle_map(map : DataBattleMap):
 	assert(game_mode == GameMode.BATTLE, "setting battle map in game mode: " + str(game_mode))
 	battle_map = map
 
@@ -193,7 +190,6 @@ func set_battle_map(map : DataBattleMap, map_name : String = ""):
 		var number_of_unit_slots = map.player_slots[slot_idx + 1] - 1  # -1 space is reserved for hero unit
 		slots[slot_idx].set_units_length(number_of_unit_slots)
 
-	map_name_hint = map_name
 
 
 func set_world_map(map : DataWorldMap) -> void:
@@ -218,8 +214,6 @@ func set_world_map(map : DataWorldMap) -> void:
 			race_idx = wrap(slot_idx, 0, CFG.RACES_LIST.size())
 			slot.race = CFG.RACES_LIST[race_idx]
 
-	map_name_hint = map.resource_path.get_file()
-
 
 ## used at start with some default preset, also used when preset is chosen
 ## in UI
@@ -232,7 +226,7 @@ func apply_battle_preset(preset : PresetBattle, preset_name : String = "") -> vo
 	assert(ResourceLoader.exists(map_path), "map with name %s does not exist" % map_name)
 	var map : DataBattleMap = load(map_path)
 	assert(map, "map with name %s is corruped" % map_name)
-	set_battle_map(map, map_name)
+	set_battle_map(map)
 
 	# now we need to set armies and teams from preset
 	for i in range(slots.size()):
