@@ -58,12 +58,10 @@ var ritual_cost_reduction : int = 0
 # Battle Gameplay
 var data_unit : DataUnit
 
+## Main level upgrade related bonuses are stored here
 var passive_effects : Array[HeroPassive] = []
 
 
-## DESIGN should current level determine how many exp is needed for level up
-static func level_threshold_at(_level : int) -> int:
-	return 2
 
 
 # static func create_hero(data_hero : DataHero, player : Player) -> Hero:
@@ -101,12 +99,28 @@ func _init():
 	name = "Hero"
 
 
-func trade(_another_hero : Hero):
-	print("trade menu")
-
+#region Map actions
 
 func move(target : TileForm):
 	target_tile = target
+
+
+func revive():
+	movement_points = max_movement_points
+
+
+func add_ritual(ritual : Ritual) -> void:
+	rituals_book.append(ritual.duplicate())
+	rituals.append(ritual.duplicate())
+
+#endregion Map actions
+
+
+#region Level Up
+
+## DESIGN should current level determine how many exp is needed for level up
+static func level_threshold_at(_level : int) -> int:
+	return 2
 
 
 func add_xp(gained_xp : int) -> void:
@@ -135,14 +149,27 @@ func _level_up() -> void:
 		add_ritual(load("res://Resources/World/Rituals/town_portal.tres"))
 
 
-func revive():
-	movement_points = max_movement_points
+## force_apply - for special events to skip level requirements like cheats
+func add_passive(passive : HeroPassive, force_apply : bool = false) -> void:
+	if not force_apply and passive in passive_effects:
+		return
+	passive_effects.append(passive)
 
 
-func add_ritual(ritual : Ritual) -> void:
-	rituals_book.append(ritual.duplicate())
-	rituals.append(ritual.duplicate())
+## passive_id = number from the left 0.., tier = row 0.., is_it_talent or an ability
+func add_passive_from_tree(passive_id : int, tier : int, is_it_talent : bool) -> void:
+	var selected_passive_group : Array[HeroPassive]
+	if is_it_talent:
+		selected_passive_group = CFG.talents[tier]
+	else:
+		selected_passive_group = CFG.abilities[tier]
 
+	add_passive(selected_passive_group[passive_id])
+
+#endregion Level Up
+
+
+#region Networking
 
 func to_network_serializable() -> Dictionary[String, Variant]:
 	var dict : Dictionary[String, Variant] = {}
@@ -162,3 +189,5 @@ static func from_network_serializable(dict : Dictionary[String, Variant], contro
 	hero.xp = dict["xp"]
 	hero.level = dict["level"]
 	return hero
+
+#endregion Networking
