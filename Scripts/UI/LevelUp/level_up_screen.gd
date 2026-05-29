@@ -46,12 +46,10 @@ func apply_talents_and_abilities() -> void:
 	for tier in range(3):
 		var talent_idx = chosen_talents[tier]
 		if talent_idx >= 0:
-			var new_talent : HeroPassive = CFG.talents[tier][talent_idx]
-			selected_hero.add_passive(new_talent)
+			selected_hero.add_passive_from_tree(talent_idx, tier, true)
 
 		for ability_idx : int in chosen_abilities[tier]:
-			var new_ability : HeroPassive = CFG.abilities[tier][ability_idx]
-			selected_hero.add_passive(new_ability)
+			selected_hero.add_passive_from_tree(ability_idx, tier, false)
 
 
 

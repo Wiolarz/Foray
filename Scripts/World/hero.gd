@@ -155,6 +155,17 @@ func add_passive(passive : HeroPassive, force_apply : bool = false) -> void:
 		return
 	passive_effects.append(passive)
 
+
+## passive_id = number from the left 0.., tier = row 0.., is_it_talent or an ability
+func add_passive_from_tree(passive_id : int, tier : int, is_it_talent : bool) -> void:
+	var selected_passive_group : Array[HeroPassive]
+	if is_it_talent:
+		selected_passive_group = CFG.talents[tier]
+	else:
+		selected_passive_group = CFG.abilities[tier]
+
+	add_passive(selected_passive_group[passive_id])
+
 #endregion Level Up
 
 
