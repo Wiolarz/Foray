@@ -5,6 +5,24 @@ extends AIWorldInterface
 ## pairs of heroes (hero_name) and their map coord targets
 var hero_targets : Dictionary[String, Army] = {}
 
+const level_up_build = [
+	 # 1 tier
+	[[false, 0, 0]],
+	[[false, 1, 0], [true, 0, 0]],
+	# 2 tier
+	[[false, 0, 1], [true, 0, 1]],
+	[[false, 1, 1]],
+	# 3 tier
+	[[false, 0, 2], [true, 0, 2]],
+	[[false, 1, 2]]
+]
+
+func _hero_level_up(hero : Hero) -> void:
+	for level in range(hero.level):
+		var level_selection = level_up_build[level]
+		for choice in level_selection:
+			hero.add_passive_from_tree(choice[1], choice[2], choice[0])
+
 
 func choose_move() -> WorldMoveInfo:
 
@@ -19,6 +37,7 @@ func choose_move() -> WorldMoveInfo:
 
 	## MOVING HEROES AROUND THE MAP
 	for army : Army in faction.hero_armies:
+		_hero_level_up(army.hero) # if after winning a battle bot moves once again, it can level up
 		#continue # Disable moving for tests
 		## Search for potential targets
 		if army.hero.hero_name not in hero_targets.keys():
@@ -66,9 +85,11 @@ func choose_move() -> WorldMoveInfo:
 			var possible_targets : Array[Vector2i] = WS.get_all_ritual_targets(army.hero, ritual)
 			if possible_targets.size() == 0:
 				continue
-			possible_targets.shuffle()
-			return WorldMoveInfo.make_ritual(army.coord, possible_targets[0], ritual)
+			return WorldMoveInfo.make_ritual(army.coord, possible_targets.pick_random(), ritual)
 
-
+	# if army no longer has movement points,
+	# but it could have leveled up during on last move try leveling up
+	for army : Army in faction.hero_armies:
+		_hero_level_up(army.hero)
 
 	return WorldMoveInfo.make_end_turn()
