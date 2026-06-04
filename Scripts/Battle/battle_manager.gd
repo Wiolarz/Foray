@@ -1066,6 +1066,10 @@ func toggle_ally_arrows(focus_mode : bool) -> void:
 	else:
 		_painter_node.show()
 
+
+func draw_allies_arrows(text_arrows : String, teammate_idx : int) -> void:
+	_painter_node.generate_arrows_from_net(text_arrows, teammate_idx)
+
 #endregion Painting
 
 

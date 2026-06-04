@@ -126,6 +126,17 @@ func clear_local_chat_log() -> void:
 	chat_log_cleared.emit()
 
 
+func send_drawn_arrows_array(message : String) -> void:
+	if not client:
+		append_message_to_local_chat_log(message, get_current_login())
+	if server:
+		server.broadcast_say(message)
+	elif client:
+		client.queue_say(message)
+
+	BM.draw_allies_arrows(message, 5)
+
+
 ## Poly API - not currently maintained by anyone [br]
 ## tries to determine probable address by which a server running on this
 ## machine could be reached, usually by making a call to an external

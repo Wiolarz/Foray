@@ -4,12 +4,34 @@ extends Node2D
 
 var new_arrow : ChessArrow
 var arrows_to_draw : Array[ChessArrow] = []  # Array[Array[Vector2]]
+var teammates_arrows : Dictionary = {}
 
 func update_drawings() -> void:
 	#multi stuff
 	print("test")
+	NET.send_chat_message("update_drawings")
+	NET.send_drawn_arrows_array(_convert_arrows_array_to_net())
 	queue_redraw()
 
+
+func _convert_arrows_array_to_net() -> String:
+	var result : String = ""
+	for arrow : ChessArrow in arrows_to_draw:
+		result += arrow.to_net_string()
+
+	return result
+
+
+func generate_arrows_from_net(text_arrows : String, player_idx : int) -> void:
+	var split_text_arrows : PackedStringArray = text_arrows.split("|")
+	teammates_arrows[player_idx] = []
+	for text_arrow : String in split_text_arrows:
+		if text_arrow.length() < 2: # prevents empty strings from generating arrows
+			continue
+		var new_arrow_from_string := ChessArrow.create_from_net_string(text_arrow, player_idx)
+		teammates_arrows[player_idx].append(new_arrow_from_string)
+		add_child(new_arrow_from_string.end_node)## TODO create seperate child node for each ally
+	queue_redraw()
 
 
 func _draw():
@@ -21,6 +43,12 @@ func _draw():
 		var color : Color = BattlePainter.get_color_from_index(arrow.color_idx)
 		draw_polyline(arrow.draw_path, color, _line_width)
 
+	for teammate : int in teammates_arrows.keys():
+		for arrow : ChessArrow in teammates_arrows[teammate]:
+			if arrow.draw_path.size() == 1:
+				continue  # we don't draw lines for pointers
+			var color : Color = BattlePainter.get_color_from_index(arrow.color_idx)
+			draw_polyline(arrow.draw_path, color, _line_width)
 
 func erase():
 	arrows_to_draw = []
@@ -67,7 +95,7 @@ func planning_input( \
 				arrow_color_idx += 4
 
 			new_arrow = \
-				ChessArrow.creat_chess_arrow(arrow_color_idx, tile_coord, position_calculator)
+				ChessArrow.create_chess_arrow(arrow_color_idx, tile_coord, position_calculator)
 			arrows_to_draw.append(new_arrow)
 			#add_child(new_arrow.end_node)
 			return
@@ -97,7 +125,7 @@ func draw_path( \
 		arrow_color_idx += 4  # RED
 
 	new_arrow = \
-		ChessArrow.creat_chess_arrow(arrow_color_idx, path[0], position_calculator)
+		ChessArrow.create_chess_arrow(arrow_color_idx, path[0], position_calculator)
 	arrows_to_draw.append(new_arrow)
 	for idx in range(1, path.size()):
 		new_arrow.add_hex(path[idx])
@@ -119,7 +147,7 @@ class ChessArrow:
 	var position_calculator : GridNode2D = null
 
 
-	static func creat_chess_arrow(
+	static func create_chess_arrow(
 			color_idx_ : int, \
 			first_coord : Vector2, \
 			position_calculator_ : GridNode2D
@@ -133,6 +161,41 @@ class ChessArrow:
 		new_arrow.draw_path = [new_pos]
 		new_arrow.end_node.modulate = BattlePainter.get_color_from_index(color_idx_)
 		new_arrow.arrow_end_scene.modulate = BattlePainter.get_color_from_index(color_idx_)
+		return new_arrow
+
+	static func create_from_net_string(sent_arrow : String, player_idx : int) -> ChessArrow:
+		var new_arrow := ChessArrow.new()
+
+		new_arrow.color_idx = player_idx
+		new_arrow.position_calculator = BM
+
+		var new_hex_path : Array[Vector2i] = []
+		var first_int : String = ""
+		var second_int : String = ""
+		var letter_decode_state : int = 0
+		for letter in sent_arrow:
+			if letter_decode_state == 0 and letter == "(":
+				letter_decode_state = 1
+				first_int = ""
+				second_int = ""
+			elif letter_decode_state == 1:
+				if letter == ",":
+					letter_decode_state = 2
+					continue
+				first_int += letter
+			elif letter_decode_state == 2:
+				if letter == ")":
+					letter_decode_state = 0
+					new_hex_path.append(Vector2i(int(first_int), int(second_int)))
+					continue
+				second_int += letter
+
+		for hex in new_hex_path:
+			new_arrow.add_hex(hex)
+
+		new_arrow.end_node.modulate = BattlePainter.get_color_from_index(player_idx)
+		new_arrow.arrow_end_scene.modulate = BattlePainter.get_color_from_index(player_idx)
+
 		return new_arrow
 
 
@@ -152,10 +215,20 @@ class ChessArrow:
 	func _update_end_node() -> void:
 		#end_node.queue_free()
 		end_node = arrow_end_scene
+		end_node.position = draw_path[-1]
+		if hex_path.size() < 2:
+			return
 		var offset = hex_path[-2] - hex_path[-1]  # angle between last two coords
 		var rotation_value = GenericHexGrid.DIRECTION_TO_OFFSET.find(offset) * PI / 3
 		end_node.rotation = rotation_value
 
-		end_node.position = draw_path[-1]
+
+
+	func to_net_string() -> String:
+		var result : String = "|"
+		for coord : Vector2i in hex_path:
+			result += str(coord)
+
+		return result
 
 #endregion Planning (Chess arrows)
