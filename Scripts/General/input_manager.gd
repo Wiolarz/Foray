@@ -341,6 +341,13 @@ func get_index_of_player(player : Player) -> int:
 			return i
 	return -1
 
+
+func get_index_of_player_by_name(player_name : String) -> int:
+	for i in range(players.size()):
+		if players[i].name == player_name:
+			return i
+	return -1
+
 #endregion Technical
 
 

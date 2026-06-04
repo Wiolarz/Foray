@@ -126,15 +126,20 @@ func clear_local_chat_log() -> void:
 	chat_log_cleared.emit()
 
 
-func send_drawn_arrows_array(message : String) -> void:
-	if not client:
-		append_message_to_local_chat_log(message, get_current_login())
-	if server:
-		server.broadcast_say(message)
-	elif client:
-		client.queue_say(message)
+func draw_allies_arrow(message : String, author : String) -> void:
+	var player_index : int = IM.get_index_of_player_by_name(author)
+	var player : Player = IM.get_player_by_index(player_index)
+	var color_idx : int = 0
+	if player:
+		color_idx = player.color_idx
+	BM.draw_allies_arrows(message, color_idx)
 
-	BM.draw_allies_arrows(message, 5)
+
+func send_drawn_arrows_array(message : String) -> void:
+	if server:
+		server.broadcast_arrow(message)
+	elif client:
+		client.queue_arrows(message)
 
 
 ## Poly API - not currently maintained by anyone [br]

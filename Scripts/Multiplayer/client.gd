@@ -62,6 +62,11 @@ func queue_say(message : String):
 	queue_message_to_server(packet)
 
 
+func queue_arrows(text_arrows : String):
+	var packet : Dictionary = RequestArrow.create_packet(text_arrows)
+	queue_message_to_server(packet)
+
+
 func queue_cycle_color(slot_index : int, backwards : bool = false):
 	var packet : Dictionary = \
 		RequestColorCycle.create_packet(slot_index, backwards)
@@ -220,8 +225,7 @@ func roll() -> void:
 	if broken:
 		close()
 
-
-#endregion
+#endregion Communication
 
 
 func is_slot_steal_allowed() -> bool:
