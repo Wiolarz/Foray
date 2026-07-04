@@ -132,6 +132,7 @@ func draw_allies_arrow(message : String, author : String) -> void:
 	var color_idx : int = 0
 	if player:
 		color_idx = player.color_idx
+	send_chat_message(str(color_idx) + " " + str(player))
 	BM.draw_allies_arrows(message, color_idx)
 
 

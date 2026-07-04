@@ -51,6 +51,7 @@ func _draw():
 			draw_polyline(arrow.draw_path, color, _line_width)
 
 func erase():
+	NET.send_chat_message("ERASE")
 	arrows_to_draw = []
 	Helpers.remove_all_children(self)
 	update_drawings()
@@ -93,6 +94,11 @@ func planning_input( \
 				arrow_color_idx += 2
 			if Input.is_key_pressed(KEY_SHIFT):
 				arrow_color_idx += 4
+
+			if not UI.battle_ui.focus_mode:
+				arrow_color_idx = IM.get_index_of_player_by_name(NET.get_current_login())
+				if arrow_color_idx == -1:
+					arrow_color_idx = 4
 
 			new_arrow = \
 				ChessArrow.create_chess_arrow(arrow_color_idx, tile_coord, position_calculator)
