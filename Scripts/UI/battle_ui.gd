@@ -35,6 +35,7 @@ var armies_reference : Array[BattleGridState.ArmyInBattleState]
 
 var current_player : int = 0
 
+var focus_mode : bool = false
 
 ## used only for deployment unit tiles,
 ## points to currently selected unit/unit-button in deployment bar
@@ -484,3 +485,12 @@ func show_text_bubble(text_bubble : TextBubble) -> void:
 func _on_text_bubble_button_pressed():
 	IM.set_game_paused(false)
 	$TextBubble.hide()
+
+
+func _on_focus_button_pressed():
+	focus_mode = not focus_mode
+	BM.toggle_ally_arrows(focus_mode)
+	if focus_mode:
+		chat.hide()
+	else:
+		chat.show()

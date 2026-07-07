@@ -331,7 +331,12 @@ func quit_game() -> void:
 
 func get_player_by_index(index : int) -> Player:
 	if index in range(players.size()):
+		var player = players[index]
+		if not player:
+			NET.send_chat_message("NULLLLLLLL" + str(players.size()) + "  " + str(index) + "  " + str(index in range(players.size())))
 		return players[index]
+	else:
+		NET.send_chat_message("Players size " + str(players.size()) + "  " + str(index) + "  " + str(index in range(players.size())))
 	return null
 
 
@@ -339,6 +344,20 @@ func get_index_of_player(player : Player) -> int:
 	for i in range(players.size()):
 		if players[i] == player:
 			return i
+	return -1
+
+
+func get_index_of_player_by_name(player_name : String) -> int:
+	# first, check if the name is the local player and change it to magic empty
+	# string
+	if player_name == NET.get_current_username():
+		player_name = ""
+
+	for i in range(players.size()):
+		if players[i].occupier == player_name:
+			return i
+		print(players[i].occupier, player_name)
+
 	return -1
 
 #endregion Technical

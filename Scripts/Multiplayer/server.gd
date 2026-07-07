@@ -150,8 +150,17 @@ func broadcast_chat_message(message : String, author : String):
 	broadcast(packet)
 
 
+func broadcast_arrow_message(message : String, author : String):
+	var packet : Dictionary = OrderArrow.create_packet(message, author)
+	broadcast(packet)
+
+
 func broadcast_say(message : String):
 	return broadcast_chat_message(message, server_username)
+
+
+func broadcast_arrow(message : String):
+	return broadcast_arrow_message(message, server_username)
 
 
 func broadcast_full_game_setup(game_setup : GameSetupInfo):

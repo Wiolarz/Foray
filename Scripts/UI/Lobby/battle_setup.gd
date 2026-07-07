@@ -109,7 +109,7 @@ func apply_preset_by_name(preset_name : String) -> bool:
 
 func _load_map(map_name : String) -> void:
 	var map : DataBattleMap = load(CFG.BATTLE_MAPS_PATH + "/" + map_name)
-	IM.game_setup_info.set_battle_map(map, map_name)
+	IM.game_setup_info.set_battle_map(map)
 
 
 func show_hero_level_up(slot_index : int) -> void:

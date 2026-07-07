@@ -94,17 +94,17 @@ func client_connection() -> bool:
 	return client and client.enet_network
 
 
-func get_current_login() -> String: # TODO rename username to login
+func get_current_username() -> String:
 	if server_connection():
 		return server.server_username
 	if client_connection():
 		return client.username
-	return CFG.DEFAULT_USER_NAME # TODO rename to PLACEHOLDER_LOGIN
+	return CFG.DEFAULT_USER_NAME
 
 
 func send_chat_message(message : String) -> void:
 	if not client:
-		append_message_to_local_chat_log(message, get_current_login())
+		append_message_to_local_chat_log(message, get_current_username())
 	if server:
 		server.broadcast_say(message)
 	elif client:
@@ -126,6 +126,23 @@ func clear_local_chat_log() -> void:
 	chat_log_cleared.emit()
 
 
+func draw_allies_arrow(message : String, author : String) -> void:
+	var player_index : int = IM.get_index_of_player_by_name(author)
+	var player : Player = IM.get_player_by_index(player_index)
+	var color_idx : int = 0
+	if player:
+		color_idx = player.color_idx
+	NET.append_message_to_local_chat_log(str(color_idx) + " " + str(player), "system")
+	BM.draw_allies_arrows(message, color_idx)
+
+
+func send_drawn_arrows_array(message : String) -> void:
+	if server:
+		server.broadcast_arrow(message)
+	elif client:
+		client.queue_arrows(message)
+
+
 ## Poly API - not currently maintained by anyone [br]
 ## tries to determine probable address by which a server running on this
 ## machine could be reached, usually by making a call to an external
@@ -141,4 +158,3 @@ func fetch_external_address_guess() -> String:
 	request.queue_free()
 	print("external address from '", url, "' is : ", external_address)
 	return external_address
-

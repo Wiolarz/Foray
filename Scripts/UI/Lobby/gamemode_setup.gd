@@ -107,7 +107,7 @@ func _refresh_slot(index : int) -> void:
 
 	if logic_slot.occupier is String:
 		if logic_slot.occupier == "":
-			username = NET.get_current_login()
+			username = NET.get_current_username()
 			take_leave_button_state = PlayerSlotPanel.TakeLeaveButtonState.TAKEN_BY_YOU
 		else:
 			username = logic_slot.occupier
@@ -188,7 +188,15 @@ func update_maps_list_selection() -> void:
 		else:
 			client_side_map_label.text = DataBattleMap.get_network_id(IM.game_setup_info.battle_map)
 		return # on client
-	var target : String = IM.game_setup_info.map_name_hint
+
+	## used in dropdown list in UI of battle setup, due to the problem with loading selected map
+	## with a preset not setting selection properly
+	var target : String
+	if IM.game_setup_info.world_map:
+		target = IM.game_setup_info.world_map.resource_path.get_file()
+	else:
+		target = IM.game_setup_info.battle_map.resource_path.get_file()
+
 	assert(target != "")
 
 	for index in maps_list.item_count:

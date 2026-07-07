@@ -60,14 +60,13 @@ static func create(new_slot : Slot) -> Player:
 	result.color_idx = new_slot.color_idx
 
 	result.occupier = new_slot.occupier
+	assert(result.occupier is String or result.occupier is int)
 
 	result.timer_reserve_sec = new_slot.timer_reserve_sec
 	result.timer_increment_sec = new_slot.timer_increment_sec
 	result.index = new_slot.index
 	result.team = new_slot.team
 	result.color_idx = new_slot.color_idx
-
-	result.occupier = new_slot.occupier
 
 	result.timer_reserve_sec = new_slot.timer_reserve_sec
 	result.timer_increment_sec = new_slot.timer_increment_sec
