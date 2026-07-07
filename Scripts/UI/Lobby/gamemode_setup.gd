@@ -107,7 +107,7 @@ func _refresh_slot(index : int) -> void:
 
 	if logic_slot.occupier is String:
 		if logic_slot.occupier == "":
-			username = NET.get_current_login()
+			username = NET.get_current_username()
 			take_leave_button_state = PlayerSlotPanel.TakeLeaveButtonState.TAKEN_BY_YOU
 		else:
 			username = logic_slot.occupier

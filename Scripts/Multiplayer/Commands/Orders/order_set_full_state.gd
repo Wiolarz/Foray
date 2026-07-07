@@ -26,7 +26,7 @@ static func process_command(_client : Client, params : Dictionary) -> int:
 	if not "battle" in params or not params["battle"] is PackedByteArray:
 		return FAILED
 	var setup = GameSetupInfo.from_dictionary(params["setup"], \
-		NET.get_current_login())
+		NET.get_current_username())
 	var world_state : SerializableWorldState = \
 		SerializableWorldState.from_network_serialized(params["world"])
 	var battle_state : SerializableBattleState = \

@@ -17,7 +17,7 @@ static func process_command(_client : Client, params : Dictionary) -> int:
 	if not "setup" in params or not params["setup"] is Dictionary:
 		return FAILED
 	var setup = GameSetupInfo.from_dictionary(params["setup"], \
-		NET.get_current_login())
+		NET.get_current_username())
 	IM.game_setup_info = setup
 	IM.game_setup_info_changed.emit()
 	return OK

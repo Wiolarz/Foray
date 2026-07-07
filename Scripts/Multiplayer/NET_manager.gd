@@ -94,17 +94,17 @@ func client_connection() -> bool:
 	return client and client.enet_network
 
 
-func get_current_login() -> String: # TODO rename username to login
+func get_current_username() -> String:
 	if server_connection():
 		return server.server_username
 	if client_connection():
 		return client.username
-	return CFG.DEFAULT_USER_NAME # TODO rename to PLACEHOLDER_LOGIN
+	return CFG.DEFAULT_USER_NAME
 
 
 func send_chat_message(message : String) -> void:
 	if not client:
-		append_message_to_local_chat_log(message, get_current_login())
+		append_message_to_local_chat_log(message, get_current_username())
 	if server:
 		server.broadcast_say(message)
 	elif client:
@@ -132,7 +132,7 @@ func draw_allies_arrow(message : String, author : String) -> void:
 	var color_idx : int = 0
 	if player:
 		color_idx = player.color_idx
-	send_chat_message(str(color_idx) + " " + str(player))
+	NET.append_message_to_local_chat_log(str(color_idx) + " " + str(player), "system")
 	BM.draw_allies_arrows(message, color_idx)
 
 
@@ -158,4 +158,3 @@ func fetch_external_address_guess() -> String:
 	request.queue_free()
 	print("external address from '", url, "' is : ", external_address)
 	return external_address
-

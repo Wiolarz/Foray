@@ -96,7 +96,7 @@ func planning_input( \
 				arrow_color_idx += 4
 
 			if not UI.battle_ui.focus_mode:
-				arrow_color_idx = IM.get_index_of_player_by_name(NET.get_current_login())
+				arrow_color_idx = IM.get_index_of_player_by_name(NET.get_current_username())
 				if arrow_color_idx == -1:
 					arrow_color_idx = 4
 
